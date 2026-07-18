@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ulysses — The Character Map</title>
+<style>
+  :root{
+    --deep:#081a35;
+    --ground:#0b2445;
+    --sea:#1c4b8f;
+    --line:#28558f;
+    --paper:#f4efe2;
+    --mute:#7d9cc2;
+    --dim:#3d6493;
+    --gold:#dfa93f;
+    --ash:#a3c4e2;
+    --rose:#cf6470;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--deep);
+    color:var(--paper);
+    font-family:var(--serif);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:28px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:22px}
+  .eyebrow{
+    font-family:var(--mono);font-size:10px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--mute);margin:0 0 10px
+  }
+  h1{
+    font-size:clamp(28px,7vw,46px);line-height:1.05;margin:0 0 10px;
+    font-weight:400;letter-spacing:-.01em
+  }
+  h1 em{font-style:italic;color:var(--gold)}
+  .standfirst{margin:0;max-width:56ch;color:#cfe0f2;font-size:15px}
+
+  /* ---- map ---- */
+  .stage{margin:26px -18px 0;padding:0 4px}
+  svg{width:100%;height:auto;display:block;overflow:visible}
+
+  .hourtick{stroke:var(--dim);stroke-width:1}
+  .hourtick.on{stroke:var(--gold);stroke-width:2}
+  .hourhit{fill:transparent;cursor:pointer}
+  .hourhit:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .hourlab{
+    font-family:var(--mono);font-size:10px;fill:var(--mute);
+    letter-spacing:.06em;pointer-events:none
+  }
+  .hourlab.on{fill:var(--gold)}
+  .hournum{font-family:var(--mono);font-size:12px;fill:var(--paper);pointer-events:none}
+  .hournum.on{fill:var(--gold);font-weight:700}
+  .ringline{fill:none;stroke:var(--line);stroke-width:.7;opacity:.5}
+  .parallel{fill:none;stroke:var(--dim);stroke-width:1;stroke-dasharray:2 4;opacity:.85}
+
+  .thread{fill:none;stroke-width:1;opacity:.28;transition:opacity .25s,stroke-width .25s}
+  .thread.hi{opacity:.95;stroke-width:1.8}
+  .thread.off{opacity:.05}
+  .t-blood{stroke:var(--gold)}
+  .t-marriage{stroke:var(--rose)}
+  .t-affair{stroke:var(--rose);stroke-dasharray:5 4}
+  .t-elective{stroke:var(--gold);stroke-dasharray:7 5;stroke-width:1.6;opacity:.6}
+  .t-rivalry{stroke:#c0574f}
+  .t-crossing{stroke:var(--ash);stroke-dasharray:1 4}
+
+  .node{cursor:pointer}
+  .node:focus-visible circle{stroke:var(--gold);stroke-width:2.5}
+  .node circle{stroke:var(--ground);stroke-width:1.2;transition:opacity .25s,r .2s}
+  .node text{fill:var(--paper);font-size:11px;transition:opacity .25s}
+  .node.c0 circle{r:13}
+  .node.c0 text{font-size:15px;letter-spacing:.01em}
+  .node.faded circle,.node.faded text{opacity:.13}
+  .node.sel circle{stroke:var(--paper);stroke-width:2.5}
+  .node.kin circle{stroke:var(--gold);stroke-width:2}
+  .lbl-a{font-size:11.5px;text-anchor:middle}
+
+  /* ---- episode strip ---- */
+  .strip{
+    display:flex;gap:6px;overflow-x:auto;padding:16px 0 10px;
+    margin-top:18px;border-top:1px solid var(--line);
+    scrollbar-width:thin
+  }
+  .strip button{
+    flex:0 0 auto;background:transparent;color:var(--mute);
+    border:1px solid var(--line);border-radius:0;
+    font-family:var(--mono);font-size:11px;letter-spacing:.04em;
+    padding:7px 10px;cursor:pointer;white-space:nowrap;
+    transition:.18s
+  }
+  .strip button:hover{color:var(--paper);border-color:var(--sea)}
+  .strip button[aria-pressed="true"]{
+    background:var(--gold);color:var(--deep);border-color:var(--gold);font-weight:700
+  }
+  .strip button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+  /* ---- panel ---- */
+  .panel{
+    margin-top:22px;border:1px solid var(--line);background:var(--ground);
+    padding:22px 20px;min-height:190px
+  }
+  .kicker{
+    font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--gold);margin:0 0 8px
+  }
+  .panel h2{font-size:26px;font-weight:400;margin:0 0 4px;line-height:1.15}
+  .homer{font-style:italic;color:var(--ash);margin:0 0 14px;font-size:14px}
+  .panel p{margin:0 0 12px;font-size:15px;max-width:62ch}
+  .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+  .chip{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;
+    border:1px solid var(--line);padding:4px 7px;color:var(--mute)
+  }
+  .chip.here{border-color:var(--gold);color:var(--gold)}
+  .rel{font-size:14px;color:#cfe0f2;margin-top:12px}
+  .rel b{color:var(--paper);font-weight:400}
+
+  /* ---- legend ---- */
+  .legend{
+    display:flex;flex-wrap:wrap;gap:14px 22px;margin-top:22px;
+    padding-top:16px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--mute)
+  }
+  .key{display:flex;align-items:center;gap:7px}
+  .sw{width:22px;height:0;border-top:2px solid}
+  .dot{width:10px;height:10px;border-radius:50%}
+
+  footer{
+    margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--mute);max-width:64ch
+  }
+  footer em{color:var(--ash)}
+
+  @media (max-width:600px){
+    .panel{padding:18px 15px}
+    .node text{font-size:13px}
+    .lbl-a{font-size:13px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Base document 01 · Character map</p>
+  <h1>Everyone in <em>Ulysses</em>,<br>and the day they cross</h1>
+  <p class="standfirst">
+    Dublin, Thursday 16 June 1904. Four circles of cast, drawn inside a ring of the
+    book's eighteen hours. Tap an hour to see who stands where; tap a person to see
+    who they are and what binds them.
+  </p>
+</header>
+
+<div class="stage">
+  <svg id="map" viewBox="0 0 980 980" role="img"
+       aria-label="Circular map of the characters of Ulysses arranged in four rings inside a ring of the eighteen episodes"></svg>
+</div>
+
+<nav class="strip" id="strip" aria-label="Episodes"></nav>
+
+<section class="panel" id="panel" aria-live="polite"></section>
+
+<div class="legend" id="legend"></div>
+
+<footer>
+  The outer ring is the day. Joyce gave every episode an hour except the last —
+  <em>Penelope</em> has no hour in his own schema, so its mark sits outside the ring,
+  unfilled. The three dotted arcs join the episodes that happen at the same time:
+  the book's first three hours are lived twice, once by Stephen and once by Bloom.
+</footer>
+
+</div>
+
+<script>
+/* ------------------------------------------------------------------ data -- */
+
+const EPISODES = [
+ {n:1, t:"Telemachus",           h:"8 a.m.",   p:"The Martello Tower, Sandycove"},
+ {n:2, t:"Nestor",               h:"10 a.m.",  p:"Mr Deasy's school, Dalkey"},
+ {n:3, t:"Proteus",              h:"11 a.m.",  p:"Sandymount Strand"},
+ {n:4, t:"Calypso",              h:"8 a.m.",   p:"7 Eccles Street"},
+ {n:5, t:"Lotus-Eaters",         h:"10 a.m.",  p:"Westland Row and the baths"},
+ {n:6, t:"Hades",                h:"11 a.m.",  p:"Glasnevin Cemetery"},
+ {n:7, t:"Aeolus",               h:"12 noon",  p:"The Freeman's Journal"},
+ {n:8, t:"Lestrygonians",        h:"1 p.m.",   p:"Davy Byrne's"},
+ {n:9, t:"Scylla & Charybdis",   h:"2 p.m.",   p:"The National Library"},
+ {n:10,t:"Wandering Rocks",      h:"3 p.m.",   p:"The streets of Dublin"},
+ {n:11,t:"Sirens",               h:"4 p.m.",   p:"The Ormond Hotel"},
+ {n:12,t:"Cyclops",              h:"5 p.m.",   p:"Barney Kiernan's pub"},
+ {n:13,t:"Nausicaa",             h:"8 p.m.",   p:"Sandymount Strand"},
+ {n:14,t:"Oxen of the Sun",      h:"10 p.m.",  p:"Holles Street hospital"},
+ {n:15,t:"Circe",                h:"midnight", p:"Nighttown"},
+ {n:16,t:"Eumaeus",              h:"1 a.m.",   p:"The cabman's shelter"},
+ {n:17,t:"Ithaca",               h:"2 a.m.",   p:"7 Eccles Street"},
+ {n:18,t:"Penelope",             h:"no hour",  p:"The bed"}
+];
+
+/* c = circle (0 core, 1 shaping, 2 chorus, 3 dead/absent)
+   e = episodes present in the flesh · g = present only as memory, vision, letter */
+const CAST = [
+ {id:"bloom",  s:"Leopold Bloom", c:0, col:"gold", h:"Odysseus",
+  r:"Advertisement canvasser, 38",
+  d:"Born Dublin to a Hungarian Jewish father who died by suicide and an Irish mother. Baptised three times, believing none of it. Married sixteen years; a daughter of fifteen away in Mullingar and a son who died at eleven days old. Carries a potato from his mother, a cake of lemon soap, and a secret correspondence under the name Henry Flower. The most humane consciousness in the book.",
+  e:[4,5,6,7,8,10,11,12,13,14,15,16,17], g:[18]},
+
+ {id:"stephen",s:"Stephen Dedalus", c:0, col:"ash", h:"Telemachus",
+  r:"Poet and reluctant teacher, 22",
+  d:"Recalled from Paris by his mother's death; refused to kneel and pray at her bed and has carried the refusal ever since. Pays the rent on the tower and gives up the key on the first morning. Keyless, in mourning black, in borrowed boots, carrying an ashplant. Brilliant, proud, drinking too much, and looking — without admitting it — for a father.",
+  e:[1,2,3,7,9,10,14,15,16,17], g:[]},
+
+ {id:"molly",  s:"Molly Bloom", c:0, col:"rose", h:"Penelope",
+  r:"Concert soprano, 33",
+  d:"Born in Gibraltar to an Irish major and a Spanish mother; half-Spanish, sun-raised, brought north as a girl. Takes a lover at four o'clock this afternoon. Speaks a handful of lines in bed in the morning and then nothing at all until the last forty pages, which are hers — eight unpunctuated sentences ending in the most famous yes in literature.",
+  e:[4,10,17,18], g:[]},
+
+ /* ---- circle 1 : the shaping presences ---- */
+ {id:"mulligan",s:"Mulligan", full:"Buck Mulligan", c:1, h:"Antinous, chief suitor",
+  r:"Medical student",
+  d:"Blasphemous, brilliant, cruel, endlessly performing. Shares the tower and takes its key. Called Stephen's mother beastly dead and has not been forgiven. Modelled on Joyce's own friend-turned-rival Oliver St John Gogarty.",
+  e:[1,9,10,14], g:[15]},
+ {id:"boylan", s:"Boylan", full:"Blazes Boylan", c:1, h:"The suitors",
+  r:"Concert manager; Molly's lover",
+  d:"Straw hat askew, red flower in his teeth, swagger and potency and no manners at all. Sends fruit ahead, arrives at four, and is gone. He and Bloom never exchange a single word in the entire novel.",
+  e:[10,11], g:[6,8,15]},
+ {id:"simon",  s:"Simon Dedalus", c:1, h:"The inadequate father",
+  r:"Stephen's father",
+  d:"Widower, drinker, wit, and a fine tenor voice. Sentimental about the past, savage about the present, letting his daughters go hungry. Present, and not enough — the vacancy that Bloom will quietly fill.",
+  e:[6,7,10,11], g:[]},
+ {id:"haines", s:"Haines", c:1, h:"England",
+  r:"Oxford Englishman at the tower",
+  d:"Collects Irish folklore in a mild colonial way and wakes screaming about a black panther. In one apparition he holds a portfolio of Celtic literature in one hand and a phial marked Poison in the other — the collector and the poisoner of a culture, in a single image.",
+  e:[1,10], g:[14,15]},
+ {id:"milly",  s:"Milly", full:"Milly Bloom", c:1, h:"The daughter",
+  r:"The Blooms' daughter, 15",
+  d:"Away in Mullingar learning photography, being courted by a student. Never appears — she exists as a letter and as her parents' thoughts. Bloom reads between her lines that she is becoming a woman and slipping away from him.",
+  e:[], g:[4,18]},
+ {id:"rudy",   s:"Rudy", full:"Rudy Bloom", c:1, h:"The lost son",
+  r:"The son who died at eleven days",
+  d:"Appears exactly once, at the very end of Nighttown: a boy of about eleven in an Eton suit with a lamb in his pocket, reading a book from right to left, gazing without seeing into his father's eyes. Everything in the novel exists to make that page possible.",
+  e:[], g:[15]},
+ {id:"martha", s:"Martha", full:"Martha Clifford", c:1, h:"The secret",
+  r:"Bloom's correspondent",
+  d:"A typewritten flirtation addressed to Henry Flower, poste restante. She exists as a letter, and then as an accusing hallucination demanding he clear her name. Bloom's own concealment, running underneath his grievance.",
+  e:[], g:[5,15]},
+ {id:"gerty",  s:"Gerty", full:"Gerty MacDowell", c:1, h:"Nausicaa",
+  r:"On the strand at evening",
+  d:"Poor, lame, romantic, with a drunk father, imagining her life in the borrowed language of magazine fiction. She knows Bloom is watching and performs for him. Her chapter's syrupy prose is a dream she is using to survive — and it got the book prosecuted for obscenity.",
+  e:[13], g:[15]},
+ {id:"citizen",s:"The Citizen", c:1, h:"Polyphemus",
+  r:"Archnationalist, Barney Kiernan's",
+  d:"Huge, bellowing, xenophobic, with a mangy dog and a belt of carved Irish heroes. Modelled on the founder of the Gaelic Athletic Association. One eye, in Homer, means one way of seeing — and Joyce's target is not Irish freedom but the single eye.",
+  e:[12], g:[]},
+ {id:"deasy",  s:"Deasy", full:"Mr Garrett Deasy", c:1, h:"Nestor, ironised",
+  r:"Schoolmaster, Dalkey",
+  d:"Unionist, proud of paying his way, full of unwanted advice and a cheap anti-Semitic joke. Joyce plants his bigotry two episodes before introducing the Jewish hero, so that the joke curdles in retrospect.",
+  e:[2], g:[15]},
+ {id:"bella",  s:"Bella Cohen", c:1, h:"Circe",
+  r:"Brothel madam, Nighttown",
+  d:"Massive, fanned, with a sprouting moustache. Becomes masculine Bello and stages Bloom's total degradation — the enchantress who turns men into swine, and the masochism the book has been hinting at since the first mention of Venus in furs.",
+  e:[15], g:[]},
+ {id:"dignam", s:"Dignam", full:"Paddy Dignam", c:1, h:"The day's death",
+  r:"Buried this morning",
+  d:"Dead of drink and a stroke, leaving a widow, children and no money. Present as a corpse, as a spirit reporting from the astral plane about his boots, as an apparition in Nighttown, and as an insurance problem in a pub.",
+  e:[6], g:[10,12,15]},
+
+ /* ---- circle 2 : the Dublin chorus ---- */
+ {id:"cunningham",s:"Cunningham", full:"Martin Cunningham", c:2, r:"Castle official",
+  d:"Kindly, competent, organising a fund for Dignam's widow. Knows about Bloom's father's suicide and steers the carriage talk away from it. His own wife is a drunkard.", e:[6,10,12], g:[]},
+ {id:"power",  s:"Power", full:"Jack Power", c:2, r:"In the funeral carriage",
+  d:"Talks carelessly about suicide in front of Bloom. Keeps a barmaid while his wife is ill — which Molly knows perfectly well.", e:[6,10,12], g:[]},
+ {id:"hynes",  s:"Hynes", full:"Joe Hynes", c:2, r:"Journalist",
+  d:"Reports the funeral, mishears Bloom's phrase for a surname, and prints the man in the macintosh into history as Mr M'Intosh. Owes Bloom money.", e:[6,7,12], g:[]},
+ {id:"lenehan",s:"Lenehan", c:2, r:"Sports writer and sponger",
+  d:"Tips the losing horse, cadges drinks, and tells a grubby story about groping Molly in a carriage while her husband pointed out the stars.", e:[7,10,11,12,14], g:[]},
+ {id:"kelleher",s:"Kelleher", full:"Corny Kelleher", c:2, r:"Undertaker's man",
+  d:"Suspected police informer; hums, chews a straw, and talks the watch out of arresting Stephen at the end of Nighttown.", e:[6,10,15], g:[]},
+ {id:"lambert",s:"Ned Lambert", c:2, r:"Corn merchant",
+  d:"Laughs at everything, present at the funeral, the newspaper and the pub — one of the men who make up the city's chorus.", e:[6,7,10,12], g:[]},
+ {id:"kernan", s:"Tom Kernan", c:2, r:"Tea traveller",
+  d:"Protestant convert, pleased with his own turns of phrase, admiring the retrospective arrangement of things.", e:[6,10], g:[]},
+ {id:"goulding",s:"Goulding", full:"Richie Goulding", c:2, r:"Stephen's uncle",
+  d:"Law clerk with a bad back, and the quiet crossing of the two families: Stephen's uncle by marriage, dining with Bloom in the Ormond while the singing goes on next door.", e:[11], g:[3]},
+ {id:"dollard",s:"Ben Dollard", c:2, r:"Bass singer",
+  d:"Enormous, ruined, magnificent voice — the base barreltone. Once borrowed a pair of trousers from the Blooms that were comically too tight.", e:[10,11], g:[]},
+ {id:"douce",  s:"Miss Douce", full:"Lydia Douce", c:2, r:"Barmaid, bronze",
+  d:"One of the two sirens at the Ormond. Snaps her garter against her thigh for the customers — sonnez la cloche.", e:[11], g:[10]},
+ {id:"kennedy",s:"Miss Kennedy", full:"Mina Kennedy", c:2, r:"Barmaid, gold",
+  d:"The second siren. Bronze by gold — the two heads together are the first real image of the music episode.", e:[11], g:[10]},
+ {id:"conmee", s:"Father Conmee", c:2, r:"Jesuit",
+  d:"Opens the city-wide episode with smooth, well-fed piety, thinking of maimed soldiers but not for long. Had taught Stephen as a boy at Clongowes.", e:[10], g:[]},
+ {id:"mccoy",  s:"M'Coy", c:2, r:"Buttonholer",
+  d:"Delays Bloom in the street to have his name put down at the funeral, and borrows suitcases he never returns.", e:[5,10], g:[]},
+ {id:"lyons",  s:"Bantam Lyons", c:2, r:"The accidental tip",
+  d:"Misreads Bloom's throwaway remark as a tip on the horse Throwaway, which wins at twenty to one — convincing half of Dublin that Bloom is a secret winner too mean to stand a round.", e:[5,8,12], g:[]},
+ {id:"josie",  s:"Josie Breen", c:2, r:"Bloom's old flame",
+  d:"The woman he might have married instead of Molly, now tied to a husband touring solicitors over an anonymous postcard reading U.p: up.", e:[8], g:[15]},
+ {id:"dilly",  s:"Dilly Dedalus", c:2, r:"Stephen's sister",
+  d:"Hungry, spending pennies she cannot spare on a French primer. The sharpest indictment of Simon in the book, delivered without a word of comment.", e:[10], g:[]},
+ {id:"lynch",  s:"Lynch", full:"Vincent Lynch", c:2, r:"Stephen's companion",
+  d:"Cynical medical student who follows Stephen through the hospital and the brothel — and abandons him the moment there is trouble.", e:[14,15], g:[]},
+ {id:"zoe",    s:"Zoe", full:"Zoe Higgins", c:2, r:"In Bella Cohen's house",
+  d:"Young, quick, sharp-tongued. Takes the potato talisman out of Bloom's pocket — and carries, by coincidence or design, his own mother's maiden name.", e:[15], g:[]},
+ {id:"carr",   s:"Private Carr", c:2, r:"British soldier",
+  d:"Drunk, patriotic, spoiling for it. Knocks Stephen unconscious in the street for an insult to the King that Stephen never quite made.", e:[15], g:[]},
+ {id:"callan", s:"Nurse Callan", c:2, r:"Maternity hospital",
+  d:"Modest and severe; her presence restrains even the filthiest of the students, and her departure is the signal for the ribaldry to erupt.", e:[14], g:[]},
+ {id:"bannon", s:"Bannon", full:"Alec Bannon", c:2, r:"Milly's suitor",
+  d:"The student courting Bloom's daughter in Mullingar, who turns up drunk in the hospital boasting about his photo girl — in a room where her father is sitting, and neither of them knows.", e:[14], g:[]},
+ {id:"murphy", s:"Murphy the sailor", c:2, r:"In the cabman's shelter",
+  d:"Spinner of tall tales, tattooed, producing a discharge paper and a story about everywhere. A fraudulent Odysseus, home from a sea he may never have crossed.", e:[16], g:[]},
+ {id:"ae",     s:"A.E.", full:"A.E. / George Russell", c:2, r:"Poet and mystic",
+  d:"Real Dublin figure. Dismisses biographical readings of art as the speculation of schoolboys, and is gently satirised for it. Stephen owes him money — A.E.I.O.U.", e:[9], g:[8]},
+ {id:"crawford",s:"Myles Crawford", c:2, r:"Newspaper editor",
+  d:"Inflamed, shouting, generous and useless, presiding over a room where everyone is making speeches and nothing is being printed.", e:[7], g:[]},
+ {id:"viceroy",s:"The Viceroy", full:"The Earl of Dudley", c:2, r:"Lord Lieutenant of Ireland",
+  d:"The Crown's deputy, parading through a subject capital in a cavalcade. Joyce catalogues the citizens' salutes and non-salutes until the imperial grandeur deflates into a pair of trousers and a closing door.", e:[10], g:[]},
+ {id:"stripling",s:"The blind stripling", c:2, r:"Piano tuner",
+  d:"A blind young man Bloom helps across the road, who later taps his way back to the Ormond for the tuning fork he left behind. One of Bloom's small unwitnessed kindnesses.", e:[8,10,11], g:[]},
+ {id:"masterdignam",s:"Master Dignam", full:"Master Patrick Dignam", c:2, r:"The dead man's son",
+  d:"Carrying pork steaks home, catching his own reflection, half proud of his new mourning suit, hoping his father is in purgatory because he went to confession on Saturday.", e:[10], g:[]},
+ {id:"mintosh",s:"M'Intosh", full:"The Man in the Macintosh", c:2, r:"Unidentified",
+  d:"The thirteenth mourner at the graveside, whom nobody can name. A journalist's mishearing turns him into a person in the newspaper. In a book that catalogues the contents of every drawer, he is still unexplained on the last page of the catechism.",
+  e:[6], g:[15,16,17]},
+
+ /* ---- circle 3 : the dead and the absent ---- */
+ {id:"rudolph",s:"Rudolph", full:"Rudolph Virág", c:3, r:"Bloom's father",
+  d:"Hungarian Jew from Szombathely; emigrated, converted, anglicised the name, and killed himself with poison in a hotel at Ennis. His note: no more pain, wake no more, nobody owns. Returns in Nighttown to reproach his son.", e:[], g:[6,15,17]},
+ {id:"ellen",  s:"Ellen Higgins", c:3, r:"Bloom's mother",
+  d:"Irish, Catholic-born. Gave her son the shrivelled potato he still carries in his pocket — which is, in Homer's terms, the herb that saves him from the enchantress.", e:[], g:[15]},
+ {id:"may",    s:"May Dedalus", c:3, r:"Stephen's mother",
+  d:"Dead about a year. Rises through the floor of a brothel green with gravemould, still in the rags of a bridal veil, praying for her son — and gets Non serviam in reply.", e:[], g:[1,15]},
+ {id:"tweedy", s:"Major Tweedy", full:"Major Brian Tweedy", c:3, r:"Molly's father",
+  d:"Of the Royal Dublin Fusiliers, garrisoned at Gibraltar. Raised his daughter among soldiers and cannon and the Mediterranean sun.", e:[], g:[15,18]},
+ {id:"laredo", s:"Lunita Laredo", c:3, r:"Molly's mother",
+  d:"Spanish, of Gibraltar, barely mentioned and never described. Molly mourns even the loss of her lovely name.", e:[], g:[18]},
+ {id:"mulvey", s:"Mulvey", full:"Lieutenant Harry Mulvey", c:3, r:"Molly's first love",
+  d:"A young naval officer at Gibraltar; the first kiss, under the Moorish wall. In the final pages his memory merges with Bloom's proposal on Howth until the two men become one moment of being young and desired.", e:[], g:[18]},
+ {id:"riordan",s:"Mrs Riordan", c:3, r:"The hinge",
+  d:"Lodged with the Blooms at the City Arms Hotel — and was the governess-figure of Stephen's childhood, the Dante of A Portrait of the Artist. One old woman connecting both households, and neither man notices.", e:[], g:[12,18]},
+ {id:"parnell",s:"Parnell", full:"Charles Stewart Parnell", c:3, r:"The lost leader",
+  d:"Dead since 1891; the nationalist leader destroyed by an adultery scandal and by his own church. Haunts every political conversation, and some in the shelter still believe the coffin was full of stones.", e:[], g:[7,16]}
+];
+
+/* [a, b, type, label] */
+const THREADS = [
+ ["bloom","stephen","elective","the book's spine — the son he lost, the father who failed"],
+ ["bloom","molly","marriage","married sixteen years"],
+ ["molly","boylan","affair","this afternoon, at four"],
+ ["bloom","martha","crossing","a secret correspondence"],
+ ["bloom","milly","blood","father and daughter"],
+ ["bloom","rudy","blood","the son who died at eleven days"],
+ ["bloom","rudolph","blood","father, a suicide"],
+ ["bloom","ellen","blood","mother"],
+ ["stephen","simon","blood","father, present and insufficient"],
+ ["stephen","may","blood","mother, unprayed for"],
+ ["stephen","dilly","blood","brother and sister"],
+ ["stephen","mulligan","rivalry","the tower, and the key"],
+ ["stephen","haines","crossing","lodgers under one roof"],
+ ["mulligan","haines","crossing","the Englishman and his guide"],
+ ["stephen","deasy","crossing","schoolmaster and reluctant teacher"],
+ ["stephen","goulding","blood","uncle by marriage"],
+ ["bloom","goulding","crossing","dine together, and neither knows the link"],
+ ["stephen","lynch","crossing","through the hospital and the brothel"],
+ ["stephen","carr","rivalry","a fist, in the street"],
+ ["molly","tweedy","blood","father, of the Gibraltar garrison"],
+ ["molly","laredo","blood","mother, Spanish"],
+ ["molly","mulvey","crossing","the first kiss, under the Moorish wall"],
+ ["bloom","citizen","rivalry","the biscuit tin"],
+ ["bloom","gerty","crossing","the beach, at eight"],
+ ["bloom","bella","rivalry","degradation, and recovery"],
+ ["bloom","josie","crossing","the woman he did not marry"],
+ ["bloom","zoe","crossing","she takes the potato"],
+ ["bloom","dignam","crossing","a funeral he attends as an outsider"],
+ ["dignam","masterdignam","blood","father and son"],
+ ["dignam","cunningham","crossing","the widow's fund"],
+ ["milly","bannon","crossing","a courtship discussed in front of her father"],
+ ["bannon","mulligan","crossing","drinking in the hospital"],
+ ["gerty","citizen","crossing","her grandfather owns his dog"],
+ ["bloom","riordan","crossing","she lodged with the Blooms"],
+ ["stephen","riordan","crossing","she raised him"],
+ ["stephen","conmee","crossing","taught him at Clongowes"],
+ ["bloom","lyons","crossing","the tip he never gave"],
+ ["mintosh","dignam","crossing","the thirteenth mourner"],
+ ["stephen","ae","crossing","a debt, and a disagreement"],
+ ["bloom","stripling","crossing","helped across the road"]
+];
+
+/* -------------------------------------------------------------- geometry -- */
+
+const SVG = document.getElementById("map");
+const CX = 490, CY = 490;
+const R = {0:70, 1:178, 2:288, 3:372};
+const R_HOUR = 432, R_HOURLAB = 458;
+const NS = "http://www.w3.org/2000/svg";
+
+const el = (tag, attrs={}) => {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+};
+const pos = (r, deg) => {
+  const t = (deg - 90) * Math.PI / 180;
+  return {x: CX + r * Math.cos(t), y: CY + r * Math.sin(t)};
+};
+
+/* assign an angle to every character */
+const byCircle = {0:[],1:[],2:[],3:[]};
+CAST.forEach(c => byCircle[c.c].push(c));
+const START = {0:200, 1:-15, 2:0, 3:22};
+for (const k in byCircle) {
+  const arr = byCircle[k], step = 360 / arr.length;
+  arr.forEach((c, i) => { c.ang = (START[k] + i * step) % 360; });
+}
+const byId = Object.fromEntries(CAST.map(c => [c.id, c]));
+
+/* ---------------------------------------------------------------- render -- */
+
+const gRings   = el("g");
+const gThreads = el("g");
+const gHours   = el("g");
+const gNodes   = el("g");
+SVG.append(gRings, gHours, gThreads, gNodes);
+
+/* faint guide rings */
+[R[1], R[2], R[3]].forEach(r =>
+  gRings.appendChild(el("circle", {cx:CX, cy:CY, r, class:"ringline"})));
+
+/* the hour ring */
+const hourNodes = [];
+EPISODES.forEach((ep, i) => {
+  const ang = i * (360 / 18);
+  const outside = ep.n === 18;                       // Penelope has no hour
+  const rTick = outside ? R_HOUR + 22 : R_HOUR;
+  const a = pos(rTick - 12, ang), b = pos(rTick + 6, ang);
+  const tick = el("line", {x1:a.x, y1:a.y, x2:b.x, y2:b.y, class:"hourtick"});
+
+  const pn = pos(rTick + 20, ang);
+  const num = el("text", {x:pn.x, y:pn.y + 4, class:"hournum", "text-anchor":"middle"});
+  num.textContent = ep.n;
+
+  const pl = pos(R_HOURLAB + (outside ? 26 : 4), ang);
+  const flip = ang > 180;
+  const lab = el("text", {
+    x: pl.x, y: pl.y,
+    class: "hourlab",
+    "text-anchor": flip ? "end" : "start",
+    "dominant-baseline": "middle",
+    transform: `rotate(${flip ? ang + 90 : ang - 90} ${pl.x} ${pl.y})`
+  });
+  lab.textContent = `${ep.t.toUpperCase()} · ${ep.h}`;
+
+  const hit = el("circle", {cx:pn.x, cy:pn.y, r:20, class:"hourhit",
+    tabindex:"0", role:"button", "aria-label":`Episode ${ep.n}, ${ep.t}, ${ep.h}`});
+  hit.addEventListener("click", () => selectEpisode(ep.n));
+  hit.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectEpisode(ep.n); }
+  });
+
+  gHours.append(tick, num, lab, hit);
+  hourNodes.push({ep, tick, num, lab});
+});
+
+/* dotted arcs joining the simultaneous episodes: 1↔4, 2↔5, 3↔6 */
+[[1,4],[2,5],[3,6]].forEach(([a,b]) => {
+  const aa = (a-1) * 20, bb = (b-1) * 20;
+  const p1 = pos(R_HOUR + 30, aa), p2 = pos(R_HOUR + 30, bb);
+  const m  = pos(R_HOUR + 96, (aa + bb) / 2);
+  gHours.appendChild(el("path",
+    {d:`M${p1.x},${p1.y} Q${m.x},${m.y} ${p2.x},${p2.y}`, class:"parallel"}));
+});
+
+/* relationship threads */
+const threadEls = [];
+THREADS.forEach(([a, b, type, label]) => {
+  const A = byId[a], B = byId[b];
+  if (!A || !B) return;
+  const p1 = pos(R[A.c], A.ang), p2 = pos(R[B.c], B.ang);
+  const mx = (p1.x + p2.x) / 2, my = (p1.y + p2.y) / 2;
+  const c = {x: CX + (mx - CX) * 0.34, y: CY + (my - CY) * 0.34};
+  const path = el("path", {
+    d:`M${p1.x},${p1.y} Q${c.x},${c.y} ${p2.x},${p2.y}`,
+    class:`thread t-${type}`
+  });
+  gThreads.appendChild(path);
+  threadEls.push({a, b, type, label, path});
+});
+
+/* character nodes */
+const COL = {gold:"var(--gold)", ash:"var(--ash)", rose:"var(--rose)"};
+const nodeEls = {};
+CAST.forEach(c => {
+  const p = pos(R[c.c], c.ang);
+  const g = el("g", {class:`node c${c.c}`, tabindex:"0", role:"button",
+                     "aria-label":c.full || c.s});
+  const fill = c.col ? COL[c.col]
+             : c.c === 1 ? "#e8e0cd"
+             : c.c === 2 ? "#8fb3d8"
+             : "#5f81ab";
+  const rad = c.c === 0 ? 13 : c.c === 1 ? 7 : c.c === 2 ? 4.5 : 4;
+  g.appendChild(el("circle", {cx:p.x, cy:p.y, r:rad, fill}));
+
+  let lab;
+  if (c.c === 0) {
+    lab = el("text", {x:p.x, y:p.y + 30, class:"lbl-a", "text-anchor":"middle"});
+  } else if (c.c === 1) {
+    const out = pos(R[1] + 21, c.ang);
+    lab = el("text", {x:out.x, y:out.y + 4, class:"lbl-a", "text-anchor":"middle"});
+  } else {
+    const out = pos(R[c.c] + 11, c.ang);
+    const flip = c.ang > 180;
+    lab = el("text", {
+      x:out.x, y:out.y,
+      "text-anchor": flip ? "end" : "start",
+      "dominant-baseline":"middle",
+      transform:`rotate(${flip ? c.ang + 90 : c.ang - 90} ${out.x} ${out.y})`
+    });
+  }
+  lab.textContent = c.s;
+  g.appendChild(lab);
+
+  g.addEventListener("click", () => selectPerson(c.id));
+  g.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectPerson(c.id); }
+  });
+  gNodes.appendChild(g);
+  nodeEls[c.id] = g;
+});
+
+/* ------------------------------------------------------------------ state -- */
+
+let curEp = null, curPerson = null;
+
+const strip = document.getElementById("strip");
+const allBtn = document.createElement("button");
+allBtn.textContent = "THE WHOLE DAY";
+allBtn.setAttribute("aria-pressed", "true");
+allBtn.addEventListener("click", () => selectEpisode(null));
+strip.appendChild(allBtn);
+const epBtns = EPISODES.map(ep => {
+  const b = document.createElement("button");
+  b.textContent = `${ep.n} · ${ep.t}`;
+  b.setAttribute("aria-pressed", "false");
+  b.addEventListener("click", () => selectEpisode(ep.n));
+  strip.appendChild(b);
+  return b;
+});
+
+function inEpisode(c, n) { return c.e.includes(n); }
+function ghostIn(c, n)   { return (c.g || []).includes(n); }
+
+function selectEpisode(n) {
+  curEp = (curEp === n) ? null : n;
+  curPerson = null;
+  allBtn.setAttribute("aria-pressed", String(curEp === null));
+  epBtns.forEach((b, i) =>
+    b.setAttribute("aria-pressed", String(EPISODES[i].n === curEp)));
+  hourNodes.forEach(h => {
+    const on = h.ep.n === curEp;
+    h.tick.classList.toggle("on", on);
+    h.num.classList.toggle("on", on);
+    h.lab.classList.toggle("on", on);
+  });
+  paint();
+  renderEpisodePanel();
+}
+
+function selectPerson(id) {
+  curPerson = (curPerson === id) ? null : id;
+  paint();
+  if (curPerson) renderPersonPanel(byId[curPerson]);
+  else if (curEp) renderEpisodePanel();
+  else renderIntro();
+}
+
+function paint() {
+  const kin = new Set();
+  if (curPerson) {
+    threadEls.forEach(t => {
+      if (t.a === curPerson) kin.add(t.b);
+      if (t.b === curPerson) kin.add(t.a);
+    });
+  }
+  CAST.forEach(c => {
+    const g = nodeEls[c.id];
+    let faded = false;
+    if (curPerson) faded = !(c.id === curPerson || kin.has(c.id));
+    else if (curEp)  faded = !(inEpisode(c, curEp) || ghostIn(c, curEp));
+    g.classList.toggle("faded", faded);
+    g.classList.toggle("sel", c.id === curPerson);
+    g.classList.toggle("kin", !!curPerson && kin.has(c.id));
+  });
+  threadEls.forEach(t => {
+    const hi = curPerson && (t.a === curPerson || t.b === curPerson);
+    t.path.classList.toggle("hi", !!hi);
+    t.path.classList.toggle("off", !!curPerson && !hi);
+  });
+}
+
+/* ------------------------------------------------------------------ panel -- */
+
+const panel = document.getElementById("panel");
+
+function chips(list) {
+  return list.map(x => `<span class="chip${x.here ? " here" : ""}">${x.t}</span>`).join("");
+}
+
+function renderIntro() {
+  panel.innerHTML = `
+    <p class="kicker">Four circles</p>
+    <h2>Three consciousnesses, and a city</h2>
+    <p class="homer">Bloom, Stephen, Molly at the centre — then the figures who bend
+      the day, then Dublin itself, then the dead.</p>
+    <p>The book gives us the inside of only three minds. Everyone else is seen from
+      outside: overheard in a pub, glimpsed from a carriage, remembered, or invented
+      in a hallucination. The outermost ring is made of people who never walk the
+      streets at all and shape everything anyway.</p>
+    <p>Two men spend the day almost meeting — in a newspaper office, a library, the
+      streets — and only converge at ten at night, in a maternity hospital. Follow the
+      long gold thread across the middle.</p>`;
+}
+
+function renderPersonPanel(c) {
+  const here = c.e.map(n => ({t:`${n} · ${EPISODES[n-1].t}`, here:true}));
+  const ghost = (c.g || []).map(n =>
+    ({t:`${n} · ${EPISODES[n-1].t} (recalled)`, here:false}));
+  const rels = threadEls
+    .filter(t => t.a === c.id || t.b === c.id)
+    .map(t => {
+      const other = byId[t.a === c.id ? t.b : t.a];
+      return `<b>${other.full || other.s}</b> — ${t.label}`;
+    });
+  const circleName = ["The three", "Shaping presences", "The Dublin chorus",
+                      "The dead and the absent"][c.c];
+  panel.innerHTML = `
+    <p class="kicker">${circleName}</p>
+    <h2>${c.full || c.s}</h2>
+    <p class="homer">${c.r}${c.h ? ` · ${c.h}` : ""}</p>
+    <p>${c.d}</p>
+    ${rels.length ? `<div class="rel">${rels.join("<br>")}</div>` : ""}
+    <div class="meta">${chips([...here, ...ghost])}</div>`;
+}
+
+function renderEpisodePanel() {
+  if (!curEp) { renderIntro(); return; }
+  const ep = EPISODES[curEp - 1];
+  const present = CAST.filter(c => inEpisode(c, curEp));
+  const recalled = CAST.filter(c => ghostIn(c, curEp));
+  panel.innerHTML = `
+    <p class="kicker">Episode ${ep.n} · ${ep.h}</p>
+    <h2>${ep.t}</h2>
+    <p class="homer">${ep.p}</p>
+    <div class="meta">${chips(present.map(c => ({t:c.full || c.s, here:true})))}</div>
+    ${recalled.length ? `<div class="rel" style="margin-top:14px">
+        <b>Present only in memory, letter or vision:</b><br>
+        ${recalled.map(c => c.full || c.s).join(" · ")}</div>` : ""}`;
+}
+
+/* ----------------------------------------------------------------- legend -- */
+
+document.getElementById("legend").innerHTML = `
+  <span class="key"><span class="dot" style="background:var(--gold)"></span>Bloom</span>
+  <span class="key"><span class="dot" style="background:var(--ash)"></span>Stephen</span>
+  <span class="key"><span class="dot" style="background:var(--rose)"></span>Molly</span>
+  <span class="key"><span class="sw" style="border-color:var(--gold);border-top-style:dashed"></span>elective kinship</span>
+  <span class="key"><span class="sw" style="border-color:var(--gold)"></span>blood</span>
+  <span class="key"><span class="sw" style="border-color:var(--rose)"></span>marriage</span>
+  <span class="key"><span class="sw" style="border-color:var(--rose);border-top-style:dashed"></span>affair</span>
+  <span class="key"><span class="sw" style="border-color:#c0574f"></span>antagonism</span>
+  <span class="key"><span class="sw" style="border-color:var(--ash);border-top-style:dotted"></span>crossing</span>`;
+
+renderIntro();
+paint();
+</script>
+</body>
+</html>

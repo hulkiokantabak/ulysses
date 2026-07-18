@@ -1,0 +1,544 @@
+/* ============================================================
+   Ulysses Project — site stylesheet (FINAL)
+   Lineage: candidate Folio, ratified with grafts from Ledger
+   (scroll-safe focus, hospitable table bodies) and Threshold
+   (semantic-element matrix states; explicit deep-link coverage).
+   Binding brief: panel session 02 synthesis + 00-method visual system.
+   One stylesheet, built to survive sixteen dimension builds — session 02, Braudel.
+   No animation, no transitions anywhere; nothing moves, so no
+   reduced-motion guard is required.
+   ============================================================ */
+
+:root {
+  --deep:  #081a35;                 /* 1922 cover blue — ground of plates, ink of the page */
+  --paper: #f4efe2;                 /* the paper ground, site-wide — session 02 §1 */
+  --gold:  #dfa93f;                 /* gold on deep ONLY — session 02 §1 */
+  --gold-ink: #A0701C;              /* gold's paper-ground form: 3.79:1 — INDICATORS ONLY, never text */
+  --ink-mute: #3d4d68;              /* muted factual ink on paper, 7.44:1 */
+  --paper-mute: #b9c3d6;            /* muted factual tone on deep, 9.79:1 */
+  --paper-tint: #e9e5da;            /* zebra row on paper tables; deep on it 13.79:1, gold-ink on it 3.46:1 */
+  --rule: rgba(8, 26, 53, .25);     /* decorative rules on paper (non-text) */
+  --rule-deep: rgba(244, 239, 226, .28); /* decorative rules on deep (non-text) */
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  /* modular scale, minor third (1.2) on a 1rem base; the mono down-step
+     is held at .875rem so the copyable address line stays legible — Kiberd */
+  --step--1: .875rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: 1.44rem;
+  --step-3: 1.728rem;
+  --measure: 65ch;                  /* the folio measure */
+}
+
+/* ---------- base ---------- */
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--deep);                     /* 15.12:1 */
+  font-family: var(--serif);
+  font-size: var(--step-0);
+  line-height: 1.65;
+}
+
+@media (min-width: 40em) {
+  body { font-size: 1.0625rem; }          /* a book-page 17px at reading width */
+}
+
+/* the folio column: one quiet measure for chrome and text alike */
+.site-header,
+.site-footer,
+main {
+  max-width: calc(var(--measure) + 2.5rem);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+main { padding-block: 1.5rem 3rem; }
+
+img, svg { max-width: 100%; height: auto; }
+
+iframe { max-width: 100%; border: 1px solid var(--rule); }
+
+/* ---------- headings: serif, classical, unhurried ---------- */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--serif);
+  font-weight: 600;
+  line-height: 1.25;
+  margin-block: 2.25rem .75rem;
+  scroll-margin-top: 1rem;                /* every heading is an address — session 02 §3 */
+}
+
+h1 { font-size: var(--step-3); margin-block-start: 1rem; }
+h2 { font-size: var(--step-2); }
+h3 { font-size: var(--step-1); }
+h4, h5, h6 { font-size: var(--step-0); }
+
+/* an element arrived at by fragment link gets a quiet marginal mark */
+:target {
+  border-inline-start: 2px solid var(--gold-ink);   /* indicator, 3.79:1 >= 3:1 */
+  padding-inline-start: .625rem;
+  margin-inline-start: calc(-.625rem - 2px);
+}
+
+/* on deep ground the mark speaks gold — gold on deep only, session 02 */
+.plate :target,
+.matrix :target,
+.artifact-frame :target {
+  border-inline-start-color: var(--gold); /* 8.17:1 */
+}
+
+/* ---------- prose ---------- */
+
+p, ul, ol, dl { margin-block: 0 1rem; }
+
+p, li, dd, blockquote {
+  text-align: left;                       /* the folio is ragged-right; nothing justifies */
+}
+
+ul, ol { padding-inline-start: 1.5rem; }
+
+li { margin-block-end: .25rem; }
+
+dl { margin-block: 1.25rem; }
+dt { font-style: italic; }
+dd { margin: 0 0 .75rem 2ch; }
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  width: 8rem;
+  margin: 2.5rem auto;
+}
+
+strong { font-weight: 700; }
+
+/* ---------- links: ink on paper, the underline does the work ---------- */
+
+a {
+  color: var(--deep);                     /* 15.12:1 — no coloured links on paper; gold fails there */
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .15em;
+  text-decoration-color: var(--gold-ink); /* decoration indicator, 3.79:1 >= 3:1 */
+}
+
+a:hover { text-decoration-thickness: 2px; }  /* thickness change only; nothing revealed */
+
+/* every deep-ground container carries gold links — no invisible-link hole
+   (Threshold's coverage, adopted wholesale per the judges) */
+.plate a,
+.matrix a,
+.artifact-frame a {
+  color: var(--gold);                     /* 8.17:1 — gold lives on deep only */
+  text-decoration-color: var(--gold);
+}
+
+/* ---------- keyboard focus: 2px ring, same geometry on both grounds ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--gold-ink);     /* on paper — 3.79:1 >= 3:1 */
+  outline-offset: 2px;
+}
+
+.plate :focus-visible,
+.matrix :focus-visible,
+.artifact-frame :focus-visible {
+  outline-color: var(--gold);             /* on deep — 8.17:1 */
+}
+
+/* inside the matrix scroll box the ring draws inward so edge cells
+   cannot clip it — Ledger's verified fix, grafted */
+.matrix :focus-visible {
+  outline-offset: -2px;
+}
+
+/* ---------- skip link ---------- */
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+}
+
+/* reveals on :focus, not :focus-visible, so programmatic and AT focus
+   also surface it; fixed position — no layout jump */
+.skip-link:focus {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 10;
+  background: var(--paper);
+  color: var(--deep);
+  border: 1px solid var(--deep);
+  padding: .5rem 1rem;
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  text-decoration: none;
+}
+
+/* ---------- site chrome: mono scaffolding, quiet ---------- */
+
+.site-header {
+  border-bottom: 1px solid var(--rule);
+  padding-block: 1rem .875rem;
+}
+
+/* the masthead: whatever text element carries it, no shape assumed */
+.site-header p {
+  margin: 0 0 .375rem;
+  font-size: var(--step-1);
+}
+
+.site-header p a { text-decoration: none; }
+
+.site-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem 1.25rem;
+}
+
+.site-nav a {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  letter-spacing: .02em;
+  text-decoration: none;
+  color: var(--deep);                     /* 15.12:1 */
+  padding-block: .125rem;
+}
+
+.site-nav a[aria-current] {
+  border-bottom: 2px solid var(--gold-ink);  /* indicator, 3.79:1 >= 3:1; ancestry too (playtest 01) */
+}
+
+.site-footer {
+  border-top: 1px solid var(--rule);
+  margin-block-start: 2rem;
+  padding-block: 1rem 2rem;
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  color: var(--ink-mute);                 /* 7.44:1 */
+}
+
+.site-footer a { color: var(--deep); }
+
+/* ---------- the mono factual layer on paper ---------- */
+/* status, addresses, hours, captions, empty-state labels keep their
+   exact wording and move to the mono voice — session 02 §7 */
+
+.page-address,
+.status-line,
+.empty,
+.matrix-caption {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  color: var(--ink-mute);                 /* 7.44:1 */
+  letter-spacing: .02em;
+}
+
+.page-address {
+  user-select: all;                       /* the visible address is copyable — session 02 §2 */
+  overflow-wrap: anywhere;
+  margin-block: .25rem 1.5rem;
+}
+
+.status-line { margin-block: .25rem 1rem; }
+
+.empty {
+  display: block;
+  letter-spacing: .06em;                  /* an exhibition label, dignified, second — Eames */
+  margin-block: 1rem;
+}
+
+/* ---------- rendered documents ---------- */
+
+.doc { /* the folio measure is already the page's; the container asks nothing extra */ }
+
+code, kbd, samp {
+  font-family: var(--mono);
+  font-size: .875em;
+}
+
+pre {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  line-height: 1.5;
+  overflow-x: auto;
+  padding: .75rem 1rem;
+  border: 1px solid var(--rule);
+  margin-block: 1.25rem;
+}
+
+pre code { font-size: 1em; }
+
+caption, figcaption {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  color: var(--ink-mute);                 /* 7.44:1 */
+  text-align: left;
+}
+
+caption { caption-side: bottom; padding-block: .5rem; }
+
+/* ---------- tables: bookkeeping rendered as what it is — Braudel ---------- */
+/* markdown-rendered tables get no wrapper; the table itself scrolls.
+   The mono stack is the hard constraint's factual voice; the body is set
+   near book size with open leading and a quiet zebra so the long
+   reference documents stay hospitable — Ledger's table hospitality,
+   grafted without surrendering the mono numerics. */
+
+table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  line-height: 1.55;
+  margin-block: 1.5rem;
+}
+
+th, td {
+  border: 1px solid var(--rule);
+  padding: .5rem .75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+thead th {
+  font-weight: 600;
+  border-bottom: 2px solid var(--deep);
+}
+
+/* zebra on paper tables only — never inside the deep matrix plate */
+table:not(.matrix) > tbody > tr:nth-child(even) > td {
+  background: var(--paper-tint);          /* deep text on tint 13.79:1; gold-ink underline 3.46:1 */
+}
+
+/* ---------- the quotation grammar — session 02 §4, Senn ---------- */
+/* installed now, before any dimension improvises one; quoted matter is
+   never justified, hyphenated, clamped, truncated or case-transformed */
+
+blockquote {
+  margin: 1.5rem 0 1.5rem 2ch;
+  padding: 0;
+  font-family: var(--serif);
+}
+
+blockquote,
+blockquote * {
+  text-align: left;
+  hyphens: none;
+  -webkit-hyphens: none;
+  text-transform: none;
+  text-overflow: clip;
+}
+
+/* verse or preformatted matter inside a quotation keeps its lineation;
+   its overflow scrolls rather than mutilates — Senn's red line */
+blockquote pre,
+blockquote pre * { white-space: pre; }
+blockquote pre { overflow-x: auto; }
+
+blockquote p { margin-block: 0 .5rem; }
+
+blockquote cite,
+cite {
+  font-style: normal;
+  font-family: var(--serif);
+  display: block;
+  margin-block-start: .5rem;
+}
+
+blockquote cite::before { content: "\2014\00a0"; }  /* the attributive em dash */
+
+.q-address {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  color: var(--ink-mute);                 /* 7.44:1 */
+  letter-spacing: .02em;
+  margin-block-start: .25rem;
+  user-select: all;
+}
+
+/* ---------- bounded deep plates — session 02 §1 ---------- */
+/* deep ground ONLY here: the matrix plate and the artifact frames */
+
+.plate {
+  background: var(--deep);
+  color: var(--paper);                    /* 15.12:1 */
+  padding: 1rem 1.25rem;
+  margin-block: 2rem;
+  /* hard-edged: no radius, no shadow — session 02 §1 */
+}
+
+/* ---------- the 16x4 status matrix on /dimensions/ ---------- */
+/* visible whole on load, keyboard-walkable, never filtered or collapsed.
+   Cell state is carried by the semantic inline elements the templates
+   already own — strong / em / del / s / plain text — no invented
+   attribute contract; every state reads as its own literal mono word,
+   never colour alone (Threshold's honesty, grafted per all three judges). */
+
+/* Playtest 01 (a11y cohort): the scroll region is keyboard-reachable — the
+   template wraps the table in a focusable region; overflow moves to it. */
+.matrix-scroll { overflow-x: auto; }
+.matrix {
+  display: block;
+  max-width: 100%;
+  background: var(--deep);
+  color: var(--paper);
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  line-height: 1.4;
+  margin-block: 1rem;
+}
+
+.matrix th, .matrix td {
+  border: 1px solid var(--rule-deep);
+  padding: .375rem .625rem;
+  text-align: left;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.matrix thead th,
+.matrix tbody th {                        /* register columns and dimension row-labels: scaffolding */
+  font-weight: 400;
+  color: var(--paper-mute);               /* 9.79:1 */
+  letter-spacing: .04em;
+}
+
+/* the honest muted majority: a plain cell — "planned", or an em dash
+   for unbudgeted — sits at the muted rank */
+.matrix td { color: var(--paper-mute); }  /* 9.79:1 */
+
+/* built — <strong>built</strong> — the ONLY gold in the site — session 02 §1 */
+.matrix strong {
+  background: var(--gold);
+  color: var(--deep);                     /* 8.17:1 */
+  font-weight: 700;
+  padding: .0625rem .3125rem;
+}
+
+/* where :has is available the whole cell takes the gold fill */
+.matrix td:has(> strong) {
+  background: var(--gold);
+  color: var(--deep);                     /* 8.17:1 */
+}
+
+/* building — <em>building</em> — roman, full-strength paper, a true
+   1px border (no box-shadow on a hard-edged plate — session 02 §1) */
+.matrix em {
+  font-style: normal;
+  color: var(--paper);                    /* 15.12:1 */
+  border: 1px solid var(--paper);
+  padding: .0625rem .3125rem;
+}
+
+/* dropped — <del>dropped</del> — muted, solid strike */
+.matrix del {
+  color: var(--paper-mute);
+  text-decoration: line-through;
+}
+
+/* skipped-by-budget — <s>skipped-by-budget</s> — muted, italic,
+   dashed strike: never the same mark as dropped */
+.matrix s {
+  color: var(--paper-mute);
+  font-style: italic;
+  text-decoration: line-through;
+  text-decoration-style: dashed;
+}
+
+.matrix .matrix-caption,
+.plate .matrix-caption,
+.matrix caption {
+  color: var(--paper-mute);               /* 9.79:1 on deep */
+  caption-side: bottom;
+  text-align: left;
+  padding-block: .5rem;
+}
+
+/* ---------- the artifact orientation frame — session 02 §3 ---------- */
+/* the slim site bar above an embedded verbatim artifact; the frame is
+   the site's, the artifact below returns to byte-verbatim */
+
+.artifact-frame {
+  background: var(--deep);
+  color: var(--paper);                    /* 15.12:1 */
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  letter-spacing: .02em;
+  padding: .5rem 1rem;
+  margin-block: 1.5rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem 1.5rem;
+  align-items: baseline;
+}
+
+.artifact-frame + iframe {
+  display: block;
+  width: 100%;
+  height: max(78vh, 34rem); /* implementer's addition — a plate, not a slot; recorded in 06-design */
+  margin-block-end: 1.5rem;
+}
+
+/* Playtest 01, all three cohorts: the artifact plates escape the folio measure —
+   a size tune within the ratified system; deep stays bounded to the plate.
+   67.5rem covers the artifacts' native 1040px wrap; min() collapses on phones. */
+.artifact-frame,
+.artifact-frame + iframe {
+  width: min(100vw - 3rem, 67.5rem);
+  max-width: none;
+  margin-inline: calc(50% - min(100vw - 3rem, 67.5rem) / 2);
+}
+
+/* ---------- print: the inversion is already the paper scheme ---------- */
+
+@media print {
+  .skip-link, .site-nav { display: none; }   /* chrome only; the footer stays */
+
+  iframe { display: none; }               /* the frame's address line survives; the un-renderable iframe does not */
+
+  body { background: #fff; color: var(--deep); }  /* 17.36:1 */
+
+  a { color: var(--deep); text-decoration-color: var(--deep); }
+
+  /* deep plates print as ruled paper; no ink fields */
+  .plate, .matrix, .artifact-frame {
+    background: none;
+    color: var(--deep);
+    border: 1px solid var(--deep);
+  }
+  .plate a, .artifact-frame a, .matrix a,
+  .matrix td, .matrix th,
+  .matrix del, .matrix s,
+  .matrix .matrix-caption, .matrix caption, .plate .matrix-caption { color: var(--deep); }
+  .matrix th, .matrix td { border-color: var(--rule); }
+
+  /* built: the bold word carries the state; gold's print form is the
+     2px #A0701C border — 00-method (4.35:1 on white) */
+  .matrix td:has(> strong) { background: none; }
+  .matrix strong {
+    background: none;
+    color: var(--deep);
+    border: 2px solid var(--gold-ink);
+  }
+  .matrix em { color: var(--deep); border-color: var(--deep); }
+
+  table { display: table; overflow-x: visible; }
+  table:not(.matrix) > tbody > tr:nth-child(even) > td { background: none; }
+  tr, blockquote { break-inside: avoid; }
+}

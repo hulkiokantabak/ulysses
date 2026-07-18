@@ -3,56 +3,61 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A website and a presentation built out of a first cover-to-cover reading of James Joyce's Ulysses — the reading record, three reference documents, and sixteen analytic dimensions in seven kinds.">
+  <meta name="theme-color" content="#f4efe2">
   <title>The four registers · Ulysses Project</title>
   <link rel="canonical" href="https://hulkiokantabak.github.io/ulysses/method/registers/">
+  <link rel="stylesheet" href="/ulysses/assets/site/site.css">
 </head>
 <body>
-  <header>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
     <p><a href="/ulysses/">Ulysses Project</a></p>
-    <nav aria-label="Primary">
+    <nav class="site-nav" aria-label="Primary">
       <ul>
         <li><a href="/ulysses/reading/">Reading</a></li>
         <li><a href="/ulysses/reference/">Reference</a></li>
         <li><a href="/ulysses/dimensions/">Dimensions</a></li>
         <li><a href="/ulysses/presentation/">Presentation</a></li>
-        <li><a href="/ulysses/method/">Method</a></li>
+        <li><a href="/ulysses/method/" aria-current="true">Method</a></li>
         <li><a href="/ulysses/about/">About</a></li>
       </ul>
     </nav>
   </header>
-  <main>
-<h1>Ulysses — Method</h1>
+  <main id="main">
+<div class="doc">
+<h1 id="ulysses-method">Ulysses — Method</h1>
 <p><strong>Base document 00 · How this project is built</strong>
 Written at the point of carrying the work from documentation into build.
 Everything else in the project answers to this file.</p>
 <hr>
-<h2>The aim</h2>
+<h2 id="the-aim">The aim</h2>
 <p>A website and a presentation about <em>Ulysses</em>, built out of a first cover-to-cover
-reading (8–17 July 2026, Penguin Modern Classics / Kiberd).</p>
+reading (7–17 July 2026, Penguin Modern Classics / Kiberd).</p>
 <p>The sequence has been deliberate and should stay that way: <strong>documentation first, design
 second.</strong> Base documents get built while the book is fresh; the look of the website and
 the shape of the presentation are not decided until the material is in hand. The
 documents are not notes toward the deliverables — they are the deliverables' source of
 truth, and they should be able to outlive any particular design.</p>
 <hr>
-<h2>THE FOUR REGISTERS</h2>
+<h2 id="the-four-registers">THE FOUR REGISTERS</h2>
 <p>Every dimension we analyse gets output in up to four registers. They are distinct
 products, not four exports of one file. When a new dimension is picked, the first
 question is <em>which registers does this one earn</em>.</p>
-<h3>1 · HTML</h3>
+<h3 id="1-html">1 · HTML</h3>
 <p>Single-file, self-contained, no external dependencies. Interactive where interaction
 earns its place — a filter, a toggle, a tap-to-reveal that shows something static layout
 cannot.</p>
 <p>Doubles as the build material for the website. Anything shipped here should be
 transplantable into the site without a rewrite.</p>
-<h3>2 · PDF reporting</h3>
+<h3 id="2-pdf-reporting">2 · PDF reporting</h3>
 <p>The durable, portable, offline register. <strong>Hyperlinked and cross-linked</strong>: internal
 navigation (contents → section → back), cross-references between documents, and outbound
 links where a source deserves one. A reader should be able to move around inside a PDF
 the way they move around inside the site.</p>
 <p>This is also the handoff register — the form the work travels in, to another session,
 another model, or another person.</p>
-<h3>3 · Presentation — the Madrid logic</h3>
+<h3 id="3-presentation-the-madrid-logic">3 · Presentation — the Madrid logic</h3>
 <p>Follows the format ratified on the <strong>Paseo del Arte</strong> decks (Prado / Reina Sofía), which
 is settled and should not be redesigned:</p>
 <ul>
@@ -71,14 +76,14 @@ be traded for size without apology.</li>
 </ul>
 <p>For <em>Ulysses</em> the &quot;topic&quot; unit is whatever the chosen dimension makes natural — an
 episode, a character, a place, an object. Decide the unit before writing any slides.</p>
-<h3>4 · Maps, images and diagrams</h3>
+<h3 id="4-maps-images-and-diagrams">4 · Maps, images and diagrams</h3>
 <p>Standalone references in their own right, <strong>and</strong> components integrated into the PDF and
 HTML packages. Built once, at a quality that survives being pulled out of context.</p>
 <p>The rule that has held so far: <strong>one signature device per document.</strong> The character map
 got the rings-of-the-day; the place-and-time document got the two routes and the time
 rail. The device should encode something true about the material, not decorate it.</p>
 <hr>
-<h2>The shared visual system</h2>
+<h2 id="the-shared-visual-system">The shared visual system</h2>
 <p>All four registers draw on the same tokens, so the set reads as one family.</p>
 <p><strong>Origin.</strong> Joyce specified the 1922 Shakespeare &amp; Company cover as Greek-flag blue with
 white lettering — the Odyssey made into an object. The palette comes from the book's own
@@ -128,7 +133,7 @@ darkened to <code>#A0701C</code> for legibility. Same family, different medium.<
 <code>prefers-reduced-motion</code> respected, responsive to a phone, real semantics on interactive
 elements.</p>
 <hr>
-<h2>What exists</h2>
+<h2 id="what-exists">What exists</h2>
 <table>
 <thead>
 <tr>
@@ -174,7 +179,7 @@ elements.</p>
 no PDF has been built with the hyperlinking the second register calls for. The Reading
 Companion is a PDF but a linear one.</p>
 <hr>
-<h2>Standing rules</h2>
+<h2 id="standing-rules">Standing rules</h2>
 <p><strong>Flag uncertainty rather than smoothing it.</strong> Where the text contradicts itself — Molly's
 age, Rudy's age in the vision — show the contradiction. Where a figure is approximate —
 Dublin's population — say so. The open-questions section at the end of a document is part
@@ -190,7 +195,7 @@ present must hold this distinction consistently.</p>
 reproduced as spoken, dictation slips included. Cleaning them up would quietly falsify
 the record of learning a difficult book.</p>
 <hr>
-<h2>Open</h2>
+<h2 id="open">Open</h2>
 <ul>
 <li><strong>The next dimension.</strong> Ten candidates ranked by the masters; the top of the field is
 the Object Museum, then the Women's Dublin, then the Governed City. The Homeric
@@ -204,10 +209,12 @@ set of answers, to be merged with this material.</li>
 <p><em>Base document 00. Update this file when a register, a token, or a standing rule changes
 — not when a document is added.</em></p>
 
+</div>
 
   </main>
-  <footer>
-    <p><a href="/ulysses/about/">About — the reading, the edition, rights, colophon</a></p>
+  <footer class="site-footer">
+    <p class="page-address">https://hulkiokantabak.github.io/ulysses/method/registers/</p>
+    <p><a href="/ulysses/about/">About — the reading, the edition, rights</a></p>
   </footer>
 </body>
 </html>

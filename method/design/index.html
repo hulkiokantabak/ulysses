@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A website and a presentation built out of a first cover-to-cover reading of James Joyce's Ulysses — the reading record, three reference documents, and sixteen analytic dimensions in seven kinds.">
+  <meta name="theme-color" content="#f4efe2">
+  <title>The design record · Ulysses Project</title>
+  <link rel="canonical" href="https://hulkiokantabak.github.io/ulysses/method/design/">
+  <link rel="stylesheet" href="/ulysses/assets/site/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <p><a href="/ulysses/">Ulysses Project</a></p>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="/ulysses/reading/">Reading</a></li>
+        <li><a href="/ulysses/reference/">Reference</a></li>
+        <li><a href="/ulysses/dimensions/">Dimensions</a></li>
+        <li><a href="/ulysses/presentation/">Presentation</a></li>
+        <li><a href="/ulysses/method/" aria-current="true">Method</a></li>
+        <li><a href="/ulysses/about/">About</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="main">
+<div class="doc">
+<h1 id="the-design-record">The Design Record</h1>
+<p><strong>Base document 06 · written 18 July 2026, the day the author commissioned design.</strong>
+The sequence held to the end: documentation (00–04), architecture (05), the unstyled
+site under contract — and only then the look. This document records how the look was
+decided, what it is, and what it refuses, so that it can be re-opened deliberately
+rather than drifted from.</p>
+<hr>
+<h2 id="how-it-was-decided">How it was decided</h2>
+<ol>
+<li><strong>Panel session 02</strong> (<code>panel-session-02-design.md</code>): seven advisors, three rounds,
+binding vetoes. Direction <strong>D, Addresses Before Paint</strong> carried at 12, grafting
+<strong>A, The Sealed Quotation</strong> (9). Two directions died under argued vetoes — the
+cinematic threshold, and the empty matrix as front door.</li>
+<li><strong>A design swarm</strong> produced three complete stylesheet candidates under the ratified
+brief — <em>Folio</em> (the book page), <em>Ledger</em> (Ithaca as design logic), <em>Restraint</em>
+(near-defaults minimalism) — each with a computed contrast manifest.</li>
+<li><strong>Three judges</strong> — the Shneiderman floor (who recomputed every contrast claim and
+verified rendered behaviour in a browser), the Kiberd first-reader, and a joint
+Braudel/Warburg furniture-and-plate lens — scored them <strong>Folio 25.5 · Ledger 20.5 ·
+Restraint 17</strong>, with itemized defects.</li>
+<li><strong>A synthesis pass</strong> repaired every judged defect in Folio and grafted the losers'
+named strengths. The result is <code>design/site.css</code>, deployed at <code>/assets/site/site.css</code>.</li>
+</ol>
+<h2 id="what-it-is">What it is</h2>
+<ul>
+<li><strong>The reading room.</strong> A 65ch serif column (Iowan Old Style / Palatino / Georgia
+stack), 17px at reading width, 1.65 leading, on paper <code>#f4efe2</code> with deep <code>#081a35</code>
+ink. The site's core surfaces are twenty-minute documents; the page is built for
+them. Minor-third scale; no webfonts — a system stack is both faster and free of
+fabricated provenance.</li>
+<li><strong>The mono factual layer</strong> (ui-monospace stack, 14px floor): status lines, the
+visible canonical address on every page, hours, captions, matrix labels, empty-state
+labels, and tables — whole tables, because &quot;table numerics in mono&quot; cannot be
+guaranteed cell-wise for unknown future markdown.</li>
+<li><strong>One new deep plate</strong>: the 16×4 dimension/register matrix on <code>/dimensions/</code> —
+deep ground, hard edges, visible whole on load, keyboard-walkable (focus ring drawn
+<em>inside</em> the scroll box at <code>outline-offset:-2px</code>, Ledger's graft, so edge cells can
+never clip it). Cell state rides in semantic elements plus the literal word, never
+colour alone (Restraint's graft): <code>&lt;strong&gt;built&lt;/strong&gt;</code> on the site's <strong>only gold</strong>,
+<code>&lt;em&gt;building&lt;/em&gt;</code>, plain <code>planned</code>, <code>&lt;del&gt;dropped&lt;/del&gt;</code>, <code>&lt;s&gt;skip&lt;/s&gt;</code>, <code>—</code>.</li>
+<li><strong>Gold discipline</strong>: <code>#dfa93f</code> exists only on deep ground (8.17:1). On paper, gold's
+form is <code>#A0701C</code> and it never carries a letterform — it is the focus ring, the link
+underline, the <code>aria-current</code> bar (≥3:1 as a UI indicator; 3.79:1 measured).</li>
+<li><strong>The quotation grammar, installed before any dimension needs it</strong>: <code>blockquote</code> +
+<code>cite</code> + mono <code>.q-address</code>; quoted matter is never justified, hyphenated, clamped,
+ellipsized or case-transformed. Senn's red line is now a stylesheet fact.</li>
+<li><strong>The two artifacts are byte-verbatim</strong> assets (<code>/assets/characters/…</code>,
+<code>/assets/day/…</code>), embedded in orientation frames — the earlier head-injection of a
+canonical is gone; the frame pages carry the canonical and the way back.</li>
+<li><strong>Print</strong> keeps the footer, drops only nav and iframes, restores wide tables to
+full display, and renders the built state as a <code>#A0701C</code> border (gold's print form
+per <code>00-method.md</code>).</li>
+</ul>
+<h2 id="what-it-refuses-as-binding-as-what-it-has">What it refuses (as binding as what it has)</h2>
+<p>Photography and imagery · network webfonts · icons · animation and transitions ·
+hover-only reveals · ambient ash/rose washes (those colours belong to Stephen and
+Molly, who are not on these pages yet) · gold letterforms on paper · serif display
+type for schema titles · uppercase performance · empty-state theatrics · any rule
+keyed to today's emptiness.</p>
+<h2 id="enforcement">Enforcement</h2>
+<p><code>tools/check.mjs</code> inverted at this commit — from <em>forbidding style</em> to <em>protecting
+words</em>: exactly one stylesheet per page and no stray styling vectors; rendered
+document text sampled and verified against source on all twelve document pages;
+artifacts and PDFs byte-compared to their sources; every declared colour pairing in
+<code>data/design.json</code> recomputed against its WCAG floor at every build (with a standing
+sanity assertion that gold-on-paper <em>fails</em>, so the forbidden pairing can never be
+declared conforming); fragment links resolve against real heading ids.</p>
+<h2 id="implementer-s-additions-beyond-the-synthesis-recorded-per-the-handback-disciplin">Implementer's additions beyond the synthesis (recorded per the handback discipline)</h2>
+<ul>
+<li>The matrix cell semantics in <code>site/dimensions/index.njk</code> map grid states to the
+semantic elements the synthesis specified; a dropped dimension's cells read
+<code>dropped</code> regardless of budget.</li>
+<li>The 404 page links the stylesheet directly (it does not use the base layout).</li>
+<li>The synthesis's <code>.artifact-frame + iframe</code> rule set width but no height, leaving the
+embedded artifacts at the 150px iframe default; a <code>height: max(78vh, 34rem)</code> was
+added so the plate is a room, not a slot.</li>
+<li>The <code>.artifact-embed</code> class on the iframes is inert (the stylesheet targets
+<code>.artifact-frame + iframe</code>); it is left in place as a future hook.</li>
+</ul>
+<h2 id="the-user-cohort-tests">The user-cohort tests</h2>
+<p>Three pre-registered personas — a first-time reader, an experienced Joycean, and an
+accessibility professional — tested the designed site in isolated cycles; an evaluator
+per cohort triaged findings across the content/presentation boundary (bounded
+presentation fixes applied; content findings queued for the author; anything that
+would erode an honesty marker refused). Results and the applied fixes are appended
+below.</p>
+<p><em>Appendix — the cohort verdicts, the applied fixes, the author queue and the refused
+list are recorded in <code>docs/playtest-01.md</code>. All three cohorts would return; the two
+failures every cohort named — the artifact letterbox and the stale &quot;unstyled&quot; claim —
+were fixed the same day.</em></p>
+
+</div>
+
+  </main>
+  <footer class="site-footer">
+    <p class="page-address">https://hulkiokantabak.github.io/ulysses/method/design/</p>
+    <p><a href="/ulysses/about/">About — the reading, the edition, rights</a></p>
+  </footer>
+</body>
+</html>
