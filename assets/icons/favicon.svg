@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- The 1922 object: paper letter on deep ground, one gold rule. -->
+  <rect width="64" height="64" fill="#081a35"/>
+  <text x="32" y="45" font-family="Georgia, 'Times New Roman', serif" font-size="42" text-anchor="middle" fill="#f4efe2">U</text>
+  <rect x="16" y="51" width="32" height="3" fill="#dfa93f"/>
+</svg>

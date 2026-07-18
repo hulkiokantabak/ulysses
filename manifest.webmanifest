@@ -1,0 +1,14 @@
+{
+  "name": "Ulysses Project",
+  "short_name": "Ulysses",
+  "description": "A site built out of one first cover-to-cover reading of James Joyce's Ulysses.",
+  "start_url": "/ulysses/",
+  "scope": "/ulysses/",
+  "display": "minimal-ui",
+  "background_color": "#f4efe2",
+  "theme_color": "#f4efe2",
+  "icons": [
+    { "src": "/ulysses/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/ulysses/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
