@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Constraint Model</title>
+<style>
+  /* Dimension 13's single-file HTML register. Family: the 1922 system — one deep
+     plate, paper prose page, gold only on the deep ground. No imagery anywhere:
+     the no-representation rule and the design refusals coincide. No animation at
+     all, so prefers-reduced-motion is honoured by construction. */
+  :root {
+    --deep:#081a35; --paper:#f4efe2; --gold:#dfa93f; --ink-mute:#3d4d68;
+    --deep-mute:#b9c3d6; --rule:rgba(8,26,53,.25); --prule:rgba(244,239,226,.28);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *,*::before,*::after { box-sizing:border-box; }
+  html,body { margin:0; padding:0; background:var(--paper); color:var(--deep); }
+  body { font-family:var(--serif); font-size:1.0625rem; line-height:1.65; overflow-x:clip; }
+  main { max-width:65ch; margin-inline:auto; padding:1.5rem 1rem 3rem; }
+  h1 { font-size:1.728rem; line-height:1.2; margin:0 0 .25rem; }
+  h2 { font-size:1.44rem; margin:2rem 0 .5rem; }
+  h3 { font-size:1.1rem; margin:1.5rem 0 .4rem; }
+  .kicker { font-family:var(--mono); font-size:.875rem; color:var(--ink-mute); letter-spacing:.06em; margin:0 0 1.25rem; }
+  .voice { font-size:.9375rem; color:var(--ink-mute); border-block:1px solid var(--rule); padding-block:.625rem; }
+  a { color:var(--deep); text-decoration-color:#A0701C; text-decoration-thickness:1px; }
+  :focus-visible { outline:2px solid #A0701C; outline-offset:2px; }
+  table { border-collapse:collapse; width:100%; font-size:.875rem; margin:1rem 0; font-family:var(--mono); }
+  th,td { text-align:left; vertical-align:top; padding:.35rem .5rem; border:1px solid var(--rule); }
+  ol.assump li { margin-block-end:.6rem; }
+  .src { font-family:var(--mono); font-size:.8125rem; color:var(--ink-mute); }
+
+  /* ---- the plate: the operable instrument ---- */
+  .plate { background:var(--deep); color:var(--paper); padding:1.25rem 1rem; margin:1.75rem 0;
+           width:min(100vw - 2rem, 71rem); margin-inline:calc(50% - min(100vw - 2rem, 71rem)/2);
+           font-family:var(--mono); font-size:.875rem; line-height:1.55; }
+  .plate :focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+  .plate h2 { font-family:var(--serif); font-size:1.25rem; margin:.25rem 0 .75rem; font-weight:600; }
+  .inst { display:flex; flex-wrap:wrap; gap:.75rem 2rem; align-items:baseline;
+          border-block:1px solid var(--prule); padding-block:.6rem; margin-bottom:1rem; }
+  .clock { font-size:1.55rem; letter-spacing:.04em; }
+  .purse { font-size:1.05rem; }
+  .chips { list-style:none; display:flex; flex-wrap:wrap; gap:.4rem 1.4rem; margin:.1rem 0 0; padding:0; flex-basis:100%; }
+  .chips li { max-width:100%; }
+  .cols > section { min-width:0; }
+  .gold { color:var(--gold); }
+  .mut  { color:var(--deep-mute); }
+  .cols { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:1.25rem; }
+  @media (max-width:47.5rem){ .cols { grid-template-columns:minmax(0,1fr); } }
+  .here { font-family:var(--serif); font-size:1.2rem; margin:.1rem 0 .5rem; }
+  ol.dest { list-style:none; margin:.4rem 0; padding:0; }
+  ol.dest li { margin:.35rem 0; }
+  .row { display:block; width:100%; text-align:left; background:transparent; color:var(--paper);
+         border:1px solid var(--prule); font-family:var(--mono); font-size:.875rem;
+         line-height:1.5; padding:.45rem .6rem; cursor:pointer; }
+  .row .nm { font-family:var(--serif); font-size:1rem; }
+  .row[aria-disabled="true"] { border-style:dashed; cursor:not-allowed; }
+  .row .ann { display:block; }
+  .ledger { border:1px solid var(--prule); padding:.6rem; height:21rem; overflow-y:auto; overflow-x:hidden; }
+  .ledger p { margin:0 0 .45rem; overflow-wrap:anywhere; }
+  .recordline { border:1px dashed var(--prule); padding:.45rem .6rem; margin-top:.75rem; }
+  .counters { margin-top:.75rem; }
+  .legend { color:var(--deep-mute); font-size:.8125rem; margin-top:.75rem; border-top:1px solid var(--prule); padding-top:.5rem; }
+  .keys { color:var(--deep-mute); font-size:.8125rem; margin-top:.9rem; }
+  .results { border-top:1px solid var(--prule); margin-top:1.25rem; padding-top:.9rem; }
+  .results h3 { font-family:var(--serif); font-size:1.15rem; margin:.2rem 0 .5rem; }
+  .results pre { font-family:var(--mono); font-size:.8125rem; line-height:1.5; margin:.5rem 0;
+                 white-space:pre; overflow-x:auto; }
+  .results p { margin:.4rem 0; max-width:75ch; }
+  .plate button.small { background:transparent; color:var(--paper); border:1px solid var(--prule);
+        font-family:var(--mono); font-size:.8125rem; padding:.3rem .6rem; cursor:pointer; margin:.2rem .4rem .2rem 0; }
+  @media print { .plate { background:#fff; color:var(--deep); border:1px solid var(--deep); width:auto; margin-inline:0; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>The Constraint Model</h1>
+  <p class="kicker">DIMENSION 13 &#183; TYPE V, MODEL</p>
+
+  <p class="voice">This is a toy model in the economist's sense. It takes from the
+  itinerary (base document 03) a graph of eighteen named places, the hours 03 gives,
+  two purses, four facts about Bloom's day and one fact about Stephen's, and it lets
+  you route a figure through them against a running clock. It is not a claim about
+  what anyone felt or intended. Its constraints are hard windows and detection
+  events; the novel's are soft and interior. Where the model had to guess, the guess
+  is printed on the line that uses it, marked <span class="src">[assumed]</span>,
+  and listed in full below the instrument. You operate it; you do not read it.</p>
+
+  <p>Bloom starts with four shillings and ninepence, a funeral he must attend, an
+  advertisement he must place, a house he cannot return to before four, and one man
+  he must not meet. Stephen starts with nothing in his pocket until Dalkey pays him,
+  no obligation at all, and no key. The clock runs from eight in the morning to a
+  quarter to three the next morning, where 03 stops. Nothing you do ends the day
+  early except going home; the day cannot be won, only failed informatively.</p>
+
+  <div class="plate" id="plate">
+    <h2 id="model-title">Four and Nine &#8212; the day as a routing-and-avoidance problem</h2>
+
+    <div class="inst" role="group" aria-label="Instruments: clock, purse, constraints">
+      <span class="clock" id="clock">16 JUNE&#8201;&#183;&#8201;08:00</span>
+      <span class="purse" id="purse">PURSE 4s 9d &#183; 57 pence</span>
+      <ul class="chips" id="chips" aria-live="polite" aria-atomic="false"></ul>
+    </div>
+
+    <div class="cols">
+      <section aria-labelledby="dest-h">
+        <p class="here" id="here">the basement kitchen, 7 Eccles Street</p>
+        <p id="dest-h" class="mut" style="margin:.2rem 0">reachable from here &#8212; press the number, or &#8593;&#8595; and Enter:</p>
+        <ol class="dest" id="dest"></ol>
+        <p class="keys">keys &#8212; <strong>1&#8211;9</strong> go &#183; <strong>&#8593;&#8595;</strong>/<strong>j k</strong> choose &#183; <strong>Enter</strong> go &#183;
+        <strong>W</strong> or <strong>.</strong> wait 15 min &#183; <strong>S</strong> switch figure &#183; <strong>Shift+J</strong> the book's day, same
+        classifier &#183; <strong>M</strong> a thousand random days &#183; <strong>R</strong> reset &#183; <strong>A</strong> assumptions &#183; <strong>?</strong> this list</p>
+      </section>
+
+      <section aria-labelledby="ledger-h">
+        <p id="ledger-h" class="mut" style="margin:.2rem 0 .4rem">the ledger &#8212; every move, tagged by the printed rule:</p>
+        <div class="ledger" id="ledger" role="log" aria-live="polite" tabindex="0" aria-label="the ledger"></div>
+        <p class="recordline" id="record" aria-live="polite">the record says: &#8212;</p>
+        <p class="counters" id="counters" aria-live="polite"></p>
+        <p class="legend">the classifier, applied to every move including the book's own &#8212;
+        TOWARD: the destination hosts an open or upcoming unmet obligation.
+        AWAY: no obligation is targeted, and the move leaves a place with an active
+        documented hazard or increases graph distance from the nearest one.
+        DRIFT: neither. Waits are drift.
+        A crossing: same place as the documented track with overlapping minutes;
+        the second count adds one-edge-away within ten minutes.
+        Stephen's three-till-ten gap is never counted, and after ten the record
+        has the two in company &#8212; company is not a crossing. The meeting is
+        tallied apart.</p>
+      </section>
+    </div>
+
+    <section class="results" id="results" aria-label="Results" hidden>
+      <h3 id="results-h" tabindex="-1"></h3>
+      <div id="results-body"></div>
+    </section>
+  </div>
+
+  <h2 id="assumptions">Assumptions</h2>
+  <p>Everything below is a modelling choice, printed here in the document flow, not
+  behind a keystroke. Anything not covered by these sixteen lines comes from 03, and
+  the line that uses it says which section.</p>
+  <ol class="assump">
+    <li>Walking pace 5&#8201;km/h applied to the distances 03 states; tram and train
+    about 2&#189;&#215; foot, the funeral carriage about 2&#215;. The multipliers are assumed.</li>
+    <li>Edges exist only where 03 describes a traversal. Where 03 states no distance,
+    the duration is interpolated from relative position and bounded by 03's
+    consecutive-episode clock gaps; every such edge is marked
+    <span class="src">[assumed]</span> on its row and in the edge table.</li>
+    <li>One composed leg: 03 is silent on Bloom between six and eight in the evening.
+    The model sends the documented car south-east from Little Britain Street and
+    waits on the strand. The ledger flags it.</li>
+    <li>The clock is quantized to 5-minute display and 15-minute waits, because 03's
+    own warning is that hours are firm and minutes approximate. Every minute shown
+    here is a rounding.</li>
+    <li>The funeral counts as attended if the figure is at Newbridge Avenue between
+    10:30 and 11:00, or at Glasnevin between 11:00 and 11:45. Both bounds are
+    assumed; 03 fixes the hours, not the attendance rule &#8212; and a dawn visit to
+    the cemetery is not the funeral.</li>
+    <li>The advertisement counts as attempted on a visit to the Freeman's Journal
+    office between 10:00 and 18:00. The office hours are assumed; 03 fixes only the
+    noon visit &#8212; and in 03 the renewal is never settled, so the chip says
+    <em>attempted</em>, never <em>placed</em>.</li>
+    <li>The home lockout is a hard wall from 09:30 (the morning's last departure) to
+    16:00. The novel's constraint is psychological, not physical. And the key is in
+    the other trousers all day (03 &#167;17), so every return is over the railings.</li>
+    <li>The Boylan hazard is his documented sightings only, each active &#177;30
+    minutes: the Molesworth-Street sighting ~13:50 (03 &#167;8) placed on the
+    Grafton&#8211;Duke node and the fruit shop ~15:00 (03 &#167;10 gives no address)
+    likewise placed there &#8212; both placements assumed; the Ormond bar just before 16:00
+    (03 &#167;11); the front door of Eccles Street at 16:00 (03 &#167;4). His departure
+    from Eccles Street is unstated and is modelled as evening &#8212; active to 20:00.
+    No diffuse risk is invented between sightings.</li>
+    <li>Stephen's &#163;3 12s is credited at Dalkey at 10:00, where 03 places Deasy's
+    payment. The dimension specification credits it at the day's start; the model
+    follows 03 and says so.</li>
+    <li>Stephen's gap runs 15:00&#8211;22:00 &#8212; seven hours, per 03's own sentence.
+    During it his position is unknown, co-presence is indeterminate, and nothing is
+    counted. The Wandering Rocks fragment at three has no address in 03 and is
+    likewise uncounted. Both choices are conservative: they can only lower the
+    crossing counts.</li>
+    <li>A crossing is: same place with overlapping minutes. The second, wider count
+    adds: one edge away within ten minutes. Both are always printed side by side.
+    The 22:00 meeting at Holles Street is tallied apart from both.</li>
+    <li>Spending amounts are placeholders &#8212; kidney 3d, soap 4d, lunch 7d, dinner
+    1s 6d, crubeen 4d, coffee and bun 4d &#8212; each marked
+    <span class="src">[assumed]</span> on its ledger line. Bloom's opening four and
+    nine is the dimension's own figure; 03's one money glimpse of him
+    (&#8220;eightpence,&#8221; Grafton Street, &#167;8) is looser and is not modelled. The
+    real economy of the day is dimension 4's ground, not this model's.</li>
+    <li>Stephen's purse drains 72 pence an hour from receipt &#8212; a calibration to
+    two sentences in 03 (&#8220;most of it will be gone by midnight&#8221;; at Burke's,
+    &#8220;by the end of the hour it is gone&#8221;), not a claim about who bought what.
+    The drain is flat; the model does not know who is drinking. The flat rate
+    empties the purse about an hour before 03's Burke's sentence does &#8212; the
+    calibration is deliberately blunt.</li>
+    <li>The thousand-day policy is uniform over legal moves and the 15-minute wait,
+    except one step along a shortest path when an obligation would otherwise become
+    unreachable. The walker keeps Bloom's constraints, knows nothing of
+    Stephen, and stays out until two, as the book's day does &#8212; with one crack:
+    when every other exit from a dead end is closed, the forced step may pass
+    through Eccles Street, which the walker otherwise avoids.</li>
+    <li>The classifier is mechanical and identical for your day, the random days,
+    and the book's: TOWARD &#8212; destination hosts an open or upcoming unmet
+    obligation. AWAY &#8212; no obligation targeted, and the move departs an active
+    documented hazard or increases graph distance from the nearest one. DRIFT &#8212;
+    neither. Waits are drift.</li>
+    <li>Co-presence with a documented Boylan sighting is detected at node
+    resolution. The book can put two men in one building and keep them apart in it;
+    this model cannot see rooms. Where that overstates, the line says so.</li>
+    <li>Constraints here are hard and exterior; the novel's are soft and interior.
+    That gap is the definition of a toy, and the model would rather show it than
+    hide it.</li>
+  </ol>
+
+  <h2 id="data">The data, from 03 and only 03</h2>
+  <p>The tables below are rendered from the same constants the instrument runs on
+  &#8212; there is one copy of the data, and this is it. Provenance is per entry:
+  <span class="src">[03]</span> where the itinerary states the thing or its clock
+  gaps bound it, <span class="src">[assumed]</span> where a listed assumption
+  produced the number.</p>
+  <h3>The eighteen places</h3>
+  <div id="t-nodes"></div>
+  <h3>The edges</h3>
+  <div id="t-edges"></div>
+  <h3>Stephen's documented day, the timetable the model plays against</h3>
+  <div id="t-stephen"></div>
+  <h3>Boylan's documented sightings, the hazard track</h3>
+  <div id="t-boylan"></div>
+  <h3>03's near-misses, the validation target</h3>
+  <p>The replay (key Shift+J) must reproduce this table or say exactly where and why it
+  cannot.</p>
+  <div id="t-nearmiss"></div>
+
+  <h2>What the model refuses</h2>
+  <p class="voice">No map, no streets, no picture of anything: adjacency is the only
+  geography here, because representation is another project's ground and not this
+  one's. No character beyond the two figures and a hazard track: Stephen is a
+  timetable, Boylan is four sightings. And the person who travels furthest in the
+  book does not appear in the model at all &#8212; the episode with no hour and no
+  movement has no place in a routing problem. That absence is a confession about
+  what kind of thing this is, and it is the most accurate line in it.</p>
+</main>
+
+<script>
+"use strict";
+/* ============================================================================
+   DATA — derived from base document 03 (docs/03-itinerary.md) and nothing else.
+   Each entry carries a source note naming 03's section, or [assumed] pointing
+   at the numbered assumptions list in the document above. Minutes are counted
+   from 00:00 on 16 June: 08:00 = 480, midnight = 1440, 02:45 = 1605.
+   ========================================================================== */
+
+// The eighteen places 03 names. src = where 03 establishes the place.
+const NODES = {
+  tower:     {name:"the Martello Tower, Sandycove",         src:"03 §1 · ~13 km south-east of the city"},
+  dalkey:    {name:"Mr Deasy's school, Dalkey",             src:"03 §2 · end of the tram and train line"},
+  strand:    {name:"Sandymount Strand",                     src:"03 §3/§13 · ~5 km from the centre"},
+  eccles:    {name:"7 Eccles Street",                       src:"03 §4/§17 · ~1.5 km from the centre"},
+  dorset:    {name:"Dlugacz's, Upper Dorset Street",        src:"03 §4"},
+  quay:      {name:"Sir John Rogerson's Quay",              src:"03 §5"},
+  westland:  {name:"the Westland Row quarter",              src:"03 §5/§14 · post office, church, chemist, station"},
+  newbridge: {name:"Newbridge Avenue, Sandymount",          src:"03 §6 · Dignam's house"},
+  glasnevin: {name:"Glasnevin Cemetery",                    src:"03 §6"},
+  freeman:   {name:"the Freeman's Journal, Prince's Street",src:"03 §7 · behind the GPO"},
+  bridge:    {name:"O'Connell Bridge / Sackville Street",   src:"03 §7/§8 · the exact centre"},
+  grafton:   {name:"Grafton–Duke Street",              src:"03 §8 · the Burton, Davy Byrne's"},
+  kildare:   {name:"Kildare Street — Museum and Library", src:"03 §8/§9"},
+  ormond:    {name:"the Ormond Hotel, Upper Ormond Quay",   src:"03 §11"},
+  kiernan:   {name:"Barney Kiernan's, Little Britain Street", src:"03 §12"},
+  holles:    {name:"Holles Street hospital (and Burke's)",  src:"03 §14 · Burke's is the corner pub, folded in"},
+  nighttown: {name:"Nighttown — Mabbot Street",        src:"03 §15 · a few hundred metres from the GPO"},
+  shelter:   {name:"the cabman's shelter, Butt Bridge",     src:"03 §16"}
+};
+
+// Edges: only where 03 describes a traversal. [a, b, minutes, mode, prov, note].
+// prov "03" = 03 states the distance or its episode clock gaps bound the time;
+// "assumed" = assumptions 1-3 produced the number. All edges run both ways.
+const EDGES = [
+  ["tower","dalkey",     25,"foot", "assumed","03 §1–2: adjacent villages on the same line; pace applied"],
+  ["dalkey","strand",    15,"train","03",     "03 §3: in from Dalkey by train; bounded by the 10:45→11:00 gap"],
+  ["strand","westland",  45,"foot", "assumed","03 §3: the strand ~5 km out; pace applied"],
+  ["strand","newbridge", 10,"foot", "assumed","03 §6/§13: both in Sandymount; adjacent"],
+  ["newbridge","westland",15,"tram","03",     "bounded by the 10:45 close → 11:00 open gap, 03 §5–6"],
+  ["newbridge","glasnevin",45,"car","03",     "the funeral traverse of the whole city, 11:00 → ~11:45, 03 §6"],
+  ["glasnevin","eccles", 30,"foot", "assumed","03 §6: the cortege route passes Phibsborough, near Eccles St"],
+  ["glasnevin","freeman",20,"tram", "03",     "bounded by the ~12:00 close → 12:00 open seam, 03 §6–7; minutes approximate"],
+  ["eccles","dorset",     5,"foot", "03",     "03 §4: out the front door to the butcher and back"],
+  ["eccles","bridge",    20,"foot", "03",     "03 §4: ~1.5 km from the centre; pace applied"],
+  ["eccles","ormond",    30,"foot", "03",     "03 §11: a mile and a half apart; pace applied"],
+  ["bridge","quay",      15,"foot", "assumed","down the south quays"],
+  ["bridge","freeman",    5,"foot", "03",     "03 §7: Prince's Street immediately behind the GPO"],
+  ["bridge","grafton",   10,"foot", "03",     "03 §8: Westmoreland Street → Grafton Street"],
+  ["bridge","ormond",    10,"foot", "assumed","along the quays to Upper Ormond Quay"],
+  ["bridge","nighttown", 10,"foot", "03",     "03 §15: Monto a few hundred metres from the GPO"],
+  ["bridge","shelter",   10,"foot", "assumed","O'Connell Bridge down-river to Butt Bridge"],
+  ["quay","westland",    10,"foot", "03",     "03 §5: Lime Street → Townsend Street → Westland Row"],
+  ["westland","kildare", 10,"foot", "assumed","Lincoln Place to Kildare Street, one quarter"],
+  ["westland","holles",  10,"foot", "03",     "03 §14: Holles Street by Merrion Square; the party walks it"],
+  ["westland","nighttown",20,"train","assumed","mode (train) from 03 §14–15; minutes interpolated, bounded only by the 23:00→24:00 gap"],
+  ["grafton","kildare",  10,"foot", "03",     "03 §8: Duke → Dawson → Molesworth → Kildare"],
+  ["grafton","westland", 10,"foot", "assumed","around Trinity, one quarter"],
+  ["kildare","ormond",   15,"foot", "assumed","Kildare Street to the north quays; relative position"],
+  ["kildare","holles",   15,"foot", "assumed","past Merrion Square"],
+  ["ormond","kiernan",   10,"foot", "assumed","Upper Ormond Quay up to Little Britain Street"],
+  ["freeman","kiernan",  10,"foot", "assumed","behind the GPO to the markets quarter"],
+  ["freeman","nighttown",10,"foot", "03",     "03 §15: a few hundred metres from the GPO"],
+  ["kiernan","strand",   30,"car",  "assumed","assumption 3: 03 silent between six and eight; the documented car, sent south-east"],
+  ["strand","holles",    45,"foot", "assumed","03 §13–14: ~5 km out to the south-east edge; bounded by the 21:00→22:00 gap"],
+  ["nighttown","shelter",15,"foot", "03",     "03 §16: Beaver St → Amiens St → Store St → Butt Bridge"],
+  ["shelter","eccles",   25,"foot", "03",     "03 §17: Beresford Pl → Gardiner → Mountjoy Sq → Temple St → Hardwicke → Berkeley Rd; bounded 02:00→02:45"]
+];
+
+// Stephen's documented day: the timetable the model plays against. Never pathed,
+// never simulated - only what 03 states, plus the gap 03 itself declares.
+const STEPHEN = [
+  {node:"tower",    a:480,  b:525,  src:"03 §1 · 8:00–8:45"},
+  {node:"dalkey",   a:585,  b:645,  src:"03 §2 · ~9:45–10:45"},
+  {node:"strand",   a:660,  b:705,  src:"03 §3 · ~11:00–11:45"},
+  {node:"freeman",  a:720,  b:780,  src:"03 §7 · noon–1:00, arriving with Deasy's letter"},
+  {node:"kildare",  a:840,  b:900,  src:"03 §9 · 2:00–3:00, the Library"},
+  // 15:00-22:00: OFF THE RECORD. 03: "vanishes for seven hours. From three in the
+  // afternoon until ten at night we do not see him at all." Excluded from counts.
+  {node:"holles",   a:1320, b:1380, src:"03 §14 · 10:00–11:00 — they finally meet"},
+  {node:"westland", a:1380, b:1395, src:"03 §14 · scattering toward the Westland Row train"},
+  {node:"nighttown",a:1440, b:1500, src:"03 §15 · midnight–1:00"},
+  {node:"shelter",  a:1500, b:1560, src:"03 §16 · 1:00–2:00"},
+  {node:"eccles",   a:1560, b:1605, src:"03 §17 · 2:00–2:45, let in the back; leaves — where is never said"}
+];
+const STEPHEN_GAP = {a:900, b:1320, src:"03, The two routes · ‘vanishes for seven hours’ — three till ten"};
+
+// Boylan's documented sightings: the hazard track. fix = the stated hour;
+// window = fix +/-30 min (assumption 8). The Eccles entry runs 16:00-20:00.
+const BOYLAN = [
+  {node:"grafton", a:800,  b:860,  fix:"~13:50", src:"03 §8 · seen ahead near Molesworth Street; the museum bolt; placed on the Grafton–Duke node [assumed]"},
+  {node:"grafton", a:870,  b:930,  fix:"~15:00", src:"03 §10 · the fruit shop; no address in 03 — placed on Grafton St [assumed]"},
+  {node:"ormond",  a:925,  b:985,  fix:"~15:55", src:"03 §11 · in the Ormond bar just before four"},
+  {node:"eccles",  a:960,  b:1200, fix:"16:00",  src:"03 §4 · in at the front door at four; departure unstated — active to 20:00 [assumed]"}
+];
+// A sighting that is a route, not a node: the pavement, from the carriage, ~11:30
+// (03 §6). Below node resolution; the replay prints it as a note, uncounted.
+
+// 03's near-miss table, verbatim: the validation target for the replay (key Shift+J).
+const NEARMISS_03 = [
+  ["~11:30 a.m.","Irishtown, from the funeral carriage","Simon sees Stephen through the window; Bloom looks"],
+  ["12 noon","The Freeman's Journal","Both in the building. No meeting"],
+  ["~3 p.m.","The National Library porch","Bloom passes between Stephen and Mulligan"],
+  ["~3 p.m.","Wandering Rocks","Both crossing the same small city"],
+  ["10 p.m.","Holles Street hospital","They finally meet"]
+];
+
+// The canonical Bloom day (for key Shift+J): departure minute -> destination, straight
+// from 03's episode opens/closes; dwell is whatever the edge sums leave over.
+const CANON = [
+  [485,"dorset",   "03 §4 · the kidney"],
+  [495,"eccles",   "03 §4 · back along Dorset Street"],
+  [545,"bridge",   "03 §4–5 · out for the morning"],
+  [565,"quay",     "03 §5 · opens ~9:45 on the quay"],
+  [600,"westland", "03 §5 · the letter, the church, the chemist"],
+  [645,"newbridge","03 §6 · the funeral leaves at 11:00"],
+  [660,"glasnevin","03 §6 · the traverse; Boylan on the pavement ~11:30, below this model's resolution"],
+  [720,"freeman",  "03 §7 · the Keyes ad at noon"],
+  [780,"bridge",   "03 §8 · crossing south at ~1:00"],
+  [785,"grafton",  "03 §8 · lunch at Davy Byrne's"],
+  [830,"kildare",  "03 §8 · sees Boylan ahead; bolts through the museum gates"],
+  [930,"ormond",   "03 §10–11 · a bookcart on the way (03 gives it no address); the Ormond ~3:55"],
+  [1020,"kiernan", "03 §12 · Barney Kiernan's"],
+  [1080,"strand",  "03 §12–13 · driven off by car; 03 silent till eight [assumption 3]"],
+  [1275,"holles",  "03 §14 · the hospital by ten"],
+  [1380,"westland","03 §14 · toward the last train"],
+  [1420,"nighttown","03 §15 · midnight"],
+  [1500,"shelter", "03 §16 · the shelter at ~1:00"],
+  [1560,"eccles",  "03 §17 · home at two, no key, over the railings"]
+];
+
+// Spending nodes: placeholder amounts, assumption 12. [pence, open, close, label]
+const SPEND = {
+  dorset:   [3, 480, 1080,"the butcher takes 3d"],
+  westland: [4, 540, 1080,"the chemist takes 4d — soap"],
+  grafton:  [7, 720, 900, "Davy Byrne's takes 7d"],
+  ormond:   [18,900, 1140,"the dining room takes 1s 6d"],
+  nighttown:[4, 1440,1560,"the crubeen takes 4d"],
+  shelter:  [4, 1440,1605,"coffee and a bun, 4d"]
+};
+
+const START_MIN = 480, END_MIN = 1605, HARD_END = 1560; // 08:00, 02:45, 02:00
+const BLOOM_PURSE = 57;           // four and nine — the dimension's model definition;
+                                  // 03 §8's "eightpence" at Grafton St is looser and unmodelled (A12)
+const STEPHEN_PURSE = 864;        // three pounds twelve, paid at Dalkey (03 §2; assumption 9)
+const STEPHEN_DRAIN = 18;         // pence per 15 min from receipt = 72d/hour (assumption 13)
+const FUNERAL = {newbridgeFrom:630, newbridgeBy:660, glasnevinFrom:660, glasnevinBy:705};   // assumption 5
+const AD_WINDOW = {a:600, b:1080};                    // assumption 6
+const LOCKOUT = {a:570, b:960};                       // assumption 7: 09:30-16:00
+</script>
+
+<script>
+"use strict";
+/* ============================ ENGINE ====================================== */
+// Graph structures.
+const NBR = {}; Object.keys(NODES).forEach(k => NBR[k] = []);
+EDGES.forEach(e => {
+  NBR[e[0]].push({to:e[1], min:e[2], mode:e[3], prov:e[4]});
+  NBR[e[1]].push({to:e[0], min:e[2], mode:e[3], prov:e[4]});
+});
+Object.values(NBR).forEach(l => l.sort((a,b)=> a.min-b.min || a.to.localeCompare(b.to)));
+// All-pairs hop distance (BFS) — for the AWAY rule and the adjacency count.
+const HOP = {};
+Object.keys(NODES).forEach(s => {
+  const d = {}; d[s]=0; const q=[s];
+  while(q.length){ const c=q.shift(); NBR[c].forEach(n=>{ if(d[n.to]===undefined){ d[n.to]=d[c]+1; q.push(n.to); } }); }
+  HOP[s]=d;
+});
+// Travel-time (Dijkstra) to a target — for the thousand-day deadline pull.
+function timesTo(target){
+  const dist={}; Object.keys(NODES).forEach(k=>dist[k]=Infinity); dist[target]=0;
+  const todo=new Set(Object.keys(NODES));
+  while(todo.size){
+    let best=null; todo.forEach(k=>{ if(best===null||dist[k]<dist[best]) best=k; });
+    todo.delete(best);
+    NBR[best].forEach(n=>{ const v=dist[best]+n.min; if(v<dist[n.to]) dist[n.to]=v; });
+  }
+  return dist;
+}
+const TT = {glasnevin:timesTo("glasnevin"), freeman:timesTo("freeman")};
+
+// Formatting. Every displayed minute is a multiple of 5 by construction (A4).
+function hhmm(t){ const m=((t%1440)+1440)%1440; return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0"); }
+function clockStr(t){ return (t<1440?"16 JUNE":"17 JUNE")+" · "+hhmm(t); }
+function money(p){
+  p=Math.max(0,Math.round(p));
+  const L=Math.floor(p/240), s=Math.floor((p%240)/12), d=p%12;
+  if(L>0) return "£"+L+" "+s+"s "+d+"d";
+  if(s>0) return s+"s "+d+"d";
+  return d+"d";
+}
+
+// A fresh day-state. mode: "bloom" | "stephen".
+function freshState(mode, emit){
+  return {
+    mode, t:START_MIN, node: mode==="bloom" ? "eccles" : "tower",
+    purse: mode==="bloom" ? BLOOM_PURSE : 0,
+    presence: [{node: mode==="bloom" ? "eccles" : "tower", a:START_MIN, b:START_MIN}],
+    moves:[],                       // {t, from, to, tag, wait}
+    funeral:"pending", buried:false, ad:"pending",
+    boylanSeen:{}, boylanCount:0, boylanMet:false,
+    paid:false, paidAt:null, drainCharged:0, spent:{},
+    towerRefusals:0, homeRefusals:0, leftTower:false,
+    bothNoted:false, twoNoted:false, ended:false, endReason:"",
+    emit: emit || function(){}
+  };
+}
+
+// Documented-track targets for the crossing counters.
+function targetsFor(St){
+  if(St.mode==="bloom") return STEPHEN;
+  return BLOOMDOC;   // canonical Bloom presence, computed at init by silent replay
+}
+// Which windows count as crossings (A11): only the documented track BEFORE the
+// meeting hour. After ten the record has the two in company — co-presence there
+// is company, not crossing. The 22:00 Holles Street window is the meeting,
+// tallied apart. The 2 a.m. Eccles window is cohabitation, noted only.
+function windowCounted(St,w){
+  if(St.mode==="bloom") return w.b<=900;                    // Stephen's pre-gap day
+  return w.b<=1320 && !(w.a>=1080 && w.b<=1200);            // Bloom pre-meeting, minus the silent six-till-eight
+}
+function isMeetingWindow(St,w){
+  return w.node==="holles" && overlapMin(w.a,w.b,1320,1380)>0;
+}
+function overlapMin(a1,b1,a2,b2){ return Math.min(b1,b2)-Math.max(a1,a2); }
+function crossings(St){
+  const tg=targetsFor(St);
+  let same=0, wide=0, meeting=false, cohab=false;
+  tg.forEach(w=>{
+    let sr=false, ad=false;
+    St.presence.forEach(p=>{
+      const pb = (p.b===null? St.t : p.b);
+      const ov = overlapMin(p.a,pb,w.a,w.b);
+      if(p.node===w.node && ov>0) sr=true;
+      if(HOP[p.node][w.node]===1){
+        const gap = ov>0 ? 0 : Math.max(w.a-pb, p.a-w.b);
+        if(gap<=10) ad=true;
+      }
+    });
+    if(isMeetingWindow(St,w)){ if(sr) meeting=true; return; }
+    if(w.node==="eccles" && w.a>=1440){
+      // The day-ending arrival is a zero-length presence; treat it as inclusive
+      // so ending the day at home inside the window counts as cohabitation.
+      if(sr || (St.ended && St.node==="eccles" && St.t>=w.a && St.t<=w.b)) cohab=true;
+      return;
+    }
+    if(!windowCounted(St,w)) return;
+    if(sr) same++;
+    if(sr||ad) wide++;
+  });
+  return {same,wide,meeting,cohab};
+}
+
+// Obligations and hazards (Bloom only).
+function towardReason(St,dest,arrive){
+  if(St.mode!=="bloom") return null;
+  if(St.funeral==="pending" && dest==="newbridge" && arrive<=FUNERAL.newbridgeBy) return "the funeral";
+  // Glasnevin stays the funeral's target until the burial is reached or missed,
+  // even if attendance was already credited at Newbridge (A5).
+  if(!St.buried && St.funeral!=="LAPSED" && dest==="glasnevin" && arrive<=FUNERAL.glasnevinBy) return "the funeral";
+  if(St.ad==="pending" && dest==="freeman" && arrive<=AD_WINDOW.b) return "the advertisement";
+  return null;
+}
+function activeHazards(St,t){
+  if(St.mode!=="bloom") return [];
+  return BOYLAN.filter(w=> t>=w.a && t<=w.b);
+}
+function classify(St,dest,edgeMin){
+  if(St.mode==="stephen") return {tag:"DRIFT", why:""};
+  const arrive=St.t+edgeMin;
+  const tw=towardReason(St,dest,arrive);
+  if(tw) return {tag:"TOWARD", why:"— "+tw};
+  const H=activeHazards(St,St.t);
+  if(H.length){
+    const dc=Math.min.apply(null,H.map(w=>HOP[St.node][w.node]));
+    const dd=Math.min.apply(null,H.map(w=>HOP[dest][w.node]));
+    if(dc===0 || dd>dc) return {tag:"AWAY", why:"— Boylan's documented track"};
+  }
+  return {tag:"DRIFT", why:""};
+}
+
+// Advance the clock through t1, firing every scheduled event in between.
+function advanceTo(St,t1){
+  const t0=St.t;
+  if(t1<=t0) return;
+  // Stephen: pay + drain (A9, A13).
+  if(St.mode==="stephen"){
+    if(!St.paid && t0<600 && t1>=600){
+      if(St.node==="dalkey"){ St.paid=true; St.paidAt=600; St.purse+=STEPHEN_PURSE;
+        St.emit(hhmm(600)+" · Deasy pays. £3 12s. [03 §2; credited here, not at dawn — assumption 9]","gold");
+      } else {
+        St.emit(hhmm(600)+" · the record pays Stephen at Dalkey about now. You are not there; nothing arrives. [assumption 9]","mut");
+      }
+    }
+    if(St.paid){
+      const hrs = Math.floor((t1-St.paidAt)/60) - Math.max(0,Math.floor((t0-St.paidAt)/60));
+      if(hrs>0 && St.purse>0){
+        const take=Math.min(St.purse,72*hrs); St.purse-=take;
+        St.emit(hhmm(t1)+" · the hour drinks "+money(take)+". [flat drain — assumption 13]","mut");
+        if(St.purse===0) St.emit(hhmm(t1)+" · the purse is empty. The company drinks on.","gold");
+      }
+    }
+  }
+  // Bloom: window edges.
+  if(St.mode==="bloom"){
+    // Standing in the office when it opens counts as the visit (A6).
+    if(St.ad==="pending" && St.node==="freeman" && t0<AD_WINDOW.a && t1>=AD_WINDOW.a){
+      St.ad="attempted at "+hhmm(AD_WINDOW.a);
+      St.emit(hhmm(AD_WINDOW.a)+" · the office opens around you. The Keyes renewal is raised; in 03 it is never settled. AD: attempted, not placed. [03 §7; assumption 6]","gold");
+    }
+    if(St.funeral==="pending" && t0<=FUNERAL.glasnevinBy && t1>FUNERAL.glasnevinBy){
+      St.funeral="LAPSED";
+      St.emit(hhmm(FUNERAL.glasnevinBy)+" · the funeral goes on without you. FUNERAL: LAPSED. Nothing in this model ends the day. That is the point.","gold");
+    }
+    if(St.ad==="pending" && t0<=AD_WINDOW.b && t1>AD_WINDOW.b){
+      St.ad="LAPSED";
+      St.emit(hhmm(AD_WINDOW.b)+" · the office closes. AD: LAPSED. The day continues.","gold");
+    }
+    if(t0<LOCKOUT.b && t1>=LOCKOUT.b)
+      St.emit(hhmm(LOCKOUT.b)+" · four o’clock. The front door of Eccles Street is open now, and Boylan is documented at it. [03 §4]","mut");
+    if(t0<=HARD_END && t1>HARD_END && St.node!=="eccles")
+      St.emit(hhmm(HARD_END)+" · the book’s Bloom is at his own railings about now. [03 §17]","mut");
+  }
+  St.t=t1;
+  St.presence[St.presence.length-1].b=t1;
+  checkBoylanPresence(St,t0,t1);
+  maybeNoteExhaustion(St);
+  if(t1>=END_MIN && !St.ended) endDay(St,"stop");
+}
+function checkBoylanPresence(St,t0,t1){
+  if(St.mode!=="bloom") return;
+  BOYLAN.forEach((w,i)=>{
+    if(St.boylanSeen[i]) return;
+    if(St.node===w.node && overlapMin(t0,t1,w.a,w.b)>=0 && t1>=w.a && t0<=w.b){
+      St.boylanSeen[i]=true; St.boylanCount++;
+      if(w.node==="eccles" && !St.boylanMet){
+        // Being in the house during the documented window is the MET event,
+        // whether you walked in or never left.
+        St.boylanMet=true;
+        St.emit(hhmm(Math.max(t0,w.a))+" · BOYLAN: MET. You are in the house during the documented window. The book was not. [03 §4; node resolution — assumption 15]","gold");
+      } else {
+        St.emit(hhmm(Math.max(t0,w.a))+" · you are inside the window of a documented Boylan sighting here — "+w.src+". BOYLAN: "+St.boylanCount+" encounter"+(St.boylanCount>1?"s":"")+". [assumption 8; node resolution — assumption 15]","gold");
+      }
+    }
+  });
+}
+function maybeNoteExhaustion(St){
+  if(St.mode!=="bloom" || St.bothNoted) return;
+  const fDone = St.funeral!=="pending", aDone = St.ad!=="pending";
+  if(fDone && aDone){
+    St.bothNoted=true;
+    St.emit(hhmm(St.t)+" · both errands are resolved. The list still renders; nothing in it is required any more. What stays active is what must be avoided.","mut");
+  }
+}
+
+// One move. Returns false if refused. confirmed = the hazard interstitial was answered.
+function doMove(St,dest,confirmed){
+  if(St.ended) return false;
+  const edge = NBR[St.node].find(n=>n.to===dest);
+  if(!edge) return false;
+  // Refusals.
+  if(St.mode==="bloom" && dest==="eccles" && St.t>=LOCKOUT.a && St.t<LOCKOUT.b){
+    St.homeRefusals++;
+    St.emit(hhmm(St.t)+" · 7 Eccles Street — refused. You cannot. The model does not say why. The novel does. [the door opens at four — assumption 7]","gold");
+    return false;
+  }
+  if(St.mode==="stephen" && dest==="tower" && St.leftTower){
+    St.towerRefusals++;
+    St.emit(hhmm(St.t)+" · the Tower — refused. No key; Mulligan holds it. You cannot. The model does not say why. The novel does. [03 §1]","gold");
+    return false;
+  }
+  // Hazard interstitial: entering a node inside an active documented window.
+  if(St.mode==="bloom" && !confirmed){
+    const arrive=St.t+edge.min;
+    const hz=BOYLAN.find(w=> dest===w.node && arrive>=w.a && arrive<=w.b);
+    if(hz) return {ask:hz, dest:dest};
+  }
+  const cls=classify(St,dest,edge.min);
+  const from=St.node, dep=St.t;
+  if(St.mode==="stephen" && from==="tower") St.leftTower=true;
+  St.moves.push({t:dep, from:from, to:dest, tag:cls.tag, wait:false});
+  St.emit(hhmm(dep)+" · depart "+NODES[from].name+" → "+NODES[dest].name+" · "+edge.min+" min by "+edge.mode+" ["+edge.prov+"] · "+cls.tag+(cls.why?" "+cls.why:""));
+  // Travel: close the old presence segment, advance the clock, then arrive.
+  // Transit positions are below node resolution and are not presence (A15).
+  St.presence[St.presence.length-1].b=dep;
+  advanceTravel(St,dep+edge.min);
+  St.node=dest;
+  St.presence.push({node:dest,a:St.t,b:St.t});
+  arriveAt(St,dest);
+  return true;
+}
+// advanceTo without presence bookkeeping on a real node.
+function advanceTravel(St,t1){
+  const t0=St.t;
+  if(St.mode==="stephen" && St.paid){
+    const hrs=Math.floor((t1-St.paidAt)/60)-Math.max(0,Math.floor((t0-St.paidAt)/60));
+    if(hrs>0 && St.purse>0){ const take=Math.min(St.purse,72*hrs); St.purse-=take;
+      St.emit(hhmm(t1)+" · the hour drinks "+money(take)+". [assumption 13]","mut"); }
+  }
+  if(St.mode==="stephen" && !St.paid && t0<600 && t1>=600)
+    St.emit(hhmm(600)+" · the record pays Stephen at Dalkey about now. You are in transit; nothing arrives. [assumption 9]","mut");
+  if(St.mode==="bloom"){
+    if(St.funeral==="pending" && t0<=FUNERAL.glasnevinBy && t1>FUNERAL.glasnevinBy){
+      St.funeral="LAPSED";
+      St.emit(hhmm(FUNERAL.glasnevinBy)+" · the funeral goes on without you. FUNERAL: LAPSED. Nothing in this model ends the day. That is the point.","gold");
+    }
+    if(St.ad==="pending" && t0<=AD_WINDOW.b && t1>AD_WINDOW.b){
+      St.ad="LAPSED"; St.emit(hhmm(AD_WINDOW.b)+" · the office closes. AD: LAPSED. The day continues.","gold");
+    }
+    if(t0<LOCKOUT.b && t1>=LOCKOUT.b)
+      St.emit(hhmm(LOCKOUT.b)+" · four o’clock. The front door of Eccles Street is open now, and Boylan is documented at it. [03 §4]","mut");
+  }
+  St.t=t1;
+}
+function arriveAt(St,dest){
+  // Attendance and errand rules (A5, A6).
+  if(St.mode==="bloom"){
+    if(St.funeral==="pending" &&
+       ((dest==="newbridge" && St.t>=FUNERAL.newbridgeFrom && St.t<=FUNERAL.newbridgeBy) ||
+        (dest==="glasnevin" && St.t>=FUNERAL.glasnevinFrom && St.t<=FUNERAL.glasnevinBy))){
+      St.funeral="met at "+hhmm(St.t);
+      St.emit(hhmm(St.t)+" · the funeral is attended. FUNERAL: met. [attendance rule — assumption 5]","gold");
+    }
+    if(dest==="glasnevin" && St.t>=FUNERAL.glasnevinFrom && St.t<=FUNERAL.glasnevinBy) St.buried=true;
+    if(St.ad==="pending" && dest==="freeman" && St.t>=AD_WINDOW.a && St.t<=AD_WINDOW.b){
+      St.ad="attempted at "+hhmm(St.t);
+      St.emit(hhmm(St.t)+" · the Keyes renewal is raised. In 03 it is never settled. AD: attempted, not placed. [03 §7; assumption 6]","gold");
+    }
+    // Entering the house during the documented window: the violation the day is built around.
+    const hi=BOYLAN.findIndex(w=> w.node==="eccles" && dest==="eccles" && St.t>=w.a && St.t<=w.b);
+    if(hi>=0 && !St.boylanMet){
+      St.boylanSeen[hi]=true;
+      St.boylanMet=true; St.boylanCount++;
+      St.emit(hhmm(St.t)+" · BOYLAN: MET. You are in the house during the documented window. The book was not. [03 §4; node resolution — assumption 15]","gold");
+    }
+  }
+  if(St.mode==="stephen" && dest==="dalkey" && !St.paid && St.t>=600){
+    St.paid=true; St.paidAt=St.t; St.purse+=STEPHEN_PURSE;
+    St.emit(hhmm(St.t)+" · Deasy pays, late by the model’s clock. £3 12s. [03 §2; assumption 9]","gold");
+  }
+  // Spend (A12) — Bloom only; Stephen's drain is the flat calibration instead.
+  if(St.mode==="bloom" && SPEND[dest] && !St.spent[dest]){
+    const s=SPEND[dest];
+    if(St.t>=s[1] && St.t<=s[2] && St.purse>0){
+      const take=Math.min(St.purse,s[0]); St.purse-=take; St.spent[dest]=true;
+      St.emit(hhmm(St.t)+" · "+s[3]+" [assumed] · purse "+money(St.purse),"mut");
+    }
+  }
+  checkBoylanPresence(St,St.t,St.t);
+  maybeNoteExhaustion(St);
+  // Going home ends the day (Bloom, after four).
+  if(St.mode==="bloom" && dest==="eccles" && St.t>=LOCKOUT.b && !St.ended) endDay(St,"home");
+  if(St.t>=END_MIN && !St.ended) endDay(St,"stop");
+}
+function doWait(St){
+  if(St.ended) return;
+  St.moves.push({t:St.t, from:St.node, to:St.node, tag:"DRIFT", wait:true});
+  St.emit(hhmm(St.t)+" · wait 15 min at "+NODES[St.node].name+" · DRIFT","mut");
+  advanceTo(St,Math.min(St.t+15,END_MIN));
+}
+function endDay(St,how){
+  St.ended=true; St.endReason=how;
+  St.presence[St.presence.length-1].b=St.t;
+}
+</script>
+
+<script>
+"use strict";
+/* ============================ INTERFACE =================================== */
+const $=id=>document.getElementById(id);
+let STATE=null, PENDING=null, BLOOMDOC=[];
+// aria-live hygiene: only touch the live regions when their content changes,
+// so unchanged chips/counters/record are not re-announced after every move.
+let lastChips=null, lastCounters=null, lastRecord=null;
+function setChips(h){ if(h!==lastChips){ lastChips=h; $("chips").innerHTML=h; } }
+function setCounters(t){ if(t!==lastCounters){ lastCounters=t; $("counters").textContent=t; } }
+function setRecord(t){ if(t!==lastRecord){ lastRecord=t; $("record").textContent=t; } }
+
+function emitLedger(text,cls){
+  const p=document.createElement("p");
+  if(cls) p.className=cls;
+  p.textContent=text;
+  $("ledger").appendChild(p);
+  $("ledger").scrollTop=$("ledger").scrollHeight;
+}
+function chipsHTML(St){
+  const li=[];
+  if(St.mode==="bloom"){
+    li.push(St.funeral==="pending" ? "FUNERAL — pending · Newbridge by 11:00 or Glasnevin by 11:45"
+      : St.funeral==="LAPSED" ? "<span class='gold'>FUNERAL — LAPSED</span>" : "FUNERAL — "+St.funeral);
+    li.push(St.ad==="pending" ? "AD — pending · the Freeman’s office, 10:00–18:00"
+      : St.ad==="LAPSED" ? "<span class='gold'>AD — LAPSED</span>" : "AD — "+St.ad);
+    li.push(St.t<LOCKOUT.a ? "HOME — yours till 09:30" :
+            St.t<LOCKOUT.b ? "HOME — locked till 16:00" :
+            St.t<=1200 ? "HOME — open · Boylan documented at the door at four" : "HOME — open");
+    li.push(St.boylanMet ? "<span class='gold'>BOYLAN — MET</span>" :
+            St.boylanCount>0 ? "<span class='gold'>BOYLAN — "+St.boylanCount+" encounter"+(St.boylanCount>1?"s":"")+"</span>"
+            : "BOYLAN — clear · what Bloom knows: four o’clock, his own front door");
+  } else {
+    li.push("OBLIGATIONS — none");
+    li.push("KEY — surrendered; Mulligan holds it");
+    li.push(St.paid ? "WAGES — £3 12s, paid" : "WAGES — Deasy pays at Dalkey at ten");
+  }
+  return li.map(x=>"<li>"+x+"</li>").join("");
+}
+function rowAnnotations(St,dest,edge){
+  const out=[];
+  const arrive=St.t+edge.min;
+  const tw=towardReason(St,dest,arrive);
+  if(tw) out.push("<span class='ann gold'>obligation here — "+tw+"</span>");
+  if(St.mode==="bloom"){
+    BOYLAN.forEach(w=>{
+      if(w.node!==dest) return;
+      if(arrive>=w.a && arrive<=w.b) out.push("<span class='ann gold'>Boylan risk — documented here about this hour</span>");
+      else if(w.a>arrive && w.a-arrive<=60) out.push("<span class='ann mut'>Boylan documented here at "+w.fix+"</span>");
+    });
+    if(dest==="eccles" && St.t>=LOCKOUT.a && St.t<LOCKOUT.b)
+      out.push("<span class='ann mut'>locked till four — the model will refuse</span>");
+    if(dest==="eccles" && St.t>=1200) out.push("<span class='ann mut'>open · the record says nothing since four</span>");
+    const s=SPEND[dest];
+    if(s && !St.spent[dest] && arrive>=s[1] && arrive<=s[2]) out.push("<span class='ann mut'>"+s[3]+" [assumed]</span>");
+  }
+  return out.join("");
+}
+function render(){
+  const St=STATE;
+  $("clock").textContent=clockStr(St.t);
+  $("purse").textContent="PURSE "+money(St.purse)+" · "+St.purse+" pence";
+  setChips(chipsHTML(St));
+  $("here").textContent=NODES[St.node].name;
+  const dest=$("dest"); dest.innerHTML="";
+  if(PENDING){
+    const hz=PENDING.hz;
+    const q=document.createElement("li");
+    q.innerHTML="<span class='gold'>Boylan is documented at "+NODES[PENDING.dest].name+" about this hour — "+hz.src+".</span><br>Continue, or go round?";
+    dest.appendChild(q);
+    [["1 · continue","cont"],["2 · go round","round"]].forEach(function(b,i){
+      const li=document.createElement("li"), btn=document.createElement("button");
+      btn.className="row"; btn.innerHTML="<span class='nm'>"+b[0]+"</span>"; btn.dataset.act=b[1];
+      li.appendChild(btn); dest.appendChild(li);
+      if(i===0) setTimeout(function(){btn.focus();},0);
+    });
+    setCounters(countersText(St));
+    return;
+  }
+  if(St.ended){
+    const li=document.createElement("li");
+    li.innerHTML="<span class='mut'>the day is over — R resets it · Shift+J runs the book’s day · M runs a thousand · S switches the figure</span>";
+    dest.appendChild(li);
+  } else {
+    let rows=NBR[St.node].map(n=>({dest:n.to, edge:n}));
+    if(St.mode==="stephen" && St.leftTower && St.node!=="tower" && !rows.some(r=>r.dest==="tower"))
+      rows.push({dest:"tower", edge:null});
+    rows.forEach(function(r,i){
+      const li=document.createElement("li"), btn=document.createElement("button");
+      btn.className="row"; btn.dataset.dest=r.dest;
+      const barred=(St.mode==="bloom" && r.dest==="eccles" && St.t>=LOCKOUT.a && St.t<LOCKOUT.b) ||
+                   (St.mode==="stephen" && r.dest==="tower" && St.leftTower);
+      if(barred) btn.setAttribute("aria-disabled","true");
+      const meta = r.edge ? r.edge.min+" min by "+r.edge.mode+" ["+r.edge.prov+"]" : "no way there [no edge in 03]";
+      const noKey = (St.mode==="stephen" && r.dest==="tower" && St.leftTower) ? " · <span class='gold'>no key; Mulligan holds it</span>" : "";
+      btn.innerHTML=(i+1)+" · <span class='nm'>"+NODES[r.dest].name+"</span> · "+meta+noKey+(r.edge?rowAnnotations(St,r.dest,r.edge):"");
+      li.appendChild(btn); dest.appendChild(li);
+    });
+    const li=document.createElement("li"), btn=document.createElement("button");
+    btn.className="row"; btn.dataset.act="wait";
+    btn.innerHTML="W · <span class='nm'>wait 15 minutes</span> · DRIFT by rule";
+    li.appendChild(btn); dest.appendChild(li);
+  }
+  setCounters(countersText(St));
+  setRecord(recordText(St));
+}
+function countersText(St){
+  const c=crossings(St);
+  let s="crossings of the documented track — same place: "+c.same+" · within one edge & ten minutes: "+c.wide;
+  if(St.mode==="bloom"){
+    if(c.meeting) s+=" · the meeting: made (Holles Street, ten o’clock)";
+    else if(St.t>=1380||St.ended) s+=" · the meeting: not made — the record had Stephen at Holles Street at ten";
+  } else if(c.meeting) s+=" · the meeting: made (Holles Street, ten o’clock)";
+  return s;
+}
+function recordText(St){
+  const t=St.t;
+  if(St.mode==="bloom"){
+    if(t>=STEPHEN_GAP.a && t<STEPHEN_GAP.b) return "the record says nothing — Stephen is off it from three till ten. Nothing here is counted. [03]";
+    const w=STEPHEN.find(w=>t>=w.a && t<w.b);
+    if(w) return "the record says: Stephen — "+NODES[w.node].name+" ("+hhmm(w.a)+"–"+hhmm(w.b)+") ["+w.src.split("·")[0].trim()+"]"+(w.node===St.node?" — here.":"");
+    return "the record says: — (between entries)";
+  } else {
+    if(t>=1080 && t<1200) return "the record is silent on Bloom between six and eight. Nothing here is counted. [03]";
+    const w=BLOOMDOC.find(w=>t>=w.a && t<w.b && w.b>w.a);
+    if(w) return "the record says: Bloom — "+NODES[w.node].name+" ("+hhmm(w.a)+"–"+hhmm(w.b)+") [03]"+(w.node===St.node?" — here.":"");
+    return "the record says: — (Bloom is between places)";
+  }
+}
+function tally(St,a,b){
+  const out={T:0,A:0,D:0,N:0};
+  St.moves.forEach(function(m){
+    if(a!==undefined && (m.t<a||m.t>=b)) return;
+    out.N++;
+    if(m.tag==="TOWARD") out.T++; else if(m.tag==="AWAY") out.A++; else out.D++;
+  });
+  return out;
+}
+function endCardHTML(St){
+  const c=crossings(St), all=tally(St), hz=tally(St,780,1200);
+  const L=[];
+  if(St.mode==="bloom"){
+    if(St.endReason==="home"){
+      L.push("<p><strong>"+hhmm(St.t)+" · 7 Eccles Street.</strong> No key — it is in the other trousers. You climb the area railings and drop five feet nine and a half inches into the area, and enter your own house through the back. [03 §17]</p>");
+    } else {
+      const neverLeft = !St.moves.some(m=>!m.wait);
+      L.push("<p><strong>"+hhmm(St.t)+" · the model stops here, where 03’s record ends (02:45"+(St.t>END_MIN?"; your last leg overran it":"")+").</strong> "+(neverLeft?"You never left the house; the whole day happened elsewhere.":"You never went home;")+" the book’s Bloom dropped over his own railings at two. [03 §17]</p>");
+    }
+    L.push("<p>FUNERAL: "+St.funeral+" · AD: "+St.ad+" · BOYLAN: "+(St.boylanMet?"MET":St.boylanCount+" encounter"+(St.boylanCount===1?"":"s"))+
+      (St.homeRefusals?" · the locked door refused you "+St.homeRefusals+" time"+(St.homeRefusals>1?"s":""):"")+"</p>");
+    L.push("<p>PURSE: "+money(St.purse)+" left of 4s 9d. [every spend was a placeholder — assumption 12]</p>");
+    L.push("<p>CROSSINGS of Stephen’s documented track — same place: "+c.same+" · within one edge &amp; ten minutes: "+c.wide+" · the meeting: "+(c.meeting?"made, Holles Street, ten o’clock. [03 §14]":"not made. The record put Stephen at Holles Street at ten; you were elsewhere. In the book that room is where the day turns. [03 §14]")+"</p>");
+    if(c.cohab) L.push("<p class='mut'>and Stephen is documented in your kitchen at two. [03 §17]</p>");
+    L.push("<p>THE CLASSIFIER, over your whole day: TOWARD "+all.T+" · AWAY "+all.A+" · DRIFT "+all.D+" (waits included) — "+all.N+" decisions.</p>");
+    L.push("<p class='gold'>Of your "+hz.N+" decisions between one and eight — the hours the hazard track is live — "+hz.A+" were moves away from a documented hazard; "+hz.T+" toward anything; "+hz.D+" neither.</p>");
+    L.push("<p class='mut'>The classifier files the entire evening as drift. The novel files those hours as the point. That disagreement is a fact about the classifier, and the model prints it rather than hiding it.</p>");
+    L.push("<p class='mut'>Shift+J runs the book’s own route through the identical classifier. M asks whether your crossings were luck. S hands you the other figure. R starts the day again.</p>");
+  } else {
+    L.push("<p><strong>"+hhmm(St.t)+" · the day stops here.</strong></p>");
+    L.push("<p>THE CLASSIFIER, over your whole day: TOWARD "+all.T+" · AWAY "+all.A+" · DRIFT "+all.D+" — "+all.N+" decisions. With no obligation to move toward and no hazard to move away from, the rule has one word left, and it used it "+all.N+" time"+(all.N===1?"":"s")+".</p>");
+    L.push("<p>PURSE: "+money(St.purse)+" left of £3 12s. The flat drain took the rest. [calibrated to 03’s two sentences — assumption 13]</p>");
+    L.push("<p>THE TOWER: refused you "+St.towerRefusals+" time"+(St.towerRefusals===1?"":"s")+". It was on every list. No key; Mulligan holds it. [03 §1]</p>");
+    L.push("<p>CROSSINGS of Bloom’s documented track — same place: "+c.same+" · within one edge &amp; ten minutes: "+c.wide+(c.meeting?" · the meeting: made, Holles Street, ten o’clock. [03 §14]":"")+"</p>");
+    L.push("<p class='mut'>A ledger with no gradient is what this day looks like from inside the rule. The key that would have given it one was handed over before the model started. [03 §1: Stephen pays the rent; Mulligan holds the key]</p>");
+    L.push("<p class='mut'>S hands you Bloom. Shift+J runs his book-day through the same classifier. R starts again.</p>");
+  }
+  return L.join("");
+}
+function showResults(title,html){
+  $("results").hidden=false;
+  $("results-h").textContent=title;
+  $("results-body").innerHTML=html;
+  $("results-h").focus();
+}
+function commitEndIfNeeded(){
+  if(STATE.ended){ showResults(STATE.mode==="bloom"?"the end of the operated day":"the end of the operated day — Stephen", endCardHTML(STATE)); }
+}
+function focusFirst(){
+  const f=$("dest").querySelector("button.row");
+  if(f && (document.activeElement===document.body || !document.body.contains(document.activeElement))) f.focus();
+}
+function actMove(dest){
+  if(STATE.ended||PENDING) return;
+  if(STATE.mode==="stephen" && dest==="tower" && STATE.leftTower){
+    STATE.towerRefusals++;
+    emitLedger(hhmm(STATE.t)+" · the Tower — refused. No key; Mulligan holds it. You cannot. The model does not say why. The novel does. [03 §1]","gold");
+    render(); focusFirst(); return;
+  }
+  const r=doMove(STATE,dest,false);
+  if(r && r.ask){ PENDING={dest:dest,hz:r.ask}; render(); return; }
+  render(); focusFirst(); commitEndIfNeeded();
+}
+function actWait(){ if(STATE.ended||PENDING) return; doWait(STATE); render(); focusFirst(); commitEndIfNeeded(); }
+function actPending(act){
+  if(!PENDING) return;
+  const dest=PENDING.dest; PENDING=null;
+  if(act==="cont"){ doMove(STATE,dest,true); render(); commitEndIfNeeded(); }
+  else { emitLedger(hhmm(STATE.t)+" · you go round. The choice is recorded; no time passes.","mut"); render(); }
+  const first=$("dest").querySelector("button"); if(first) first.focus();
+}
+function startDay(mode){
+  PENDING=null; $("ledger").innerHTML=""; $("results").hidden=true;
+  STATE=freshState(mode,emitLedger);
+  if(mode==="bloom"){
+    emitLedger("16 JUNE · 08:00 · the basement kitchen, 7 Eccles Street. [03 §4]");
+    emitLedger("It is eight in the morning. You have four shillings and ninepence and four facts on the instrument row. Press 1, or ↑↓ and Enter.");
+  } else {
+    emitLedger("16 JUNE · 08:00 · the gun-platform of the Martello Tower, Sandycove. [03 §1]");
+    emitLedger("It is eight in the morning. You have no obligation at all, nothing in your pocket until Dalkey pays you at ten, and no key — you paid the rent; Mulligan holds it. Press 1.");
+  }
+  render();
+}
+document.addEventListener("click",function(e){
+  const b=e.target.closest("button.row"); if(!b) return;
+  if(b.dataset.act==="wait") actWait();
+  else if(b.dataset.act==="cont") actPending("cont");
+  else if(b.dataset.act==="round") actPending("round");
+  else if(b.dataset.dest) actMove(b.dataset.dest);
+});
+document.addEventListener("keydown",function(e){
+  if(e.ctrlKey||e.metaKey||e.altKey) return;
+  const k=e.key;
+  if(PENDING){
+    if(k==="1"){ actPending("cont"); e.preventDefault(); return; }
+    if(k==="2"||k==="Escape"){ actPending("round"); e.preventDefault(); return; }
+  }
+  if(k>="1" && k<="9" && !PENDING){
+    const btns=$("dest").querySelectorAll("button.row[data-dest]");
+    const b=btns[Number(k)-1];
+    if(b){ b.focus(); actMove(b.dataset.dest); e.preventDefault(); }
+    return;
+  }
+  if(k==="ArrowDown"||k==="j"||k==="ArrowUp"||k==="k"){
+    if(document.activeElement && document.activeElement.closest(".ledger")) return;
+    const btns=Array.prototype.slice.call($("dest").querySelectorAll("button.row"));
+    if(!btns.length) return;
+    let i=btns.indexOf(document.activeElement);
+    i = (k==="ArrowDown"||k==="j") ? Math.min(btns.length-1,i+1) : Math.max(0,i<0?0:i-1);
+    btns[i].focus(); e.preventDefault(); return;
+  }
+  if(k==="w"||k==="W"||k==="."){ actWait(); e.preventDefault(); return; }
+  if(k==="s"||k==="S"){ startDay(STATE.mode==="bloom"?"stephen":"bloom"); e.preventDefault(); return; }
+  if(k==="r"||k==="R"){ startDay(STATE.mode); e.preventDefault(); return; }
+  if(k==="J"){ runReplay(); e.preventDefault(); return; }
+  if(k==="m"||k==="M"){ runMonteCarlo(); e.preventDefault(); return; }
+  if(k==="a"||k==="A"){ location.hash="assumptions"; e.preventDefault(); return; }
+  if(k==="?"){ const el=document.querySelector(".keys"); el.setAttribute("tabindex","-1"); el.focus(); e.preventDefault(); return; }
+});
+</script>
+
+<script>
+"use strict";
+/* ============================ REPLAY · MONTE CARLO · TABLES =============== */
+function runCanonicalCore(emit){
+  const St=freshState("bloom", emit||function(){});
+  CANON.forEach(function(step){
+    if(St.ended) return;
+    if(St.t<step[0]) advanceTo(St,step[0]);
+    doMove(St,step[1],true);
+    St.emit("   ↳ "+step[2],"mut");
+  });
+  if(!St.ended) endDay(St,"stop");
+  return St;
+}
+function windowHit(St,w){
+  let sr=false, ad=false;
+  St.presence.forEach(function(p){
+    const pb=(p.b===null?St.t:p.b);
+    if(p.node===w.node && overlapMin(p.a,pb,w.a,w.b)>0) sr=true;
+    if(HOP[p.node][w.node]===1){
+      const ov=overlapMin(p.a,pb,w.a,w.b);
+      const gap= ov>0?0:Math.max(w.a-pb,p.a-w.b);
+      if(gap<=10) ad=true;
+    }
+  });
+  return {sr:sr, ad:ad};
+}
+function runReplay(){
+  const lines=[];
+  const St=runCanonicalCore(function(t,c){ lines.push({t:t,c:c||""}); });
+  const get=function(n){ return windowHit(St, STEPHEN.find(function(w){return w.node===n;})); };
+  const hitStrand=get("strand"), hitFreeman=get("freeman"), hitKildare=get("kildare");
+  const met=crossings(St).meeting;
+  const V=[
+    [NEARMISS_03[0], hitStrand.ad||hitStrand.sr ?
+      "reproduced at the adjacency threshold — the cortege leaves Newbridge Avenue at 11:00, one edge from the strand; the pavement moment mid-traverse is below node resolution":
+      "NOT reproduced — engine deviation; report it"],
+    [NEARMISS_03[1], hitFreeman.sr ? "reproduced — same place, 12:20–13:00" : "NOT reproduced — engine deviation; report it"],
+    [NEARMISS_03[2], hitKildare.sr ? "reproduced — same place, 14:00–15:00" : "NOT reproduced — engine deviation; report it"],
+    [NEARMISS_03[3], "not reproducible — 03 gives it no address; the model counts it as nothing, and says so"],
+    [NEARMISS_03[4], met ? "reproduced — the meeting, ten o’clock, Holles Street" : "NOT reproduced — engine deviation; report it"]
+  ];
+  let html="<p>The book’s route per 03, run through the identical classifier, counters and refusals — the same engine you are operating, fed 03’s departures. Nothing below is scripted output.</p>";
+  html+="<div class='ledger' tabindex='0' aria-label='the ledger' style='height:14rem'>"+lines.map(function(l){
+    return "<p"+(l.c?" class='"+l.c+"'":"")+"></p>";
+  }).join("")+"</div>";
+  html+=endCardHTML(St);
+  html+="<p><strong>Validation against 03’s five near-misses:</strong></p><div style='overflow-x:auto'><table><thead><tr><th>03 says</th><th>the replay</th></tr></thead><tbody>";
+  V.forEach(function(v){ html+="<tr><td>"+v[0][0]+" · "+v[0][1]+" — "+v[0][2]+"</td><td>"+v[1]+"</td></tr>"; });
+  html+="</tbody></table></div>";
+  showResults("the canonical day, same classifier (Shift+J)",html);
+  // textContent-safe fill of the ledger lines (they carry en-dashes and arrows).
+  const ps=$("results-body").querySelectorAll(".ledger p");
+  lines.forEach(function(l,i){ ps[i].textContent=l.t; });
+}
+// Same metric as the live counters (A11): crossings over Stephen's five pre-gap
+// documented windows; being in the meeting room at ten reported separately.
+function mcCount(presence){
+  let same=0, wide=0, meet=false;
+  STEPHEN.forEach(function(w){
+    let sr=false, ad=false;
+    presence.forEach(function(p){
+      if(p.node===w.node && overlapMin(p.a,p.b,w.a,w.b)>0) sr=true;
+      if(HOP[p.node][w.node]===1){
+        const ov=overlapMin(p.a,p.b,w.a,w.b);
+        const gap= ov>0?0:Math.max(w.a-p.b,p.a-w.b);
+        if(gap<=10) ad=true;
+      }
+    });
+    if(w.node==="holles" && w.a>=1320){ if(sr) meet=true; return; }
+    if(w.b>900) return;
+    if(sr) same++;
+    if(sr||ad) wide++;
+  });
+  return {same:same, wide:wide, meet:meet};
+}
+function randomDay(){
+  let t=START_MIN, node="eccles", curA=t, funeral=false, ad=false;
+  const presence=[];
+  while(t<HARD_END){
+    // Deadline pull (assumption 14): one step along a shortest path when an
+    // obligation would otherwise become unreachable.
+    let forced=null;
+    const obs=[];
+    if(!funeral) obs.push({target:"glasnevin", dl:FUNERAL.glasnevinBy});
+    if(!ad)      obs.push({target:"freeman",  dl:AD_WINDOW.b-15});
+    for(let i=0;i<obs.length;i++){
+      const o=obs[i], tt=TT[o.target][node];
+      if(t+tt>o.dl){ if(o.target==="glasnevin") funeral="missed"; else ad="missed"; continue; }
+      if(t+tt>=o.dl-15){ forced=o.target; break; }
+    }
+    if(forced){
+      let best=null,bv=Infinity;
+      let cand=NBR[node].filter(function(n){ return n.to!=="eccles"; });
+      if(!cand.length) cand=NBR[node];
+      cand.forEach(function(n){ const v=n.min+TT[forced][n.to]; if(v<bv){bv=v;best=n;} });
+      presence.push({node:node,a:curA,b:t});
+      t+=best.min; node=best.to; curA=t;
+    } else {
+      const opts=NBR[node].filter(function(n){ return n.to!=="eccles"; });
+      const pick=Math.floor(Math.random()*(opts.length+1));
+      if(pick===opts.length){ t+=15; }
+      else {
+        presence.push({node:node,a:curA,b:t});
+        t+=opts[pick].min; node=opts[pick].to; curA=t;
+      }
+    }
+    if(!funeral && node==="glasnevin" && t<=FUNERAL.glasnevinBy){ funeral=true; t+=15; }
+    if(!ad && node==="freeman" && t>=AD_WINDOW.a && t<=AD_WINDOW.b-15){ ad=true; t+=15; }
+  }
+  presence.push({node:node,a:curA,b:Math.min(t,HARD_END)});
+  return mcCount(presence);
+}
+function bar(n,max){ const w=Math.round(28*n/Math.max(1,max)); return w?Array(w+1).join("█"):"·"; }
+function runMonteCarlo(){
+  const N=1000, bs=[0,0,0,0,0,0], bw=[0,0,0,0,0,0];
+  let meets=0;
+  for(let i=0;i<N;i++){
+    const c=randomDay();
+    bs[Math.min(5,c.same)]++; bw[Math.min(5,c.wide)]++;
+    if(c.meet) meets++;
+  }
+  const cc=mcCount(CANON_STATE.presence);
+  const cSame=cc.same, cWide=cc.wide;
+  const ms=Math.max.apply(null,bs), mw=Math.max.apply(null,bw);
+  const lab=function(i){ return (i<5?String(i)+" ":"5+"); };
+  let outS="", outW="";
+  for(let i=0;i<6;i++){
+    outS+=lab(i)+" │"+bar(bs[i],ms)+" "+String(bs[i]).padStart(4)+(i===Math.min(5,cSame)?"   ◆ the book’s day ("+cSame+")":"")+"\n";
+    outW+=lab(i)+" │"+bar(bw[i],mw)+" "+String(bw[i]).padStart(4)+(i===Math.min(5,cWide)?"   ◆ the book’s day ("+cWide+")":"")+"\n";
+  }
+  const n1=N-bs[0], n2=N-bw[0];
+  let html="<p>1,000 random legal Bloom-days against Stephen’s fixed documented track — his five pre-gap windows, the only hours a crossing can be counted. The walker keeps the funeral, the advertisement and the lockout; it knows nothing of Stephen and stays out till two. Uniform choice over legal moves, plus the one-step deadline pull. [assumption 14]</p>";
+  html+="<p>Same-place crossings per day:</p><pre>"+outS+"</pre>";
+  html+="<p>Within one edge and ten minutes:</p><pre>"+outW+"</pre>";
+  html+="<p>"+n1+" of "+N+" days ("+(n1/10).toFixed(1)+"%) crossed the documented track in the same place at least once; "+bs[0]+" managed zero. At the wider count, "+n2+" of "+N+" ("+(n2/10).toFixed(1)+"%). The book’s day, same rules and same counter, made "+cSame+" and "+cWide+" — marked ◆.</p>";
+  html+="<p>And "+meets+" of "+N+" random days ("+(meets/10).toFixed(1)+"%) happened to be at Holles Street in the meeting hour. The book’s day was. The classifier files that move as drift; the reader may not.</p>";
+  html+= (n1>N/2)
+    ? "<p class='gold'>In this graph, on these errands, even the same-place crossing is not the rare event — zero is the tail. What the novel is praised for arranging is close to what the structure hands out.</p>"
+    : (n2>N/2)
+    ? "<p class='gold'>At street scale — one edge, ten minutes — the crossing is the expected outcome of these errands: "+(n2/10).toFixed(1)+"% of random days make at least one, and the book’s count sits beside the mode. In the same place at the same minutes, chance thins out. The structure supplies the neighbourhood; the book supplies the room.</p>"
+    : "<p class='gold'>In this run, most random days made no crossing at either count: the structure alone did not force the book’s day. The model prints what it computed.</p>";
+  html+="<p class='mut'>Every count excludes Stephen’s three-till-ten gap, and the fourth row of 03’s table — ‘both crossing the same small city’ at three — has no address in 03 and is invisible to this counter. Both exclusions can only lower these bars. Rerun M for a fresh thousand.</p>";
+  showResults("a thousand days (M)",html);
+}
+/* ---- document-flow tables, rendered from the same constants ---- */
+function tbl(head,rows){
+  return "<div style='overflow-x:auto'><table><thead><tr>"+head.map(function(h){return "<th>"+h+"</th>";}).join("")+
+    "</tr></thead><tbody>"+rows.map(function(r){
+      return "<tr>"+r.map(function(c){return "<td>"+c+"</td>";}).join("")+"</tr>";
+    }).join("")+"</tbody></table></div>";
+}
+function buildTables(){
+  $("t-nodes").innerHTML=tbl(["place","source"],
+    Object.keys(NODES).map(function(k){ return [NODES[k].name, NODES[k].src]; }));
+  $("t-edges").innerHTML=tbl(["edge","min","mode","provenance","note"],
+    EDGES.map(function(e){ return [NODES[e[0]].name+" ↔ "+NODES[e[1]].name, e[2], e[3], "["+e[4]+"]", e[5]]; }));
+  const sr=[];
+  STEPHEN.forEach(function(w){
+    if(w.a===1320) sr.push(["15:00–22:00","<strong>OFF THE RECORD</strong>","03 · ‘vanishes for seven hours’ — from three till ten; excluded from every count"]);
+    let nm=NODES[w.node].name;
+    if(w.node==="eccles") nm+=" · cohabitation, not a near-miss — uncounted";
+    else if(w.a===1320) nm+=" · the meeting — tallied apart";
+    else if(w.a>1320) nm+=" · in company with Bloom per 03 — uncounted";
+    sr.push([hhmm(w.a)+"–"+hhmm(w.b), nm, w.src]);
+  });
+  $("t-stephen").innerHTML=tbl(["hours","place","source"],sr);
+  const br=BOYLAN.map(function(w){ return [w.fix, NODES[w.node].name, hhmm(w.a)+"–"+hhmm(w.b), w.src]; });
+  br.splice(0,0,["~11:30","the pavement, from the funeral carriage","—","03 §6 · a route, not a node; printed as a note, never counted"]);
+  $("t-boylan").innerHTML=tbl(["documented","place","active window","source"],br);
+  $("t-nearmiss").innerHTML=tbl(["hour","place","what happens"],NEARMISS_03);
+}
+/* ---- init ---- */
+let CANON_STATE=null;
+buildTables();
+CANON_STATE=runCanonicalCore(null);
+BLOOMDOC=[];
+CANON_STATE.presence.forEach(function(p){
+  const b=(p.b===null?CANON_STATE.t:p.b);
+  if(b<1080 || p.a>=1200){ BLOOMDOC.push({node:p.node,a:p.a,b:b}); return; }
+  if(p.a<1080) BLOOMDOC.push({node:p.node,a:p.a,b:1080});
+  if(b>1200)  BLOOMDOC.push({node:p.node,a:1200,b:b});
+});
+startDay("bloom");
+</script>
+</body>
+</html>
