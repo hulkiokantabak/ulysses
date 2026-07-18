@@ -505,6 +505,15 @@ blockquote cite::before { content: "\2014\00a0"; }  /* the attributive em dash *
   margin-inline: calc(50% - min(100vw - 3rem, 67.5rem) / 2);
 }
 
+/* A dimension page's inline artifact (the spec's "the artifact — inline"):
+   embedded plate within the reading measure. Implementer's addition, 06-design. */
+iframe.register-embed {
+  display: block;
+  width: 100%;
+  height: max(55vh, 28rem);
+  margin-block: 1rem 1.5rem;
+}
+
 /* ---------- print: the inversion is already the paper scheme ---------- */
 
 @media print {
