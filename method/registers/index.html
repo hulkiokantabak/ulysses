@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The four registers · Ulysses Project</title>
+  <link rel="canonical" href="https://hulkiokantabak.github.io/ulysses/method/registers/">
+</head>
+<body>
+  <header>
+    <p><a href="/ulysses/">Ulysses Project</a></p>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="/ulysses/reading/">Reading</a></li>
+        <li><a href="/ulysses/reference/">Reference</a></li>
+        <li><a href="/ulysses/dimensions/">Dimensions</a></li>
+        <li><a href="/ulysses/presentation/">Presentation</a></li>
+        <li><a href="/ulysses/method/">Method</a></li>
+        <li><a href="/ulysses/about/">About</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+<h1>Ulysses — Method</h1>
+<p><strong>Base document 00 · How this project is built</strong>
+Written at the point of carrying the work from documentation into build.
+Everything else in the project answers to this file.</p>
+<hr>
+<h2>The aim</h2>
+<p>A website and a presentation about <em>Ulysses</em>, built out of a first cover-to-cover
+reading (8–17 July 2026, Penguin Modern Classics / Kiberd).</p>
+<p>The sequence has been deliberate and should stay that way: <strong>documentation first, design
+second.</strong> Base documents get built while the book is fresh; the look of the website and
+the shape of the presentation are not decided until the material is in hand. The
+documents are not notes toward the deliverables — they are the deliverables' source of
+truth, and they should be able to outlive any particular design.</p>
+<hr>
+<h2>THE FOUR REGISTERS</h2>
+<p>Every dimension we analyse gets output in up to four registers. They are distinct
+products, not four exports of one file. When a new dimension is picked, the first
+question is <em>which registers does this one earn</em>.</p>
+<h3>1 · HTML</h3>
+<p>Single-file, self-contained, no external dependencies. Interactive where interaction
+earns its place — a filter, a toggle, a tap-to-reveal that shows something static layout
+cannot.</p>
+<p>Doubles as the build material for the website. Anything shipped here should be
+transplantable into the site without a rewrite.</p>
+<h3>2 · PDF reporting</h3>
+<p>The durable, portable, offline register. <strong>Hyperlinked and cross-linked</strong>: internal
+navigation (contents → section → back), cross-references between documents, and outbound
+links where a source deserves one. A reader should be able to move around inside a PDF
+the way they move around inside the site.</p>
+<p>This is also the handoff register — the form the work travels in, to another session,
+another model, or another person.</p>
+<h3>3 · Presentation — the Madrid logic</h3>
+<p>Follows the format ratified on the <strong>Paseo del Arte</strong> decks (Prado / Reina Sofía), which
+is settled and should not be redesigned:</p>
+<ul>
+<li><strong>Two decks.</strong> An <strong>audience deck</strong> (image cards only) and a <strong>presenter deck</strong> (image
+card plus the material to speak from).</li>
+<li><strong>Ten facts and three questions per topic.</strong> Facts may run to fifteen where the
+material earns it; weak ones get cut rather than padded.</li>
+<li><strong>The questions must not echo the facts on the same page.</strong> This was the single biggest
+failure in the first Madrid version. A question that restates a fact above it is
+furniture. The question should open something the facts did not close.</li>
+<li><strong>Per-topic accent colour.</strong></li>
+<li><strong>A4. Page orientation follows the image</strong>, not the template.</li>
+<li><strong>Deep-dives sit immediately after their topic</strong>, never collected at the end.</li>
+<li><strong>Files stay small.</strong> These are screen documents, not print products; image quality can
+be traded for size without apology.</li>
+</ul>
+<p>For <em>Ulysses</em> the &quot;topic&quot; unit is whatever the chosen dimension makes natural — an
+episode, a character, a place, an object. Decide the unit before writing any slides.</p>
+<h3>4 · Maps, images and diagrams</h3>
+<p>Standalone references in their own right, <strong>and</strong> components integrated into the PDF and
+HTML packages. Built once, at a quality that survives being pulled out of context.</p>
+<p>The rule that has held so far: <strong>one signature device per document.</strong> The character map
+got the rings-of-the-day; the place-and-time document got the two routes and the time
+rail. The device should encode something true about the material, not decorate it.</p>
+<hr>
+<h2>The shared visual system</h2>
+<p>All four registers draw on the same tokens, so the set reads as one family.</p>
+<p><strong>Origin.</strong> Joyce specified the 1922 Shakespeare &amp; Company cover as Greek-flag blue with
+white lettering — the Odyssey made into an object. The palette comes from the book's own
+first edition, not from a template.</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Value</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>deep</td>
+<td><code>#081a35</code></td>
+<td>ground</td>
+</tr>
+<tr>
+<td>paper</td>
+<td><code>#f4efe2</code></td>
+<td>text on dark, warm white</td>
+</tr>
+<tr>
+<td>gold</td>
+<td><code>#dfa93f</code></td>
+<td>Bloom</td>
+</tr>
+<tr>
+<td>ash</td>
+<td><code>#a3c4e2</code></td>
+<td>Stephen</td>
+</tr>
+<tr>
+<td>rose</td>
+<td><code>#cf6470</code></td>
+<td>Molly</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Typography.</strong> A serif for people and prose; a monospace for the factual layer — hours,
+episode numbers, measurements. The pairing is not arbitrary: <em>Ithaca</em> turns the book into
+a catechism of facts and figures, so a data face for data is the book's own logic.</p>
+<p><strong>Print adaptation.</strong> On paper the ground inverts — white page, deep blue headings, gold
+darkened to <code>#A0701C</code> for legibility. Same family, different medium.</p>
+<p><strong>Accessibility floor</strong>, non-negotiable in the HTML register: visible keyboard focus,
+<code>prefers-reduced-motion</code> respected, responsive to a phone, real semantics on interactive
+elements.</p>
+<hr>
+<h2>What exists</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Document</th>
+<th>Registers built</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00</td>
+<td>Method <em>(this file)</em></td>
+<td>—</td>
+</tr>
+<tr>
+<td>01</td>
+<td>The Character Map</td>
+<td>markdown · HTML</td>
+</tr>
+<tr>
+<td>02</td>
+<td>The World, the City, and the Day — Dublin 1904</td>
+<td>markdown</td>
+</tr>
+<tr>
+<td>03</td>
+<td>The Itinerary — place and hour, episode by episode</td>
+<td>markdown · HTML <em>(shared with 02)</em></td>
+</tr>
+<tr>
+<td>—</td>
+<td>Reading Companion — the full Q&amp;A of the read, 117pp</td>
+<td>PDF</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Masters session — which dimension next</td>
+<td>markdown</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Gaps against the four registers:</strong> nothing yet exists in the presentation register, and
+no PDF has been built with the hyperlinking the second register calls for. The Reading
+Companion is a PDF but a linear one.</p>
+<hr>
+<h2>Standing rules</h2>
+<p><strong>Flag uncertainty rather than smoothing it.</strong> Where the text contradicts itself — Molly's
+age, Rudy's age in the vision — show the contradiction. Where a figure is approximate —
+Dublin's population — say so. The open-questions section at the end of a document is part
+of the document, not an admission.</p>
+<p><strong>Separate what the book says from what the schemas say.</strong> Joyce printed no episode
+titles. Telemachus, Calypso, Circe and the rest come from schemas he circulated privately
+and then contradicted between versions. Use them as scaffolding, and say that they are
+scaffolding, every time.</p>
+<p><strong>Distinguish present, remembered and hallucinated.</strong> Milly never walks on stage; Rudy
+appears once, as a vision; Martha exists as a letter. Any document that lists who is
+present must hold this distinction consistently.</p>
+<p><strong>Keep the reader's own material intact.</strong> The questions asked during the reading are
+reproduced as spoken, dictation slips included. Cleaning them up would quietly falsify
+the record of learning a difficult book.</p>
+<hr>
+<h2>Open</h2>
+<ul>
+<li><strong>The next dimension.</strong> Ten candidates ranked by the masters; the top of the field is
+the Object Museum, then the Women's Dublin, then the Governed City. The Homeric
+concordance was vetoed twice and survives only as Cortázar's inversion — map the
+places where Joyce <em>refuses</em> Homer. Awaiting the author's pick.</li>
+<li><strong>Website and presentation design.</strong> Still deliberately deferred.</li>
+<li><strong>The second-source pass.</strong> Reading questions also going to ChatGPT for an independent
+set of answers, to be merged with this material.</li>
+</ul>
+<hr>
+<p><em>Base document 00. Update this file when a register, a token, or a standing rule changes
+— not when a document is added.</em></p>
+
+
+  </main>
+  <footer>
+    <p><a href="/ulysses/about/">About — the reading, the edition, rights, colophon</a></p>
+  </footer>
+</body>
+</html>

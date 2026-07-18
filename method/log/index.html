@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catches and learnings · Ulysses Project</title>
+  <link rel="canonical" href="https://hulkiokantabak.github.io/ulysses/method/log/">
+</head>
+<body>
+  <header>
+    <p><a href="/ulysses/">Ulysses Project</a></p>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="/ulysses/reading/">Reading</a></li>
+        <li><a href="/ulysses/reference/">Reference</a></li>
+        <li><a href="/ulysses/dimensions/">Dimensions</a></li>
+        <li><a href="/ulysses/presentation/">Presentation</a></li>
+        <li><a href="/ulysses/method/">Method</a></li>
+        <li><a href="/ulysses/about/">About</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+<h1>The log — catches and learnings</h1>
+
+<p>The project logs its own errors and publishes them. A catch is an error found, with
+severity and resolution; a catch that suggests a standing rule is escalated to a
+learning. This includes the project's structural errors about itself — that is the
+point of keeping the log in public.</p>
+
+<h2>Ulysses — Catches</h2>
+<p>Errors found, with severity (1 cosmetic … 5 blocker) and resolution.
+Log every catch regardless of severity. A catch that suggests a standing rule is
+escalated to <code>learnings.md</code>.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Date</th>
+<th>Sev</th>
+<th>Catch</th>
+<th>Resolution</th>
+<th>Escalated</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C-01</td>
+<td>07-18</td>
+<td>2</td>
+<td>Character map used three circles; omitted the dead and absent, who do more work here than most of the living</td>
+<td>Fourth circle added</td>
+<td>L-01</td>
+</tr>
+<tr>
+<td>C-02</td>
+<td>07-18</td>
+<td>3</td>
+<td>Place/time documents mapped two male routes only; Molly appears as an arm</td>
+<td>Acknowledged as a fact about the book, not a flaw in the map; became dimension 2</td>
+<td>L-02</td>
+</tr>
+<tr>
+<td>C-03</td>
+<td>07-18</td>
+<td>3</td>
+<td>No tenement on the city map, because the protagonists never enter one</td>
+<td>Noted; became part of dimension 3</td>
+<td>L-02</td>
+</tr>
+<tr>
+<td>C-04</td>
+<td>07-18</td>
+<td>2</td>
+<td>Naive markdown regex produced crossed <code>&lt;b&gt;/&lt;i&gt;</code> on <code>**bold and *italic***</code>; crashed the PDF build</td>
+<td>Replaced with a tag-stack walker guaranteeing well-formed output</td>
+<td>L-03</td>
+</tr>
+<tr>
+<td>C-05</td>
+<td>07-18</td>
+<td>1</td>
+<td>Page-range extraction read page <em>counts</em> (&quot;120 pages&quot;) as page numbers</td>
+<td>Explicit anchors plus monotonicity enforcement</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-06</td>
+<td>07-18</td>
+<td>2</td>
+<td>Four &quot;nobody has done this&quot; dimension candidates turned out to have dedicated literatures</td>
+<td><code>source-research.md</code> now precedes any novelty claim</td>
+<td>L-04</td>
+</tr>
+<tr>
+<td>C-07</td>
+<td>07-18</td>
+<td><strong>4</strong></td>
+<td><strong>Ten of twelve dimensions were the same operation — inventory. The masters flagged it in round two and it was logged without being acted on</strong></td>
+<td>Typology of seven operations introduced; three new types added; Type-I capped at three (A11)</td>
+<td><strong>L-05</strong></td>
+</tr>
+<tr>
+<td>C-08</td>
+<td>07-18</td>
+<td>3</td>
+<td>A python <code>re.sub</code> intended to dedupe a heading swallowed an entire new section of the skill file; caught only by a structural grep</td>
+<td>Section rebuilt by splitting on the heading instead of regex-replacing across it; structural verification now runs after every scripted edit</td>
+<td>L-06</td>
+</tr>
+<tr>
+<td>C-09</td>
+<td>07-18</td>
+<td><strong>4</strong></td>
+<td><strong>Sequencing error: dimension 15 (an instrument) was scheduled to ship second, before dimension 11 (the analysis that defines its questions). Collection defects cannot be repaired retroactively</strong></td>
+<td>Anchor A15 — 15 is second in the queue, last in the shipping order</td>
+<td><strong>L-07</strong></td>
+</tr>
+<tr>
+<td>C-10</td>
+<td>07-18</td>
+<td>2</td>
+<td>Chair issued &quot;make it provisional and ugly on purpose&quot; to Code as though it were a specification. It is a wish; every style reads as a choice</td>
+<td>Replaced with structural constraint — one page, no nav, system fonts (A16)</td>
+<td>L-08</td>
+</tr>
+<tr>
+<td>C-11</td>
+<td>07-18</td>
+<td>3</td>
+<td>The Cowork handoff prompt named <code>ulysses-bundle-2026-07-18-v2.zip</code> by exact filename; the bundle had since become v3, so the prompt pointed at a file that no longer existed</td>
+<td>Version-agnostic reference; found by a bundle consistency audit, not by reading</td>
+<td>L-09</td>
+</tr>
+<tr>
+<td>C-12</td>
+<td>07-18</td>
+<td>2</td>
+<td>No rights note in a bundle destined for a <strong>public</strong> site quoting a public-domain novel alongside in-copyright apparatus and four in-copyright translations</td>
+<td><code>RIGHTS.md</code> added at bundle root</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-13</td>
+<td>07-18</td>
+<td>2</td>
+<td>Chair reported the missing second-model answer set as &quot;the single largest missing input to the project.&quot; It was a deliberate exclusion to keep two builds independent — asserted as a defect without checking whether it was a decision</td>
+<td>Reclassified; anchor A17 records the decision</td>
+<td><strong>L-10</strong></td>
+</tr>
+<tr>
+<td>C-14</td>
+<td>07-18</td>
+<td><strong>4</strong></td>
+<td><strong>Anchor A16 (no navigation, no sections, one flat page) was wrong. It treated &quot;we don't know which dimensions survive&quot; as &quot;we don't know what the project contains&quot; — but the categories (reading, reference, dimensions, registers, presentation, method) are settled. The chair also quoted Shneiderman's overview-first mantra and then specified a flat directory listing, which is the failure state that mantra exists to prevent</strong></td>
+<td>A16 withdrawn by the author; <code>05-site-architecture.md</code> written; A18 separates architecture from visual design</td>
+<td><strong>L-11</strong></td>
+</tr>
+<tr>
+<td>C-15</td>
+<td>07-18</td>
+<td>3</td>
+<td>Git's line-ending auto-detection classified two of the three reading PDFs as text at the repo's first commit. The stored blobs were verified byte-identical to the bundle originals (the files happen to contain no CR bytes), but any fresh Windows checkout would have rewritten their line endings — corrupting the byte-offset xref tables of the files the public site serves</td>
+<td><code>.gitattributes</code> disables conversion repo-wide (<code>* -text</code>); the first commit amended before anything was pushed or mirrored; blob-vs-original hash comparison recorded as the check</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+
+
+<hr>
+
+<h2>Ulysses — Learnings</h2>
+<p>Standing rules escalated from catches. A learning that has not changed an artifact is
+not yet a learning.</p>
+<p><strong>L-01 — The absent are a category, not a footnote.</strong>
+<em>From C-01.</em> In a book whose engine is a dead son, a dead mother and a dead father,
+characters who never appear need their own tier.
+<em>Applied:</em> fourth circle in the character map; anchor A3; dimension 6.</p>
+<p><strong>L-02 — A faithful map inherits the book's blind spots.</strong>
+<em>From C-02, C-03.</em> Mapping what the protagonists do reproduces what the protagonists
+ignore. The omission is data, not error.
+<em>Applied:</em> dimensions 2 and 3 were created from this; anchor A5.</p>
+<p><strong>L-03 — Author markup will be malformed; parsers must be total.</strong>
+<em>From C-04.</em> Real prose contains crossed emphasis. Converters must produce well-formed
+output from ill-formed input rather than fail.
+<em>Applied:</em> the PDF builder's inline converter.</p>
+<p><strong>L-04 — Verify coverage before claiming novelty.</strong>
+<em>From C-06.</em> Across two passes, five of seven &quot;surely nobody has done this&quot; candidates
+were occupied.
+<em>Applied:</em> anchor A12; <code>source-research.md</code> precedes any novelty claim.</p>
+<p><strong>L-05 — Count the operations, not the topics.</strong>
+<em>From C-07.</em> A project can look varied and be monotonous. Twelve dimensions, ten
+identical operations. The failure was invisible at the level of subject and obvious at
+the level of method — and the panel had already said so, which means <strong>a logged
+objection that produces no artifact change is not a catch, it is a note.</strong>
+<em>Applied:</em> the seven-type taxonomy; dimensions 13, 14, 15; anchor A11 capping Type I at
+three; the panel skill's type discipline; step 1 of the pipeline is now <em>declare the
+type</em>.</p>
+<p><strong>L-06 — Verify structure after every scripted edit.</strong>
+<em>From C-08.</em> A regex meant to remove a duplicate heading deleted the section between two
+matches. The write reported success; only a structural grep revealed the loss.
+<em>Applied:</em> scripted edits split on markers rather than substituting across them, and are
+followed by a heading/count check. Same family as the PDF coverage check.</p>
+<p><strong>L-07 — An instrument cannot precede the analysis that specifies it.</strong>
+<em>From C-09.</em> Urgency about collecting data is not the same as readiness to collect it.
+The questions a public reading log asks come from knowing what the categories of
+difficulty actually are, which is dimension 11's output. And unlike a document, a badly
+specified collection cannot be fixed later — you cannot return to respondents and ask
+what you forgot.
+<em>Applied:</em> anchor A15; the shipping order separated from the build queue in
+<code>04-dimensions.md</code> and <code>HANDOFF.md</code>.</p>
+<p><strong>L-08 — Provisionality is structural, not stylistic.</strong>
+<em>From C-10.</em> A container cannot signal &quot;this is temporary&quot; through its appearance,
+because every appearance reads as a decision and gets reacted to as a proposal. The only
+way to defer design is to withhold the structures that carry it.
+<em>Applied:</em> anchor A16 — no navigation, no sections, one flat page — in <code>CODE-PROMPT.md</code>
+as a binding scope limit rather than a stylistic preference.</p>
+<p><strong>L-09 — A handoff document must not name its own container by version.</strong>
+<em>From C-11.</em> Any prompt or document that references the bundle by exact filename breaks
+the moment the bundle is revised — and handoffs are revised more than anything else in
+the project. Reference containers by pattern or by role, never by version string.
+<em>Applied:</em> <code>HANDOFF-PROMPT.md</code> now refers to &quot;the zip beginning <code>ulysses-bundle-</code>.&quot;
+Standing check added to the audit: grep for version strings in every handoff artifact
+before shipping a bundle.</p>
+<p><strong>L-10 — An absence is not a gap until you know it wasn't chosen.</strong>
+<em>From C-13.</em> A consistency audit can prove a file is missing. It cannot tell you whether
+the file is missing <em>by mistake</em> or <em>by design</em>, and the difference is the whole meaning
+of the finding. Reporting an intentional exclusion as a defect wastes the author's time
+and — worse — invites them to &quot;fix&quot; something that was load-bearing.
+<em>Applied:</em> anchor A17; audits now report absences as questions (&quot;is this intended?&quot;)
+rather than as findings, unless a document elsewhere in the bundle claims the file exists.</p>
+<p><strong>L-11 — Distinguish the unknown thing from the known container.</strong>
+<em>From C-14.</em> A project can be genuinely uncertain about its contents while being certain
+about their kinds. Deferring structure because the contents are unsettled throws away the
+part that was settled, and costs far more later — architecture retrofitted onto finished
+work is always compromise, while architecture built at n=0 is nearly free. The cost
+asymmetry runs opposite to the intuition that says <em>wait until you know more.</em>
+<em>Applied:</em> A16 withdrawn; A18 added separating architecture from visual design; base
+document 05 written and the Code prompt rewritten from <em>build almost nothing</em> to <em>build
+the structure properly, and no styling</em>.</p>
+<p><em>Second-order note:</em> the panel produced this error unanimously, and the author caught it.
+Designed disagreement is not a guarantee — a panel composed for one kind of caution will
+be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
+question, not to trust the answer</strong> (the skill's own rule, which the chair did not apply
+to a vote that went the way the chair already leaned).</p>
+
+
+  </main>
+  <footer>
+    <p><a href="/ulysses/about/">About — the reading, the edition, rights, colophon</a></p>
+  </footer>
+</body>
+</html>

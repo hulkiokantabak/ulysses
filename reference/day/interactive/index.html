@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://hulkiokantabak.github.io/ulysses/reference/day/interactive/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ulysses — The Map and the Day</title>
+<style>
+  :root{
+    --deep:#081a35;
+    --ground:#0b2445;
+    --water:#0e2f57;
+    --land:#0a2040;
+    --line:#28558f;
+    --paper:#f4efe2;
+    --mute:#7d9cc2;
+    --dim:#3d6493;
+    --gold:#dfa93f;
+    --ash:#a3c4e2;
+    --rose:#cf6470;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--deep);color:var(--paper);font-family:var(--serif);
+       line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:28px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:20px}
+  .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.22em;
+           text-transform:uppercase;color:var(--mute);margin:0 0 10px}
+  h1{font-size:clamp(28px,7vw,46px);line-height:1.05;margin:0 0 10px;
+     font-weight:400;letter-spacing:-.01em}
+  h1 em{font-style:italic;color:var(--gold)}
+  .standfirst{margin:0;max-width:58ch;color:#cfe0f2;font-size:15px}
+
+  .sectionhead{
+    display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+    margin:34px 0 6px;padding-top:18px;border-top:1px solid var(--line)}
+  .sectionhead h2{font-size:21px;font-weight:400;margin:0}
+  .sectionhead span{font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+                    text-transform:uppercase;color:var(--mute)}
+
+  .viewtoggle{display:flex;gap:6px;margin:12px 0 6px}
+  .viewtoggle button{
+    background:transparent;color:var(--mute);border:1px solid var(--line);
+    font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+    padding:6px 11px;cursor:pointer;transition:.18s}
+  .viewtoggle button[aria-pressed="true"]{
+    background:var(--gold);color:var(--deep);border-color:var(--gold);font-weight:700}
+  .viewtoggle button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+  svg{width:100%;height:auto;display:block}
+  #map{aspect-ratio:1750/1400;transition:none}
+  #map.city{aspect-ratio:500/500}
+
+  .bay{fill:var(--water)}
+  .coast{fill:none;stroke:var(--line);stroke-width:2;opacity:.9}
+  .river{fill:none;stroke:#1d4d86;stroke-width:5;stroke-linecap:round}
+  .canal{fill:none;stroke:var(--dim);stroke-width:1.4;stroke-dasharray:6 5;opacity:.7}
+  .route{fill:none;stroke-linejoin:round;stroke-linecap:round;opacity:.5;
+         transition:opacity .25s,stroke-width .25s}
+  .route.bloom{stroke:var(--gold);stroke-width:2.6}
+  .route.stephen{stroke:var(--ash);stroke-width:2.6;stroke-dasharray:9 6}
+  .route.dim{opacity:.12}
+
+  .place{cursor:pointer}
+  .place circle{fill:var(--paper);stroke:var(--ground);stroke-width:1.4;
+                transition:opacity .25s}
+  .place.meet circle{fill:var(--gold)}
+  .place.memory circle{fill:none;stroke:var(--rose);stroke-width:2}
+  .place text{fill:var(--paper);font-size:13px;font-family:var(--serif);
+              transition:opacity .25s;pointer-events:none}
+  .place.faded circle,.place.faded text{opacity:.14}
+  .place.on circle{fill:var(--gold);r:8}
+  .place:focus-visible circle{stroke:var(--gold);stroke-width:3}
+  .place.hidelabel text{display:none}
+
+  /* time rail */
+  .lane{font-family:var(--mono);font-size:11px;fill:var(--mute);letter-spacing:.08em}
+  .grid{stroke:var(--line);stroke-width:.7;opacity:.55}
+  .axislab{font-family:var(--mono);font-size:10px;fill:var(--mute)}
+  .bar{cursor:pointer;transition:opacity .25s}
+  .bar rect{transition:opacity .25s}
+  .bar text{font-family:var(--mono);font-size:10px;fill:var(--deep);font-weight:700;
+            pointer-events:none}
+  .bar.faded{opacity:.2}
+  .bar:focus-visible rect{stroke:var(--paper);stroke-width:2}
+  .gapnote{font-family:var(--mono);font-size:9.5px;fill:var(--mute);letter-spacing:.06em}
+  .gapline{stroke:var(--mute);stroke-width:1;stroke-dasharray:2 4;opacity:.6}
+  .meetline{stroke:var(--gold);stroke-width:1.5;stroke-dasharray:4 3}
+  .meetlab{font-family:var(--mono);font-size:10px;fill:var(--gold);letter-spacing:.08em}
+
+  .strip{display:flex;gap:6px;overflow-x:auto;padding:16px 0 10px;margin-top:16px;
+         border-top:1px solid var(--line);scrollbar-width:thin}
+  .strip button{flex:0 0 auto;background:transparent;color:var(--mute);
+    border:1px solid var(--line);font-family:var(--mono);font-size:11px;
+    letter-spacing:.04em;padding:7px 10px;cursor:pointer;white-space:nowrap;transition:.18s}
+  .strip button:hover{color:var(--paper);border-color:var(--sea)}
+  .strip button[aria-pressed="true"]{background:var(--gold);color:var(--deep);
+    border-color:var(--gold);font-weight:700}
+  .strip button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+  .panel{margin-top:20px;border:1px solid var(--line);background:var(--ground);
+         padding:22px 20px;min-height:200px}
+  .kicker{font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+          text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+  .panel h3{font-size:26px;font-weight:400;margin:0 0 4px;line-height:1.15}
+  .where{font-style:italic;color:var(--ash);margin:0 0 14px;font-size:14px}
+  .panel p{margin:0 0 12px;font-size:15px;max-width:62ch}
+  .steps{font-size:14.5px;color:#cfe0f2;margin:12px 0}
+  .steps b{color:var(--paper);font-weight:400}
+  .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+  .chip{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;
+        border:1px solid var(--line);padding:4px 7px;color:var(--mute)}
+  .chip.here{border-color:var(--gold);color:var(--gold)}
+
+  .legend{display:flex;flex-wrap:wrap;gap:14px 22px;margin-top:20px;padding-top:16px;
+    border-top:1px solid var(--line);font-family:var(--mono);font-size:10.5px;
+    letter-spacing:.05em;color:var(--mute)}
+  .key{display:flex;align-items:center;gap:7px}
+  .sw{width:22px;height:0;border-top:2px solid}
+  .dot{width:10px;height:10px;border-radius:50%}
+
+  footer{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--mute);max-width:66ch}
+  footer em{color:var(--ash)}
+
+  @media (max-width:600px){
+    .panel{padding:18px 15px}
+    .place text{font-size:17px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Base document 02–03 · Place and hour</p>
+  <h1>Two men crossing<br>one small city, <em>once</em></h1>
+  <p class="standfirst">
+    Dublin, 8 a.m. Thursday 16 June to 2 a.m. Friday 17 June 1904. The gold thread is
+    Bloom, the pale thread is Stephen. They come within a few metres of each other
+    three times before noon and do not meet until ten at night.
+  </p>
+</header>
+
+<div class="sectionhead">
+  <h2>The map</h2><span>where</span>
+</div>
+<div class="viewtoggle" role="group" aria-label="Map extent">
+  <button id="btnBay"  aria-pressed="true">DUBLIN BAY</button>
+  <button id="btnCity" aria-pressed="false">THE CITY</button>
+</div>
+<svg id="map" viewBox="0 0 1750 1400" role="img"
+     aria-label="Map of Dublin and its bay showing the routes of Bloom and Stephen on 16 June 1904"></svg>
+
+<div class="sectionhead">
+  <h2>The day</h2><span>when</span>
+</div>
+<svg id="rail" viewBox="0 0 1020 230" role="img"
+     aria-label="Timeline of the eighteen episodes across three characters"></svg>
+
+<nav class="strip" id="strip" aria-label="Episodes"></nav>
+
+<section class="panel" id="panel" aria-live="polite"></section>
+
+<div class="legend" id="legend"></div>
+
+<footer>
+  Positions are plotted from real coordinates, so the distances are true — but the
+  coastline, the river and the canals are drawn as a schematic, not a survey.
+  The hours are Joyce's own, from the schemas he circulated privately; the minutes are
+  reconstructions. <em>Penelope</em> has no hour at all, which is why Molly's band runs
+  off the end of the clock and never closes.
+</footer>
+
+</div>
+
+<script>
+/* ------------------------------------------------------------------ data -- */
+/* projection: x = (lon + 6.34) * 5972 ;  y = (53.40 - lat) * 10000  */
+
+const PLACES = {
+ tower:   {n:"Martello Tower, Sandycove", x:1352, y:1114, bay:true,
+   w:"A Napoleonic gun-tower let out as lodgings. Stephen pays the rent; Mulligan holds the key."},
+ dalkey:  {n:"Mr Deasy's school, Dalkey", x:1433, y:1225, bay:true,
+   w:"A private school in a prosperous, unionist-leaning coastal village. Stephen earns his only money of the day here."},
+ strand:  {n:"Sandymount Strand", x:776, y:650, bay:true,
+   w:"A vast flat tidal beach. Stephen's mind walks it at eleven in the morning; Bloom's body sits on it at eight at night."},
+ eccles:  {n:"7 Eccles Street", x:436, y:424, bay:true,
+   w:"The Bloom house — a Georgian terrace on the declining north side. Boylan comes in the front door at four; Bloom comes over the area railings at two in the morning."},
+ dlugacz: {n:"Dlugacz's, Upper Dorset Street", x:448, y:435,
+   w:"A pork butcher run by a Hungarian Jew. Bloom buys a kidney and finds an advertisement for orange groves in Palestine."},
+ rogerson:{n:"Sir John Rogerson's Quay", x:609, y:545,
+   w:"The dockside where Bloom's second morning begins, walking east of the centre."},
+ westland:{n:"Westland Row — post office and All Hallows", x:540, y:565,
+   w:"Bloom collects a love letter here under the name Henry Flower, then watches the end of a Mass as a fascinated outsider."},
+ sweny:   {n:"Sweny's chemist, Lincoln Place", x:525, y:588,
+   w:"Still standing, and now kept open largely by readers of this book. The cake of lemon soap bought here travels all day and eventually sings."},
+ dignamh: {n:"Dignam's house, Newbridge Avenue", x:729, y:680,
+   w:"Where the funeral sets out — leaving a widow, children and no money."},
+ glasnevin:{n:"Glasnevin Cemetery", x:365, y:293, bay:true,
+   w:"The great Catholic burial ground, founded by Daniel O'Connell because Catholics had nowhere dignified to be buried. O'Connell lies here under a round tower; so does Parnell."},
+ freemans:{n:"The Freeman's Journal, Prince's Street", x:478, y:510,
+   w:"The newspaper offices behind the GPO, at the exact centre of the city. Bloom and Stephen are both in this building at noon and do not meet."},
+ davyb:   {n:"Davy Byrne's, Duke Street", x:482, y:582,
+   w:"A cheese sandwich, a glass of burgundy, and the memory of Howth Head — the memory Molly will return to from the other side in the last pages."},
+ museum:  {n:"National Museum, Kildare Street", x:511, y:595,
+   w:"Bloom bolts through these gates to avoid seeing Boylan on the street."},
+ library: {n:"National Library, Kildare Street", x:502, y:590,
+   w:"Stephen performs his Shakespeare theory to the men of the Revival while the actual betrayed husband walks past the door."},
+ bookcart:{n:"The bookcarts, Merchant's Arch and Bedford Row", x:456, y:541,
+   w:"At three in the afternoon Bloom is choosing an erotic novel at one bookcart and Stephen is standing at another, a hundred metres away. Neither knows."},
+ ormond:  {n:"The Ormond Hotel, Ormond Quay", x:430, y:535,
+   w:"Bloom eats in the back room and listens to the singing through the door — at the exact hour Boylan reaches his house, a mile and a half north."},
+ kiernans:{n:"Barney Kiernan's, Little Britain Street", x:406, y:508,
+   w:"Beside the Green Street courthouse. The high priest of Irish nationalism does his roaring in a street called Little Britain, and Joyce never points it out."},
+ starsea: {n:"Star of the Sea, Sandymount", x:735, y:660,
+   w:"The Benediction service is audible from the rocks, so the litany to the Virgin runs simultaneously with what is happening on the beach."},
+ holles:  {n:"Holles Street maternity hospital", x:558, y:622,
+   w:"Bloom comes to ask after a woman he barely knows. Nobody asked him to. It is why he is in the room when Stephen needs someone."},
+ night:   {n:"Nighttown — Mabbot Street and Monto", x:520, y:495,
+   w:"Reputedly the largest red-light district in Europe, operating openly a few hundred metres from the imperial post office. Closed in 1925; Mabbot Street is now James Joyce Street."},
+ shelter: {n:"The cabman's shelter, Butt Bridge", x:537, y:525,
+   w:"A wooden hut for night cab drivers, under the Custom House. The two men finally talk in a shed in the shadow of the building that governs them."},
+ pillar:  {n:"Nelson's Pillar, Sackville Street", x:478, y:502,
+   w:"The centre of the city and the tram hub. Blown up in 1966; the street is now O'Connell Street."},
+ trinity: {n:"Trinity College", x:503, y:562,
+   w:"Protestant, Ascendancy, walled — an island in the middle of a Catholic city."},
+ castle:  {n:"Dublin Castle", x:430, y:570,
+   w:"The British administration, and its detective division. The word means both 'the government' and 'informers'."},
+ phoenix: {n:"Viceregal Lodge, Phoenix Park", x:119, y:440, bay:true,
+   w:"The Lord Lieutenant's residence. His cavalcade sets out from here to close episode 10."},
+ howth:   {n:"Howth Head", x:1612, y:250, bay:true, memory:true,
+   w:"Not visited on the day. Sixteen years earlier, on this hill among the rhododendrons, Molly passed Bloom seedcake from her mouth and said yes. The book's true destination."},
+ kingst:  {n:"Kingstown harbour", x:1224, y:1050, bay:true,
+   w:"The mail boat to Holyhead — how you left Ireland, as Joyce did."},
+ guinness:{n:"Guinness, St James's Gate", x:311, y:570,
+   w:"The largest brewery in the world and the city's largest employer, in a capital with almost no other industry."}
+};
+
+const COAST = "1600,0 1642,120 1672,250 1403,150 1135,320 955,370 860,500 1000,560 "
+            + "880,600 806,650 848,800 896,920 967,1000 1105,1030 1224,1060 1356,1120 "
+            + "1463,1240 1409,1380 1409,1400 1750,1400 1750,0";
+const LIFFEY = "179,540 287,535 400,535 430,535 482,532 537,525 657,525 836,540 1000,560";
+const ROYAL  = "239,440 358,400 478,380 597,400 650,470 639,510";
+const GRAND  = "239,600 358,650 478,680 597,680 669,620";
+
+const BLOOM_ROUTE = ["eccles","dlugacz","eccles","rogerson","westland","sweny",
+  "dignamh","glasnevin","freemans","davyb","museum","library","bookcart","ormond",
+  "kiernans","starsea","holles","night","shelter","eccles"];
+const STEPHEN_ROUTE = ["tower","dalkey","strand","freemans","library","bookcart",
+  "holles","night","shelter","eccles"];
+
+/* t0/t1 in hours after 8 a.m. */
+const EP = [
+ {n:1, t:"Telemachus", h:"8 a.m.", t0:0,    t1:0.75, who:["s"],
+  places:["tower"], opens:"the roof of the Martello Tower, Sandycove",
+  steps:"the gun-platform → down to the living room → out to the Forty Foot bathing place",
+  cast:"Stephen · Mulligan · Haines · the milkwoman"},
+ {n:2, t:"Nestor", h:"10 a.m.", t0:1.75, t1:2.75, who:["s"],
+  places:["dalkey"], opens:"a classroom in Mr Deasy's school, Dalkey",
+  steps:"classroom → the hockey field → Deasy's study → the gravel drive",
+  cast:"Stephen · Mr Deasy · the boys, and Sargent"},
+ {n:3, t:"Proteus", h:"11 a.m.", t0:3, t1:3.75, who:["s"],
+  places:["strand"], opens:"the northern end of Sandymount Strand",
+  steps:"east along the tideline → a rock, to write → up toward the city",
+  cast:"Stephen, alone. Two cocklepickers and a dog"},
+ {n:4, t:"Calypso", h:"8 a.m.", t0:0, t1:0.75, who:["b","m"],
+  places:["eccles","dlugacz"], opens:"the basement kitchen at 7 Eccles Street",
+  steps:"kitchen → Dorset Street → Dlugacz's → home → Molly's bedroom → the privy",
+  cast:"Bloom · Molly · the cat · Dlugacz"},
+ {n:5, t:"Lotus-Eaters", h:"10 a.m.", t0:1.75, t1:2.75, who:["b"],
+  places:["rogerson","westland","sweny"], opens:"Sir John Rogerson's Quay",
+  steps:"the quay → Westland Row post office → All Hallows → Sweny's → the Turkish baths",
+  cast:"Bloom · M'Coy · Bantam Lyons · Sweny"},
+ {n:6, t:"Hades", h:"11 a.m.", t0:3, t1:4, who:["b"],
+  places:["dignamh","shelter","pillar","glasnevin"],
+  opens:"Newbridge Avenue, Sandymount — the funeral leaving",
+  steps:"Irishtown → Ringsend → over the Liffey → the quays → Sackville Street → Phibsborough → Glasnevin",
+  cast:"Bloom · Cunningham · Power · Simon Dedalus · Hynes · Kelleher · the man in the macintosh"},
+ {n:7, t:"Aeolus", h:"12 noon", t0:4, t1:5, who:["b","s"],
+  places:["freemans","pillar"], opens:"the Freeman's Journal, Prince's Street",
+  steps:"the machine room → the editor's office → out to the street",
+  cast:"Bloom · Crawford · MacHugh · Simon Dedalus · O'Molloy · Lenehan · and Stephen"},
+ {n:8, t:"Lestrygonians", h:"1 p.m.", t0:5, t1:6, who:["b"],
+  places:["trinity","davyb","museum"], opens:"O'Connell Bridge, crossing south",
+  steps:"Westmoreland Street → Grafton Street → the Burton → Davy Byrne's → Molesworth Street → into the museum, fleeing Boylan",
+  cast:"Bloom · Josie Breen · Nosey Flynn · Davy Byrne · the blind stripling"},
+ {n:9, t:"Scylla & Charybdis", h:"2 p.m.", t0:6, t1:7, who:["s","b"],
+  places:["library"], opens:"the librarian's office, the National Library",
+  steps:"the office → the entrance porch, where Bloom passes between Stephen and Mulligan",
+  cast:"Stephen · Eglinton · A.E. · Lyster · Best · Mulligan · Bloom, passing"},
+ {n:10,t:"Wandering Rocks", h:"3 p.m.", t0:7, t1:8, who:["b","s","m"],
+  places:["eccles","bookcart","phoenix","castle","pillar"],
+  opens:"Upper Gardiner Street — Father Conmee setting out",
+  steps:"nineteen sections across the whole city, opening with the Church walking north-east and closing with the Crown driving south-east",
+  cast:"almost everyone — including Molly's arm at a window, and Boylan buying fruit"},
+ {n:11,t:"Sirens", h:"4 p.m.", t0:8, t1:9, who:["b"],
+  places:["ormond"], opens:"the bar of the Ormond Hotel, Ormond Quay",
+  steps:"the quay → the dining room → Boylan leaves for Eccles Street → the singing → out past Lionel Marks's window",
+  cast:"Miss Douce · Miss Kennedy · Bloom · Richie Goulding · Simon Dedalus · Boylan"},
+ {n:12,t:"Cyclops", h:"5 p.m.", t0:9, t1:10, who:["b"],
+  places:["kiernans"], opens:"a street corner in the north inner city",
+  steps:"into Barney Kiernan's → the argument → out into the street, and the biscuit tin",
+  cast:"the nameless narrator · the Citizen · Garryowen · Hynes · Bergan · Bloom"},
+ {n:13,t:"Nausicaa", h:"8 p.m.", t0:12, t1:13, who:["b"],
+  places:["strand","starsea"], opens:"the rocks at Sandymount Strand",
+  steps:"stationary — the girls on the sand, Benediction from the church, fireworks over Ballsbridge",
+  cast:"Gerty MacDowell · Cissy Caffrey · Edy Boardman · the children · Bloom"},
+ {n:14,t:"Oxen of the Sun", h:"10 p.m.", t0:14, t1:15, who:["b","s"],
+  places:["holles"], opens:"the doorstep of the Holles Street maternity hospital",
+  steps:"the common room → the thunderclap → the birth → Burke's pub at closing time → the last train",
+  cast:"Bloom · Nurse Callan · Dixon · Stephen · Lynch · Mulligan · Bannon · and Mina Purefoy, unseen"},
+ {n:15,t:"Circe", h:"midnight", t0:16, t1:17, who:["b","s"],
+  places:["night"], opens:"the entrance to Mabbot Street, Nighttown",
+  steps:"the streets → Bella Cohen's house → out to Beaver Street, where Carr knocks Stephen down",
+  cast:"Stephen · Bloom · Lynch · Zoe · Bella · Kitty · Florry · the soldiers — and the dead"},
+ {n:16,t:"Eumaeus", h:"1 a.m.", t0:17, t1:18, who:["b","s"],
+  places:["shelter"], opens:"Beaver Street, Bloom getting Stephen to his feet",
+  steps:"Amiens Street → Store Street → the cabman's shelter at Butt Bridge",
+  cast:"Bloom · Stephen · Murphy the sailor · the keeper · jarvies"},
+ {n:17,t:"Ithaca", h:"2 a.m.", t0:18, t1:18.75, who:["b","s","m"],
+  places:["shelter","eccles"], opens:"walking north-west from Butt Bridge",
+  steps:"Gardiner Street → Mountjoy Square → Eccles Street → over the area railings → the kitchen → the garden → the bedroom",
+  cast:"Bloom · Stephen, until he leaves · Molly, asleep"},
+ {n:18,t:"Penelope", h:"no hour", t0:18.75, t1:19.9, who:["m"],
+  places:["eccles","howth"], opens:"the bed at 7 Eccles Street",
+  steps:"nowhere. The mind travels to Gibraltar, to Howth Head, and back",
+  cast:"Molly, awake. Bloom, asleep beside her"}
+];
+
+/* ---------------------------------------------------------------- helpers -- */
+const NS="http://www.w3.org/2000/svg";
+const el=(t,a={})=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+
+/* -------------------------------------------------------------------- map -- */
+const map=document.getElementById("map");
+const gBase=el("g"), gRoutes=el("g"), gPlaces=el("g");
+map.append(gBase,gRoutes,gPlaces);
+
+gBase.appendChild(el("polygon",{points:COAST,class:"bay"}));
+gBase.appendChild(el("polyline",{points:COAST.split(" ").slice(0,18).join(" "),class:"coast"}));
+gBase.appendChild(el("polyline",{points:LIFFEY,class:"river"}));
+gBase.appendChild(el("polyline",{points:ROYAL,class:"canal"}));
+gBase.appendChild(el("polyline",{points:GRAND,class:"canal"}));
+
+function routePath(ids){
+  const pts=ids.map(i=>PLACES[i]);
+  let d=`M${pts[0].x},${pts[0].y}`;
+  for(let i=1;i<pts.length;i++){
+    const a=pts[i-1],b=pts[i];
+    const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
+    const dx=b.x-a.x, dy=b.y-a.y;
+    const cx=mx-dy*0.10, cy=my+dx*0.10;   // gentle bow, so overlaps stay readable
+    d+=` Q${cx},${cy} ${b.x},${b.y}`;
+  }
+  return d;
+}
+const routeB=el("path",{d:routePath(BLOOM_ROUTE),class:"route bloom"});
+const routeS=el("path",{d:routePath(STEPHEN_ROUTE),class:"route stephen"});
+gRoutes.append(routeS,routeB);
+
+const placeEls={};
+for(const id in PLACES){
+  const p=PLACES[id];
+  const g=el("g",{class:"place"+(p.memory?" memory":"")+(id==="holles"?" meet":""),
+                  tabindex:"0",role:"button","aria-label":p.n});
+  g.appendChild(el("circle",{cx:p.x,cy:p.y,r:p.memory?6:5}));
+  const short=p.n.split(",")[0].replace(/^The /,"");
+  const t=el("text",{x:p.x+11,y:p.y+5});
+  t.textContent=short;
+  g.appendChild(t);
+  g.addEventListener("click",()=>selectPlace(id));
+  g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();selectPlace(id);}});
+  gPlaces.appendChild(g);
+  placeEls[id]=g;
+}
+
+const VIEW={bay:"0 0 1750 1400", city:"300 250 500 500"};
+let view="bay";
+const btnBay=document.getElementById("btnBay"), btnCity=document.getElementById("btnCity");
+function setView(v){
+  view=v;
+  map.setAttribute("viewBox",VIEW[v]);
+  map.classList.toggle("city",v==="city");
+  btnBay.setAttribute("aria-pressed",String(v==="bay"));
+  btnCity.setAttribute("aria-pressed",String(v==="city"));
+  for(const id in PLACES){
+    placeEls[id].classList.toggle("hidelabel", v==="bay" && !PLACES[id].bay);
+  }
+  gPlaces.querySelectorAll("text").forEach(t=>
+    t.setAttribute("font-size", v==="bay" ? 22 : 13));
+  gPlaces.querySelectorAll("circle").forEach(c=>
+    c.setAttribute("r", v==="bay" ? 8 : 5));
+  gRoutes.querySelectorAll("path").forEach(p=>
+    p.setAttribute("stroke-width", v==="bay" ? 5 : 2.6));
+}
+btnBay.addEventListener("click",()=>setView("bay"));
+btnCity.addEventListener("click",()=>setView("city"));
+
+/* ------------------------------------------------------------------- rail -- */
+const rail=document.getElementById("rail");
+const X0=86, X1=966, T=19;
+const tx=t=>X0+(t/T)*(X1-X0);
+const LANE={s:64,b:110,m:156};
+const LANECOL={s:"var(--ash)",b:"var(--gold)",m:"var(--rose)"};
+const BH=22;
+
+/* grid */
+for(let h=0;h<=18;h+=2){
+  const x=tx(h);
+  rail.appendChild(el("line",{x1:x,y1:44,x2:x,y2:190,class:"grid"}));
+  const hr=(8+h)%24;
+  const lab=el("text",{x:x,y:206,class:"axislab","text-anchor":"middle"});
+  lab.textContent = hr===0?"12 a.m.":hr===12?"12 p.m.":hr<12?hr+" a.m.":(hr-12)+" p.m.";
+  rail.appendChild(lab);
+}
+["Stephen","Bloom","Molly"].forEach((n,i)=>{
+  const k=["s","b","m"][i];
+  const t=el("text",{x:X0-12,y:LANE[k]+15,class:"lane","text-anchor":"end"});
+  t.textContent=n.toUpperCase();
+  t.setAttribute("fill",LANECOL[k]);
+  rail.appendChild(t);
+});
+
+/* the meeting */
+const xm=tx(14);
+rail.appendChild(el("line",{x1:xm,y1:38,x2:xm,y2:190,class:"meetline"}));
+const ml=el("text",{x:xm+6,y:34,class:"meetlab"});
+ml.textContent="10 P.M. — THEY MEET";
+rail.appendChild(ml);
+
+/* the gaps */
+function gap(k,a,b,label){
+  const y=LANE[k]+BH/2;
+  rail.appendChild(el("line",{x1:tx(a),y1:y,x2:tx(b),y2:y,class:"gapline"}));
+  const t=el("text",{x:(tx(a)+tx(b))/2,y:y-7,class:"gapnote","text-anchor":"middle"});
+  t.textContent=label;
+  rail.appendChild(t);
+}
+gap("s",8,14,"SEVEN HOURS UNACCOUNTED FOR");
+gap("m",8,18,"ELEVEN HOURS OFFSTAGE");
+
+/* bars */
+const barEls={};
+EP.forEach(e=>{
+  e.who.forEach(k=>{
+    const x=tx(e.t0), w=Math.max(tx(e.t1)-tx(e.t0),8);
+    const g=el("g",{class:"bar",tabindex:"0",role:"button",
+                    "aria-label":`Episode ${e.n}, ${e.t}, ${e.h}`});
+    const open = e.n===18;   // Penelope has no closing hour
+    const r=el("rect",{x:x,y:LANE[k],width:open?w+40:w,height:BH,
+                       fill:LANECOL[k],opacity:open?1:.88});
+    if(open){
+      const grad=el("linearGradient",{id:"fadeout",x1:"0",x2:"1"});
+      grad.appendChild(el("stop",{offset:"0","stop-color":"#cf6470","stop-opacity":"1"}));
+      grad.appendChild(el("stop",{offset:"1","stop-color":"#cf6470","stop-opacity":"0"}));
+      const defs=el("defs"); defs.appendChild(grad); rail.appendChild(defs);
+      r.setAttribute("fill","url(#fadeout)");
+    }
+    g.appendChild(r);
+    if(w>16){
+      const t=el("text",{x:x+w/2,y:LANE[k]+15,"text-anchor":"middle"});
+      t.textContent=e.n; g.appendChild(t);
+    }
+    g.addEventListener("click",()=>selectEpisode(e.n));
+    g.addEventListener("keydown",ev=>{if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();selectEpisode(e.n);}});
+    rail.appendChild(g);
+    (barEls[e.n]=barEls[e.n]||[]).push(g);
+  });
+});
+
+/* ------------------------------------------------------------------ state -- */
+let cur=null;
+const strip=document.getElementById("strip");
+const allBtn=document.createElement("button");
+allBtn.textContent="THE WHOLE DAY";
+allBtn.setAttribute("aria-pressed","true");
+allBtn.addEventListener("click",()=>selectEpisode(null));
+strip.appendChild(allBtn);
+const epBtns=EP.map(e=>{
+  const b=document.createElement("button");
+  b.textContent=`${e.n} · ${e.t}`;
+  b.setAttribute("aria-pressed","false");
+  b.addEventListener("click",()=>selectEpisode(e.n));
+  strip.appendChild(b); return b;
+});
+
+function selectEpisode(n){
+  cur=(cur===n)?null:n;
+  allBtn.setAttribute("aria-pressed",String(cur===null));
+  epBtns.forEach((b,i)=>b.setAttribute("aria-pressed",String(EP[i].n===cur)));
+  const e=cur?EP[cur-1]:null;
+  for(const id in PLACES){
+    const g=placeEls[id];
+    const on=!!e && e.places.includes(id);
+    g.classList.toggle("on",on);
+    g.classList.toggle("faded",!!e && !on);
+  }
+  Object.entries(barEls).forEach(([n2,gs])=>
+    gs.forEach(g=>g.classList.toggle("faded",!!cur && +n2!==cur)));
+  routeB.classList.toggle("dim",!!e && !e.who.includes("b"));
+  routeS.classList.toggle("dim",!!e && !e.who.includes("s"));
+  e?renderEpisode(e):renderIntro();
+}
+
+function selectPlace(id){
+  cur=null;
+  allBtn.setAttribute("aria-pressed","false");
+  epBtns.forEach(b=>b.setAttribute("aria-pressed","false"));
+  for(const k in PLACES){
+    placeEls[k].classList.toggle("on",k===id);
+    placeEls[k].classList.toggle("faded",k!==id);
+  }
+  Object.values(barEls).flat().forEach(g=>g.classList.remove("faded"));
+  routeB.classList.remove("dim"); routeS.classList.remove("dim");
+  const p=PLACES[id];
+  const eps=EP.filter(e=>e.places.includes(id));
+  document.getElementById("panel").innerHTML=`
+    <p class="kicker">${p.memory?"Not visited — remembered":"A place on the day"}</p>
+    <h3>${p.n}</h3>
+    <p>${p.w}</p>
+    <div class="meta">${eps.map(e=>
+      `<span class="chip here">${e.n} · ${e.t} · ${e.h}</span>`).join("")}</div>`;
+}
+
+const panel=document.getElementById("panel");
+function renderIntro(){
+  panel.innerHTML=`
+    <p class="kicker">Nineteen hours</p>
+    <h3>The shape of the day</h3>
+    <p class="where">8 a.m. Thursday 16 June — 2 a.m. Friday 17 June 1904</p>
+    <p>Almost everything happens within two kilometres of the river. Joyce built the
+    book from a street directory and said that if Dublin were destroyed it could be
+    rebuilt from his pages — a boast, but not only a boast.</p>
+    <p>Three things the clock shows that the prose hides. The book never lets go of
+    Bloom. It <b>loses Stephen for seven hours</b> between three in the afternoon and
+    ten at night, and tells us afterwards that he was drinking. And it leaves Molly
+    offstage for eleven hours — then hands her the last forty pages, in an episode
+    Joyce gave no hour at all.</p>`;
+}
+function renderEpisode(e){
+  const who={s:"Stephen",b:"Bloom",m:"Molly"};
+  panel.innerHTML=`
+    <p class="kicker">Episode ${e.n} · ${e.h}</p>
+    <h3>${e.t}</h3>
+    <p class="where">Opens at ${e.opens}</p>
+    <div class="steps"><b>Moves:</b> ${e.steps}</div>
+    <div class="steps"><b>Present:</b> ${e.cast}</div>
+    <div class="meta">
+      ${e.who.map(k=>`<span class="chip here">${who[k]}</span>`).join("")}
+      ${e.places.map(p=>`<span class="chip">${PLACES[p].n}</span>`).join("")}
+    </div>`;
+}
+
+document.getElementById("legend").innerHTML=`
+  <span class="key"><span class="sw" style="border-color:var(--gold)"></span>Bloom's route</span>
+  <span class="key"><span class="sw" style="border-color:var(--ash);border-top-style:dashed"></span>Stephen's route</span>
+  <span class="key"><span class="dot" style="background:var(--gold)"></span>where they meet</span>
+  <span class="key"><span class="dot" style="border:2px solid var(--rose)"></span>remembered, not visited</span>
+  <span class="key"><span class="sw" style="border-color:#1d4d86;border-top-width:3px"></span>the Liffey</span>
+  <span class="key"><span class="sw" style="border-color:var(--dim);border-top-style:dashed"></span>the canals</span>`;
+
+setView("bay");
+renderIntro();
+</script>
+</body>
+</html>
+
