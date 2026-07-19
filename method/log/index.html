@@ -265,6 +265,38 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-40</td>
+<td>07-20</td>
+<td><strong>4</strong></td>
+<td><strong>The deck PDFs are still wrong, at the third attempt, and this time the audit found it rather than me.</strong> 90 cards across the five decks produce 56 pages, so <strong>34 cards are silently absent</strong> — most cards are class-toggles over a SHARED figure, and a print rule that reveals elements cannot reveal states. Worse: <strong>all 56 pages carry an empty caption bar</strong>, because the captions are filled by JavaScript at render time and the page is printed at card zero. The identity labels that C-19 and C-36 define as the deck's ENTIRE public content appear in none of the five PDFs. The tool reported success for all five</td>
+<td><strong>NOT FIXED.</strong> Named here in full so it cannot be lost. The fix is not another print rule: the tool must drive the deck's own render() card by card and print each state, or the decks must emit a static print DOM. Related and also unfixed: both deck tools exit 0 with a summary counting INPUTS rather than outputs, so on a Chrome-only machine they print nothing and report five successes; and all three PDF tools accept a STALE pdf as a fresh render, because the target is never deleted and existence-plus-stable-size is the only success signal</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-39</td>
+<td>07-20</td>
+<td>3</td>
+<td><strong>A vacuous check, reported as 488 passing rows.</strong> <code>check.mjs</code> section 10 compares table rows between a print source and its artifact — and silently compares ZERO rows for three of the six pipeline PDFs: constraint-model (all eight tables are <code>data-derived</code>, so the loop body never executes) and four-odysseys and concordance-of-failures (their sibling artifact does not follow the filename convention the lookup assumes). The audit ran the skipped comparison for four-odysseys: <strong>10 of its 15 rows have no match in <code>two-axes.html</code></strong>, so the skip was hiding live divergence. This is L-14's failure mode — a green check that would go green whatever happened — committed inside a checker written to prevent it</td>
+<td><strong>NOT FIXED.</strong> The count must report rows-compared AND files-skipped, and a skip must name itself. Also unfixed from the same pass: <code>build-pdf.mjs</code>'s same-length guard on the xref patch can never fire</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-38</td>
+<td>07-20</td>
+<td>3</td>
+<td><strong>Base document 00 published &quot;no PDF has been built&quot; for hours after seven were.</strong> The correction note for the identical staleness sat one paragraph above it. <code>HANDOFF.md</code> — the first document the next session is told to read — was wrong on six of eleven dimension rows and still called the PDF the largest open gap. The README still said &quot;0 of 16 dimensions built, and the site says so honestly&quot; while the site said five. <strong>The generated surfaces were correct throughout</strong>: the dimension index, the register indexes and every dimension page are derived from <code>data/</code> and told the truth. Only the prose lied</td>
+<td>00-method rewritten keeping both revisions, because the pattern is the point; HANDOFF and README corrected. The structural lesson is L-22: <strong>derive it or it will drift.</strong> Every count in prose that a build could compute is a future falsehood</td>
+<td><strong>L-22</strong></td>
+</tr>
+<tr>
+<td>C-37</td>
+<td>07-20</td>
+<td><strong>4</strong></td>
+<td><strong>The Reading Log's privacy claim was false in the one way that matters.</strong> The instrument states in bold that the project receives nothing — &quot;not the entries, not a count of them, not the fact that you opened this page.&quot; Its dimension page at <code>/dimensions/reading-log/</code> carried the site's GoatCounter tag, which runs <strong>same-origin</strong> with the log and can therefore read the very localStorage the page promises never leaves the device. Found by the security audit, which called it the top finding and was right. Nothing suggests it was ever exploited; the defect is that the promise was not true as built</td>
+<td>The tag is removed from that one page by an explicit condition in <code>base.njk</code>, with the reason written beside it so nobody restores it for consistency. The rest of the site keeps it. <strong>Note what this cost:</strong> the project's most carefully written honesty marker was undermined by a global template decision nobody re-read against it</td>
+<td><strong>L-23</strong></td>
+</tr>
+<tr>
 <td>C-36</td>
 <td>07-19</td>
 <td>—</td>
@@ -583,6 +615,21 @@ specified a dimension made of images, and no build has any way to notice. Rules 
 only their consequences live in code.
 <em>Applied:</em> the refusal struck rather than deleted (A4); the purpose rule written; dimension 14
 made consistent with the design it is built under; the audience decks freed to be image cards.</p>
+<p><strong>L-22 — Derive it, or it will drift.</strong>
+<em>From C-38.</em> Every generated surface on this site told the truth all day; every hand-written
+sentence about the same facts went stale within hours, including one that sat directly beneath a
+correction note for the identical error. A count in prose is a snapshot of a moment nobody records.
+<strong>If a build can compute it, prose must not assert it</strong> — and where prose must carry it, it should
+name its date and its source so a reader can tell how old the claim is. Same family as L-14, one
+level up: L-14 was about lists the code did not derive, this is about facts the prose asserts.</p>
+<p><strong>L-23 — A global default can silently break a local promise.</strong>
+<em>From C-37.</em> The Reading Log's whole design is that nothing leaves the reader's device, and it says
+so in bold. A site-wide analytics tag, added months earlier for good reasons and reviewed as a
+site-wide decision, ran same-origin with that page and could read exactly the store the page
+promised to keep private. Neither decision was wrong on its own; nobody re-read one against the
+other. <strong>When a page makes a promise stronger than the site's default, the default must be checked
+against the promise — and the exception must carry its reason inline</strong>, or someone will restore
+consistency and quietly break it again.</p>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
@@ -598,7 +645,6 @@ to a vote that went the way the chair already leaned).</p>
   </footer>
   <!-- Privacy-respecting, cookieless page-view analytics — the author's shared
        GoatCounter, as on the practice's other sites. Author-directed exception to
-       the no-external-requests refusal; recorded in 06-design. -->
-  <script data-goatcounter="https://hulkiokantabak.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+       the no-external-requests refusal; recorded in 06-design. --><script data-goatcounter="https://hulkiokantabak.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>

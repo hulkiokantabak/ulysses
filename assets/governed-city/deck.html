@@ -5,59 +5,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Governed City &#8212; the deck</title>
 <style>
-  /* Dimension 3's presentation register: the audience deck. Image cards only, no
-     explanations (the presenter's material is kept off the public site &#8212; C-19). Two
-     kinds of card share one mechanism. The first is the plane &#8212; the
-     instruments-by-episodes matrix, drawn once; each such card lights a subset of its
-     cells in gold (a column, a row, a state, or all of it). The second is a drawn plate
-     &#8212; an overlay carrying its own inline SVG: a chart, a map, a timeline, an object.
-     Drawn imagery is admitted since the design's reversal of 19 July 2026, but the cards
-     still carry identity only &#8212; a name, an hour, an episode, a count &#8212; never
-     the argument (C-19). Nothing is fetched: every mark is drawn here.
-     The 1922 family: deep plate, paper, gold, mono factual layer. No animation, so
-     prefers-reduced-motion is honoured by design. */
+  /* Dimension 3's presentation register: the audience deck, rebuilt to THE VITRINE
+     (ratified 20 July 2026, after the author's verdict that the audience presentations
+     were poor). Every card is one object under one light: the subject is drawn, the room
+     is a trace, and gold is the light &#8212; used once per plate and never on the ambient
+     layer. Cards carry identity only &#8212; a name, an hour, an episode, a count &#8212;
+     never the argument (C-19). Nothing is fetched: every mark is drawn here.
+     THE SYSTEM, constant across the deck family:
+       canvas    1120 &#215; 630, one viewBox unit = one CSS pixel at design width
+       bands     register 48&#8211;90 (baseline 78) &#183; title 90&#8211;160 (140)
+                 &#183; stage 160&#8211;552 &#183; foot 552&#8211;590 (580); left margin x=64
+       type      datum 96 serif &#183; title 44 serif &#183; label 26 mono
+                 &#183; register 24 mono UPPER &#183; note 22 mono
+       stroke    hair 1.5 &#183; draw 4 &#183; bear 10 (ratio 1 : 2.5 : 6)
+       tone      ground #081a35 &#183; plate #0b2140 &#183; trace paper .14
+                 &#183; ambient mute .55 (3.83:1) &#183; subject paper (13.90:1)
+                 &#183; accent gold (7.57:1)
+       marks     ambient r=5, lit r=11 &#183; solid = present, ring = recalled,
+                 diamond = hallucinated
+     No animation, so prefers-reduced-motion is honoured by construction: the scale-ups
+     are instantaneous state changes and carry no transition. */
   :root {
-    --deep:#081a35; --paper:#f4efe2; --gold:#dfa93f; --mute:#b9c3d6;
+    --deep:#081a35; --plate:#0b2140; --paper:#f4efe2; --gold:#dfa93f; --mute:#b9c3d6;
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
     --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
   }
   *,*::before,*::after { box-sizing:border-box; }
   html,body { margin:0; padding:0; height:100%; background:var(--deep); color:var(--paper); }
   body { font-family:var(--serif); display:flex; flex-direction:column; min-height:100vh; }
-  .deck { flex:1; display:flex; flex-direction:column; max-width:74rem; width:100%;
-          margin-inline:auto; padding:1rem 1rem 0; }
+  .deck { flex:1; display:flex; flex-direction:column; max-width:76rem; width:100%;
+          margin-inline:auto; padding:1rem 3rem 0; }
   .stage { position:relative; flex:1; display:flex; align-items:center; justify-content:center; }
   svg { display:block; width:100%; height:auto; max-height:74vh; }
-  /* cells default to muted marks (the ambient hum); JS lights the active column/row */
-  .cell .m { fill:var(--mute); }
-  .cell .ring { fill:none; stroke:var(--mute); stroke-width:1.5; }
-  .cell.on .m { fill:var(--gold); transform:scale(1.55); transform-box:fill-box; transform-origin:center; }
-  .cell.on .ring { fill:none; stroke:var(--gold); }
-  /* the title card overlays the stage */
-  .title { position:absolute; inset:0; display:none; flex-direction:column;
-           align-items:center; justify-content:center; text-align:center; }
-  .title.show { display:flex; }
-  .title h1 { font-size:clamp(2rem,7vw,4rem); margin:0 0 .5rem; letter-spacing:.01em; }
-  .title .works { font-family:var(--mono); color:var(--mute); font-size:clamp(.9rem,2.4vw,1.15rem);
-                  letter-spacing:.12em; }
-  .title .rule { width:8rem; height:3px; background:var(--gold); margin:1.25rem 0; }
-  .title .sub { font-style:italic; color:var(--paper); max-width:34ch; font-size:clamp(1rem,2.6vw,1.3rem); }
-  /* the drawn plates overlay the stage &#8212; the title card's mechanism, with a ground */
+  /* only one drawn surface is visible at a time */
+  .stage.plated > svg { visibility:hidden; }
   .plate { position:absolute; inset:0; display:none; background:var(--deep); }
-  .plate.show { display:block; }
-  .plate svg { width:100%; height:100%; max-height:none; }
-  .pl-h { font-family:var(--mono); font-size:15px; fill:var(--paper); letter-spacing:.16em; }
-  .pl-l { font-family:var(--mono); font-size:12.5px; fill:var(--mute); letter-spacing:.07em; }
-  .pl-n { font-family:var(--mono); font-size:11px; fill:var(--mute); letter-spacing:.05em; }
-  .pl-er { font-family:var(--mono); font-size:26px; fill:var(--paper); letter-spacing:.1em; }
-  /* the colour classes follow the size classes, so a lit label wins the cascade */
-  .pl-gold { fill:var(--gold); }
-  .pl-paper { fill:var(--paper); }
-  .pl-mute { fill:var(--mute); }
-  /* the caption bar reads the current card &#8212; identity only */
-  .caption { min-height:3.2rem; text-align:center; padding:.5rem 0 .25rem; }
-  .caption .cname { font-size:1.4rem; }
-  .caption .ctag { font-family:var(--mono); color:var(--mute); font-size:.9rem; letter-spacing:.04em; display:block; margin-top:.15rem; }
+  .plate.show { display:flex; align-items:center; justify-content:center; }
+
+  /* THE FIVE TYPE SIZES. Nothing in the drawn layer goes below 22. */
+  .pl-dat  { font-family:var(--serif); font-size:96px; fill:var(--paper); }
+  .pl-ttl  { font-family:var(--serif); font-size:44px; fill:var(--paper); }
+  .pl-lab  { font-family:var(--mono); font-size:26px; fill:var(--paper); }
+  .pl-reg  { font-family:var(--mono); font-size:24px; letter-spacing:.16em; fill:var(--paper); }
+  .pl-note { font-family:var(--mono); font-size:22px; letter-spacing:.04em;
+             fill:var(--mute); fill-opacity:.55; }
+  .pl-badge{ font-family:var(--mono); font-size:22px; letter-spacing:.16em;
+             fill:var(--mute); fill-opacity:.55; }
+  /* the tone classes follow the size classes, so a lit element wins the cascade */
+  .t-amb { fill:var(--mute); fill-opacity:.55; }
+  .t-sub { fill:var(--paper); fill-opacity:1; }
+  .t-acc { fill:var(--gold); fill-opacity:1; }
+  /* an axis label that names the lit row or column steps up a size and into subject tone;
+     everything unlit stays ambient and unnamed */
+  .pl-note.on { font-size:26px; fill:var(--paper); fill-opacity:1; }
+
+  /* the matrix marks: ambient hum by default, lit by the card */
+  .cell .m { fill:var(--mute); fill-opacity:.55; }
+  .cell .ring { fill:none; stroke:var(--mute); stroke-opacity:.55; stroke-width:1.5; }
+  .cell.on .m { fill:var(--paper); fill-opacity:1;
+                transform:scale(2.2); transform-box:fill-box; transform-origin:center; }
+  .cell.on .ring { fill:none; stroke:var(--paper); stroke-opacity:1; }
+
+  /* the caption reads the current card &#8212; identity only. The name is kept in the DOM
+     for aria-live and hidden visually, because the plate already draws its own title. */
+  .caption { min-height:2.4rem; text-align:center; padding:.5rem 0 .25rem; }
+  .caption .cname { position:absolute; width:1px; height:1px; margin:-1px; padding:0;
+                    overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+  .caption .ctag { font-family:var(--mono); color:var(--mute); font-size:.9rem;
+                   letter-spacing:.04em; display:block; }
   .caption.hidden { visibility:hidden; }
   /* controls */
   .bar { display:flex; align-items:center; justify-content:center; gap:1rem;
@@ -65,7 +80,7 @@
   button { font:inherit; font-family:var(--mono); font-size:1rem; color:var(--deep);
            background:var(--paper); border:0; padding:.4rem .9rem; cursor:pointer; }
   button:disabled { opacity:.35; cursor:default; }
-  .dots { display:flex; gap:.5rem; }
+  .dots { display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem; }
   .dots button { padding:0; width:.85rem; height:.85rem; border-radius:50%;
                  background:transparent; border:1.5px solid var(--mute); }
   .dots button[aria-current="true"] { background:var(--gold); border-color:var(--gold); }
@@ -75,12 +90,26 @@
   .foot { text-align:center; font-family:var(--mono); font-size:.75rem; color:var(--mute);
           padding-bottom:1rem; }
 
+/* Small screens: the plate does not reflow &#8212; a drawn plate is a fixed surface. It is
+   held at 720px inside a keyboard-walkable scroll box, which keeps the mono factual layer
+   at 14.1px and the labels at 16.6px (the design record's 14px mono floor). The focus ring
+   is drawn INSIDE the box (Ledger's graft on the dimensions matrix) so an edge can never
+   clip it. */
+@media (max-width:760px) {
+  .deck { padding:.5rem .75rem 0; }
+  .stage { overflow-x:auto; overflow-y:hidden; justify-content:flex-start; }
+  .stage > svg { width:720px; max-width:none; max-height:none; }
+  .plate { right:auto; width:720px; }
+  .plate.show { justify-content:flex-start; }
+  .plate svg { width:720px; max-width:none; max-height:none; }
+  .stage:focus-visible { outline-offset:-2px; }
+}
 
 /* Print: a deck is a card viewer, so printing it naively emits one page showing whichever
    card is current. These rules unstack the cards and break a page between them. The first
-   attempt named only .plane and missed .plate entirely — two of the five decks use the other
-   name — and it left the stage clipping its overflow, so even the decks it did match
-   collapsed to two pages. Screen behaviour is untouched. */
+   attempt named only .plane and missed .plate entirely &#8212; two of the five decks use the
+   other name &#8212; and it left the stage clipping its overflow, so even the decks it did
+   match collapsed to two pages. Screen behaviour is untouched. */
 @media print {
   .dots, .nav, button, .foot { display: none !important; }
   html, body { background: #081a35 !important; height: auto !important;
@@ -91,11 +120,15 @@
     display: block !important; visibility: visible !important; position: static !important;
     opacity: 1 !important; height: auto !important; max-height: none !important;
     overflow: visible !important; page-break-after: always; break-after: page;
-    margin: 0 0 4mm; inset: auto !important; }
+    margin: 0 0 4mm; inset: auto !important; width: auto !important; }
+  .stage.plated > svg { visibility: visible !important; }
   .plane svg, .plate svg, .stage > svg {
-    width: 100% !important; height: auto !important; max-height: 165mm; display: block; }
+    width: 100% !important; height: auto !important; max-height: 165mm; display: block;
+    visibility: visible !important; }
   .stage > svg { page-break-after: always; break-after: page; }
   .cap, .caption { display: block !important; visibility: visible !important; }
+  .caption .cname { position: static !important; width: auto !important; height: auto !important;
+    margin: 0 !important; clip-path: none !important; }
 }
 </style>
 </head>
@@ -103,450 +136,280 @@
 <div class="deck">
   <div class="stage" id="stage" tabindex="0" role="group" aria-roledescription="slide deck"
        aria-label="The Governed City, an audience deck. Use the left and right arrow keys.">
-    <svg viewBox="0 0 980 540" aria-hidden="true">
-  <g stroke="none"><line x1="288" y1="64" x2="288" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="326.7" y1="64" x2="326.7" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="365.4" y1="64" x2="365.4" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="404.1" y1="64" x2="404.1" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="442.8" y1="64" x2="442.8" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="481.5" y1="64" x2="481.5" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="520.2" y1="64" x2="520.2" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="558.9" y1="64" x2="558.9" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="597.6" y1="64" x2="597.6" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="636.4" y1="64" x2="636.4" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="675.1" y1="64" x2="675.1" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="713.8" y1="64" x2="713.8" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="752.5" y1="64" x2="752.5" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="791.2" y1="64" x2="791.2" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="829.9" y1="64" x2="829.9" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="868.6" y1="64" x2="868.6" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="907.3" y1="64" x2="907.3" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="946" y1="64" x2="946" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/></g>
-  <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12.5" fill="#b9c3d6"><text x="288" y="52" text-anchor="middle">1</text><text x="326.7" y="52" text-anchor="middle">2</text><text x="365.4" y="52" text-anchor="middle">3</text><text x="404.1" y="52" text-anchor="middle">4</text><text x="442.8" y="52" text-anchor="middle">5</text><text x="481.5" y="52" text-anchor="middle">6</text><text x="520.2" y="52" text-anchor="middle">7</text><text x="558.9" y="52" text-anchor="middle">8</text><text x="597.6" y="52" text-anchor="middle">9</text><text x="636.4" y="52" text-anchor="middle">10</text><text x="675.1" y="52" text-anchor="middle">11</text><text x="713.8" y="52" text-anchor="middle">12</text><text x="752.5" y="52" text-anchor="middle">13</text><text x="791.2" y="52" text-anchor="middle">14</text><text x="829.9" y="52" text-anchor="middle">15</text><text x="868.6" y="52" text-anchor="middle">16</text><text x="907.3" y="52" text-anchor="middle">17</text><text x="946" y="52" text-anchor="middle">18</text></g>
-  <g class="rowlabels" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="13" fill="#b9c3d6"><text x="252" y="78.0" text-anchor="end">Police</text><text x="252" y="107.0" text-anchor="end">The garrison</text><text x="252" y="136.0" text-anchor="end">Dublin Castle</text><text x="252" y="165.0" text-anchor="end">The cavalcade</text><text x="252" y="194.0" text-anchor="end">The courts</text><text x="252" y="223.0" text-anchor="end">The gallows</text><text x="252" y="252.0" text-anchor="end">The informer</text><text x="252" y="281.0" text-anchor="end">The Church</text><text x="252" y="310.0" text-anchor="end">The schoolroom</text><text x="252" y="339.0" text-anchor="end">The King&#x27;s English</text><text x="252" y="368.0" text-anchor="end">The Crown in effigy</text><text x="252" y="397.0" text-anchor="end">The paperwork</text><text x="252" y="426.0" text-anchor="end">The parliament</text></g>
-  <text x="617" y="470" text-anchor="middle" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12.5" fill="#b9c3d6" letter-spacing="2">THE EIGHTEEN EPISODES &#183; 8 A.M. TO DEEP NIGHT</text>
-  <text x="22" y="248" text-anchor="middle" transform="rotate(-90 22 248)" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12.5" fill="#b9c3d6" letter-spacing="2">THIRTEEN INSTRUMENTS OF RULE</text>
-  <g class="legend" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12.5" fill="#b9c3d6">
-    <circle cx="300" cy="505" r="5" fill="#b9c3d6"/><text x="314" y="509">present</text>
-    <circle cx="430" cy="505" r="5" fill="none" stroke="#b9c3d6" stroke-width="1.5"/><text x="444" y="509">recalled / reported</text>
-    <path d="M640 499 L646 505 L640 511 L634 505 Z" fill="#b9c3d6"/><text x="654" y="509">hallucinated (Circe)</text>
-  </g>
-  <g id="marks"><g class="cell" data-ep="4" data-inst="0"><circle class="m ring" cx="404.1" cy="74" r="5"/></g><g class="cell" data-ep="6" data-inst="0"><circle class="m dot" cx="481.5" cy="74" r="5"/></g><g class="cell" data-ep="8" data-inst="0"><circle class="m dot" cx="558.9" cy="74" r="5"/></g><g class="cell" data-ep="10" data-inst="0"><circle class="m dot" cx="636.4" cy="74" r="5"/></g><g class="cell" data-ep="11" data-inst="0"><circle class="m ring" cx="675.1" cy="74" r="5"/></g><g class="cell" data-ep="12" data-inst="0"><circle class="m dot" cx="713.8" cy="74" r="5"/></g><g class="cell" data-ep="13" data-inst="0"><circle class="m ring" cx="752.5" cy="74" r="5"/></g><g class="cell" data-ep="14" data-inst="0"><circle class="m ring" cx="791.2" cy="74" r="5"/></g><g class="cell" data-ep="15" data-inst="0"><circle class="m dot" cx="829.9" cy="74" r="5"/></g><g class="cell" data-ep="16" data-inst="0"><circle class="m dot" cx="868.6" cy="74" r="5"/></g><g class="cell" data-ep="17" data-inst="0"><circle class="m ring" cx="907.3" cy="74" r="5"/></g><g class="cell" data-ep="18" data-inst="0"><circle class="m ring" cx="946" cy="74" r="5"/></g><g class="cell" data-ep="1" data-inst="1"><circle class="m dot" cx="288" cy="103" r="5"/></g><g class="cell" data-ep="2" data-inst="1"><circle class="m ring" cx="326.7" cy="103" r="5"/></g><g class="cell" data-ep="3" data-inst="1"><circle class="m ring" cx="365.4" cy="103" r="5"/></g><g class="cell" data-ep="4" data-inst="1"><circle class="m ring" cx="404.1" cy="103" r="5"/></g><g class="cell" data-ep="5" data-inst="1"><circle class="m dot" cx="442.8" cy="103" r="5"/></g><g class="cell" data-ep="6" data-inst="1"><circle class="m ring" cx="481.5" cy="103" r="5"/></g><g class="cell" data-ep="7" data-inst="1"><circle class="m dot" cx="520.2" cy="103" r="5"/></g><g class="cell" data-ep="8" data-inst="1"><circle class="m ring" cx="558.9" cy="103" r="5"/></g><g class="cell" data-ep="9" data-inst="1"><circle class="m ring" cx="597.6" cy="103" r="5"/></g><g class="cell" data-ep="10" data-inst="1"><circle class="m dot" cx="636.4" cy="103" r="5"/></g><g class="cell" data-ep="11" data-inst="1"><circle class="m ring" cx="675.1" cy="103" r="5"/></g><g class="cell" data-ep="12" data-inst="1"><circle class="m ring" cx="713.8" cy="103" r="5"/></g><g class="cell" data-ep="13" data-inst="1"><circle class="m dot" cx="752.5" cy="103" r="5"/></g><g class="cell" data-ep="14" data-inst="1"><circle class="m dot" cx="791.2" cy="103" r="5"/></g><g class="cell" data-ep="15" data-inst="1"><circle class="m dot" cx="829.9" cy="103" r="5"/></g><g class="cell" data-ep="16" data-inst="1"><circle class="m ring" cx="868.6" cy="103" r="5"/></g><g class="cell" data-ep="17" data-inst="1"><circle class="m ring" cx="907.3" cy="103" r="5"/></g><g class="cell" data-ep="18" data-inst="1"><circle class="m ring" cx="946" cy="103" r="5"/></g><g class="cell" data-ep="1" data-inst="2"><circle class="m ring" cx="288" cy="132" r="5"/></g><g class="cell" data-ep="2" data-inst="2"><circle class="m ring" cx="326.7" cy="132" r="5"/></g><g class="cell" data-ep="6" data-inst="2"><circle class="m dot" cx="481.5" cy="132" r="5"/></g><g class="cell" data-ep="7" data-inst="2"><circle class="m ring" cx="520.2" cy="132" r="5"/></g><g class="cell" data-ep="8" data-inst="2"><circle class="m ring" cx="558.9" cy="132" r="5"/></g><g class="cell" data-ep="10" data-inst="2"><circle class="m dot" cx="636.4" cy="132" r="5"/></g><g class="cell" data-ep="12" data-inst="2"><circle class="m dot" cx="713.8" cy="132" r="5"/></g><g class="cell" data-ep="13" data-inst="2"><circle class="m ring" cx="752.5" cy="132" r="5"/></g><g class="cell" data-ep="14" data-inst="2"><circle class="m ring" cx="791.2" cy="132" r="5"/></g><g class="cell" data-ep="15" data-inst="2"><path class="m dia" d="M829.9 126 L835.9 132 L829.9 138 L823.9 132 Z"/></g><g class="cell" data-ep="16" data-inst="2"><circle class="m ring" cx="868.6" cy="132" r="5"/></g><g class="cell" data-ep="8" data-inst="3"><circle class="m dot" cx="558.9" cy="161" r="5"/></g><g class="cell" data-ep="10" data-inst="3"><circle class="m dot" cx="636.4" cy="161" r="5"/></g><g class="cell" data-ep="11" data-inst="3"><circle class="m dot" cx="675.1" cy="161" r="5"/></g><g class="cell" data-ep="12" data-inst="3"><path class="m dia" d="M713.8 155 L719.8 161 L713.8 167 L707.8 161 Z"/></g><g class="cell" data-ep="13" data-inst="3"><circle class="m dot" cx="752.5" cy="161" r="5"/></g><g class="cell" data-ep="15" data-inst="3"><path class="m dia" d="M829.9 155 L835.9 161 L829.9 167 L823.9 161 Z"/></g><g class="cell" data-ep="3" data-inst="4"><circle class="m ring" cx="365.4" cy="190" r="5"/></g><g class="cell" data-ep="5" data-inst="4"><circle class="m ring" cx="442.8" cy="190" r="5"/></g><g class="cell" data-ep="6" data-inst="4"><circle class="m ring" cx="481.5" cy="190" r="5"/></g><g class="cell" data-ep="7" data-inst="4"><circle class="m ring" cx="520.2" cy="190" r="5"/></g><g class="cell" data-ep="8" data-inst="4"><circle class="m dot" cx="558.9" cy="190" r="5"/></g><g class="cell" data-ep="9" data-inst="4"><circle class="m ring" cx="597.6" cy="190" r="5"/></g><g class="cell" data-ep="10" data-inst="4"><circle class="m dot" cx="636.4" cy="190" r="5"/></g><g class="cell" data-ep="11" data-inst="4"><circle class="m ring" cx="675.1" cy="190" r="5"/></g><g class="cell" data-ep="12" data-inst="4"><circle class="m dot" cx="713.8" cy="190" r="5"/></g><g class="cell" data-ep="14" data-inst="4"><circle class="m ring" cx="791.2" cy="190" r="5"/></g><g class="cell" data-ep="15" data-inst="4"><path class="m dia" d="M829.9 184 L835.9 190 L829.9 196 L823.9 190 Z"/></g><g class="cell" data-ep="16" data-inst="4"><circle class="m ring" cx="868.6" cy="190" r="5"/></g><g class="cell" data-ep="17" data-inst="4"><circle class="m ring" cx="907.3" cy="190" r="5"/></g><g class="cell" data-ep="18" data-inst="4"><circle class="m ring" cx="946" cy="190" r="5"/></g><g class="cell" data-ep="3" data-inst="5"><circle class="m ring" cx="365.4" cy="219" r="5"/></g><g class="cell" data-ep="6" data-inst="5"><circle class="m ring" cx="481.5" cy="219" r="5"/></g><g class="cell" data-ep="8" data-inst="5"><circle class="m ring" cx="558.9" cy="219" r="5"/></g><g class="cell" data-ep="10" data-inst="5"><circle class="m ring" cx="636.4" cy="219" r="5"/></g><g class="cell" data-ep="11" data-inst="5"><circle class="m dot" cx="675.1" cy="219" r="5"/></g><g class="cell" data-ep="12" data-inst="5"><circle class="m dot" cx="713.8" cy="219" r="5"/></g><g class="cell" data-ep="14" data-inst="5"><circle class="m ring" cx="791.2" cy="219" r="5"/></g><g class="cell" data-ep="15" data-inst="5"><path class="m dia" d="M829.9 213 L835.9 219 L829.9 225 L823.9 219 Z"/></g><g class="cell" data-ep="16" data-inst="5"><circle class="m ring" cx="868.6" cy="219" r="5"/></g><g class="cell" data-ep="17" data-inst="5"><path class="m dia" d="M907.3 213 L913.3 219 L907.3 225 L901.3 219 Z"/></g><g class="cell" data-ep="18" data-inst="5"><circle class="m ring" cx="946" cy="219" r="5"/></g><g class="cell" data-ep="3" data-inst="6"><circle class="m ring" cx="365.4" cy="248" r="5"/></g><g class="cell" data-ep="4" data-inst="6"><circle class="m ring" cx="404.1" cy="248" r="5"/></g><g class="cell" data-ep="5" data-inst="6"><circle class="m ring" cx="442.8" cy="248" r="5"/></g><g class="cell" data-ep="6" data-inst="6"><circle class="m dot" cx="481.5" cy="248" r="5"/></g><g class="cell" data-ep="7" data-inst="6"><circle class="m dot" cx="520.2" cy="248" r="5"/></g><g class="cell" data-ep="8" data-inst="6"><circle class="m ring" cx="558.9" cy="248" r="5"/></g><g class="cell" data-ep="10" data-inst="6"><circle class="m dot" cx="636.4" cy="248" r="5"/></g><g class="cell" data-ep="11" data-inst="6"><circle class="m ring" cx="675.1" cy="248" r="5"/></g><g class="cell" data-ep="12" data-inst="6"><circle class="m dot" cx="713.8" cy="248" r="5"/></g><g class="cell" data-ep="15" data-inst="6"><circle class="m dot" cx="829.9" cy="248" r="5"/></g><g class="cell" data-ep="16" data-inst="6"><circle class="m dot" cx="868.6" cy="248" r="5"/></g><g class="cell" data-ep="18" data-inst="6"><circle class="m ring" cx="946" cy="248" r="5"/></g><g class="cell" data-ep="1" data-inst="7"><circle class="m dot" cx="288" cy="277" r="5"/></g><g class="cell" data-ep="3" data-inst="7"><circle class="m ring" cx="365.4" cy="277" r="5"/></g><g class="cell" data-ep="4" data-inst="7"><circle class="m dot" cx="404.1" cy="277" r="5"/></g><g class="cell" data-ep="5" data-inst="7"><circle class="m dot" cx="442.8" cy="277" r="5"/></g><g class="cell" data-ep="6" data-inst="7"><circle class="m dot" cx="481.5" cy="277" r="5"/></g><g class="cell" data-ep="7" data-inst="7"><circle class="m dot" cx="520.2" cy="277" r="5"/></g><g class="cell" data-ep="8" data-inst="7"><circle class="m dot" cx="558.9" cy="277" r="5"/></g><g class="cell" data-ep="9" data-inst="7"><circle class="m dot" cx="597.6" cy="277" r="5"/></g><g class="cell" data-ep="10" data-inst="7"><circle class="m dot" cx="636.4" cy="277" r="5"/></g><g class="cell" data-ep="13" data-inst="7"><circle class="m dot" cx="752.5" cy="277" r="5"/></g><g class="cell" data-ep="14" data-inst="7"><circle class="m dot" cx="791.2" cy="277" r="5"/></g><g class="cell" data-ep="15" data-inst="7"><path class="m dia" d="M829.9 271 L835.9 277 L829.9 283 L823.9 277 Z"/></g><g class="cell" data-ep="16" data-inst="7"><circle class="m ring" cx="868.6" cy="277" r="5"/></g><g class="cell" data-ep="17" data-inst="7"><circle class="m dot" cx="907.3" cy="277" r="5"/></g><g class="cell" data-ep="18" data-inst="7"><circle class="m ring" cx="946" cy="277" r="5"/></g><g class="cell" data-ep="1" data-inst="8"><circle class="m ring" cx="288" cy="306" r="5"/></g><g class="cell" data-ep="2" data-inst="8"><circle class="m dot" cx="326.7" cy="306" r="5"/></g><g class="cell" data-ep="3" data-inst="8"><circle class="m ring" cx="365.4" cy="306" r="5"/></g><g class="cell" data-ep="4" data-inst="8"><circle class="m dot" cx="404.1" cy="306" r="5"/></g><g class="cell" data-ep="5" data-inst="8"><circle class="m ring" cx="442.8" cy="306" r="5"/></g><g class="cell" data-ep="6" data-inst="8"><circle class="m dot" cx="481.5" cy="306" r="5"/></g><g class="cell" data-ep="7" data-inst="8"><circle class="m dot" cx="520.2" cy="306" r="5"/></g><g class="cell" data-ep="8" data-inst="8"><circle class="m dot" cx="558.9" cy="306" r="5"/></g><g class="cell" data-ep="9" data-inst="8"><circle class="m dot" cx="597.6" cy="306" r="5"/></g><g class="cell" data-ep="13" data-inst="8"><circle class="m ring" cx="752.5" cy="306" r="5"/></g><g class="cell" data-ep="15" data-inst="8"><path class="m dia" d="M829.9 300 L835.9 306 L829.9 312 L823.9 306 Z"/></g><g class="cell" data-ep="16" data-inst="8"><circle class="m dot" cx="868.6" cy="306" r="5"/></g><g class="cell" data-ep="17" data-inst="8"><circle class="m ring" cx="907.3" cy="306" r="5"/></g><g class="cell" data-ep="18" data-inst="8"><circle class="m ring" cx="946" cy="306" r="5"/></g><g class="cell" data-ep="1" data-inst="9"><circle class="m dot" cx="288" cy="335" r="5"/></g><g class="cell" data-ep="2" data-inst="9"><circle class="m dot" cx="326.7" cy="335" r="5"/></g><g class="cell" data-ep="3" data-inst="9"><circle class="m dot" cx="365.4" cy="335" r="5"/></g><g class="cell" data-ep="4" data-inst="9"><circle class="m dot" cx="404.1" cy="335" r="5"/></g><g class="cell" data-ep="5" data-inst="9"><circle class="m dot" cx="442.8" cy="335" r="5"/></g><g class="cell" data-ep="6" data-inst="9"><circle class="m dot" cx="481.5" cy="335" r="5"/></g><g class="cell" data-ep="7" data-inst="9"><circle class="m dot" cx="520.2" cy="335" r="5"/></g><g class="cell" data-ep="8" data-inst="9"><circle class="m dot" cx="558.9" cy="335" r="5"/></g><g class="cell" data-ep="9" data-inst="9"><circle class="m dot" cx="597.6" cy="335" r="5"/></g><g class="cell" data-ep="10" data-inst="9"><circle class="m dot" cx="636.4" cy="335" r="5"/></g><g class="cell" data-ep="11" data-inst="9"><circle class="m dot" cx="675.1" cy="335" r="5"/></g><g class="cell" data-ep="12" data-inst="9"><circle class="m dot" cx="713.8" cy="335" r="5"/></g><g class="cell" data-ep="13" data-inst="9"><circle class="m dot" cx="752.5" cy="335" r="5"/></g><g class="cell" data-ep="14" data-inst="9"><circle class="m dot" cx="791.2" cy="335" r="5"/></g><g class="cell" data-ep="15" data-inst="9"><circle class="m dot" cx="829.9" cy="335" r="5"/></g><g class="cell" data-ep="16" data-inst="9"><circle class="m dot" cx="868.6" cy="335" r="5"/></g><g class="cell" data-ep="17" data-inst="9"><circle class="m dot" cx="907.3" cy="335" r="5"/></g><g class="cell" data-ep="18" data-inst="9"><circle class="m dot" cx="946" cy="335" r="5"/></g><g class="cell" data-ep="2" data-inst="10"><circle class="m dot" cx="326.7" cy="364" r="5"/></g><g class="cell" data-ep="3" data-inst="10"><circle class="m ring" cx="365.4" cy="364" r="5"/></g><g class="cell" data-ep="6" data-inst="10"><circle class="m dot" cx="481.5" cy="364" r="5"/></g><g class="cell" data-ep="7" data-inst="10"><circle class="m dot" cx="520.2" cy="364" r="5"/></g><g class="cell" data-ep="8" data-inst="10"><circle class="m ring" cx="558.9" cy="364" r="5"/></g><g class="cell" data-ep="10" data-inst="10"><circle class="m dot" cx="636.4" cy="364" r="5"/></g><g class="cell" data-ep="11" data-inst="10"><circle class="m dot" cx="675.1" cy="364" r="5"/></g><g class="cell" data-ep="12" data-inst="10"><circle class="m dot" cx="713.8" cy="364" r="5"/></g><g class="cell" data-ep="15" data-inst="10"><path class="m dia" d="M829.9 358 L835.9 364 L829.9 370 L823.9 364 Z"/></g><g class="cell" data-ep="17" data-inst="10"><circle class="m dot" cx="907.3" cy="364" r="5"/></g><g class="cell" data-ep="18" data-inst="10"><circle class="m ring" cx="946" cy="364" r="5"/></g><g class="cell" data-ep="4" data-inst="11"><circle class="m dot" cx="404.1" cy="393" r="5"/></g><g class="cell" data-ep="6" data-inst="11"><circle class="m dot" cx="481.5" cy="393" r="5"/></g><g class="cell" data-ep="8" data-inst="11"><circle class="m dot" cx="558.9" cy="393" r="5"/></g><g class="cell" data-ep="10" data-inst="11"><circle class="m dot" cx="636.4" cy="393" r="5"/></g><g class="cell" data-ep="12" data-inst="11"><circle class="m dot" cx="713.8" cy="393" r="5"/></g><g class="cell" data-ep="13" data-inst="11"><circle class="m dot" cx="752.5" cy="393" r="5"/></g><g class="cell" data-ep="14" data-inst="11"><circle class="m dot" cx="791.2" cy="393" r="5"/></g><g class="cell" data-ep="15" data-inst="11"><path class="m dia" d="M829.9 387 L835.9 393 L829.9 399 L823.9 393 Z"/></g><g class="cell" data-ep="16" data-inst="11"><circle class="m dot" cx="868.6" cy="393" r="5"/></g><g class="cell" data-ep="17" data-inst="11"><circle class="m dot" cx="907.3" cy="393" r="5"/></g><g class="cell" data-ep="2" data-inst="12"><circle class="m ring" cx="326.7" cy="422" r="5"/></g><g class="cell" data-ep="7" data-inst="12"><circle class="m dot" cx="520.2" cy="422" r="5"/></g><g class="cell" data-ep="8" data-inst="12"><circle class="m dot" cx="558.9" cy="422" r="5"/></g><g class="cell" data-ep="10" data-inst="12"><circle class="m dot" cx="636.4" cy="422" r="5"/></g><g class="cell" data-ep="12" data-inst="12"><circle class="m dot" cx="713.8" cy="422" r="5"/></g><g class="cell" data-ep="16" data-inst="12"><circle class="m ring" cx="868.6" cy="422" r="5"/></g><g class="cell" data-ep="17" data-inst="12"><circle class="m dot" cx="907.3" cy="422" r="5"/></g><g class="cell" data-ep="18" data-inst="12"><circle class="m ring" cx="946" cy="422" r="5"/></g></g>
+<svg viewBox="0 0 1120 630" role="img" aria-labelledby="pm-t pm-d">
+<title id="pm-t">The instruments of rule, thirteen by eighteen</title>
+<desc id="pm-d">A grid of thirteen rows and eighteen columns. Each row is an instrument of rule: the police, the garrison, Dublin Castle, the cavalcade, the courts, the gallows, the informer, the Church, the schoolroom, the King&#8217;s English, the Crown in effigy, the paperwork, the parliament. Each column is one of the eighteen episodes, running from eight in the morning to deep night. A hundred and sixty marks sit in the grid: eighty-eight filled dots for present, sixty-two open rings for recalled or reported, ten diamonds for hallucinated. The garrison row and the King&#8217;s English row carry a mark in every column; the twelfth and fifteenth columns are the fullest. When a card names an hour or an instrument, that column or row is drawn bright and a gold rule is laid along it.</desc>
+<rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+<text class="pl-reg" x="64" y="78">THIRTEEN INSTRUMENTS OF RULE &#183; 160 MARKS</text>
+<line x1="64" y1="100" x2="1056" y2="100" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/>
+<text class="pl-ttl" x="64" y="140">The governed city</text>
+<text class="pl-note" x="64" y="580">8 a.m. &#8594; deep night</text>
+<text class="pl-badge" x="1056" y="580" text-anchor="end">03 &#183; THE GOVERNED CITY</text>
+<g class="legend">
+<circle cx="551" cy="133" r="5" fill="#b9c3d6" fill-opacity=".55"/><text class="pl-note" x="568" y="140">present</text>
+<circle cx="699" cy="133" r="5" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/><text class="pl-note" x="716" y="140">recalled</text>
+<path id="lg-dia" d="M861 127 L867 133 L861 139 L855 133 Z" fill="#b9c3d6" fill-opacity=".55"/><text class="pl-note" x="878" y="140">hallucinated</text>
+</g>
+<line x1="376" y1="213" x2="376" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="415.1" y1="213" x2="415.1" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="454.1" y1="213" x2="454.1" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="493.2" y1="213" x2="493.2" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="532.2" y1="213" x2="532.2" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="571.3" y1="213" x2="571.3" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="610.4" y1="213" x2="610.4" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="649.4" y1="213" x2="649.4" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="688.5" y1="213" x2="688.5" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="727.5" y1="213" x2="727.5" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="766.6" y1="213" x2="766.6" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="805.6" y1="213" x2="805.6" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="844.7" y1="213" x2="844.7" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="883.8" y1="213" x2="883.8" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="922.8" y1="213" x2="922.8" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="961.9" y1="213" x2="961.9" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="1000.9" y1="213" x2="1000.9" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/><line x1="1040" y1="213" x2="1040" y2="547" stroke="#f4efe2" stroke-opacity=".14" stroke-width="1.5"/>
+<line id="mk-all" x1="376" y1="204" x2="1040" y2="204" stroke="#dfa93f" stroke-width="10" visibility="hidden"/>
+<g id="mk-cols"></g>
+<line id="mk-row" x1="365" y1="0" x2="1051" y2="0" stroke="#dfa93f" stroke-width="10" visibility="hidden"/>
+<text class="pl-note ep" data-ep="1" x="376" y="186" text-anchor="middle">1</text><text class="pl-note ep" data-ep="2" x="415.1" y="186" text-anchor="middle">2</text><text class="pl-note ep" data-ep="3" x="454.1" y="186" text-anchor="middle">3</text><text class="pl-note ep" data-ep="4" x="493.2" y="186" text-anchor="middle">4</text><text class="pl-note ep" data-ep="5" x="532.2" y="186" text-anchor="middle">5</text><text class="pl-note ep" data-ep="6" x="571.3" y="186" text-anchor="middle">6</text><text class="pl-note ep" data-ep="7" x="610.4" y="186" text-anchor="middle">7</text><text class="pl-note ep" data-ep="8" x="649.4" y="186" text-anchor="middle">8</text><text class="pl-note ep" data-ep="9" x="688.5" y="186" text-anchor="middle">9</text><text class="pl-note ep" data-ep="10" x="727.5" y="186" text-anchor="middle">10</text><text class="pl-note ep" data-ep="11" x="766.6" y="186" text-anchor="middle">11</text><text class="pl-note ep" data-ep="12" x="805.6" y="186" text-anchor="middle">12</text><text class="pl-note ep" data-ep="13" x="844.7" y="186" text-anchor="middle">13</text><text class="pl-note ep" data-ep="14" x="883.8" y="186" text-anchor="middle">14</text><text class="pl-note ep" data-ep="15" x="922.8" y="186" text-anchor="middle">15</text><text class="pl-note ep" data-ep="16" x="961.9" y="186" text-anchor="middle">16</text><text class="pl-note ep" data-ep="17" x="1000.9" y="186" text-anchor="middle">17</text><text class="pl-note ep" data-ep="18" x="1040" y="186" text-anchor="middle">18</text>
+<text class="pl-note inst" data-inst="0" x="352" y="232" text-anchor="end">Police</text><text class="pl-note inst" data-inst="1" x="352" y="258" text-anchor="end">The garrison</text><text class="pl-note inst" data-inst="2" x="352" y="284" text-anchor="end">Dublin Castle</text><text class="pl-note inst" data-inst="3" x="352" y="310" text-anchor="end">The cavalcade</text><text class="pl-note inst" data-inst="4" x="352" y="336" text-anchor="end">The courts</text><text class="pl-note inst" data-inst="5" x="352" y="362" text-anchor="end">The gallows</text><text class="pl-note inst" data-inst="6" x="352" y="388" text-anchor="end">The informer</text><text class="pl-note inst" data-inst="7" x="352" y="414" text-anchor="end">The Church</text><text class="pl-note inst" data-inst="8" x="352" y="440" text-anchor="end">The schoolroom</text><text class="pl-note inst" data-inst="9" x="352" y="466" text-anchor="end">The King&#x27;s English</text><text class="pl-note inst" data-inst="10" x="352" y="492" text-anchor="end">The Crown in effigy</text><text class="pl-note inst" data-inst="11" x="352" y="518" text-anchor="end">The paperwork</text><text class="pl-note inst" data-inst="12" x="352" y="544" text-anchor="end">The parliament</text>
+<g id="marks"><g class="cell" data-ep="4" data-inst="0"><circle class="m ring" cx="493.2" cy="224" r="5"/></g><g class="cell" data-ep="6" data-inst="0"><circle class="m dot" cx="571.3" cy="224" r="5"/></g><g class="cell" data-ep="8" data-inst="0"><circle class="m dot" cx="649.4" cy="224" r="5"/></g><g class="cell" data-ep="10" data-inst="0"><circle class="m dot" cx="727.5" cy="224" r="5"/></g><g class="cell" data-ep="11" data-inst="0"><circle class="m ring" cx="766.6" cy="224" r="5"/></g><g class="cell" data-ep="12" data-inst="0"><circle class="m dot" cx="805.6" cy="224" r="5"/></g><g class="cell" data-ep="13" data-inst="0"><circle class="m ring" cx="844.7" cy="224" r="5"/></g><g class="cell" data-ep="14" data-inst="0"><circle class="m ring" cx="883.8" cy="224" r="5"/></g><g class="cell" data-ep="15" data-inst="0"><circle class="m dot" cx="922.8" cy="224" r="5"/></g><g class="cell" data-ep="16" data-inst="0"><circle class="m dot" cx="961.9" cy="224" r="5"/></g><g class="cell" data-ep="17" data-inst="0"><circle class="m ring" cx="1000.9" cy="224" r="5"/></g><g class="cell" data-ep="18" data-inst="0"><circle class="m ring" cx="1040" cy="224" r="5"/></g><g class="cell" data-ep="1" data-inst="1"><circle class="m dot" cx="376" cy="250" r="5"/></g><g class="cell" data-ep="2" data-inst="1"><circle class="m ring" cx="415.1" cy="250" r="5"/></g><g class="cell" data-ep="3" data-inst="1"><circle class="m ring" cx="454.1" cy="250" r="5"/></g><g class="cell" data-ep="4" data-inst="1"><circle class="m ring" cx="493.2" cy="250" r="5"/></g><g class="cell" data-ep="5" data-inst="1"><circle class="m dot" cx="532.2" cy="250" r="5"/></g><g class="cell" data-ep="6" data-inst="1"><circle class="m ring" cx="571.3" cy="250" r="5"/></g><g class="cell" data-ep="7" data-inst="1"><circle class="m dot" cx="610.4" cy="250" r="5"/></g><g class="cell" data-ep="8" data-inst="1"><circle class="m ring" cx="649.4" cy="250" r="5"/></g><g class="cell" data-ep="9" data-inst="1"><circle class="m ring" cx="688.5" cy="250" r="5"/></g><g class="cell" data-ep="10" data-inst="1"><circle class="m dot" cx="727.5" cy="250" r="5"/></g><g class="cell" data-ep="11" data-inst="1"><circle class="m ring" cx="766.6" cy="250" r="5"/></g><g class="cell" data-ep="12" data-inst="1"><circle class="m ring" cx="805.6" cy="250" r="5"/></g><g class="cell" data-ep="13" data-inst="1"><circle class="m dot" cx="844.7" cy="250" r="5"/></g><g class="cell" data-ep="14" data-inst="1"><circle class="m dot" cx="883.8" cy="250" r="5"/></g><g class="cell" data-ep="15" data-inst="1"><circle class="m dot" cx="922.8" cy="250" r="5"/></g><g class="cell" data-ep="16" data-inst="1"><circle class="m ring" cx="961.9" cy="250" r="5"/></g><g class="cell" data-ep="17" data-inst="1"><circle class="m ring" cx="1000.9" cy="250" r="5"/></g><g class="cell" data-ep="18" data-inst="1"><circle class="m ring" cx="1040" cy="250" r="5"/></g><g class="cell" data-ep="1" data-inst="2"><circle class="m ring" cx="376" cy="276" r="5"/></g><g class="cell" data-ep="2" data-inst="2"><circle class="m ring" cx="415.1" cy="276" r="5"/></g><g class="cell" data-ep="6" data-inst="2"><circle class="m dot" cx="571.3" cy="276" r="5"/></g><g class="cell" data-ep="7" data-inst="2"><circle class="m ring" cx="610.4" cy="276" r="5"/></g><g class="cell" data-ep="8" data-inst="2"><circle class="m ring" cx="649.4" cy="276" r="5"/></g><g class="cell" data-ep="10" data-inst="2"><circle class="m dot" cx="727.5" cy="276" r="5"/></g><g class="cell" data-ep="12" data-inst="2"><circle class="m dot" cx="805.6" cy="276" r="5"/></g><g class="cell" data-ep="13" data-inst="2"><circle class="m ring" cx="844.7" cy="276" r="5"/></g><g class="cell" data-ep="14" data-inst="2"><circle class="m ring" cx="883.8" cy="276" r="5"/></g><g class="cell" data-ep="15" data-inst="2"><path class="m dia" d="M922.8 270 L928.8 276 L922.8 282 L916.8 276 Z"/></g><g class="cell" data-ep="16" data-inst="2"><circle class="m ring" cx="961.9" cy="276" r="5"/></g><g class="cell" data-ep="8" data-inst="3"><circle class="m dot" cx="649.4" cy="302" r="5"/></g><g class="cell" data-ep="10" data-inst="3"><circle class="m dot" cx="727.5" cy="302" r="5"/></g><g class="cell" data-ep="11" data-inst="3"><circle class="m dot" cx="766.6" cy="302" r="5"/></g><g class="cell" data-ep="12" data-inst="3"><path class="m dia" d="M805.6 296 L811.6 302 L805.6 308 L799.6 302 Z"/></g><g class="cell" data-ep="13" data-inst="3"><circle class="m dot" cx="844.7" cy="302" r="5"/></g><g class="cell" data-ep="15" data-inst="3"><path class="m dia" d="M922.8 296 L928.8 302 L922.8 308 L916.8 302 Z"/></g><g class="cell" data-ep="3" data-inst="4"><circle class="m ring" cx="454.1" cy="328" r="5"/></g><g class="cell" data-ep="5" data-inst="4"><circle class="m ring" cx="532.2" cy="328" r="5"/></g><g class="cell" data-ep="6" data-inst="4"><circle class="m ring" cx="571.3" cy="328" r="5"/></g><g class="cell" data-ep="7" data-inst="4"><circle class="m ring" cx="610.4" cy="328" r="5"/></g><g class="cell" data-ep="8" data-inst="4"><circle class="m dot" cx="649.4" cy="328" r="5"/></g><g class="cell" data-ep="9" data-inst="4"><circle class="m ring" cx="688.5" cy="328" r="5"/></g><g class="cell" data-ep="10" data-inst="4"><circle class="m dot" cx="727.5" cy="328" r="5"/></g><g class="cell" data-ep="11" data-inst="4"><circle class="m ring" cx="766.6" cy="328" r="5"/></g><g class="cell" data-ep="12" data-inst="4"><circle class="m dot" cx="805.6" cy="328" r="5"/></g><g class="cell" data-ep="14" data-inst="4"><circle class="m ring" cx="883.8" cy="328" r="5"/></g><g class="cell" data-ep="15" data-inst="4"><path class="m dia" d="M922.8 322 L928.8 328 L922.8 334 L916.8 328 Z"/></g><g class="cell" data-ep="16" data-inst="4"><circle class="m ring" cx="961.9" cy="328" r="5"/></g><g class="cell" data-ep="17" data-inst="4"><circle class="m ring" cx="1000.9" cy="328" r="5"/></g><g class="cell" data-ep="18" data-inst="4"><circle class="m ring" cx="1040" cy="328" r="5"/></g><g class="cell" data-ep="3" data-inst="5"><circle class="m ring" cx="454.1" cy="354" r="5"/></g><g class="cell" data-ep="6" data-inst="5"><circle class="m ring" cx="571.3" cy="354" r="5"/></g><g class="cell" data-ep="8" data-inst="5"><circle class="m ring" cx="649.4" cy="354" r="5"/></g><g class="cell" data-ep="10" data-inst="5"><circle class="m ring" cx="727.5" cy="354" r="5"/></g><g class="cell" data-ep="11" data-inst="5"><circle class="m dot" cx="766.6" cy="354" r="5"/></g><g class="cell" data-ep="12" data-inst="5"><circle class="m dot" cx="805.6" cy="354" r="5"/></g><g class="cell" data-ep="14" data-inst="5"><circle class="m ring" cx="883.8" cy="354" r="5"/></g><g class="cell" data-ep="15" data-inst="5"><path class="m dia" d="M922.8 348 L928.8 354 L922.8 360 L916.8 354 Z"/></g><g class="cell" data-ep="16" data-inst="5"><circle class="m ring" cx="961.9" cy="354" r="5"/></g><g class="cell" data-ep="17" data-inst="5"><path class="m dia" d="M1000.9 348 L1006.9 354 L1000.9 360 L994.9 354 Z"/></g><g class="cell" data-ep="18" data-inst="5"><circle class="m ring" cx="1040" cy="354" r="5"/></g><g class="cell" data-ep="3" data-inst="6"><circle class="m ring" cx="454.1" cy="380" r="5"/></g><g class="cell" data-ep="4" data-inst="6"><circle class="m ring" cx="493.2" cy="380" r="5"/></g><g class="cell" data-ep="5" data-inst="6"><circle class="m ring" cx="532.2" cy="380" r="5"/></g><g class="cell" data-ep="6" data-inst="6"><circle class="m dot" cx="571.3" cy="380" r="5"/></g><g class="cell" data-ep="7" data-inst="6"><circle class="m dot" cx="610.4" cy="380" r="5"/></g><g class="cell" data-ep="8" data-inst="6"><circle class="m ring" cx="649.4" cy="380" r="5"/></g><g class="cell" data-ep="10" data-inst="6"><circle class="m dot" cx="727.5" cy="380" r="5"/></g><g class="cell" data-ep="11" data-inst="6"><circle class="m ring" cx="766.6" cy="380" r="5"/></g><g class="cell" data-ep="12" data-inst="6"><circle class="m dot" cx="805.6" cy="380" r="5"/></g><g class="cell" data-ep="15" data-inst="6"><circle class="m dot" cx="922.8" cy="380" r="5"/></g><g class="cell" data-ep="16" data-inst="6"><circle class="m dot" cx="961.9" cy="380" r="5"/></g><g class="cell" data-ep="18" data-inst="6"><circle class="m ring" cx="1040" cy="380" r="5"/></g><g class="cell" data-ep="1" data-inst="7"><circle class="m dot" cx="376" cy="406" r="5"/></g><g class="cell" data-ep="3" data-inst="7"><circle class="m ring" cx="454.1" cy="406" r="5"/></g><g class="cell" data-ep="4" data-inst="7"><circle class="m dot" cx="493.2" cy="406" r="5"/></g><g class="cell" data-ep="5" data-inst="7"><circle class="m dot" cx="532.2" cy="406" r="5"/></g><g class="cell" data-ep="6" data-inst="7"><circle class="m dot" cx="571.3" cy="406" r="5"/></g><g class="cell" data-ep="7" data-inst="7"><circle class="m dot" cx="610.4" cy="406" r="5"/></g><g class="cell" data-ep="8" data-inst="7"><circle class="m dot" cx="649.4" cy="406" r="5"/></g><g class="cell" data-ep="9" data-inst="7"><circle class="m dot" cx="688.5" cy="406" r="5"/></g><g class="cell" data-ep="10" data-inst="7"><circle class="m dot" cx="727.5" cy="406" r="5"/></g><g class="cell" data-ep="13" data-inst="7"><circle class="m dot" cx="844.7" cy="406" r="5"/></g><g class="cell" data-ep="14" data-inst="7"><circle class="m dot" cx="883.8" cy="406" r="5"/></g><g class="cell" data-ep="15" data-inst="7"><path class="m dia" d="M922.8 400 L928.8 406 L922.8 412 L916.8 406 Z"/></g><g class="cell" data-ep="16" data-inst="7"><circle class="m ring" cx="961.9" cy="406" r="5"/></g><g class="cell" data-ep="17" data-inst="7"><circle class="m dot" cx="1000.9" cy="406" r="5"/></g><g class="cell" data-ep="18" data-inst="7"><circle class="m ring" cx="1040" cy="406" r="5"/></g><g class="cell" data-ep="1" data-inst="8"><circle class="m ring" cx="376" cy="432" r="5"/></g><g class="cell" data-ep="2" data-inst="8"><circle class="m dot" cx="415.1" cy="432" r="5"/></g><g class="cell" data-ep="3" data-inst="8"><circle class="m ring" cx="454.1" cy="432" r="5"/></g><g class="cell" data-ep="4" data-inst="8"><circle class="m dot" cx="493.2" cy="432" r="5"/></g><g class="cell" data-ep="5" data-inst="8"><circle class="m ring" cx="532.2" cy="432" r="5"/></g><g class="cell" data-ep="6" data-inst="8"><circle class="m dot" cx="571.3" cy="432" r="5"/></g><g class="cell" data-ep="7" data-inst="8"><circle class="m dot" cx="610.4" cy="432" r="5"/></g><g class="cell" data-ep="8" data-inst="8"><circle class="m dot" cx="649.4" cy="432" r="5"/></g><g class="cell" data-ep="9" data-inst="8"><circle class="m dot" cx="688.5" cy="432" r="5"/></g><g class="cell" data-ep="13" data-inst="8"><circle class="m ring" cx="844.7" cy="432" r="5"/></g><g class="cell" data-ep="15" data-inst="8"><path class="m dia" d="M922.8 426 L928.8 432 L922.8 438 L916.8 432 Z"/></g><g class="cell" data-ep="16" data-inst="8"><circle class="m dot" cx="961.9" cy="432" r="5"/></g><g class="cell" data-ep="17" data-inst="8"><circle class="m ring" cx="1000.9" cy="432" r="5"/></g><g class="cell" data-ep="18" data-inst="8"><circle class="m ring" cx="1040" cy="432" r="5"/></g><g class="cell" data-ep="1" data-inst="9"><circle class="m dot" cx="376" cy="458" r="5"/></g><g class="cell" data-ep="2" data-inst="9"><circle class="m dot" cx="415.1" cy="458" r="5"/></g><g class="cell" data-ep="3" data-inst="9"><circle class="m dot" cx="454.1" cy="458" r="5"/></g><g class="cell" data-ep="4" data-inst="9"><circle class="m dot" cx="493.2" cy="458" r="5"/></g><g class="cell" data-ep="5" data-inst="9"><circle class="m dot" cx="532.2" cy="458" r="5"/></g><g class="cell" data-ep="6" data-inst="9"><circle class="m dot" cx="571.3" cy="458" r="5"/></g><g class="cell" data-ep="7" data-inst="9"><circle class="m dot" cx="610.4" cy="458" r="5"/></g><g class="cell" data-ep="8" data-inst="9"><circle class="m dot" cx="649.4" cy="458" r="5"/></g><g class="cell" data-ep="9" data-inst="9"><circle class="m dot" cx="688.5" cy="458" r="5"/></g><g class="cell" data-ep="10" data-inst="9"><circle class="m dot" cx="727.5" cy="458" r="5"/></g><g class="cell" data-ep="11" data-inst="9"><circle class="m dot" cx="766.6" cy="458" r="5"/></g><g class="cell" data-ep="12" data-inst="9"><circle class="m dot" cx="805.6" cy="458" r="5"/></g><g class="cell" data-ep="13" data-inst="9"><circle class="m dot" cx="844.7" cy="458" r="5"/></g><g class="cell" data-ep="14" data-inst="9"><circle class="m dot" cx="883.8" cy="458" r="5"/></g><g class="cell" data-ep="15" data-inst="9"><circle class="m dot" cx="922.8" cy="458" r="5"/></g><g class="cell" data-ep="16" data-inst="9"><circle class="m dot" cx="961.9" cy="458" r="5"/></g><g class="cell" data-ep="17" data-inst="9"><circle class="m dot" cx="1000.9" cy="458" r="5"/></g><g class="cell" data-ep="18" data-inst="9"><circle class="m dot" cx="1040" cy="458" r="5"/></g><g class="cell" data-ep="2" data-inst="10"><circle class="m dot" cx="415.1" cy="484" r="5"/></g><g class="cell" data-ep="3" data-inst="10"><circle class="m ring" cx="454.1" cy="484" r="5"/></g><g class="cell" data-ep="6" data-inst="10"><circle class="m dot" cx="571.3" cy="484" r="5"/></g><g class="cell" data-ep="7" data-inst="10"><circle class="m dot" cx="610.4" cy="484" r="5"/></g><g class="cell" data-ep="8" data-inst="10"><circle class="m ring" cx="649.4" cy="484" r="5"/></g><g class="cell" data-ep="10" data-inst="10"><circle class="m dot" cx="727.5" cy="484" r="5"/></g><g class="cell" data-ep="11" data-inst="10"><circle class="m dot" cx="766.6" cy="484" r="5"/></g><g class="cell" data-ep="12" data-inst="10"><circle class="m dot" cx="805.6" cy="484" r="5"/></g><g class="cell" data-ep="15" data-inst="10"><path class="m dia" d="M922.8 478 L928.8 484 L922.8 490 L916.8 484 Z"/></g><g class="cell" data-ep="17" data-inst="10"><circle class="m dot" cx="1000.9" cy="484" r="5"/></g><g class="cell" data-ep="18" data-inst="10"><circle class="m ring" cx="1040" cy="484" r="5"/></g><g class="cell" data-ep="4" data-inst="11"><circle class="m dot" cx="493.2" cy="510" r="5"/></g><g class="cell" data-ep="6" data-inst="11"><circle class="m dot" cx="571.3" cy="510" r="5"/></g><g class="cell" data-ep="8" data-inst="11"><circle class="m dot" cx="649.4" cy="510" r="5"/></g><g class="cell" data-ep="10" data-inst="11"><circle class="m dot" cx="727.5" cy="510" r="5"/></g><g class="cell" data-ep="12" data-inst="11"><circle class="m dot" cx="805.6" cy="510" r="5"/></g><g class="cell" data-ep="13" data-inst="11"><circle class="m dot" cx="844.7" cy="510" r="5"/></g><g class="cell" data-ep="14" data-inst="11"><circle class="m dot" cx="883.8" cy="510" r="5"/></g><g class="cell" data-ep="15" data-inst="11"><path class="m dia" d="M922.8 504 L928.8 510 L922.8 516 L916.8 510 Z"/></g><g class="cell" data-ep="16" data-inst="11"><circle class="m dot" cx="961.9" cy="510" r="5"/></g><g class="cell" data-ep="17" data-inst="11"><circle class="m dot" cx="1000.9" cy="510" r="5"/></g><g class="cell" data-ep="2" data-inst="12"><circle class="m ring" cx="415.1" cy="536" r="5"/></g><g class="cell" data-ep="7" data-inst="12"><circle class="m dot" cx="610.4" cy="536" r="5"/></g><g class="cell" data-ep="8" data-inst="12"><circle class="m dot" cx="649.4" cy="536" r="5"/></g><g class="cell" data-ep="10" data-inst="12"><circle class="m dot" cx="727.5" cy="536" r="5"/></g><g class="cell" data-ep="12" data-inst="12"><circle class="m dot" cx="805.6" cy="536" r="5"/></g><g class="cell" data-ep="16" data-inst="12"><circle class="m ring" cx="961.9" cy="536" r="5"/></g><g class="cell" data-ep="17" data-inst="12"><circle class="m dot" cx="1000.9" cy="536" r="5"/></g><g class="cell" data-ep="18" data-inst="12"><circle class="m ring" cx="1040" cy="536" r="5"/></g></g>
 </svg>
-    <div class="title show" id="title">
-      <h1>The Governed City</h1>
-      <div class="works">THIRTEEN INSTRUMENTS &#183; EIGHTEEN EPISODES</div>
-      <div class="rule"></div>
-      <p class="sub">Rule as an ambient hum.</p>
+    <div class="plate title" id="title">
+<svg viewBox="0 0 1120 630" role="img" aria-labelledby="p0-t p0-d">
+<title id="p0-t">The Governed City</title>
+<desc id="p0-d">The title plate. The deck&#8217;s name is set large on a lit panel, with a gold rule beneath it and the line &#8220;Rule as an ambient hum.&#8221; Low on the plate a horizontal rule carries eighteen small ticks, one for each episode of the day.</desc>
+<rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+<text class="pl-reg" x="64" y="78">THIRTEEN INSTRUMENTS &#183; EIGHTEEN EPISODES</text>
+<line x1="64" y1="100" x2="1056" y2="100" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/>
+<text class="pl-note" x="64" y="580">An audience deck &#183; dimension 03</text>
+<text class="pl-badge" x="1056" y="580" text-anchor="end">03 &#183; THE GOVERNED CITY</text>
+<text class="pl-dat t-sub" x="64" y="300">The Governed City</text>
+<line x1="64" y1="344" x2="264" y2="344" stroke="#dfa93f" stroke-width="10"/>
+<text class="pl-ttl" x="64" y="420" font-style="italic">Rule as an ambient hum.</text>
+<line x1="64" y1="490" x2="1056" y2="490" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/><circle cx="64" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="122.4" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="180.7" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="239.1" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="297.4" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="355.8" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="414.1" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="472.5" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="530.8" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="589.2" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="647.5" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="705.9" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="764.2" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="822.6" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="880.9" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="939.3" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="997.6" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="1056" cy="490" r="5" fill="#b9c3d6" fill-opacity=".55"/>
+<text class="pl-note" x="64" y="530">8 a.m.</text>
+<text class="pl-note" x="1056" y="530" text-anchor="end">deep night</text>
+</svg>
     </div>
     <div class="plate" id="pl-bars">
-<svg viewBox="0 0 980 540" role="img" aria-labelledby="pa-t pa-d">
+<svg viewBox="0 0 1120 630" role="img" aria-labelledby="pa-t pa-d">
 <title id="pa-t">Present marks by episode</title>
-<desc id="pa-d">A bar chart, one bar per episode from one to eighteen. Every bar has height: no episode is empty. The tallest is episode ten, Wandering Rocks, at eleven present marks, then episode twelve, Cyclops, at nine, then episodes six and eight at eight each. The shortest are episode three and episode eighteen, at one each. Eighty-eight present marks in all.</desc>
-<text class="pl-h" x="60" y="66">PRESENT MARKS BY EPISODE</text>
-<line x1="60" y1="432" x2="936" y2="432" stroke="#b9c3d6" stroke-width="1.4"/>
-<rect x="78" y="354" width="28" height="78" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="92" y="345" text-anchor="middle">3</text>
-<text class="pl-n" x="92" y="452" text-anchor="middle">1</text>
-<rect x="126" y="354" width="28" height="78" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="140" y="345" text-anchor="middle">3</text>
-<text class="pl-n" x="140" y="452" text-anchor="middle">2</text>
-<rect x="174" y="406" width="28" height="26" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="188" y="397" text-anchor="middle">1</text>
-<text class="pl-n" x="188" y="452" text-anchor="middle">3</text>
-<rect x="222" y="328" width="28" height="104" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="236" y="319" text-anchor="middle">4</text>
-<text class="pl-n" x="236" y="452" text-anchor="middle">4</text>
-<rect x="270" y="354" width="28" height="78" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="284" y="345" text-anchor="middle">3</text>
-<text class="pl-n" x="284" y="452" text-anchor="middle">5</text>
-<rect x="318" y="224" width="28" height="208" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="332" y="215" text-anchor="middle">8</text>
-<text class="pl-n" x="332" y="452" text-anchor="middle">6</text>
-<rect x="366" y="250" width="28" height="182" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="380" y="241" text-anchor="middle">7</text>
-<text class="pl-n" x="380" y="452" text-anchor="middle">7</text>
-<rect x="414" y="224" width="28" height="208" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="428" y="215" text-anchor="middle">8</text>
-<text class="pl-n" x="428" y="452" text-anchor="middle">8</text>
-<rect x="462" y="354" width="28" height="78" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="476" y="345" text-anchor="middle">3</text>
-<text class="pl-n" x="476" y="452" text-anchor="middle">9</text>
-<rect x="510" y="146" width="28" height="286" fill="#dfa93f"/>
-<text class="pl-n pl-gold" x="524" y="137" text-anchor="middle">11</text>
-<text class="pl-n" x="524" y="452" text-anchor="middle">10</text>
-<rect x="558" y="328" width="28" height="104" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="572" y="319" text-anchor="middle">4</text>
-<text class="pl-n" x="572" y="452" text-anchor="middle">11</text>
-<rect x="606" y="198" width="28" height="234" fill="#dfa93f"/>
-<text class="pl-n pl-gold" x="620" y="189" text-anchor="middle">9</text>
-<text class="pl-n" x="620" y="452" text-anchor="middle">12</text>
-<rect x="654" y="302" width="28" height="130" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="668" y="293" text-anchor="middle">5</text>
-<text class="pl-n" x="668" y="452" text-anchor="middle">13</text>
-<rect x="702" y="328" width="28" height="104" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="716" y="319" text-anchor="middle">4</text>
-<text class="pl-n" x="716" y="452" text-anchor="middle">14</text>
-<rect x="750" y="328" width="28" height="104" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="764" y="319" text-anchor="middle">4</text>
-<text class="pl-n" x="764" y="452" text-anchor="middle">15</text>
-<rect x="798" y="302" width="28" height="130" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="812" y="293" text-anchor="middle">5</text>
-<text class="pl-n" x="812" y="452" text-anchor="middle">16</text>
-<rect x="846" y="302" width="28" height="130" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="860" y="293" text-anchor="middle">5</text>
-<text class="pl-n" x="860" y="452" text-anchor="middle">17</text>
-<rect x="894" y="406" width="28" height="26" fill="#f4efe2" fill-opacity=".8"/>
-<text class="pl-n pl-mute" x="908" y="397" text-anchor="middle">1</text>
-<text class="pl-n" x="908" y="452" text-anchor="middle">18</text>
-<text class="pl-l pl-gold" x="524" y="480" text-anchor="middle">WANDERING ROCKS</text>
-<text class="pl-l pl-gold" x="620" y="502" text-anchor="middle">CYCLOPS</text>
-<text class="pl-l" x="60" y="502">8 A.M. &#8594; DEEP NIGHT</text>
-<text class="pl-l" x="936" y="66" text-anchor="end">88 PRESENT MARKS &#183; NO EPISODE EMPTY</text>
+<desc id="pa-d">Eighteen bars standing on a rule, one per episode, all in paper but for the tenth, which is gold and tallest. Every bar has height: no episode is empty. Episode ten, Wandering Rocks, carries eleven present marks; episode twelve, nine; episodes six and eight, eight each. Episodes three and eighteen are shortest at one each. Eighty-eight present marks in all.</desc>
+<rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+<text class="pl-reg" x="64" y="78">PRESENT MARKS BY EPISODE &#183; 88 IN ALL</text>
+<line x1="64" y1="100" x2="1056" y2="100" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/>
+<text class="pl-ttl" x="64" y="140">Present marks, episode by episode</text>
+<text class="pl-note" x="64" y="580">No episode empty &#183; 8 a.m. &#8594; deep night</text>
+<text class="pl-badge" x="1056" y="580" text-anchor="end">03 &#183; THE GOVERNED CITY</text>
+<rect x="74.6" y="418.2" width="34" height="81.8" fill="#f4efe2"/><rect x="129.7" y="418.2" width="34" height="81.8" fill="#f4efe2"/><rect x="184.8" y="472.7" width="34" height="27.3" fill="#f4efe2"/><rect x="239.9" y="390.9" width="34" height="109.1" fill="#f4efe2"/><rect x="295" y="418.2" width="34" height="81.8" fill="#f4efe2"/><rect x="350.1" y="281.8" width="34" height="218.2" fill="#f4efe2"/><rect x="405.2" y="309.1" width="34" height="190.9" fill="#f4efe2"/><rect x="460.3" y="281.8" width="34" height="218.2" fill="#f4efe2"/><rect x="515.4" y="418.2" width="34" height="81.8" fill="#f4efe2"/><rect x="570.6" y="200" width="34" height="300" fill="#dfa93f"/><rect x="625.7" y="390.9" width="34" height="109.1" fill="#f4efe2"/><rect x="680.8" y="254.5" width="34" height="245.5" fill="#f4efe2"/><rect x="735.9" y="363.6" width="34" height="136.4" fill="#f4efe2"/><rect x="791" y="390.9" width="34" height="109.1" fill="#f4efe2"/><rect x="846.1" y="390.9" width="34" height="109.1" fill="#f4efe2"/><rect x="901.2" y="363.6" width="34" height="136.4" fill="#f4efe2"/><rect x="956.3" y="363.6" width="34" height="136.4" fill="#f4efe2"/><rect x="1011.4" y="472.7" width="34" height="27.3" fill="#f4efe2"/><text class="pl-note" x="91.6" y="534" text-anchor="middle">1</text><text class="pl-note" x="146.7" y="534" text-anchor="middle">2</text><text class="pl-note" x="201.8" y="534" text-anchor="middle">3</text><text class="pl-note" x="256.9" y="534" text-anchor="middle">4</text><text class="pl-note" x="312" y="534" text-anchor="middle">5</text><text class="pl-note" x="367.1" y="534" text-anchor="middle">6</text><text class="pl-note" x="422.2" y="534" text-anchor="middle">7</text><text class="pl-note" x="477.3" y="534" text-anchor="middle">8</text><text class="pl-note" x="532.4" y="534" text-anchor="middle">9</text><text class="pl-note" x="587.6" y="534" text-anchor="middle">10</text><text class="pl-note" x="642.7" y="534" text-anchor="middle">11</text><text class="pl-note" x="697.8" y="534" text-anchor="middle">12</text><text class="pl-note" x="752.9" y="534" text-anchor="middle">13</text><text class="pl-note" x="808" y="534" text-anchor="middle">14</text><text class="pl-note" x="863.1" y="534" text-anchor="middle">15</text><text class="pl-note" x="918.2" y="534" text-anchor="middle">16</text><text class="pl-note" x="973.3" y="534" text-anchor="middle">17</text><text class="pl-note" x="1028.4" y="534" text-anchor="middle">18</text><text class="pl-lab" x="587.6" y="184" text-anchor="middle">Wandering Rocks &#183; 11</text>
+<line x1="64" y1="505" x2="1056" y2="505" stroke="#f4efe2" stroke-width="10"/>
 </svg>
     </div>
     <div class="plate" id="pl-cavalcade">
-<svg viewBox="0 0 980 540" role="img" aria-labelledby="pb-t pb-d">
+<svg viewBox="0 0 1120 630" role="img" aria-labelledby="pb-t pb-d">
 <title id="pb-t">The viceregal cavalcade</title>
-<desc id="pb-d">A drawing of an open carriage drawn by two horses, riding left to right above a time line that runs from one in the afternoon to nine at night. Six marks sit on the line: the placard at about a quarter past one in episode eight; Parkgate at about a quarter past three; a missed salute at about half past three; Wood quay at about a quarter to four, all three in episode ten; the Ormond bar at about five to four in episode eleven; and the bazaar firework at about nine in episode thirteen. The Liffey runs beneath as two wavy lines. The instrument&#8217;s two hallucinated marks, in episodes twelve and fifteen, are not on this line.</desc>
-<text class="pl-h" x="60" y="62">THE VICEREGAL CAVALCADE</text>
-<text class="pl-l" x="936" y="62" text-anchor="end">PHOENIX PARK &#8594; BALLSBRIDGE</text>
+<desc id="pb-d">On the left, a large drawing of an open carriage drawn by two horses with three figures aboard, riding left to right, with the Liffey running beneath it as two wavy lines. On the right, a vertical line carrying six marks in order of the day: the placard at about a quarter past one in episode eight; Parkgate at about a quarter past three, drawn gold; a missed salute at about half past three and Wood quay at about a quarter to four, both in episode ten; the Ormond bar at about five to four in episode eleven; and the bazaar firework at about nine in episode thirteen. The instrument&#8217;s two hallucinated marks, in episodes twelve and fifteen, are not on this line.</desc>
+<rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+<text class="pl-reg" x="64" y="78">THE VICEREGAL CAVALCADE &#183; SIX SIGHTINGS</text>
+<line x1="64" y1="100" x2="1056" y2="100" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/>
+<text class="pl-ttl" x="64" y="140">Phoenix Park to Ballsbridge</text>
+<text class="pl-note" x="64" y="580">4 present, 2 hallucinated &#183; 6 episodes</text>
+<text class="pl-badge" x="1056" y="580" text-anchor="end">03 &#183; THE GOVERNED CITY</text>
+<g transform="translate(-321.2,-78.4) scale(1.6)">
 <g transform="translate(176,4)">
 <g transform="translate(-22,12)" fill="#b9c3d6" fill-opacity=".55"><ellipse cx="150" cy="250" rx="43" ry="22"/><circle cx="182" cy="252" r="20"/><circle cx="116" cy="248" r="23"/><path d="M170 240 L196 194 L214 202 L188 248 Z"/><path d="M193 197 L228 181 L234 192 L214 209 L197 212 Z"/><path d="M196 195 L200 180 L206 194 Z"/><path d="M176 264 L188 264 L184 304 L172 304 Z"/><path d="M158 266 L170 266 L162 304 L150 304 Z"/><path d="M120 264 L132 264 L128 304 L116 304 Z"/><path d="M102 260 L114 260 L104 304 L92 304 Z"/><path d="M98 234 L84 250 L88 272 L98 258 L102 244 Z"/></g>
-<g transform="translate(0,0)" fill="#f4efe2" fill-opacity="1"><ellipse cx="150" cy="250" rx="43" ry="22"/><circle cx="182" cy="252" r="20"/><circle cx="116" cy="248" r="23"/><path d="M170 240 L196 194 L214 202 L188 248 Z"/><path d="M193 197 L228 181 L234 192 L214 209 L197 212 Z"/><path d="M196 195 L200 180 L206 194 Z"/><path d="M176 264 L188 264 L184 304 L172 304 Z"/><path d="M158 266 L170 266 L162 304 L150 304 Z"/><path d="M120 264 L132 264 L128 304 L116 304 Z"/><path d="M102 260 L114 260 L104 304 L92 304 Z"/><path d="M98 234 L84 250 L88 272 L98 258 L102 244 Z"/></g>
+<g fill="#f4efe2"><ellipse cx="150" cy="250" rx="43" ry="22"/><circle cx="182" cy="252" r="20"/><circle cx="116" cy="248" r="23"/><path d="M170 240 L196 194 L214 202 L188 248 Z"/><path d="M193 197 L228 181 L234 192 L214 209 L197 212 Z"/><path d="M196 195 L200 180 L206 194 Z"/><path d="M176 264 L188 264 L184 304 L172 304 Z"/><path d="M158 266 L170 266 L162 304 L150 304 Z"/><path d="M120 264 L132 264 L128 304 L116 304 Z"/><path d="M102 260 L114 260 L104 304 L92 304 Z"/><path d="M98 234 L84 250 L88 272 L98 258 L102 244 Z"/></g>
 <path d="M196 246 L256 250 L256 258 L196 254 Z" fill="#f4efe2"/>
 <path d="M252 272 L252 238 C252 228 260 222 272 222 L346 222 C360 222 368 232 368 246 L368 272 Z" fill="#f4efe2"/>
 <path d="M344 224 C374 216 384 190 368 170 L356 176 C368 194 360 214 340 218 Z" fill="#f4efe2"/>
-<circle cx="340" cy="272" r="30" fill="#f4efe2"/>
-<circle cx="340" cy="272" r="24" fill="#081a35"/>
-<g stroke="#f4efe2" stroke-width="2"><line x1="340" y1="272" x2="365.0" y2="272.0"/><line x1="340" y1="272" x2="357.7" y2="289.7"/><line x1="340" y1="272" x2="340.0" y2="297.0"/><line x1="340" y1="272" x2="322.3" y2="289.7"/><line x1="340" y1="272" x2="315.0" y2="272.0"/><line x1="340" y1="272" x2="322.3" y2="254.3"/><line x1="340" y1="272" x2="340.0" y2="247.0"/><line x1="340" y1="272" x2="357.7" y2="254.3"/></g>
-<circle cx="272" cy="278" r="21" fill="#f4efe2"/>
-<circle cx="272" cy="278" r="15" fill="#081a35"/>
-<g stroke="#f4efe2" stroke-width="2"><line x1="272" y1="278" x2="288.0" y2="278.0"/><line x1="272" y1="278" x2="283.3" y2="289.3"/><line x1="272" y1="278" x2="272.0" y2="294.0"/><line x1="272" y1="278" x2="260.7" y2="289.3"/><line x1="272" y1="278" x2="256.0" y2="278.0"/><line x1="272" y1="278" x2="260.7" y2="266.7"/><line x1="272" y1="278" x2="272.0" y2="262.0"/><line x1="272" y1="278" x2="283.3" y2="266.7"/></g>
-<g fill="#f4efe2">
-<circle cx="298" cy="204" r="9"/><path d="M282 222 C285 211 290 206 298 206 C306 206 311 211 314 222 Z"/>
-<circle cx="324" cy="204" r="9"/><path d="M308 222 C311 211 316 206 324 206 C332 206 337 211 340 222 Z"/>
-<circle cx="258" cy="202" r="8"/><path d="M244 222 C247 212 252 205 258 205 C264 205 269 212 272 222 Z"/>
+<circle cx="340" cy="272" r="30" fill="#f4efe2"/><circle cx="340" cy="272" r="24" fill="#0b2140"/>
+<g stroke="#f4efe2" stroke-width="4" vector-effect="non-scaling-stroke"><line x1="340" y1="272" x2="365.0" y2="272.0"/><line x1="340" y1="272" x2="357.7" y2="289.7"/><line x1="340" y1="272" x2="340.0" y2="297.0"/><line x1="340" y1="272" x2="322.3" y2="289.7"/><line x1="340" y1="272" x2="315.0" y2="272.0"/><line x1="340" y1="272" x2="322.3" y2="254.3"/><line x1="340" y1="272" x2="340.0" y2="247.0"/><line x1="340" y1="272" x2="357.7" y2="254.3"/></g>
+<circle cx="272" cy="278" r="21" fill="#f4efe2"/><circle cx="272" cy="278" r="15" fill="#0b2140"/>
+<g stroke="#f4efe2" stroke-width="4" vector-effect="non-scaling-stroke"><line x1="272" y1="278" x2="288.0" y2="278.0"/><line x1="272" y1="278" x2="283.3" y2="289.3"/><line x1="272" y1="278" x2="272.0" y2="294.0"/><line x1="272" y1="278" x2="260.7" y2="289.3"/><line x1="272" y1="278" x2="256.0" y2="278.0"/><line x1="272" y1="278" x2="260.7" y2="266.7"/><line x1="272" y1="278" x2="272.0" y2="262.0"/><line x1="272" y1="278" x2="283.3" y2="266.7"/></g>
+<g fill="#f4efe2"><circle cx="298" cy="204" r="9"/><path d="M282 222 C285 211 290 206 298 206 C306 206 311 211 314 222 Z"/><circle cx="324" cy="204" r="9"/><path d="M308 222 C311 211 316 206 324 206 C332 206 337 211 340 222 Z"/><circle cx="258" cy="202" r="8"/><path d="M244 222 C247 212 252 205 258 205 C264 205 269 212 272 222 Z"/></g>
+</g></g>
+<g fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5">
+<path d="M74 478 C 134 470, 194 486, 254 478 S 374 470, 434 478 S 494 486, 552 476"/>
+<path d="M74 492 C 134 484, 194 500, 254 492 S 374 484, 434 492 S 494 500, 552 490"/>
 </g>
-</g>
-<g fill="none" stroke="#b9c3d6" stroke-width="1.4" stroke-opacity=".7">
-<path d="M100 336 C 200 326, 280 346, 380 336 S 560 326, 660 336 S 800 346, 900 334"/>
-<path d="M100 356 C 200 346, 280 366, 380 356 S 560 346, 660 356 S 800 366, 900 354"/>
-</g>
-<text class="pl-n" x="100" y="378">THE LIFFEY</text>
-<text class="pl-n" x="920" y="388" text-anchor="end">SIX SIGHTINGS ALONG THE DAY</text>
-<line x1="90" y1="404" x2="920" y2="404" stroke="#f4efe2" stroke-width="1.6"/>
-<line x1="150" y1="392" x2="150" y2="416" stroke="#f4efe2" stroke-width="2"/>
-<circle cx="150" cy="404" r="5.5" fill="#f4efe2"/>
-<text class="pl-l pl-paper" x="150" y="444" text-anchor="middle">~1:15 P.M.</text>
-<text class="pl-n" x="150" y="462" text-anchor="middle">THE PLACARD</text>
-<text class="pl-n" x="150" y="480" text-anchor="middle">EPISODE 8</text>
-<line x1="300" y1="392" x2="300" y2="416" stroke="#dfa93f" stroke-width="2"/>
-<circle cx="300" cy="404" r="5.5" fill="#dfa93f"/>
-<text class="pl-l pl-gold" x="300" y="444" text-anchor="middle">~3:15 P.M.</text>
-<text class="pl-n" x="300" y="462" text-anchor="middle">PARKGATE</text>
-<text class="pl-n" x="300" y="480" text-anchor="middle">EPISODE 10</text>
-<line x1="440" y1="392" x2="440" y2="416" stroke="#f4efe2" stroke-width="2"/>
-<circle cx="440" cy="404" r="5.5" fill="#f4efe2"/>
-<text class="pl-l pl-paper" x="440" y="444" text-anchor="middle">~3:30 P.M.</text>
-<text class="pl-n" x="440" y="462" text-anchor="middle">A SALUTE MISSED</text>
-<text class="pl-n" x="440" y="480" text-anchor="middle">EPISODE 10</text>
-<line x1="580" y1="392" x2="580" y2="416" stroke="#f4efe2" stroke-width="2"/>
-<circle cx="580" cy="404" r="5.5" fill="#f4efe2"/>
-<text class="pl-l pl-paper" x="580" y="444" text-anchor="middle">~3:45 P.M.</text>
-<text class="pl-n" x="580" y="462" text-anchor="middle">WOOD QUAY</text>
-<text class="pl-n" x="580" y="480" text-anchor="middle">EPISODE 10</text>
-<line x1="720" y1="392" x2="720" y2="416" stroke="#f4efe2" stroke-width="2"/>
-<circle cx="720" cy="404" r="5.5" fill="#f4efe2"/>
-<text class="pl-l pl-paper" x="720" y="444" text-anchor="middle">~3:55 P.M.</text>
-<text class="pl-n" x="720" y="462" text-anchor="middle">THE ORMOND</text>
-<text class="pl-n" x="720" y="480" text-anchor="middle">EPISODE 11</text>
-<line x1="870" y1="392" x2="870" y2="416" stroke="#f4efe2" stroke-width="2"/>
-<circle cx="870" cy="404" r="5.5" fill="#f4efe2"/>
-<text class="pl-l pl-paper" x="870" y="444" text-anchor="middle">~9 P.M.</text>
-<text class="pl-n" x="870" y="462" text-anchor="middle">THE FIREWORK</text>
-<text class="pl-n" x="870" y="480" text-anchor="middle">EPISODE 13</text>
-<text class="pl-l" x="60" y="518">THE INSTRUMENT: SIX EPISODES &#183; 4 PRESENT, 2 HALLUCINATED</text>
+<text class="pl-note" x="74" y="524">The Liffey</text>
+<line x1="600" y1="200" x2="600" y2="500" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/>
+<circle cx="600" cy="200" r="7" fill="#f4efe2"/><text class="pl-lab" x="624" y="196">~1:15 p.m.</text><text class="pl-note" x="624" y="220">The placard &#183; episode 8</text>
+<circle cx="600" cy="260" r="9" fill="#dfa93f"/><text class="pl-lab" x="624" y="256">~3:15 p.m.</text><text class="pl-note" x="624" y="280">Parkgate &#183; episode 10</text>
+<circle cx="600" cy="320" r="7" fill="#f4efe2"/><text class="pl-lab" x="624" y="316">~3:30 p.m.</text><text class="pl-note" x="624" y="340">A salute missed &#183; episode 10</text>
+<circle cx="600" cy="380" r="7" fill="#f4efe2"/><text class="pl-lab" x="624" y="376">~3:45 p.m.</text><text class="pl-note" x="624" y="400">Wood quay &#183; episode 10</text>
+<circle cx="600" cy="440" r="7" fill="#f4efe2"/><text class="pl-lab" x="624" y="436">~3:55 p.m.</text><text class="pl-note" x="624" y="460">The Ormond &#183; episode 11</text>
+<circle cx="600" cy="500" r="7" fill="#f4efe2"/><text class="pl-lab" x="624" y="496">~9 p.m.</text><text class="pl-note" x="624" y="520">The firework &#183; episode 13</text>
 </svg>
     </div>
     <div class="plate" id="pl-kelleher">
-<svg viewBox="0 0 980 540" role="img" aria-labelledby="pc-t pc-d">
+<svg viewBox="0 0 1120 630" role="img" aria-labelledby="pc-t pc-d">
 <title id="pc-t">Corny Kelleher, five sightings</title>
-<desc id="pc-d">A drawn silhouette of a broad-shouldered man in a bowler hat, beside a vertical time line carrying five marks: episode five at about ten to ten in the morning, recalled; episode six at about five to twelve, present; episode eight at about ten past one, recalled; episode ten at about five past three, present; and episode fifteen at about ten to one in the morning, present. Open rings mark recalled sightings and filled dots mark present ones, as on the matrix.</desc>
-<text class="pl-h" x="60" y="62">CORNY KELLEHER</text>
-<text class="pl-l" x="936" y="62" text-anchor="end">THE INFORMER AND HIS REPUTATION</text>
-<g fill="#f4efe2">
+<desc id="pc-d">A large drawn silhouette of a broad-shouldered man in a bowler hat fills the left of the plate. To the right, the numeral five is set very large in gold, and beneath it five rows: episode five at about ten to ten in the morning, recalled; episode six at about five to twelve, present; episode eight at about ten past one, recalled; episode ten at about five past three, present; and episode fifteen at about ten to one in the morning, present. Open rings mark recalled sightings and filled dots mark present ones, as on the matrix.</desc>
+<rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+<text class="pl-reg" x="64" y="78">CORNY KELLEHER &#183; FIVE SIGHTINGS</text>
+<line x1="64" y1="100" x2="1056" y2="100" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/>
+<text class="pl-ttl" x="64" y="140">The informer and his reputation</text>
+<text class="pl-note" x="64" y="580">2 recalled, 3 present &#183; 5 episodes</text>
+<text class="pl-badge" x="1056" y="580" text-anchor="end">03 &#183; THE GOVERNED CITY</text>
+<g transform="translate(-69.3,-51.6) scale(1.35)" fill="#f4efe2">
 <path d="M118 402 C122 330 158 296 216 296 C274 296 310 330 314 402 Z"/>
 <circle cx="216" cy="248" r="40"/>
 <path d="M180 202 C180 176 252 176 252 202 L252 210 L180 210 Z"/>
 <ellipse cx="216" cy="210" rx="60" ry="9"/>
 </g>
-<text class="pl-n" x="216" y="434" text-anchor="middle">THE UNDERTAKER OF NORTH STRAND ROAD</text>
-<line x1="470" y1="132" x2="470" y2="420" stroke="#b9c3d6" stroke-width="1.4"/>
-<circle cx="470" cy="152" r="8.5" fill="none" stroke="#b9c3d6" stroke-width="2"/>
-<text class="pl-l pl-paper" x="500" y="148">EPISODE 5 &#183; ~9:50 A.M.</text>
-<text class="pl-n pl-mute" x="500" y="168">RECALLED</text>
-<circle cx="470" cy="220" r="9" fill="#dfa93f"/>
-<text class="pl-l pl-paper" x="500" y="216">EPISODE 6 &#183; ~11:55 A.M.</text>
-<text class="pl-n pl-gold" x="500" y="236">PRESENT</text>
-<circle cx="470" cy="288" r="8.5" fill="none" stroke="#b9c3d6" stroke-width="2"/>
-<text class="pl-l pl-paper" x="500" y="284">EPISODE 8 &#183; ~1:10 P.M.</text>
-<text class="pl-n pl-mute" x="500" y="304">RECALLED</text>
-<circle cx="470" cy="356" r="9" fill="#dfa93f"/>
-<text class="pl-l pl-paper" x="500" y="352">EPISODE 10 &#183; ~3:05 P.M.</text>
-<text class="pl-n pl-gold" x="500" y="372">PRESENT</text>
-<circle cx="470" cy="424" r="9" fill="#dfa93f"/>
-<text class="pl-l pl-paper" x="500" y="420">EPISODE 15 &#183; ~12:50 A.M.</text>
-<text class="pl-n pl-gold" x="500" y="440">PRESENT</text>
-<text class="pl-l" x="60" y="500">FIVE SIGHTINGS &#183; 2 RECALLED, 3 PRESENT</text>
-<text class="pl-l" x="936" y="500" text-anchor="end">EPISODES 5, 6, 8, 10, 15</text>
+<text class="pl-note" x="64" y="520">Undertaker</text>
+<text class="pl-note" x="64" y="544">North Strand Road</text>
+<text class="pl-dat t-acc" x="450" y="280">5</text>
+<text class="pl-lab" x="512" y="280">sightings</text>
+<circle cx="460" cy="332" r="9" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="4"/><text class="pl-lab" x="492" y="340">Episode 5 &#183; ~9:50 a.m. &#183; recalled</text>
+<circle cx="460" cy="380" r="9" fill="#f4efe2"/><text class="pl-lab" x="492" y="388">Episode 6 &#183; ~11:55 a.m. &#183; present</text>
+<circle cx="460" cy="428" r="9" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="4"/><text class="pl-lab" x="492" y="436">Episode 8 &#183; ~1:10 p.m. &#183; recalled</text>
+<circle cx="460" cy="476" r="9" fill="#f4efe2"/><text class="pl-lab" x="492" y="484">Episode 10 &#183; ~3:05 p.m. &#183; present</text>
+<circle cx="460" cy="524" r="9" fill="#f4efe2"/><text class="pl-lab" x="492" y="532">Episode 15 &#183; ~12:50 a.m. &#183; present</text>
 </svg>
     </div>
     <div class="plate" id="pl-garrison">
-<svg viewBox="0 0 980 540" role="img" aria-labelledby="pd-t pd-d">
+<svg viewBox="0 0 1120 630" role="img" aria-labelledby="pd-t pd-d">
 <title id="pd-t">The garrison, first hour and last</title>
-<desc id="pd-d">On the left, a drawn Martello tower with a gun on its platform above the sea, labelled episode one at about eight in the morning. On the right, the drawn rock of Gibraltar with sound arcs rising from it, labelled episode eighteen, deep night. An arc runs between them carrying eighteen ticks, one for each episode and none of them empty; the fifteenth is marked gold for Private Carr&#8217;s fist at about ten to one in the morning.</desc>
-<text class="pl-h" x="60" y="62">THE GARRISON</text>
-<text class="pl-l" x="936" y="62" text-anchor="end">FIRST HOUR AND LAST</text>
-<g fill="none" stroke="#f4efe2" stroke-width="3.2" stroke-linejoin="round">
+<desc id="pd-d">A pair, drawn either side of a thin dividing rule and standing on one heavy horizon. On the left, a Martello tower with a gun on its platform, labelled episode one at about eight in the morning, a War Office tower. On the right, the rock of Gibraltar with three sound arcs rising from it, labelled episode eighteen, deep night, Gibraltar remembered. Across the top of the plate a line carries eighteen ticks, one for each episode and none of them empty; the fifteenth is drawn gold, for Private Carr&#8217;s fist at about ten to one in the morning.</desc>
+<rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+<text class="pl-reg" x="64" y="78">THE GARRISON &#183; EIGHTEEN EPISODES, NONE EMPTY</text>
+<line x1="64" y1="100" x2="1056" y2="100" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/>
+<text class="pl-ttl" x="64" y="140">First hour and last</text>
+<text class="pl-note" x="64" y="580">Ep 15, ~12:50 a.m. &#183; 7 present, 11 recalled</text>
+<text class="pl-badge" x="1056" y="580" text-anchor="end">03 &#183; THE GOVERNED CITY</text>
+<line x1="120" y1="186" x2="1000" y2="186" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/><circle cx="120" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="171.8" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="223.5" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="275.3" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="327.1" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="378.8" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="430.6" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="482.4" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="534.1" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="585.9" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="637.6" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="689.4" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="741.2" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="792.9" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="844.7" cy="186" r="8" fill="#dfa93f"/><circle cx="896.5" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="948.2" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/><circle cx="1000" cy="186" r="5" fill="#b9c3d6" fill-opacity=".55"/>
+<text class="pl-lab" x="1056" y="222" text-anchor="end">Episode 15 &#183; Private Carr&#8217;s fist</text>
+<line x1="560" y1="250" x2="560" y2="470" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/>
+<g transform="translate(82.44,-35.92) scale(1.36)">
+<g fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round" vector-effect="non-scaling-stroke">
 <path d="M104 372 L104 250 A 56 40 0 0 1 216 250 L216 372 Z"/>
 <path d="M96 244 L224 244 L224 262 L96 262 Z"/>
 <path d="M148 372 L148 322 A 12 14 0 0 1 172 322 L172 372"/>
 </g>
-<g fill="none" stroke="#b9c3d6" stroke-width="1.4"><path d="M112 292 L208 292"/><path d="M112 322 L208 322"/></g>
-<g stroke="#f4efe2" stroke-width="7" stroke-linecap="round"><path d="M158 234 L214 212"/></g>
+<g fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"><path d="M112 292 L208 292"/><path d="M112 322 L208 322"/></g>
+<g stroke="#f4efe2" stroke-width="10" stroke-linecap="round" vector-effect="non-scaling-stroke"><path d="M158 234 L214 212"/></g>
 <circle cx="156" cy="236" r="7" fill="#f4efe2"/>
-<g fill="none" stroke="#b9c3d6" stroke-width="1.4" stroke-opacity=".8"><path d="M60 392 C110 384 150 400 200 392 S 280 384 300 392"/><path d="M60 408 C110 400 150 416 200 408 S 280 400 300 408"/></g>
-<text class="pl-l" x="160" y="448" text-anchor="middle">EPISODE 1 &#183; ~8 A.M.</text>
-<text class="pl-n" x="160" y="468" text-anchor="middle">A WAR OFFICE TOWER</text>
-<path d="M700 392 L768 262 C 796 210 852 202 886 236 L940 392 Z" fill="#f4efe2" fill-opacity=".9"/>
-<g fill="none" stroke="#b9c3d6" stroke-width="1.4" stroke-opacity=".8"><path d="M690 400 C740 392 790 408 840 400 S 920 392 950 400"/></g>
-<path d="M 786 214 A 40 40 0 0 1 826 174" fill="none" stroke="#dfa93f" stroke-width="2" stroke-opacity=".85"/>
-<path d="M 766 214 A 60 60 0 0 1 826 154" fill="none" stroke="#dfa93f" stroke-width="2" stroke-opacity=".85"/>
-<path d="M 746 214 A 80 80 0 0 1 826 134" fill="none" stroke="#dfa93f" stroke-width="2" stroke-opacity=".85"/>
-<text class="pl-l" x="820" y="448" text-anchor="middle">EPISODE 18 &#183; DEEP NIGHT</text>
-<text class="pl-n" x="820" y="468" text-anchor="middle">GIBRALTAR, REMEMBERED</text>
-<path d="M232 336 Q490 156 700 336" fill="none" stroke="#b9c3d6" stroke-width="1.4"/>
-<circle cx="232.0" cy="336.0" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="232.0" y="322.0" text-anchor="middle">1</text>
-<circle cx="262.2" cy="316.1" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="262.2" y="302.1" text-anchor="middle">2</text>
-<circle cx="292.0" cy="298.6" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="292.0" y="284.6" text-anchor="middle">3</text>
-<circle cx="321.6" cy="283.7" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="321.6" y="269.7" text-anchor="middle">4</text>
-<circle cx="350.8" cy="271.2" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="350.8" y="257.2" text-anchor="middle">5</text>
-<circle cx="379.6" cy="261.3" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="379.6" y="247.3" text-anchor="middle">6</text>
-<circle cx="408.1" cy="253.8" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="408.1" y="239.8" text-anchor="middle">7</text>
-<circle cx="436.3" cy="248.8" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="436.3" y="234.8" text-anchor="middle">8</text>
-<circle cx="464.2" cy="246.3" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="464.2" y="232.3" text-anchor="middle">9</text>
-<circle cx="491.7" cy="246.3" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="491.7" y="232.3" text-anchor="middle">10</text>
-<circle cx="518.9" cy="248.8" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="518.9" y="234.8" text-anchor="middle">11</text>
-<circle cx="545.8" cy="253.8" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="545.8" y="239.8" text-anchor="middle">12</text>
-<circle cx="572.3" cy="261.3" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="572.3" y="247.3" text-anchor="middle">13</text>
-<circle cx="598.5" cy="271.2" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="598.5" y="257.2" text-anchor="middle">14</text>
-<circle cx="624.4" cy="283.7" r="7" fill="#dfa93f"/>
-<text class="pl-n pl-gold" x="624.4" y="269.7" text-anchor="middle">15</text>
-<circle cx="649.9" cy="298.6" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="649.9" y="284.6" text-anchor="middle">16</text>
-<circle cx="675.1" cy="316.1" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="675.1" y="302.1" text-anchor="middle">17</text>
-<circle cx="700.0" cy="336.0" r="5" fill="#f4efe2"/>
-<text class="pl-n pl-mute" x="700.0" y="322.0" text-anchor="middle">18</text>
-<text class="pl-l pl-gold" x="466" y="334" text-anchor="middle">15 &#183; ~12:50 A.M. &#183; PRIVATE CARR&#8217;S FIST</text>
-<text class="pl-l" x="60" y="512">EIGHTEEN EPISODES &#183; 7 PRESENT, 11 RECALLED &#183; NONE WITHOUT IT</text>
+</g>
+<g transform="translate(-131.2,15.28) scale(1.16)">
+<path d="M700 392 L768 262 C 796 210 852 202 886 236 L940 392 Z" fill="#f4efe2"/>
+<g fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke">
+<path d="M 786 214 A 40 40 0 0 1 826 174"/>
+<path d="M 766 214 A 60 60 0 0 1 826 154"/>
+<path d="M 746 214 A 80 80 0 0 1 826 134"/>
+</g>
+</g>
+<line x1="64" y1="482" x2="1056" y2="482" stroke="#f4efe2" stroke-width="10"/>
+<text class="pl-lab" x="300" y="512" text-anchor="middle">Episode 1 &#183; ~8 a.m.</text>
+<text class="pl-note" x="300" y="540" text-anchor="middle">A War Office tower</text>
+<text class="pl-lab" x="820" y="512" text-anchor="middle">Episode 18 &#183; deep night</text>
+<text class="pl-note" x="820" y="540" text-anchor="middle">Gibraltar, remembered</text>
 </svg>
     </div>
     <div class="plate" id="pl-crown">
-<svg viewBox="0 0 980 540" role="img" aria-labelledby="pe-t pe-d">
+<svg viewBox="0 0 1120 630" role="img" aria-labelledby="pe-t pe-d">
 <title id="pe-t">The Crown in effigy</title>
-<desc id="pe-d">Four drawn objects in a row. A milled coin bearing a diademed profile, labelled the coin, Victoria, episode twelve. A mail van with the royal initials E. R. on its panel, episode seven. A column carrying a one-armed figure, episodes six, seven and eleven. A furled flag on its staff, episode seventeen. The sovereign appears in person only once in the day, in episode fifteen, and that appearance is hallucinated.</desc>
-<text class="pl-h" x="60" y="62">THE CROWN IN EFFIGY</text>
-<text class="pl-l" x="936" y="62" text-anchor="end">HANDLED CONSTANTLY, SALUTED ALMOST NEVER</text>
-<circle cx="172" cy="232" r="82" fill="none" stroke="#dfa93f" stroke-width="2.6"/>
-<circle cx="172" cy="232" r="72" fill="none" stroke="#b9c3d6" stroke-width="1.2"/>
-<g stroke="#dfa93f" stroke-width="1.6" stroke-opacity=".75"><line x1="255.0" y1="232.0" x2="262.0" y2="232.0"/><line x1="254.3" y1="242.8" x2="261.2" y2="243.7"/><line x1="252.2" y1="253.5" x2="258.9" y2="255.3"/><line x1="248.7" y1="263.8" x2="255.1" y2="266.4"/><line x1="243.9" y1="273.5" x2="249.9" y2="277.0"/><line x1="237.8" y1="282.5" x2="243.4" y2="286.8"/><line x1="230.7" y1="290.7" x2="235.6" y2="295.6"/><line x1="222.5" y1="297.8" x2="226.8" y2="303.4"/><line x1="213.5" y1="303.9" x2="217.0" y2="309.9"/><line x1="203.8" y1="308.7" x2="206.4" y2="315.1"/><line x1="193.5" y1="312.2" x2="195.3" y2="318.9"/><line x1="182.8" y1="314.3" x2="183.7" y2="321.2"/><line x1="172.0" y1="315.0" x2="172.0" y2="322.0"/><line x1="161.2" y1="314.3" x2="160.3" y2="321.2"/><line x1="150.5" y1="312.2" x2="148.7" y2="318.9"/><line x1="140.2" y1="308.7" x2="137.6" y2="315.1"/><line x1="130.5" y1="303.9" x2="127.0" y2="309.9"/><line x1="121.5" y1="297.8" x2="117.2" y2="303.4"/><line x1="113.3" y1="290.7" x2="108.4" y2="295.6"/><line x1="106.2" y1="282.5" x2="100.6" y2="286.8"/><line x1="100.1" y1="273.5" x2="94.1" y2="277.0"/><line x1="95.3" y1="263.8" x2="88.9" y2="266.4"/><line x1="91.8" y1="253.5" x2="85.1" y2="255.3"/><line x1="89.7" y1="242.8" x2="82.8" y2="243.7"/><line x1="89.0" y1="232.0" x2="82.0" y2="232.0"/><line x1="89.7" y1="221.2" x2="82.8" y2="220.3"/><line x1="91.8" y1="210.5" x2="85.1" y2="208.7"/><line x1="95.3" y1="200.2" x2="88.9" y2="197.6"/><line x1="100.1" y1="190.5" x2="94.1" y2="187.0"/><line x1="106.2" y1="181.5" x2="100.6" y2="177.2"/><line x1="113.3" y1="173.3" x2="108.4" y2="168.4"/><line x1="121.5" y1="166.2" x2="117.2" y2="160.6"/><line x1="130.5" y1="160.1" x2="127.0" y2="154.1"/><line x1="140.2" y1="155.3" x2="137.6" y2="148.9"/><line x1="150.5" y1="151.8" x2="148.7" y2="145.1"/><line x1="161.2" y1="149.7" x2="160.3" y2="142.8"/><line x1="172.0" y1="149.0" x2="172.0" y2="142.0"/><line x1="182.8" y1="149.7" x2="183.7" y2="142.8"/><line x1="193.5" y1="151.8" x2="195.3" y2="145.1"/><line x1="203.8" y1="155.3" x2="206.4" y2="148.9"/><line x1="213.5" y1="160.1" x2="217.0" y2="154.1"/><line x1="222.5" y1="166.2" x2="226.8" y2="160.6"/><line x1="230.7" y1="173.3" x2="235.6" y2="168.4"/><line x1="237.8" y1="181.5" x2="243.4" y2="177.2"/><line x1="243.9" y1="190.5" x2="249.9" y2="187.0"/><line x1="248.7" y1="200.2" x2="255.1" y2="197.6"/><line x1="252.2" y1="210.5" x2="258.9" y2="208.7"/><line x1="254.3" y1="221.2" x2="261.2" y2="220.3"/></g>
+<desc id="pe-d">Four drawn objects in a row, all in paper. A milled coin bearing a diademed profile, labelled the coin, Victoria, episode twelve. A mail van with the royal initials E. R. on its panel, episode seven. A column carrying a one-armed figure, episodes six, seven and eleven. A furled flag on its staff, episode seventeen. Below them, a single gold diamond &#8212; the matrix&#8217;s hallucinated mark &#8212; against the line: in person once, episode fifteen, hallucinated.</desc>
+<rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+<text class="pl-reg" x="64" y="78">FOUR OBJECTS &#183; ELEVEN EPISODES &#183; 7 PRESENT</text>
+<line x1="64" y1="100" x2="1056" y2="100" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/>
+<text class="pl-ttl" x="64" y="140">The Crown in effigy</text>
+<text class="pl-note" x="64" y="580">Handled constantly, saluted almost never</text>
+<text class="pl-badge" x="1056" y="580" text-anchor="end">03 &#183; THE GOVERNED CITY</text>
+<g transform="translate(44,68)">
+<circle cx="172" cy="232" r="82" fill="none" stroke="#f4efe2" stroke-width="4"/>
+<circle cx="172" cy="232" r="72" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/>
+<g stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"><line x1="255.0" y1="232.0" x2="262.0" y2="232.0"/><line x1="254.3" y1="242.8" x2="261.2" y2="243.7"/><line x1="252.2" y1="253.5" x2="258.9" y2="255.3"/><line x1="248.7" y1="263.8" x2="255.1" y2="266.4"/><line x1="243.9" y1="273.5" x2="249.9" y2="277.0"/><line x1="237.8" y1="282.5" x2="243.4" y2="286.8"/><line x1="230.7" y1="290.7" x2="235.6" y2="295.6"/><line x1="222.5" y1="297.8" x2="226.8" y2="303.4"/><line x1="213.5" y1="303.9" x2="217.0" y2="309.9"/><line x1="203.8" y1="308.7" x2="206.4" y2="315.1"/><line x1="193.5" y1="312.2" x2="195.3" y2="318.9"/><line x1="182.8" y1="314.3" x2="183.7" y2="321.2"/><line x1="172.0" y1="315.0" x2="172.0" y2="322.0"/><line x1="161.2" y1="314.3" x2="160.3" y2="321.2"/><line x1="150.5" y1="312.2" x2="148.7" y2="318.9"/><line x1="140.2" y1="308.7" x2="137.6" y2="315.1"/><line x1="130.5" y1="303.9" x2="127.0" y2="309.9"/><line x1="121.5" y1="297.8" x2="117.2" y2="303.4"/><line x1="113.3" y1="290.7" x2="108.4" y2="295.6"/><line x1="106.2" y1="282.5" x2="100.6" y2="286.8"/><line x1="100.1" y1="273.5" x2="94.1" y2="277.0"/><line x1="95.3" y1="263.8" x2="88.9" y2="266.4"/><line x1="91.8" y1="253.5" x2="85.1" y2="255.3"/><line x1="89.7" y1="242.8" x2="82.8" y2="243.7"/><line x1="89.0" y1="232.0" x2="82.0" y2="232.0"/><line x1="89.7" y1="221.2" x2="82.8" y2="220.3"/><line x1="91.8" y1="210.5" x2="85.1" y2="208.7"/><line x1="95.3" y1="200.2" x2="88.9" y2="197.6"/><line x1="100.1" y1="190.5" x2="94.1" y2="187.0"/><line x1="106.2" y1="181.5" x2="100.6" y2="177.2"/><line x1="113.3" y1="173.3" x2="108.4" y2="168.4"/><line x1="121.5" y1="166.2" x2="117.2" y2="160.6"/><line x1="130.5" y1="160.1" x2="127.0" y2="154.1"/><line x1="140.2" y1="155.3" x2="137.6" y2="148.9"/><line x1="150.5" y1="151.8" x2="148.7" y2="145.1"/><line x1="161.2" y1="149.7" x2="160.3" y2="142.8"/><line x1="172.0" y1="149.0" x2="172.0" y2="142.0"/><line x1="182.8" y1="149.7" x2="183.7" y2="142.8"/><line x1="193.5" y1="151.8" x2="195.3" y2="145.1"/><line x1="203.8" y1="155.3" x2="206.4" y2="148.9"/><line x1="213.5" y1="160.1" x2="217.0" y2="154.1"/><line x1="222.5" y1="166.2" x2="226.8" y2="160.6"/><line x1="230.7" y1="173.3" x2="235.6" y2="168.4"/><line x1="237.8" y1="181.5" x2="243.4" y2="177.2"/><line x1="243.9" y1="190.5" x2="249.9" y2="187.0"/><line x1="248.7" y1="200.2" x2="255.1" y2="197.6"/><line x1="252.2" y1="210.5" x2="258.9" y2="208.7"/><line x1="254.3" y1="221.2" x2="261.2" y2="220.3"/></g>
 <g fill="#f4efe2">
 <ellipse cx="180" cy="214" rx="30" ry="34"/>
 <path d="M152 204 L140 218 L152 232 Z"/>
 <circle cx="211" cy="202" r="14"/>
 <path d="M166 246 L170 264 C146 272 132 286 128 300 L232 300 C228 284 214 270 194 264 L192 244 Z"/>
 </g>
-<path d="M158 186 L166 172 L175 184 L184 170 L193 182 L202 172" fill="none" stroke="#dfa93f" stroke-width="3" stroke-linejoin="round"/>
-<text class="pl-l" x="172" y="374" text-anchor="middle">THE COIN</text>
-<text class="pl-n" x="172" y="394" text-anchor="middle">VICTORIA &#183; EPISODE 12</text>
-<g fill="none" stroke="#f4efe2" stroke-width="3.2" stroke-linejoin="round">
+<path d="M158 186 L166 172 L175 184 L184 170 L193 182 L202 172" fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round"/>
+</g>
+<g transform="translate(30,50)">
+<g fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round">
 <path d="M370 300 L370 194 L494 194 L494 300 Z"/>
 <path d="M362 190 L502 190"/>
 <path d="M370 216 L494 216"/>
 <circle cx="398" cy="318" r="17"/><circle cx="470" cy="318" r="17"/>
 <path d="M370 262 L342 262"/><path d="M370 272 L342 272"/>
 </g>
-<text x="432" y="262" text-anchor="middle" class="pl-er">E. R.</text>
-<text class="pl-l" x="432" y="374" text-anchor="middle">THE MAILCAR</text>
-<text class="pl-n" x="432" y="394" text-anchor="middle">EPISODE 7</text>
-<g fill="none" stroke="#f4efe2" stroke-width="3.2" stroke-linejoin="round">
+<text class="pl-lab" x="432" y="262" text-anchor="middle">E. R.</text>
+</g>
+<g transform="translate(12,65)">
+<g fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round">
 <path d="M654 320 L660 176 L692 176 L698 320 Z"/>
 <path d="M644 168 L708 168 L708 182 L644 182 Z"/>
 <path d="M638 320 L714 320 L714 332 L638 332 Z"/>
 <path d="M628 332 L724 332 L724 346 L628 346 Z"/>
 </g>
-<g fill="none" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".7"><path d="M662 220 L690 220"/><path d="M660 262 L692 262"/></g>
+<g fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"><path d="M662 220 L690 220"/><path d="M660 262 L692 262"/></g>
 <g fill="#f4efe2"><circle cx="676" cy="132" r="9"/><path d="M666 168 C666 150 670 142 676 142 C682 142 686 150 686 168 Z"/></g>
 <path d="M684 150 L702 140" fill="none" stroke="#f4efe2" stroke-width="4" stroke-linecap="round"/>
-<text class="pl-l" x="676" y="374" text-anchor="middle">THE PILLAR</text>
-<text class="pl-n" x="676" y="394" text-anchor="middle">EPISODES 6, 7, 11</text>
+</g>
+<g transform="translate(58,69)">
 <line x1="866" y1="128" x2="866" y2="346" stroke="#f4efe2" stroke-width="4" stroke-linecap="round"/>
-<path d="M856 168 C842 202 842 262 854 300 L880 300 C892 262 892 202 878 168 Z" fill="none" stroke="#f4efe2" stroke-width="3.2" stroke-linejoin="round"/>
-<g stroke="#dfa93f" stroke-width="2.4"><path d="M848 206 L886 206"/><path d="M846 262 L888 262"/></g>
+<path d="M856 168 C842 202 842 262 854 300 L880 300 C892 262 892 202 878 168 Z" fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round"/>
+<g fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"><path d="M848 206 L886 206"/><path d="M846 262 L888 262"/></g>
 <circle cx="866" cy="122" r="6" fill="#f4efe2"/>
-<text class="pl-l" x="866" y="374" text-anchor="middle">THE FLAG, FURLED</text>
-<text class="pl-n" x="866" y="394" text-anchor="middle">EPISODE 17</text>
-<text class="pl-l" x="60" y="470">ELEVEN EPISODES &#183; 7 PRESENT, 3 RECALLED, 1 HALLUCINATED</text>
-<text class="pl-l pl-gold" x="60" y="496">IN PERSON ONCE &#8212; EPISODE 15, HALLUCINATED</text>
+</g>
+<text class="pl-lab" x="216" y="452" text-anchor="middle">The coin</text>
+<text class="pl-note" x="216" y="480" text-anchor="middle">Victoria &#183; episode 12</text>
+<text class="pl-lab" x="452" y="452" text-anchor="middle">The mailcar</text>
+<text class="pl-note" x="452" y="480" text-anchor="middle">Episode 7</text>
+<text class="pl-lab" x="688" y="452" text-anchor="middle">The pillar</text>
+<text class="pl-note" x="688" y="480" text-anchor="middle">Episodes 6, 7, 11</text>
+<text class="pl-lab" x="924" y="452" text-anchor="middle">The flag, furled</text>
+<text class="pl-note" x="924" y="480" text-anchor="middle">Episode 17</text>
+<path d="M80 510 L90 520 L80 530 L70 520 Z" fill="#dfa93f"/>
+<text class="pl-lab" x="104" y="528">In person once &#183; episode 15 &#183; hallucinated</text>
 </svg>
     </div>
     <div class="plate" id="pl-paperwork">
-<svg viewBox="0 0 980 540" role="img" aria-labelledby="pf-t pf-d">
+<svg viewBox="0 0 1120 630" role="img" aria-labelledby="pf-t pf-d">
 <title id="pf-t">The paperwork of rule</title>
-<desc id="pf-d">A drawn pillarbox on the left, and eight drawn document sheets, each with a seal, laid out in two rows: the lost property office in episode four at about five past eight in the morning; notice to quit in episode eight; the muzzling order, the water rate and the deedpoll that made Virag into Bloom, all in episode twelve; and from episode seventeen, fifteen gallons per pauper, the census of 1901 counting 4,386,035, and the ordnance survey.</desc>
-<text class="pl-h" x="60" y="60">THE PAPERWORK OF RULE</text>
-<text class="pl-l" x="936" y="60" text-anchor="end">NO UNIFORM IN SIGHT</text>
-<g fill="none" stroke="#f4efe2" stroke-width="3.2" stroke-linejoin="round">
+<desc id="pf-d">A drawn pillarbox stands at the left. To its right, eight document sheets in two rows of four, each with a seal: the lost property office in episode four at about five past eight in the morning; notice to quit in episode eight; the muzzling order, the water rate and the deedpoll that made Virag into Bloom, all in episode twelve; and from episode seventeen, fifteen gallons per pauper, the census of 1901 counting 4,386,035, and the ordnance survey. Seven seals are drawn as open rings; the deedpoll&#8217;s is filled gold.</desc>
+<rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+<text class="pl-reg" x="64" y="78">TEN EPISODES &#183; 9 PRESENT &#183; 1 HALLUCINATED</text>
+<line x1="64" y1="100" x2="1056" y2="100" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/>
+<text class="pl-ttl" x="64" y="140">The paperwork of rule</text>
+<text class="pl-note" x="64" y="580">No uniform in sight</text>
+<text class="pl-badge" x="1056" y="580" text-anchor="end">03 &#183; THE GOVERNED CITY</text>
+<g transform="translate(4.2,-5.5) scale(1.15)">
+<g fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round" vector-effect="non-scaling-stroke">
 <path d="M62 204 L62 396 L130 396 L130 204 A 34 34 0 0 0 62 204 Z"/>
 <path d="M76 216 L116 216 L116 226 L76 226 Z"/>
 <path d="M58 286 L134 286 L134 298 L58 298 Z"/>
 <path d="M52 396 L140 396 L140 412 L52 412 Z"/>
 </g>
-<text class="pl-n" x="96" y="440" text-anchor="middle">THE PILLARBOX</text>
-<text class="pl-n" x="96" y="458" text-anchor="middle">EPISODE 10</text>
-<path d="M208 128 L334 128 L356 150 L356 232 L208 232 Z" fill="none" stroke="#f4efe2" stroke-width="2.4" stroke-linejoin="round"/>
-<path d="M334 128 L334 150 L356 150" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<line x1="224" y1="168" x2="312" y2="168" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="224" y1="182" x2="312" y2="182" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="224" y1="196" x2="312" y2="196" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="224" y1="210" x2="312" y2="210" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<circle cx="328" cy="210" r="10" fill="none" stroke="#dfa93f" stroke-width="2"/>
-<text class="pl-n" x="208" y="256">LOST PROPERTY OFFICE</text>
-<text class="pl-n pl-gold" x="208" y="274">4 &#183; ~8:05 A.M.</text>
-<path d="M394 128 L520 128 L542 150 L542 232 L394 232 Z" fill="none" stroke="#f4efe2" stroke-width="2.4" stroke-linejoin="round"/>
-<path d="M520 128 L520 150 L542 150" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<line x1="410" y1="168" x2="498" y2="168" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="410" y1="182" x2="498" y2="182" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="410" y1="196" x2="498" y2="196" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="410" y1="210" x2="498" y2="210" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<circle cx="514" cy="210" r="10" fill="none" stroke="#dfa93f" stroke-width="2"/>
-<text class="pl-n" x="394" y="256">NOTICE TO QUIT</text>
-<text class="pl-n pl-gold" x="394" y="274">8 &#183; ~1:30 P.M.</text>
-<path d="M580 128 L706 128 L728 150 L728 232 L580 232 Z" fill="none" stroke="#f4efe2" stroke-width="2.4" stroke-linejoin="round"/>
-<path d="M706 128 L706 150 L728 150" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<line x1="596" y1="168" x2="684" y2="168" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="596" y1="182" x2="684" y2="182" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="596" y1="196" x2="684" y2="196" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="596" y1="210" x2="684" y2="210" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<circle cx="700" cy="210" r="10" fill="none" stroke="#dfa93f" stroke-width="2"/>
-<text class="pl-n" x="580" y="256">THE MUZZLING ORDER</text>
-<text class="pl-n pl-gold" x="580" y="274">12 &#183; ~5 P.M.</text>
-<path d="M766 128 L892 128 L914 150 L914 232 L766 232 Z" fill="none" stroke="#f4efe2" stroke-width="2.4" stroke-linejoin="round"/>
-<path d="M892 128 L892 150 L914 150" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<line x1="782" y1="168" x2="870" y2="168" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="782" y1="182" x2="870" y2="182" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="782" y1="196" x2="870" y2="196" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="782" y1="210" x2="870" y2="210" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<circle cx="886" cy="210" r="10" fill="none" stroke="#dfa93f" stroke-width="2"/>
-<text class="pl-n" x="766" y="256">THE WATER RATE</text>
-<text class="pl-n pl-gold" x="766" y="274">12 &#183; ~5:15 P.M.</text>
-<path d="M208 314 L334 314 L356 336 L356 418 L208 418 Z" fill="none" stroke="#f4efe2" stroke-width="2.4" stroke-linejoin="round"/>
-<path d="M334 314 L334 336 L356 336" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<line x1="224" y1="354" x2="312" y2="354" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="224" y1="368" x2="312" y2="368" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="224" y1="382" x2="312" y2="382" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="224" y1="396" x2="312" y2="396" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<circle cx="328" cy="396" r="10" fill="none" stroke="#dfa93f" stroke-width="2"/>
-<text class="pl-n" x="208" y="442">THE DEEDPOLL</text>
-<text class="pl-n pl-gold" x="208" y="460">VIRAG &#8594; BLOOM &#183; 12</text>
-<path d="M394 314 L520 314 L542 336 L542 418 L394 418 Z" fill="none" stroke="#f4efe2" stroke-width="2.4" stroke-linejoin="round"/>
-<path d="M520 314 L520 336 L542 336" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<line x1="410" y1="354" x2="498" y2="354" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="410" y1="368" x2="498" y2="368" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="410" y1="382" x2="498" y2="382" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="410" y1="396" x2="498" y2="396" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<circle cx="514" cy="396" r="10" fill="none" stroke="#dfa93f" stroke-width="2"/>
-<text class="pl-n" x="394" y="442">15 GALLONS PER PAUPER</text>
-<text class="pl-n pl-gold" x="394" y="460">17 &#183; ~2:05 A.M.</text>
-<path d="M580 314 L706 314 L728 336 L728 418 L580 418 Z" fill="none" stroke="#f4efe2" stroke-width="2.4" stroke-linejoin="round"/>
-<path d="M706 314 L706 336 L728 336" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<line x1="596" y1="354" x2="684" y2="354" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="596" y1="368" x2="684" y2="368" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="596" y1="382" x2="684" y2="382" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="596" y1="396" x2="684" y2="396" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<circle cx="700" cy="396" r="10" fill="none" stroke="#dfa93f" stroke-width="2"/>
-<text class="pl-n" x="580" y="442">THE CENSUS OF 1901</text>
-<text class="pl-n pl-gold" x="580" y="460">4,386,035 &#183; 17</text>
-<path d="M766 314 L892 314 L914 336 L914 418 L766 418 Z" fill="none" stroke="#f4efe2" stroke-width="2.4" stroke-linejoin="round"/>
-<path d="M892 314 L892 336 L914 336" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<line x1="782" y1="354" x2="870" y2="354" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="782" y1="368" x2="870" y2="368" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="782" y1="382" x2="870" y2="382" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<line x1="782" y1="396" x2="870" y2="396" stroke="#b9c3d6" stroke-width="1.2" stroke-opacity=".65"/>
-<circle cx="886" cy="396" r="10" fill="none" stroke="#dfa93f" stroke-width="2"/>
-<text class="pl-n" x="766" y="442">THE ORDNANCE SURVEY</text>
-<text class="pl-n pl-gold" x="766" y="460">17 &#183; ~2:30 A.M.</text>
-<text class="pl-l" x="60" y="520">TEN EPISODES &#183; 9 PRESENT, 1 HALLUCINATED</text>
+</g>
+<text class="pl-note" x="64" y="494">Pillarbox</text>
+<text class="pl-note" x="64" y="518">Episode 10</text>
+<g transform="translate(14.2,37.2) scale(1.1)" vector-effect="non-scaling-stroke"><path d="M208 128 L334 128 L356 150 L356 232 L208 232 Z" fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><path d="M334 128 L334 150 L356 150" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="168" x2="312" y2="168" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="182" x2="312" y2="182" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="196" x2="312" y2="196" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="210" x2="312" y2="210" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><circle cx="328" cy="210" r="10" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/></g><text class="pl-note" x="324.5" y="318" text-anchor="middle">Lost property</text><text class="pl-note" x="324.5" y="342" text-anchor="middle">4 &#183; ~8:05 a.m.</text><g transform="translate(223.2,37.2) scale(1.1)" vector-effect="non-scaling-stroke"><path d="M208 128 L334 128 L356 150 L356 232 L208 232 Z" fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><path d="M334 128 L334 150 L356 150" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="168" x2="312" y2="168" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="182" x2="312" y2="182" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="196" x2="312" y2="196" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="210" x2="312" y2="210" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><circle cx="328" cy="210" r="10" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/></g><text class="pl-note" x="533.5" y="318" text-anchor="middle">Notice to quit</text><text class="pl-note" x="533.5" y="342" text-anchor="middle">8 &#183; ~1:30 p.m.</text><g transform="translate(432.2,37.2) scale(1.1)" vector-effect="non-scaling-stroke"><path d="M208 128 L334 128 L356 150 L356 232 L208 232 Z" fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><path d="M334 128 L334 150 L356 150" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="168" x2="312" y2="168" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="182" x2="312" y2="182" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="196" x2="312" y2="196" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="210" x2="312" y2="210" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><circle cx="328" cy="210" r="10" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/></g><text class="pl-note" x="742.5" y="318" text-anchor="middle">Muzzling order</text><text class="pl-note" x="742.5" y="342" text-anchor="middle">12 &#183; ~5 p.m.</text><g transform="translate(641.2,37.2) scale(1.1)" vector-effect="non-scaling-stroke"><path d="M208 128 L334 128 L356 150 L356 232 L208 232 Z" fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><path d="M334 128 L334 150 L356 150" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="168" x2="312" y2="168" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="182" x2="312" y2="182" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="196" x2="312" y2="196" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="210" x2="312" y2="210" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><circle cx="328" cy="210" r="10" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/></g><text class="pl-note" x="951.5" y="318" text-anchor="middle">Water rate</text><text class="pl-note" x="951.5" y="342" text-anchor="middle">12 &#183; ~5:15 p.m.</text><g transform="translate(14.2,239.2) scale(1.1)" vector-effect="non-scaling-stroke"><path d="M208 128 L334 128 L356 150 L356 232 L208 232 Z" fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><path d="M334 128 L334 150 L356 150" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="168" x2="312" y2="168" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="182" x2="312" y2="182" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="196" x2="312" y2="196" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="210" x2="312" y2="210" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><circle cx="328" cy="210" r="10" fill="#dfa93f"/></g><text class="pl-note" x="324.5" y="520" text-anchor="middle">Deedpoll &#183; 12</text><text class="pl-note" x="324.5" y="544" text-anchor="middle">Virag &#8594; Bloom</text><g transform="translate(223.2,239.2) scale(1.1)" vector-effect="non-scaling-stroke"><path d="M208 128 L334 128 L356 150 L356 232 L208 232 Z" fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><path d="M334 128 L334 150 L356 150" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="168" x2="312" y2="168" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="182" x2="312" y2="182" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="196" x2="312" y2="196" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="210" x2="312" y2="210" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><circle cx="328" cy="210" r="10" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/></g><text class="pl-note" x="533.5" y="520" text-anchor="middle">15 gallons</text><text class="pl-note" x="533.5" y="544" text-anchor="middle">17 &#183; ~2:05 a.m.</text><g transform="translate(432.2,239.2) scale(1.1)" vector-effect="non-scaling-stroke"><path d="M208 128 L334 128 L356 150 L356 232 L208 232 Z" fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><path d="M334 128 L334 150 L356 150" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="168" x2="312" y2="168" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="182" x2="312" y2="182" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="196" x2="312" y2="196" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="210" x2="312" y2="210" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><circle cx="328" cy="210" r="10" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/></g><text class="pl-note" x="742.5" y="520" text-anchor="middle">Census 1901</text><text class="pl-note" x="742.5" y="544" text-anchor="middle">17 &#183; 4,386,035</text><g transform="translate(641.2,239.2) scale(1.1)" vector-effect="non-scaling-stroke"><path d="M208 128 L334 128 L356 150 L356 232 L208 232 Z" fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><path d="M334 128 L334 150 L356 150" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="168" x2="312" y2="168" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="182" x2="312" y2="182" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="196" x2="312" y2="196" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="224" y1="210" x2="312" y2="210" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/><circle cx="328" cy="210" r="10" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/></g><text class="pl-note" x="951.5" y="520" text-anchor="middle">Ordnance survey</text><text class="pl-note" x="951.5" y="544" text-anchor="middle">17 &#183; ~2:30 a.m.</text>
 </svg>
     </div>
     <div class="plate" id="pl-gallows">
-<svg viewBox="0 0 980 540" role="img" aria-labelledby="pg-t pg-d">
+<svg viewBox="0 0 1120 630" role="img" aria-labelledby="pg-t pg-d">
 <title id="pg-t">The gallows and the jail</title>
-<desc id="pg-d">A drawn gallows with its noose standing on a platform, and beside it a barred jail window in a stone wall. Below, the eleven episodes in which the instrument surfaces are set out with the matrix marks: episodes three, six, eight, ten, fourteen, sixteen and eighteen recalled; episodes eleven and twelve present; episodes fifteen and seventeen hallucinated. No execution is present-tense on 16 June 1904.</desc>
-<text class="pl-h" x="60" y="60">THE GALLOWS, THE JAIL</text>
-<text class="pl-l" x="936" y="60" text-anchor="end">AND THE MEMORY OF STATE KILLING</text>
-<g fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+<desc id="pg-d">A pair either side of a thin dividing rule. On the left a gallows stands on its platform, its rope and noose drawn as one heavy gold line. On the right a barred jail window is set in a stone wall, its opening drawn heavy and its four bars lighter. Along the foot of the plate the eleven episodes in which the instrument surfaces are set out with the matrix marks: episodes three, six, eight, ten, fourteen, sixteen and eighteen as open rings for recalled; episodes eleven and twelve as filled dots for present; episodes fifteen and seventeen as diamonds for hallucinated.</desc>
+<rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+<text class="pl-reg" x="64" y="78">THE GALLOWS AND THE JAIL &#183; ELEVEN EPISODES</text>
+<line x1="64" y1="100" x2="1056" y2="100" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/>
+<text class="pl-ttl" x="64" y="140">The memory of state killing</text>
+<text class="pl-note" x="64" y="580">2 present, 7 recalled, 2 hallucinated</text>
+<text class="pl-badge" x="1056" y="580" text-anchor="end">03 &#183; THE GOVERNED CITY</text>
+<line x1="560" y1="180" x2="560" y2="440" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/>
+<g transform="translate(118.4,71.2) scale(0.85)">
+<g fill="none" stroke="#f4efe2" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke">
 <path d="M96 384 L336 384 L336 400 L96 400 Z"/>
 <path d="M148 384 L148 128 L306 128"/>
 <path d="M148 176 L196 128"/>
-<path d="M290 132 L290 232"/>
 </g>
-<ellipse cx="290" cy="252" rx="17" ry="21" fill="none" stroke="#f4efe2" stroke-width="4"/>
-<g stroke="#b9c3d6" stroke-width="2" stroke-opacity=".8"><path d="M276 236 L304 244"/><path d="M276 244 L304 252"/></g>
-<g stroke="#b9c3d6" stroke-width="1.4" stroke-opacity=".7"><path d="M110 400 L96 424"/><path d="M322 400 L336 424"/></g>
-<text class="pl-n" x="216" y="440" text-anchor="middle">THE SCAFFOLD</text>
-<g fill="none" stroke="#f4efe2" stroke-width="3.4" stroke-linejoin="round">
-<path d="M566 150 L750 150 L750 372 L566 372 Z"/>
+<path d="M290 132 L290 231 A17 21 0 1 1 289.99 231" fill="none" stroke="#dfa93f" stroke-width="10" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+<g fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"><path d="M110 400 L96 424"/><path d="M322 400 L336 424"/></g>
 </g>
-<g stroke="#f4efe2" stroke-width="5" stroke-linecap="round">
-<line x1="602" y1="150" x2="602" y2="372"/>
-<line x1="639" y1="150" x2="639" y2="372"/>
-<line x1="676" y1="150" x2="676" y2="372"/>
-<line x1="713" y1="150" x2="713" y2="372"/>
-<line x1="566" y1="224" x2="750" y2="224"/><line x1="566" y1="298" x2="750" y2="298"/>
+<g transform="translate(129,41.4) scale(1.05)">
+<g fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke">
+<path d="M500 132 L816 132"/><path d="M500 192 L816 192"/><path d="M500 252 L816 252"/><path d="M500 312 L816 312"/><path d="M500 372 L816 372"/>
+<path d="M536 132 L536 372"/><path d="M782 132 L782 372"/>
 </g>
-<g stroke="#b9c3d6" stroke-width="1.4" stroke-opacity=".55">
-<line x1="500" y1="132" x2="816" y2="132"/>
-<line x1="500" y1="192" x2="816" y2="192"/>
-<line x1="500" y1="252" x2="816" y2="252"/>
-<line x1="500" y1="312" x2="816" y2="312"/>
-<line x1="500" y1="372" x2="816" y2="372"/>
-<line x1="536" y1="132" x2="536" y2="372"/><line x1="782" y1="132" x2="782" y2="372"/>
+<path d="M566 150 L750 150 L750 372 L566 372 Z" fill="none" stroke="#f4efe2" stroke-width="10" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+<g fill="none" stroke="#f4efe2" stroke-width="4" stroke-linecap="round" vector-effect="non-scaling-stroke">
+<path d="M602 150 L602 372"/><path d="M639 150 L639 372"/><path d="M676 150 L676 372"/><path d="M713 150 L713 372"/>
+<path d="M566 224 L750 224"/><path d="M566 298 L750 298"/>
 </g>
-<text class="pl-n" x="658" y="440" text-anchor="middle">KILMAINHAM &#183; MOUNTJOY &#183; THE BRIDEWELL</text>
-<circle cx="852" cy="118" r="5.5" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<text class="pl-n" x="868" y="122">EPISODE 3</text>
-<circle cx="852" cy="148" r="5.5" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<text class="pl-n" x="868" y="152">EPISODE 6</text>
-<circle cx="852" cy="178" r="5.5" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<text class="pl-n" x="868" y="182">EPISODE 8</text>
-<circle cx="852" cy="208" r="5.5" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<text class="pl-n" x="868" y="212">EPISODE 10</text>
-<circle cx="852" cy="238" r="6" fill="#f4efe2"/>
-<text class="pl-n" x="868" y="242">EPISODE 11</text>
-<circle cx="852" cy="268" r="6" fill="#f4efe2"/>
-<text class="pl-n" x="868" y="272">EPISODE 12</text>
-<circle cx="852" cy="298" r="5.5" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<text class="pl-n" x="868" y="302">EPISODE 14</text>
-<path d="M852 321 L859 328 L852 335 L845 328 Z" fill="#dfa93f"/>
-<text class="pl-n" x="868" y="332">EPISODE 15</text>
-<circle cx="852" cy="358" r="5.5" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<text class="pl-n" x="868" y="362">EPISODE 16</text>
-<path d="M852 381 L859 388 L852 395 L845 388 Z" fill="#dfa93f"/>
-<text class="pl-n" x="868" y="392">EPISODE 17</text>
-<circle cx="852" cy="418" r="5.5" fill="none" stroke="#b9c3d6" stroke-width="1.6"/>
-<text class="pl-n" x="868" y="422">EPISODE 18</text>
-<text class="pl-l" x="60" y="492">ELEVEN EPISODES &#183; 2 PRESENT, 7 RECALLED, 2 HALLUCINATED</text>
-<text class="pl-l pl-gold" x="60" y="518">NO EXECUTION IS PRESENT-TENSE ON 16 JUNE 1904</text>
+</g>
+<text class="pl-lab" x="302" y="470" text-anchor="middle">The scaffold</text>
+<text class="pl-lab" x="820" y="470" text-anchor="middle">The jail</text>
+<text class="pl-note" x="1056" y="498" text-anchor="end">Kilmainham &#183; Mountjoy &#183; the Bridewell</text>
+<circle cx="80" cy="516" r="7" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/><text class="pl-note" x="80" y="546" text-anchor="middle">3</text><circle cx="176" cy="516" r="7" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/><text class="pl-note" x="176" y="546" text-anchor="middle">6</text><circle cx="272" cy="516" r="7" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/><text class="pl-note" x="272" y="546" text-anchor="middle">8</text><circle cx="368" cy="516" r="7" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/><text class="pl-note" x="368" y="546" text-anchor="middle">10</text><circle cx="464" cy="516" r="7" fill="#f4efe2"/><text class="pl-note" x="464" y="546" text-anchor="middle">11</text><circle cx="560" cy="516" r="7" fill="#f4efe2"/><text class="pl-note" x="560" y="546" text-anchor="middle">12</text><circle cx="656" cy="516" r="7" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/><text class="pl-note" x="656" y="546" text-anchor="middle">14</text><path d="M752 507 L761 516 L752 525 L743 516 Z" fill="#f4efe2"/><text class="pl-note" x="752" y="546" text-anchor="middle">15</text><circle cx="848" cy="516" r="7" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/><text class="pl-note" x="848" y="546" text-anchor="middle">16</text><path d="M944 507 L953 516 L944 525 L935 516 Z" fill="#f4efe2"/><text class="pl-note" x="944" y="546" text-anchor="middle">17</text><circle cx="1040" cy="516" r="7" fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="1.5"/><text class="pl-note" x="1040" y="546" text-anchor="middle">18</text>
 </svg>
     </div>
   </div>
@@ -558,7 +421,7 @@
 
   <div class="bar">
     <button id="prev" aria-label="Previous card">&#8249; Prev</button>
-    <div class="dots" id="dots" role="tablist" aria-label="Cards"></div>
+    <nav class="dots" id="dots" aria-label="Cards"></nav>
     <button id="next" aria-label="Next card">Next &#8250;</button>
     <span class="count" id="count"></span>
   </div>
@@ -571,35 +434,41 @@ Dimension 3 &#183; <a href="../governed-city/instruments.html">the diagram</a>.<
 (function(){
   // Cards: identity labels only &#8212; the argument itself is the presenter's, off-site.
   var CARDS = [
-    { kind:"title" },
-    { kind:"matrix", name:"The instruments of rule", tag:"160 marks · 88 present · 13 instruments · 18 episodes" },
+    { kind:"title", name:"The Governed City", tag:"thirteen instruments \u00b7 eighteen episodes" },
+    { kind:"matrix", name:"The instruments of rule", tag:"160 marks \u00b7 88 present \u00b7 13 instruments \u00b7 18 episodes" },
     { kind:"plate", id:"pl-bars", name:"Present marks, episode by episode",
-      tag:"88 present · none of the eighteen empty · peak Wandering Rocks, 11" },
-    { kind:"col", eps:[10], name:"Wandering Rocks · episode 10", tag:"~3 p.m. · 12 marks lit · 11 present, the day's peak" },
+      tag:"88 present \u00b7 none of the eighteen empty \u00b7 peak Wandering Rocks, 11" },
+    { kind:"col", eps:[10], name:"Wandering Rocks \u00b7 episode 10", tag:"~3 p.m. \u00b7 12 marks lit \u00b7 11 present, the day's peak" },
     { kind:"plate", id:"pl-cavalcade", name:"The viceregal cavalcade",
-      tag:"6 episodes · ~1:15 p.m. to ~9 p.m. · Phoenix Park to Ballsbridge" },
-    { kind:"col", eps:[12], name:"Cyclops · episode 12", tag:"~5 p.m. · 11 instruments lit · 1 hallucinated" },
-    { kind:"col", eps:[15], name:"Circe · episode 15", tag:"~midnight · 12 instruments lit · 8 hallucinated" },
-    { kind:"state", state:"hallucinated", name:"The hallucinated marks", tag:"10 marks · Circe 8 · Cyclops 1 · Ithaca 1" },
-    { kind:"col", eps:[12,15], name:"Cyclops & Circe", tag:"~5 p.m. & ~midnight · 23 marks lit · 9 hallucinated" },
-    { kind:"row", inst:2, name:"Dublin Castle", tag:"the seat of rule · 11 episodes · 7 recalled, 3 present, 1 hallucinated" },
-    { kind:"row", inst:6, name:"The informer and his reputation", tag:"12 episodes · 6 recalled, 6 present" },
+      tag:"6 episodes \u00b7 ~1:15 p.m. to ~9 p.m. \u00b7 Phoenix Park to Ballsbridge" },
+    { kind:"col", eps:[12], name:"Cyclops \u00b7 episode 12", tag:"~5 p.m. \u00b7 11 instruments lit \u00b7 1 hallucinated" },
+    { kind:"col", eps:[15], name:"Circe \u00b7 episode 15", tag:"~midnight \u00b7 12 instruments lit \u00b7 8 hallucinated" },
+    { kind:"state", state:"hallucinated", name:"The hallucinated marks", tag:"10 marks \u00b7 Circe 8 \u00b7 Cyclops 1 \u00b7 Ithaca 1" },
+    { kind:"col", eps:[12,15], name:"Cyclops & Circe", tag:"~5 p.m. & ~midnight \u00b7 23 marks lit \u00b7 9 hallucinated" },
+    { kind:"row", inst:2, name:"Dublin Castle", tag:"the seat of rule \u00b7 11 episodes \u00b7 7 recalled, 3 present, 1 hallucinated" },
+    { kind:"row", inst:6, name:"The informer and his reputation", tag:"12 episodes \u00b7 6 recalled, 6 present" },
     { kind:"plate", id:"pl-kelleher", name:"Corny Kelleher",
-      tag:"five sightings · ~9:50 a.m. to ~12:50 a.m. · episodes 5, 6, 8, 10, 15" },
+      tag:"five sightings \u00b7 ~9:50 a.m. to ~12:50 a.m. \u00b7 episodes 5, 6, 8, 10, 15" },
     { kind:"plate", id:"pl-garrison", name:"The garrison, first hour and last",
-      tag:"episode 1, ~8 a.m. · episode 15, ~12:50 a.m. · episode 18, deep night" },
-    { kind:"row", inst:1, name:"The garrison, on the plane", tag:"18 episodes, none without it · 7 present, 11 recalled" },
-    { kind:"row", inst:9, name:"The King's English", tag:"18 episodes · 18 present · none recalled, none hallucinated" },
+      tag:"episode 1, ~8 a.m. \u00b7 episode 15, ~12:50 a.m. \u00b7 episode 18, deep night" },
+    { kind:"row", inst:1, name:"The garrison, on the plane", tag:"18 episodes, none without it \u00b7 7 present, 11 recalled" },
+    { kind:"row", inst:9, name:"The King's English", tag:"18 episodes \u00b7 18 present \u00b7 none recalled, none hallucinated" },
     { kind:"plate", id:"pl-crown", name:"The Crown in effigy",
-      tag:"coin, mailcar, pillar, furled flag · 11 episodes · in person once, hallucinated" },
+      tag:"coin, mailcar, pillar, furled flag \u00b7 11 episodes \u00b7 in person once, hallucinated" },
     { kind:"plate", id:"pl-paperwork", name:"The paperwork of rule",
-      tag:"10 episodes · 9 present · the lost property office to the ordnance survey" },
+      tag:"10 episodes \u00b7 9 present \u00b7 the lost property office to the ordnance survey" },
     { kind:"plate", id:"pl-gallows", name:"The gallows and the jail",
-      tag:"11 episodes · 2 present, 7 recalled, 2 hallucinated" },
-    { kind:"all", name:"The governed city, assembled", tag:"13 instruments across 18 episodes · all 160 marks lit" }
+      tag:"11 episodes \u00b7 2 present, 7 recalled, 2 hallucinated" },
+    { kind:"all", name:"The governed city, assembled", tag:"13 instruments across 18 episodes \u00b7 all 160 marks lit" }
   ];
+  // the matrix's geometry, so the gold locator can be laid on the lit column or row
+  var COLX = [376,415.1,454.1,493.2,532.2,571.3,610.4,649.4,688.5,727.5,766.6,805.6,844.7,883.8,922.8,961.9,1000.9,1040];
+  var ROWY = [224,250,276,302,328,354,380,406,432,458,484,510,536];
+
   var cells = Array.prototype.slice.call(document.querySelectorAll(".cell"));
   var plates = Array.prototype.slice.call(document.querySelectorAll(".plate"));
+  var axEp = Array.prototype.slice.call(document.querySelectorAll(".ep"));
+  var axInst = Array.prototype.slice.call(document.querySelectorAll(".inst"));
   // read each mark's A3 state off the glyph it was drawn with, once
   cells.forEach(function(cell){
     var m = cell.querySelector(".m");
@@ -607,6 +476,7 @@ Dimension 3 &#183; <a href="../governed-city/instruments.html">the diagram</a>.<
       : m.classList.contains("ring") ? "recalled" : "hallucinated");
   });
   var i = 0;
+  var stage = document.getElementById("stage");
   var title = document.getElementById("title");
   var caption = document.getElementById("caption");
   var capName = document.getElementById("cap-name");
@@ -615,16 +485,19 @@ Dimension 3 &#183; <a href="../governed-city/instruments.html">the diagram</a>.<
   var next = document.getElementById("next");
   var count = document.getElementById("count");
   var dotsWrap = document.getElementById("dots");
+  var mkAll = document.getElementById("mk-all");
+  var mkRow = document.getElementById("mk-row");
+  var mkCols = document.getElementById("mk-cols");
+  var lgDia = document.getElementById("lg-dia");
 
   // build dots
   CARDS.forEach(function(c, n){
     var d = document.createElement("button");
-    d.setAttribute("role","tab");
-    d.setAttribute("aria-label","Card " + (n+1));
+    d.setAttribute("aria-label","Card " + (n+1) + ", " + c.name);
     d.addEventListener("click", function(){ go(n); });
     dotsWrap.appendChild(d);
   });
-  var dots = dotsWrap.querySelectorAll("button");
+  var dots = Array.prototype.slice.call(dotsWrap.querySelectorAll("button"));
 
   function lit(c, ep, inst, state){
     if (c.kind === "all") return true;
@@ -634,6 +507,33 @@ Dimension 3 &#183; <a href="../governed-city/instruments.html">the diagram</a>.<
     return false; // title, matrix, plate: nothing lit (the ambient hum)
   }
 
+  // THE ONE GOLD ELEMENT. Focus is made by weight and isolation and only confirmed by
+  // gold, so the lit marks go to subject tone and gold is spent once, on the locator that
+  // names WHERE the card is looking &#8212; never on the ambient field.
+  function locate(c){
+    mkAll.setAttribute("visibility", c.kind === "all" ? "visible" : "hidden");
+    mkRow.setAttribute("visibility", "hidden");
+    while (mkCols.firstChild) mkCols.removeChild(mkCols.firstChild);
+    lgDia.setAttribute("fill", "#b9c3d6");
+    lgDia.setAttribute("fill-opacity", ".55");
+    if (c.kind === "row") {
+      mkRow.setAttribute("y1", ROWY[c.inst]);
+      mkRow.setAttribute("y2", ROWY[c.inst]);
+      mkRow.setAttribute("visibility", "visible");
+    } else if (c.kind === "col") {
+      c.eps.forEach(function(e){
+        var l = document.createElementNS("http://www.w3.org/2000/svg","line");
+        l.setAttribute("x1", COLX[e-1]); l.setAttribute("x2", COLX[e-1]);
+        l.setAttribute("y1", 213); l.setAttribute("y2", 547);
+        l.setAttribute("stroke", "#dfa93f"); l.setAttribute("stroke-width", 10);
+        mkCols.appendChild(l);
+      });
+    } else if (c.kind === "state" && c.state === "hallucinated") {
+      lgDia.setAttribute("fill", "#dfa93f");
+      lgDia.setAttribute("fill-opacity", "1");
+    }
+  }
+
   function render(){
     var c = CARDS[i];
     cells.forEach(function(cell){
@@ -641,8 +541,18 @@ Dimension 3 &#183; <a href="../governed-city/instruments.html">the diagram</a>.<
       var inst = +cell.getAttribute("data-inst");
       cell.classList.toggle("on", lit(c, ep, inst, cell.getAttribute("data-state")));
     });
+    // Reduce, then draw, then name once: an axis label is only spoken when its row or
+    // column is the subject.
+    axEp.forEach(function(t){
+      t.classList.toggle("on", c.kind === "col" && c.eps.indexOf(+t.getAttribute("data-ep")) >= 0);
+    });
+    axInst.forEach(function(t){
+      t.classList.toggle("on", c.kind === "row" && +t.getAttribute("data-inst") === c.inst);
+    });
+    locate(c);
     plates.forEach(function(p){ p.classList.toggle("show", c.kind === "plate" && p.id === c.id); });
     title.classList.toggle("show", c.kind === "title");
+    stage.classList.toggle("plated", c.kind === "plate" || c.kind === "title");
     if (c.kind === "title") {
       caption.classList.add("hidden");
     } else {
@@ -653,18 +563,24 @@ Dimension 3 &#183; <a href="../governed-city/instruments.html">the diagram</a>.<
     prev.disabled = (i === 0);
     next.disabled = (i === CARDS.length - 1);
     count.textContent = (i+1) + " / " + CARDS.length;
-    dots.forEach(function(d, n){ d.setAttribute("aria-current", n === i ? "true" : "false"); });
+    dots.forEach(function(d, n){
+      if (n === i) d.setAttribute("aria-current", "true"); else d.removeAttribute("aria-current");
+    });
   }
   function go(n){ i = Math.max(0, Math.min(CARDS.length - 1, n)); render(); }
 
   prev.addEventListener("click", function(){ go(i-1); });
   next.addEventListener("click", function(){ go(i+1); });
-  document.addEventListener("keydown", function(e){
+  // bound to the stage and to the dot bar, not to the document: a global arrow handler
+  // fights a screen reader's browse mode.
+  function keys(e){
     if (e.key === "ArrowRight" || e.key === "PageDown") { go(i+1); e.preventDefault(); }
     else if (e.key === "ArrowLeft" || e.key === "PageUp") { go(i-1); e.preventDefault(); }
     else if (e.key === "Home") { go(0); e.preventDefault(); }
     else if (e.key === "End") { go(CARDS.length-1); e.preventDefault(); }
-  });
+  }
+  stage.addEventListener("keydown", keys);
+  dotsWrap.addEventListener("keydown", keys);
   render();
 })();
 </script>
