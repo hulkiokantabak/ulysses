@@ -6,10 +6,11 @@
 <title>Four Odysseys — the deck</title>
 <style>
   /* Dimension 16's presentation register: the audience deck. Image cards only, no
-     explanations (the presenter's material is kept off the public site — C-19). One
-     plane; each card lights one work in gold and reads it across the two axes; the
-     last card assembles all four. The 1922 family: deep plate, paper, gold, mono
-     factual layer. No animation, so prefers-reduced-motion is honoured by design. */
+     explanations (the presenter's material is kept off the public site — C-19). Two
+     kinds of card share one stage: chart cards, which light a work on the two-axis
+     plane, and drawn plates, which show one sourced particular. The 1922 family: deep
+     plate, paper, gold, mono factual layer. No animation, so prefers-reduced-motion is
+     honoured by design. Every mark is drawn inline; nothing is fetched. */
   :root {
     --deep:#081a35; --paper:#f4efe2; --gold:#dfa93f; --mute:#b9c3d6;
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
@@ -40,6 +41,26 @@
                   letter-spacing:.12em; }
   .title .rule { width:8rem; height:3px; background:var(--gold); margin:1.25rem 0; }
   .title .sub { font-style:italic; color:var(--paper); max-width:34ch; font-size:clamp(1rem,2.6vw,1.3rem); }
+  /* drawn plates overlay the stage the same way; the chart keeps the box open */
+  .plate { position:absolute; inset:0; display:none; align-items:center; justify-content:center; }
+  .plate.show { display:flex; }
+  .stage.plated svg.chart { visibility:hidden; }
+  .plate .h { font-family:var(--serif); font-size:34px; fill:var(--paper); }
+  .plate .k { font-family:var(--mono); font-size:14px; fill:var(--mute); letter-spacing:2px; }
+  .plate .w { font-family:var(--serif); font-size:30px; fill:var(--paper); }
+  .plate .wg { font-family:var(--serif); font-size:30px; fill:var(--gold); }
+  .plate .wm { font-family:var(--serif); font-size:28px; fill:var(--mute); }
+  .plate .big { font-family:var(--serif); font-size:40px; font-style:italic; fill:var(--gold); }
+  .plate .m { font-family:var(--mono); font-size:14px; fill:var(--mute); }
+  .plate .n { font-family:var(--mono); font-size:13px; fill:var(--mute); }
+  .plate .ink { stroke:var(--paper); fill:none; stroke-width:1.6; stroke-linejoin:round; }
+  .plate .hair { stroke:var(--mute); fill:none; stroke-width:1; }
+  .plate .au { stroke:var(--gold); fill:none; stroke-width:2; }
+  .plate .solid { fill:var(--paper); stroke:none; }
+  .plate .solidg { fill:var(--gold); stroke:none; }
+  .plate .solidm { fill:var(--mute); stroke:none; }
+  .plate .dash { stroke:var(--gold); fill:none; stroke-width:1.5; stroke-dasharray:6 6; }
+  .plate .dashm { stroke:var(--mute); fill:none; stroke-width:1.4; stroke-dasharray:5 5; }
   /* the caption bar reads the current card — identity only */
   .caption { min-height:3.2rem; text-align:center; padding:.5rem 0 .25rem; }
   .caption .cname { font-size:1.4rem; }
@@ -47,11 +68,11 @@
   .caption.hidden { visibility:hidden; }
   /* controls */
   .bar { display:flex; align-items:center; justify-content:center; gap:1rem;
-         padding:.75rem 0 1.25rem; font-family:var(--mono); }
+         padding:.75rem 0 1.25rem; font-family:var(--mono); flex-wrap:wrap; }
   button { font:inherit; font-family:var(--mono); font-size:1rem; color:var(--deep);
            background:var(--paper); border:0; padding:.4rem .9rem; cursor:pointer; }
   button:disabled { opacity:.35; cursor:default; }
-  .dots { display:flex; gap:.5rem; }
+  .dots { display:flex; gap:.5rem; flex-wrap:wrap; justify-content:center; }
   .dots button { padding:0; width:.85rem; height:.85rem; border-radius:50%;
                  background:transparent; border:1.5px solid var(--mute); }
   .dots button[aria-current="true"] { background:var(--gold); border-color:var(--gold); }
@@ -60,13 +81,23 @@
   a { color:var(--gold); }
   .foot { text-align:center; font-family:var(--mono); font-size:.75rem; color:var(--mute);
           padding-bottom:1rem; }
+
+@media print {
+  .dots, .nav, nav, button { display: none !important; }
+  .deck, .stage { height: auto !important; min-height: 0 !important; }
+  .plane { display: block !important; position: static !important;
+           visibility: visible !important; page-break-after: always; margin: 0 0 6mm; }
+  .plane svg, .stage > svg { width: 100% !important; height: auto !important; }
+  .title { position: static !important; page-break-after: always; }
+  body { background: #081a35 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
 </style>
 </head>
 <body>
 <div class="deck">
   <div class="stage" id="stage" tabindex="0" role="group" aria-roledescription="slide deck"
        aria-label="Four Odysseys, an audience deck. Use the left and right arrow keys.">
-    <svg viewBox="0 0 960 560" aria-hidden="true">
+    <svg class="chart" viewBox="0 0 960 560" aria-hidden="true">
       <line x1="160" y1="470" x2="900" y2="470" stroke="#b9c3d6" stroke-width="1"/>
       <line x1="160" y1="470" x2="160" y2="60" stroke="#b9c3d6" stroke-width="1"/>
       <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="14" fill="#b9c3d6">
@@ -104,11 +135,363 @@
         <text class="ptag" x="194" y="108">genre transformed · ~0%</text>
       </g>
     </svg>
+
     <div class="title show" id="title">
       <h1>Four Odysseys</h1>
       <div class="works">HOMER · WILSON · NOLAN · JOYCE</div>
       <div class="rule"></div>
       <p class="sub">Two axes usually collapsed into one.</p>
+    </div>
+
+    <!-- ============ HOMER ============ -->
+
+    <!-- kleos and xenia: a wreath and a threshold -->
+    <div class="plate" id="pl-measures">
+      <svg viewBox="0 0 960 560" aria-hidden="true">
+        <text class="h" x="480" y="62" text-anchor="middle">kleos · xenia</text>
+        <text class="k" x="480" y="92" text-anchor="middle">HOMER · THE MEASURES A HERO IS JUDGED BY</text>
+        <line class="hair" x1="480" y1="150" x2="480" y2="430" opacity=".35"/>
+        <!-- kleos: a laurel wreath -->
+        <g class="ink">
+          <path d="M 276.5 193.2 A 78 78 0 0 0 276.5 346.8"/>
+          <path d="M 303.5 193.2 A 78 78 0 0 1 303.5 346.8"/>
+          <path d="M 276.5 193.2 L 273.7 177.4 M 237.8 212 L 227.1 200.1 M 215 248.5 L 199.6 244.1 M 215 291.5 L 199.6 295.9 M 237.8 328 L 227.1 339.9 M 276.5 346.8 L 273.7 362.6"/>
+          <path d="M 303.5 193.2 L 306.3 177.4 M 342.2 212 L 352.9 200.1 M 365 248.5 L 380.4 244.1 M 365 291.5 L 380.4 295.9 M 342.2 328 L 352.9 339.9 M 303.5 346.8 L 306.3 362.6"/>
+        </g>
+        <text class="big" x="290" y="284" text-anchor="middle">kleos</text>
+        <text class="m" x="290" y="410" text-anchor="middle">fame</text>
+        <!-- xenia: a doorway and a lit threshold -->
+        <path class="ink" d="M 610 350 L 610 250 A 60 60 0 0 1 730 250 L 730 350"/>
+        <line x1="586" y1="350" x2="754" y2="350" stroke="#dfa93f" stroke-width="3"/>
+        <text class="big" x="670" y="300" text-anchor="middle">xenia</text>
+        <text class="m" x="670" y="410" text-anchor="middle">guest-law</text>
+        <text class="n" x="480" y="524" text-anchor="middle">the poem's value system</text>
+      </svg>
+    </div>
+
+    <!-- Odysseus as Joyce described him to Budgen: six roles, one figure -->
+    <div class="plate" id="pl-complete">
+      <svg viewBox="0 0 960 560" aria-hidden="true">
+        <text class="h" x="480" y="62" text-anchor="middle">&#8220;a complete man&#8221;</text>
+        <text class="k" x="480" y="92" text-anchor="middle">JOYCE, TO BUDGEN, ON ODYSSEUS</text>
+        <g class="solid">
+          <circle cx="143" cy="262" r="17"/><path d="M 121 400 L 126 302 Q 143 284 160 302 L 165 400 Z"/>
+          <circle cx="270" cy="262" r="17"/><path d="M 248 400 L 253 302 Q 270 284 287 302 L 292 400 Z"/>
+          <circle cx="397" cy="262" r="17"/><path d="M 375 400 L 380 302 Q 397 284 414 302 L 419 400 Z"/>
+          <circle cx="523" cy="262" r="17"/><path d="M 501 400 L 506 302 Q 523 284 540 302 L 545 400 Z"/>
+          <circle cx="650" cy="262" r="17"/><path d="M 628 400 L 633 302 Q 650 284 667 302 L 672 400 Z"/>
+          <circle cx="777" cy="262" r="17"/><path d="M 755 400 L 760 302 Q 777 284 794 302 L 799 400 Z"/>
+        </g>
+        <line x1="80" y1="400" x2="840" y2="400" stroke="#dfa93f" stroke-width="2"/>
+        <g class="m" text-anchor="middle" font-size="16">
+          <text x="143" y="434">son</text>
+          <text x="270" y="434">father</text>
+          <text x="397" y="434">husband</text>
+          <text x="523" y="434">lover</text>
+          <text x="650" y="434">soldier</text>
+          <text x="777" y="434">king</text>
+        </g>
+        <text class="n" x="480" y="524" text-anchor="middle">the figure Joyce chose</text>
+      </svg>
+    </div>
+
+    <!-- ============ WILSON, 2017 ============ -->
+
+    <!-- polytropos: one epithet, two renderings -->
+    <div class="plate" id="pl-polytropos">
+      <svg viewBox="0 0 960 560" aria-hidden="true">
+        <text class="h" x="480" y="62" text-anchor="middle" font-style="italic" fill="#dfa93f">polytropos</text>
+        <text class="k" x="480" y="92" text-anchor="middle">ODYSSEUS'S OPENING EPITHET</text>
+        <circle class="solidg" cx="480" cy="180" r="7"/>
+        <path class="hair" d="M 480 187 L 250 330"/>
+        <path class="au" d="M 480 187 L 710 330" stroke-width="1.6"/>
+        <rect class="hair" x="110" y="330" width="280" height="92"/>
+        <rect class="au" x="570" y="330" width="280" height="92" stroke-width="1.6"/>
+        <text class="wm" x="250" y="388" text-anchor="middle">of many wiles</text>
+        <text class="wg" x="710" y="388" text-anchor="middle">complicated</text>
+        <text class="m" x="250" y="452" text-anchor="middle">older translations</text>
+        <text class="m" x="710" y="452" text-anchor="middle">Wilson, 2017</text>
+      </svg>
+    </div>
+
+    <!-- the line: five feet, and a count held equal without being named -->
+    <div class="plate" id="pl-line">
+      <svg viewBox="0 0 960 560" aria-hidden="true">
+        <text class="h" x="480" y="62" text-anchor="middle">The line</text>
+        <text class="k" x="480" y="92" text-anchor="middle">WILSON, 2017 · UNRHYMED IAMBIC PENTAMETER</text>
+        <g>
+          <circle class="solidm" cx="206" cy="200" r="6"/><rect class="solid" x="244" y="182" width="6" height="36"/>
+          <circle class="solidm" cx="326" cy="200" r="6"/><rect class="solid" x="364" y="182" width="6" height="36"/>
+          <circle class="solidm" cx="446" cy="200" r="6"/><rect class="solid" x="484" y="182" width="6" height="36"/>
+          <circle class="solidm" cx="566" cy="200" r="6"/><rect class="solid" x="604" y="182" width="6" height="36"/>
+          <circle class="solidm" cx="686" cy="200" r="6"/><rect class="solid" x="724" y="182" width="6" height="36"/>
+        </g>
+        <g class="hair">
+          <path d="M 190 232 L 190 244 L 276 244 L 276 232"/>
+          <path d="M 310 232 L 310 244 L 396 244 L 396 232"/>
+          <path d="M 430 232 L 430 244 L 516 244 L 516 232"/>
+          <path d="M 550 232 L 550 244 L 636 244 L 636 232"/>
+          <path d="M 670 232 L 670 244 L 756 244 L 756 232"/>
+        </g>
+        <text class="m" x="473" y="274" text-anchor="middle">regular &#8212; her word</text>
+        <g class="m" text-anchor="middle">
+          <text x="380" y="318">the Greek</text>
+          <text x="580" y="318" fill="#f4efe2">Wilson, 2017</text>
+        </g>
+        <g stroke="#f4efe2" stroke-width="2">
+          <line x1="330" y1="340" x2="430" y2="340"/><line x1="330" y1="358" x2="430" y2="358"/>
+          <line x1="330" y1="376" x2="430" y2="376"/><line x1="330" y1="394" x2="430" y2="394"/>
+          <line x1="330" y1="412" x2="430" y2="412"/><line x1="330" y1="430" x2="430" y2="430"/>
+          <line x1="330" y1="448" x2="430" y2="448"/><line x1="330" y1="466" x2="430" y2="466"/>
+          <line x1="530" y1="340" x2="630" y2="340"/><line x1="530" y1="358" x2="630" y2="358"/>
+          <line x1="530" y1="376" x2="630" y2="376"/><line x1="530" y1="394" x2="630" y2="394"/>
+          <line x1="530" y1="412" x2="630" y2="412"/><line x1="530" y1="430" x2="630" y2="430"/>
+          <line x1="530" y1="448" x2="630" y2="448"/><line x1="530" y1="466" x2="630" y2="466"/>
+        </g>
+        <g class="solidm">
+          <circle cx="380" cy="484" r="2.5"/><circle cx="380" cy="494" r="2.5"/><circle cx="380" cy="504" r="2.5"/>
+          <circle cx="580" cy="484" r="2.5"/><circle cx="580" cy="494" r="2.5"/><circle cx="580" cy="504" r="2.5"/>
+        </g>
+        <text x="480" y="412" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#dfa93f">=</text>
+        <text class="n" x="480" y="536" text-anchor="middle">the same number of lines as the Greek</text>
+      </svg>
+    </div>
+
+    <!-- one Greek word, four English renderings -->
+    <div class="plate" id="pl-dmoe">
+      <svg viewBox="0 0 960 560" aria-hidden="true">
+        <text class="h" x="480" y="62" text-anchor="middle">One Greek word</text>
+        <text class="k" x="480" y="92" text-anchor="middle">DMOE, AS THE TRANSLATORS RENDER IT</text>
+        <text class="big" x="196" y="304" text-anchor="middle">dmoe</text>
+        <circle class="solidg" cx="270" cy="292" r="6"/>
+        <path class="au" d="M 276 290 L 540 180" stroke-width="1.6"/>
+        <g class="hair">
+          <path d="M 276 292 L 540 272"/>
+          <path d="M 276 294 L 540 342"/>
+          <path d="M 276 296 L 540 412"/>
+        </g>
+        <text class="wg" x="560" y="192" font-size="32">slave</text>
+        <text class="m" x="672" y="192">Wilson, often</text>
+        <text class="wm" x="560" y="282">maid</text>
+        <text class="wm" x="560" y="352">handmaid</text>
+        <text class="wm" x="560" y="422">serving-woman</text>
+        <path class="hair" d="M 806 258 L 822 258 L 822 432 L 806 432"/>
+        <text class="m" x="846" y="349" text-anchor="middle" transform="rotate(90 846 349)">older translators</text>
+        <text class="n" x="480" y="524" text-anchor="middle">often &#8212; her practice is not uniform</text>
+      </svg>
+    </div>
+
+    <!-- ============ NOLAN, 2026 — reports, not the film ============ -->
+
+    <!-- the Sea People: a fleet and its mirror -->
+    <div class="plate" id="pl-seapeople">
+      <svg viewBox="0 0 960 560" aria-hidden="true">
+        <text class="h" x="480" y="62" text-anchor="middle">&#8220;we are the Sea People&#8221;</text>
+        <text class="k" x="480" y="92" text-anchor="middle">NOLAN, 2026 · THE CENTRAL INVENTION</text>
+        <line class="dash" x1="480" y1="150" x2="480" y2="440"/>
+        <g class="solid" transform="translate(200,374) scale(0.95)">
+          <path d="M -46 0 L 46 0 L 34 20 L -34 20 Z"/>
+          <rect x="-2" y="-58" width="4" height="58"/>
+          <path d="M 6 -54 L 40 -6 L 6 -6 Z"/>
+        </g>
+        <g class="solid" transform="translate(342,390) scale(0.68)">
+          <path d="M -46 0 L 46 0 L 34 20 L -34 20 Z"/>
+          <rect x="-2" y="-58" width="4" height="58"/>
+          <path d="M 6 -54 L 40 -6 L 6 -6 Z"/>
+        </g>
+        <g class="solid" transform="translate(760,374) scale(-0.95,0.95)">
+          <path d="M -46 0 L 46 0 L 34 20 L -34 20 Z"/>
+          <rect x="-2" y="-58" width="4" height="58"/>
+          <path d="M 6 -54 L 40 -6 L 6 -6 Z"/>
+        </g>
+        <g class="solid" transform="translate(618,390) scale(-0.68,0.68)">
+          <path d="M -46 0 L 46 0 L 34 20 L -34 20 Z"/>
+          <rect x="-2" y="-58" width="4" height="58"/>
+          <path d="M 6 -54 L 40 -6 L 6 -6 Z"/>
+        </g>
+        <g class="hair">
+          <path d="M 60 384 q 30 -12 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0"/>
+          <path d="M 60 414 q 30 -12 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0"/>
+          <path d="M 60 444 q 30 -12 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0"/>
+        </g>
+        <circle class="dash" cx="112" cy="512" r="8"/>
+        <text class="n" x="130" y="517">from reports, not the film</text>
+      </svg>
+    </div>
+
+    <!-- Hades: an import from another poem -->
+    <div class="plate" id="pl-hades">
+      <svg viewBox="0 0 960 560" aria-hidden="true">
+        <text class="h" x="480" y="62" text-anchor="middle">Hades</text>
+        <text class="k" x="480" y="92" text-anchor="middle">NOLAN, 2026 · WHO MEETS ODYSSEUS THERE</text>
+        <text class="n" x="255" y="140" text-anchor="middle">THE ODYSSEY · HOMER</text>
+        <rect class="hair" x="80" y="150" width="350" height="120"/>
+        <text class="w" x="255" y="220" text-anchor="middle" font-size="34">Achilles</text>
+        <line x1="175" y1="210" x2="335" y2="210" stroke="#dfa93f" stroke-width="2.5"/>
+        <text class="n" x="705" y="140" text-anchor="middle">THE AENEID · VIRGIL</text>
+        <rect class="au" x="530" y="150" width="350" height="120" stroke-width="1.6"/>
+        <text class="wg" x="705" y="212" text-anchor="middle" font-size="34">Sinon</text>
+        <text class="m" x="705" y="242" text-anchor="middle">Elliot Page</text>
+        <path class="au" d="M 705 270 L 705 340 L 560 340 L 560 398"/>
+        <path class="solidg" d="M 560 410 L 552 394 L 568 394 Z"/>
+        <path class="dashm" d="M 255 270 L 255 340 L 400 340 L 400 382"/>
+        <line x1="384" y1="386" x2="416" y2="386" stroke="#b9c3d6" stroke-width="2.5"/>
+        <rect class="hair" x="330" y="418" width="300" height="82"/>
+        <text class="w" x="480" y="468" text-anchor="middle" font-size="26">in Hades, 2026</text>
+        <circle class="dash" cx="112" cy="530" r="8"/>
+        <text class="n" x="130" y="535">from reports, not the film</text>
+      </svg>
+    </div>
+
+    <!-- the ending: two directions of travel -->
+    <div class="plate" id="pl-ending">
+      <svg viewBox="0 0 960 560" aria-hidden="true">
+        <text class="h" x="480" y="62" text-anchor="middle">The ending</text>
+        <text class="k" x="480" y="92" text-anchor="middle">NOLAN, 2026 · EXILED, NOT CELEBRATED</text>
+        <line class="hair" x1="480" y1="140" x2="480" y2="470" opacity=".35"/>
+        <!-- left: Homer -->
+        <line x1="95" y1="300" x2="188" y2="300" stroke="#f4efe2" stroke-width="2"/>
+        <path class="solid" d="M 200 300 L 184 292 L 184 308 Z"/>
+        <path class="ink" d="M 160 388 Q 250 300 340 388 Z"/>
+        <g class="ink">
+          <rect x="203" y="327" width="26" height="24"/><path d="M 198 327 L 216 311 L 234 327"/>
+          <rect x="267" y="326" width="26" height="24"/><path d="M 262 326 L 280 310 L 298 326"/>
+        </g>
+        <g class="solid" transform="translate(110,400) scale(0.62)">
+          <path d="M -46 0 L 46 0 L 34 20 L -34 20 Z"/>
+          <rect x="-2" y="-58" width="4" height="58"/>
+          <path d="M 6 -54 L 40 -6 L 6 -6 Z"/>
+        </g>
+        <g class="hair">
+          <path d="M 60 400 q 30 -11 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0"/>
+          <path d="M 70 424 q 30 -11 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0"/>
+        </g>
+        <text class="w" x="250" y="474" text-anchor="middle" font-size="26">reclamation</text>
+        <text class="m" x="250" y="500" text-anchor="middle">HOMER</text>
+        <!-- right: Nolan -->
+        <line x1="760" y1="300" x2="853" y2="300" stroke="#dfa93f" stroke-width="2"/>
+        <path class="solidg" d="M 865 300 L 849 292 L 849 308 Z"/>
+        <path class="ink" d="M 620 388 Q 710 300 800 388 Z"/>
+        <g class="ink">
+          <rect x="663" y="327" width="26" height="24"/><path d="M 658 327 L 676 311 L 694 327"/>
+          <rect x="727" y="326" width="26" height="24"/><path d="M 722 326 L 740 310 L 758 326"/>
+        </g>
+        <g class="solid" transform="translate(860,400) scale(0.62)">
+          <path d="M -46 0 L 46 0 L 34 20 L -34 20 Z"/>
+          <rect x="-2" y="-58" width="4" height="58"/>
+          <path d="M 6 -54 L 40 -6 L 6 -6 Z"/>
+        </g>
+        <g class="hair">
+          <path d="M 520 400 q 30 -11 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0"/>
+          <path d="M 530 424 q 30 -11 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 60 0"/>
+        </g>
+        <text class="wg" x="710" y="474" text-anchor="middle" font-size="26">expulsion</text>
+        <text class="m" x="710" y="500" text-anchor="middle">NOLAN, 2026</text>
+        <circle class="dash" cx="332" cy="530" r="8"/>
+        <text class="n" x="350" y="535">from reports, not the film</text>
+      </svg>
+    </div>
+
+    <!-- ============ JOYCE, 1922 ============ -->
+
+    <!-- one day, eighteen episodes -->
+    <div class="plate" id="pl-day">
+      <svg viewBox="0 0 960 560" aria-hidden="true">
+        <text class="h" x="480" y="62" text-anchor="middle">16 June 1904</text>
+        <text class="k" x="480" y="92" text-anchor="middle">JOYCE, 1922 · ONE ORDINARY DUBLIN DAY</text>
+        <path class="hair" d="M 120 420 A 360 200 0 0 1 840 420"/>
+        <g class="solidm" opacity=".28">
+          <rect x="100" y="392" width="46" height="28"/>
+          <rect x="156" y="384" width="34" height="36"/>
+          <path d="M 156 384 L 173 368 L 190 384 Z"/>
+          <rect x="200" y="400" width="60" height="20"/>
+          <rect x="270" y="378" width="40" height="42"/>
+          <rect x="320" y="396" width="52" height="24"/>
+          <rect x="382" y="388" width="36" height="32"/>
+          <rect x="428" y="402" width="64" height="18"/>
+          <rect x="502" y="384" width="44" height="36"/>
+          <rect x="556" y="398" width="38" height="22"/>
+          <rect x="604" y="390" width="58" height="30"/>
+          <rect x="672" y="400" width="46" height="20"/>
+          <rect x="728" y="382" width="40" height="38"/>
+          <path d="M 728 382 L 748 364 L 768 382 Z"/>
+          <rect x="778" y="396" width="56" height="24"/>
+          <rect x="844" y="392" width="30" height="28"/>
+        </g>
+        <line x1="90" y1="420" x2="880" y2="420" stroke="#b9c3d6" stroke-width="1"/>
+        <g stroke="#f4efe2" stroke-width="2">
+          <line x1="140" y1="420" x2="140" y2="444"/><line x1="180" y1="420" x2="180" y2="444"/>
+          <line x1="220" y1="420" x2="220" y2="444"/><line x1="260" y1="420" x2="260" y2="444"/>
+          <line x1="300" y1="420" x2="300" y2="444"/><line x1="340" y1="420" x2="340" y2="444"/>
+          <line x1="380" y1="420" x2="380" y2="444"/><line x1="420" y1="420" x2="420" y2="444"/>
+          <line x1="460" y1="420" x2="460" y2="444"/><line x1="500" y1="420" x2="500" y2="444"/>
+          <line x1="540" y1="420" x2="540" y2="444"/><line x1="580" y1="420" x2="580" y2="444"/>
+          <line x1="620" y1="420" x2="620" y2="444"/><line x1="660" y1="420" x2="660" y2="444"/>
+          <line x1="700" y1="420" x2="700" y2="444"/><line x1="740" y1="420" x2="740" y2="444"/>
+          <line x1="780" y1="420" x2="780" y2="444"/><line x1="820" y1="420" x2="820" y2="444"/>
+        </g>
+        <text class="m" x="480" y="478" text-anchor="middle">eighteen episodes</text>
+        <text class="n" x="480" y="530" text-anchor="middle">no Cyclops · no Circe · no sea voyage</text>
+      </svg>
+    </div>
+
+    <!-- the roles that remain, and the pages that close the book -->
+    <div class="plate" id="pl-roles">
+      <svg viewBox="0 0 960 560" aria-hidden="true">
+        <text class="h" x="480" y="62" text-anchor="middle">Two roles, forty pages</text>
+        <text class="k" x="480" y="92" text-anchor="middle">JOYCE, 1922</text>
+        <text class="w" x="250" y="248" text-anchor="end">Stephen</text>
+        <text class="m" x="290" y="228" text-anchor="middle">plays</text>
+        <line x1="262" y1="240" x2="318" y2="240" stroke="#dfa93f" stroke-width="1.5"/>
+        <text class="w" x="330" y="248">Telemachus</text>
+        <text class="w" x="250" y="348" text-anchor="end">Molly</text>
+        <text class="m" x="290" y="328" text-anchor="middle">plays</text>
+        <line x1="262" y1="340" x2="318" y2="340" stroke="#dfa93f" stroke-width="1.5"/>
+        <text class="w" x="330" y="348">Penelope</text>
+        <text class="n" x="330" y="278">the son seeking a father</text>
+        <rect class="hair" x="620" y="176" width="260" height="300"/>
+        <line x1="620" y1="176" x2="880" y2="176" stroke="#dfa93f" stroke-width="3"/>
+        <g stroke="#f4efe2" stroke-width="2" opacity=".85">
+          <line x1="636" y1="200" x2="864" y2="200"/><line x1="636" y1="214" x2="864" y2="214"/>
+          <line x1="636" y1="228" x2="864" y2="228"/><line x1="636" y1="242" x2="864" y2="242"/>
+          <line x1="636" y1="256" x2="864" y2="256"/><line x1="636" y1="270" x2="864" y2="270"/>
+          <line x1="636" y1="284" x2="864" y2="284"/><line x1="636" y1="298" x2="864" y2="298"/>
+          <line x1="636" y1="312" x2="864" y2="312"/><line x1="636" y1="326" x2="864" y2="326"/>
+          <line x1="636" y1="340" x2="864" y2="340"/><line x1="636" y1="354" x2="864" y2="354"/>
+          <line x1="636" y1="368" x2="864" y2="368"/><line x1="636" y1="382" x2="864" y2="382"/>
+          <line x1="636" y1="396" x2="864" y2="396"/><line x1="636" y1="410" x2="864" y2="410"/>
+          <line x1="636" y1="424" x2="864" y2="424"/><line x1="636" y1="438" x2="864" y2="438"/>
+          <line x1="636" y1="452" x2="864" y2="452"/>
+        </g>
+        <text class="w" x="750" y="512" text-anchor="middle" font-size="24">forty unpunctuated pages</text>
+        <text class="n" x="750" y="536" text-anchor="middle">Molly · the close of the book</text>
+      </svg>
+    </div>
+
+    <!-- what each placement rests on -->
+    <div class="plate" id="pl-evidence">
+      <svg viewBox="0 0 960 560" aria-hidden="true">
+        <text class="h" x="480" y="62" text-anchor="middle">What the placements rest on</text>
+        <text class="k" x="480" y="92" text-anchor="middle">DIMENSION 16 · THE EVIDENCE</text>
+        <g class="solid">
+          <circle cx="200" cy="240" r="14"/>
+          <circle cx="380" cy="240" r="14"/>
+          <circle cx="560" cy="240" r="14"/>
+        </g>
+        <circle class="solidm" cx="760" cy="240" r="14"/>
+        <circle class="dash" cx="760" cy="240" r="30"/>
+        <g class="m" text-anchor="middle">
+          <text x="200" y="300">Homer</text>
+          <text x="380" y="300">Wilson, 2017</text>
+          <text x="560" y="300">Joyce, 1922</text>
+          <text x="760" y="316">Nolan, 2026</text>
+        </g>
+        <path class="hair" d="M 160 340 L 160 356 L 600 356 L 600 340"/>
+        <path class="dash" d="M 700 340 L 700 356 L 820 356 L 820 340"/>
+        <text class="w" x="380" y="404" text-anchor="middle" font-size="26">the works themselves</text>
+        <text class="wg" x="760" y="404" text-anchor="middle" font-size="26">reports</text>
+        <text class="n" x="480" y="500" text-anchor="middle">day-one reviews, then July 2026 reporting &#8212; still not the film</text>
+      </svg>
     </div>
   </div>
 
@@ -130,16 +513,40 @@ Dimension 16 · <a href="../four-odysseys/two-axes.html">the chart</a>.</p>
 <script>
 (function(){
   // Cards: identity labels only — the argument itself is the presenter's, off-site.
+  // kind "work" lights a point on the chart; kind "plate" swaps in a drawn plate.
   var CARDS = [
     { kind:"title" },
-    { kind:"work", id:"p-homer",  name:"Homer",        tag:"the source · externalized interiority · 100% fidelity" },
-    { kind:"work", id:"p-wilson", name:"Wilson, 2017", tag:"register, not plot · high interiority · 100% fidelity" },
-    { kind:"work", id:"p-nolan",  name:"Nolan, 2026",  tag:"adds content · medium-high · ~70% · from reports" },
-    { kind:"work", id:"p-joyce",  name:"Joyce, 1922",  tag:"genre transformed · maximal interiority · ~0% fidelity" },
-    { kind:"all",  name:"The four, assembled",         tag:"two axes usually collapsed into one" }
+    { kind:"work",  id:"p-homer",  name:"Homer",        tag:"the source · externalized interiority · 100% fidelity" },
+    { kind:"plate", plate:"pl-measures", name:"kleos · xenia",
+      tag:"Homer · fame and guest-law — the measures a hero is judged by" },
+    { kind:"plate", plate:"pl-complete", name:"“A complete man”",
+      tag:"Joyce, to Budgen, on Odysseus · son, father, husband, lover, soldier, king" },
+    { kind:"work",  id:"p-wilson", name:"Wilson, 2017", tag:"register, not plot · high interiority · 100% fidelity" },
+    { kind:"plate", plate:"pl-polytropos", name:"polytropos",
+      tag:"Odysseus's opening epithet · Wilson: “complicated” · older translations: “of many wiles”" },
+    { kind:"plate", plate:"pl-line", name:"The line",
+      tag:"unrhymed iambic pentameter · regular, her word · the same number of lines as the Greek" },
+    { kind:"plate", plate:"pl-dmoe", name:"One Greek word",
+      tag:"dmoe · Wilson, often: “slave” · older translators: maid, handmaid, serving-woman" },
+    { kind:"work",  id:"p-nolan",  name:"Nolan, 2026",  tag:"adds content · medium-high · ~70% · from reports" },
+    { kind:"plate", plate:"pl-seapeople", name:"“We are the Sea People”",
+      tag:"Nolan, 2026 · the central invention · from reports, not the film" },
+    { kind:"plate", plate:"pl-hades", name:"Hades",
+      tag:"Sinon (Elliot Page), from Virgil's Aeneid, in place of Achilles · from reports, not the film" },
+    { kind:"plate", plate:"pl-ending", name:"The ending",
+      tag:"exiled, not celebrated · reclamation, then expulsion · from reports, not the film" },
+    { kind:"work",  id:"p-joyce",  name:"Joyce, 1922",  tag:"genre transformed · maximal interiority · ~0% fidelity" },
+    { kind:"plate", plate:"pl-day", name:"16 June 1904",
+      tag:"one ordinary Dublin day · eighteen episodes · no Cyclops, no Circe, no sea voyage" },
+    { kind:"plate", plate:"pl-roles", name:"Two roles, forty pages",
+      tag:"Stephen plays Telemachus · Molly plays Penelope · her forty unpunctuated pages close the book" },
+    { kind:"plate", plate:"pl-evidence", name:"What the placements rest on",
+      tag:"Homer, Wilson, Joyce: the works themselves · Nolan: reports, not the film" },
+    { kind:"all",   name:"The four, assembled",         tag:"two axes usually collapsed into one" }
   ];
   var pts = ["p-homer","p-wilson","p-nolan","p-joyce"];
   var i = 0;
+  var stage = document.getElementById("stage");
   var title = document.getElementById("title");
   var caption = document.getElementById("caption");
   var capName = document.getElementById("cap-name");
@@ -148,12 +555,13 @@ Dimension 16 · <a href="../four-odysseys/two-axes.html">the chart</a>.</p>
   var next = document.getElementById("next");
   var count = document.getElementById("count");
   var dotsWrap = document.getElementById("dots");
+  var plates = stage.querySelectorAll(".plate");
 
   // build dots
   CARDS.forEach(function(c, n){
     var d = document.createElement("button");
     d.setAttribute("role","tab");
-    d.setAttribute("aria-label","Card " + (n+1));
+    d.setAttribute("aria-label","Card " + (n+1) + (c.name ? ": " + c.name : ""));
     d.addEventListener("click", function(){ go(n); });
     dotsWrap.appendChild(d);
   });
@@ -166,6 +574,10 @@ Dimension 16 · <a href="../four-odysseys/two-axes.html">the chart</a>.</p>
       var on = (c.kind === "all") || (c.kind === "work" && c.id === id);
       el.classList.toggle("on", on);
     });
+    plates.forEach(function(el){
+      el.classList.toggle("show", c.kind === "plate" && el.id === c.plate);
+    });
+    stage.classList.toggle("plated", c.kind === "plate");
     title.classList.toggle("show", c.kind === "title");
     if (c.kind === "title") {
       caption.classList.add("hidden");

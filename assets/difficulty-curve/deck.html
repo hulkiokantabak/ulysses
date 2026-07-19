@@ -6,11 +6,13 @@
 <title>The Difficulty Curve — the deck</title>
 <style>
   /* Dimension 11's presentation register: the audience deck. Image cards only, no
-     explanations (the presenter's material is kept off the public site — C-19). One
-     plane — the per-episode bar chart of placed questions (the signature device,
-     anchor A7); each card lights a subset of the bars in gold; the last card
-     assembles all eighteen. The 1922 family: deep plate, paper, gold, mono factual
-     layer. No animation, so prefers-reduced-motion is honoured by design. */
+     explanations (the presenter's material is kept off the public site — C-19). Seven
+     drawn planes share one stage — the per-episode bar chart of placed questions (the
+     signature device, anchor A7), the nine kinds, the strain matrix, Penelope's
+     thirty-eight, the sixteen exchanges, the 117-page record, and the dictation pairs.
+     A card shows one plane and lights a subset of it in gold. The 1922 family: deep
+     plate, paper, gold, mono factual layer. No animation, so prefers-reduced-motion is
+     honoured by design. */
   :root {
     --deep:#081a35; --paper:#f4efe2; --gold:#dfa93f; --mute:#b9c3d6;
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
@@ -23,6 +25,9 @@
           margin-inline:auto; padding:1rem 1rem 0; }
   .stage { position:relative; flex:1; display:flex; align-items:center; justify-content:center; }
   svg { display:block; width:100%; height:auto; max-height:74vh; }
+  /* one plane at a time; every plane shares the 1040x580 frame */
+  .plane { display:none; }
+  .plane.show { display:block; }
   /* bars default to muted/short; JS lights the active episode(s) gold + enlarged */
   .bar rect.col { fill:var(--mute); opacity:.5; }
   .bar.on rect.col { fill:var(--gold); opacity:1;
@@ -31,6 +36,10 @@
   .bar.on .zdot { fill:var(--gold); opacity:1; }
   .bar .val, .bar .nm { opacity:0; }
   .bar.on .val, .bar.on .nm { opacity:1; }
+  /* pins: a group of marks on a plane, hidden until its card lights it */
+  .pin { opacity:0; }
+  .bar.on .pin { opacity:1; }
+  .pin .tiny { fill:var(--gold); }
   .val { font-family:var(--mono); font-size:19px; fill:var(--gold); }
   .nm { font-family:var(--serif); font-size:14px; fill:var(--paper); }
   .enum { font-family:var(--mono); font-size:13px; fill:var(--mute); }
@@ -38,6 +47,17 @@
   .grid { stroke:#b9c3d6; stroke-width:1; opacity:.14; }
   .axlab { font-family:var(--mono); font-size:13px; fill:var(--mute); }
   .axtitle { font-family:var(--mono); font-size:13px; fill:var(--mute); letter-spacing:2px; }
+  /* shared drawn-plane type */
+  .lab { font-family:var(--mono); font-size:14px; fill:var(--paper); }
+  .lab.alt { fill:var(--gold); }
+  .tiny { font-family:var(--mono); font-size:12px; fill:var(--mute); }
+  .epname { font-family:var(--serif); font-size:12px; fill:var(--mute); }
+  .cnt { font-family:var(--mono); font-size:16px; fill:var(--gold); }
+  .big { font-family:var(--mono); font-size:19px; fill:var(--paper); }
+  .big.gold { fill:var(--gold); }
+  .fill-paper { fill:var(--paper); }
+  .fill-gold { fill:var(--gold); }
+  .out-gold { fill:none; stroke:var(--gold); stroke-width:2; }
   /* the title card overlays the stage */
   .title { position:absolute; inset:0; display:none; flex-direction:column;
            align-items:center; justify-content:center; text-align:center; }
@@ -54,11 +74,11 @@
   .caption.hidden { visibility:hidden; }
   /* controls */
   .bar-nav { display:flex; align-items:center; justify-content:center; gap:1rem;
-             padding:.75rem 0 1.25rem; font-family:var(--mono); }
+             padding:.75rem 0 1.25rem; font-family:var(--mono); flex-wrap:wrap; }
   button { font:inherit; font-family:var(--mono); font-size:1rem; color:var(--deep);
            background:var(--paper); border:0; padding:.4rem .9rem; cursor:pointer; }
   button:disabled { opacity:.35; cursor:default; }
-  .dots { display:flex; gap:.5rem; }
+  .dots { display:flex; gap:.5rem; flex-wrap:wrap; justify-content:center; }
   .dots button { padding:0; width:.85rem; height:.85rem; border-radius:50%;
                  background:transparent; border:1.5px solid var(--mute); }
   .dots button[aria-current="true"] { background:var(--gold); border-color:var(--gold); }
@@ -67,13 +87,25 @@
   a { color:var(--gold); }
   .foot { text-align:center; font-family:var(--mono); font-size:.75rem; color:var(--mute);
           padding-bottom:1rem; }
+
+@media print {
+  .dots, .nav, nav, button { display: none !important; }
+  .deck, .stage { height: auto !important; min-height: 0 !important; }
+  .plane { display: block !important; position: static !important;
+           visibility: visible !important; page-break-after: always; margin: 0 0 6mm; }
+  .plane svg, .stage > svg { width: 100% !important; height: auto !important; }
+  .title { position: static !important; page-break-after: always; }
+  body { background: #081a35 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
 </style>
 </head>
 <body>
 <div class="deck">
   <div class="stage" id="stage" tabindex="0" role="group" aria-roledescription="slide deck"
        aria-label="The Difficulty Curve, an audience deck. Use the left and right arrow keys.">
-    <svg viewBox="0 0 1040 580" aria-hidden="true">
+
+    <!-- PLANE 1 — the curve: placed questions per episode -->
+    <svg class="plane show" id="plane-curve" viewBox="0 0 1040 580" aria-hidden="true">
       <!-- gridlines -->
       <line class="grid" x1="60" y1="295" x2="1010" y2="295"/>
       <line class="grid" x1="60" y1="210" x2="1010" y2="210"/>
@@ -202,6 +234,454 @@
         <text class="nm" x="986.7" y="410" text-anchor="end" transform="rotate(-38 986.7 410)">Penelope</text>
       </g>
     </svg>
+
+    <!-- PLANE 2 — the nine kinds, by count -->
+    <svg class="plane" id="plane-kinds" viewBox="0 0 1040 580" aria-hidden="true">
+      <line class="axis" x1="360" y1="50" x2="360" y2="516"/>
+      <g text-anchor="end">
+        <text class="lab" x="344" y="83">plot and orientation</text>
+        <text class="lab" x="344" y="135">allusion and period</text>
+        <text class="lab alt" x="344" y="187">curiosity and delight</text>
+        <text class="lab" x="344" y="239">style and form</text>
+        <text class="lab" x="344" y="291">vocabulary and wordplay</text>
+        <text class="lab" x="344" y="343">voice and referent</text>
+        <text class="lab" x="344" y="395">tone, stance, significance</text>
+        <text class="lab" x="344" y="447">felt but not grasped</text>
+        <text class="lab alt" x="344" y="499">dictation and transcription</text>
+      </g>
+      <rect class="fill-paper" x="360" y="60"  width="560.0" height="34"/>
+      <rect class="fill-paper" x="360" y="112" width="548.3" height="34"/>
+      <rect class="out-gold"   x="360" y="164" width="490.0" height="34"/>
+      <rect class="fill-paper" x="360" y="216" width="478.3" height="34"/>
+      <rect class="fill-paper" x="360" y="268" width="291.7" height="34"/>
+      <rect class="fill-paper" x="360" y="320" width="256.7" height="34"/>
+      <rect class="fill-paper" x="360" y="372" width="175.0" height="34"/>
+      <rect class="fill-paper" x="360" y="424" width="70.0"  height="34"/>
+      <rect class="out-gold"   x="360" y="476" width="70.0"  height="34"/>
+      <g class="cnt">
+        <text x="934.0" y="83">48</text>
+        <text x="922.3" y="135">47</text>
+        <text x="864.0" y="187">42</text>
+        <text x="852.3" y="239">41</text>
+        <text x="665.7" y="291">25</text>
+        <text x="630.7" y="343">22</text>
+        <text x="549.0" y="395">15</text>
+        <text x="444.0" y="447">6</text>
+        <text x="444.0" y="499">6</text>
+      </g>
+      <rect class="out-gold" x="700" y="532" width="28" height="16"/>
+      <text class="tiny" x="738" y="545">NOT DIFFICULTY</text>
+    </svg>
+
+    <!-- PLANE 3 — dominant strains, episode by episode -->
+    <svg class="plane" id="plane-matrix" viewBox="0 0 1040 580" aria-hidden="true">
+      <g class="tiny" text-anchor="middle">
+        <text x="289" y="80">1</text><text x="331" y="80">2</text><text x="373" y="80">3</text>
+        <text x="415" y="80">4</text><text x="457" y="80">5</text><text x="499" y="80">6</text>
+        <text x="541" y="80">7</text><text x="583" y="80">8</text><text x="625" y="80">9</text>
+        <text x="667" y="80">10</text><text x="709" y="80">11</text><text x="751" y="80">12</text>
+        <text x="793" y="80">13</text><text x="835" y="80">14</text><text x="877" y="80">15</text>
+        <text x="919" y="80">16</text><text x="961" y="80">17</text><text x="1003" y="80">18</text>
+      </g>
+      <g fill="#b9c3d6" opacity=".10">
+        <rect x="268" y="90"  width="756" height="30"/>
+        <rect x="268" y="130" width="756" height="30"/>
+        <rect x="268" y="170" width="756" height="30"/>
+        <rect x="268" y="210" width="756" height="30"/>
+        <rect x="268" y="250" width="756" height="30"/>
+        <rect x="268" y="290" width="756" height="30"/>
+        <rect x="268" y="330" width="756" height="30"/>
+        <rect x="268" y="370" width="756" height="30"/>
+        <rect x="268" y="410" width="756" height="30"/>
+      </g>
+      <g class="grid">
+        <line x1="310" y1="90" x2="310" y2="440"/><line x1="352" y1="90" x2="352" y2="440"/>
+        <line x1="394" y1="90" x2="394" y2="440"/><line x1="436" y1="90" x2="436" y2="440"/>
+        <line x1="478" y1="90" x2="478" y2="440"/><line x1="520" y1="90" x2="520" y2="440"/>
+        <line x1="562" y1="90" x2="562" y2="440"/><line x1="604" y1="90" x2="604" y2="440"/>
+        <line x1="646" y1="90" x2="646" y2="440"/><line x1="688" y1="90" x2="688" y2="440"/>
+        <line x1="730" y1="90" x2="730" y2="440"/><line x1="772" y1="90" x2="772" y2="440"/>
+        <line x1="814" y1="90" x2="814" y2="440"/><line x1="856" y1="90" x2="856" y2="440"/>
+        <line x1="898" y1="90" x2="898" y2="440"/><line x1="940" y1="90" x2="940" y2="440"/>
+        <line x1="982" y1="90" x2="982" y2="440"/>
+      </g>
+      <g text-anchor="end">
+        <text class="lab" x="256" y="110">plot and orientation</text>
+        <text class="lab" x="256" y="150">allusion and period</text>
+        <text class="lab" x="256" y="190">style and form</text>
+        <text class="lab" x="256" y="230">vocabulary and wordplay</text>
+        <text class="lab" x="256" y="270">voice and referent</text>
+        <text class="lab" x="256" y="310">tone, stance, significance</text>
+        <text class="lab" x="256" y="350">curiosity and delight</text>
+        <text class="lab" x="256" y="390">felt but not grasped</text>
+        <text class="lab" x="256" y="430">dictation and transcription</text>
+      </g>
+      <g class="fill-gold">
+        <!-- plot and orientation: 4 5 6 11 13 15 16 17 18 -->
+        <rect x="395" y="90" width="40" height="30"/><rect x="437" y="90" width="40" height="30"/>
+        <rect x="479" y="90" width="40" height="30"/><rect x="689" y="90" width="40" height="30"/>
+        <rect x="773" y="90" width="40" height="30"/><rect x="857" y="90" width="40" height="30"/>
+        <rect x="899" y="90" width="40" height="30"/><rect x="941" y="90" width="40" height="30"/>
+        <rect x="983" y="90" width="40" height="30"/>
+        <!-- allusion and period: 6 7 8 9 10 12 14 15 16 -->
+        <rect x="479" y="130" width="40" height="30"/><rect x="521" y="130" width="40" height="30"/>
+        <rect x="563" y="130" width="40" height="30"/><rect x="605" y="130" width="40" height="30"/>
+        <rect x="647" y="130" width="40" height="30"/><rect x="731" y="130" width="40" height="30"/>
+        <rect x="815" y="130" width="40" height="30"/><rect x="857" y="130" width="40" height="30"/>
+        <rect x="899" y="130" width="40" height="30"/>
+        <!-- style and form: 7 8 10 11 12 13 14 17 -->
+        <rect x="521" y="170" width="40" height="30"/><rect x="563" y="170" width="40" height="30"/>
+        <rect x="647" y="170" width="40" height="30"/><rect x="689" y="170" width="40" height="30"/>
+        <rect x="731" y="170" width="40" height="30"/><rect x="773" y="170" width="40" height="30"/>
+        <rect x="815" y="170" width="40" height="30"/><rect x="941" y="170" width="40" height="30"/>
+        <!-- vocabulary and wordplay: 14 15 16 -->
+        <rect x="815" y="210" width="40" height="30"/><rect x="857" y="210" width="40" height="30"/>
+        <rect x="899" y="210" width="40" height="30"/>
+        <!-- voice and referent: 1 6 13 18 -->
+        <rect x="269" y="250" width="40" height="30"/><rect x="479" y="250" width="40" height="30"/>
+        <rect x="773" y="250" width="40" height="30"/><rect x="983" y="250" width="40" height="30"/>
+        <!-- tone, stance, significance: 5 10 -->
+        <rect x="437" y="290" width="40" height="30"/><rect x="647" y="290" width="40" height="30"/>
+        <!-- curiosity and delight: 4 18 -->
+        <rect x="395" y="330" width="40" height="30"/><rect x="983" y="330" width="40" height="30"/>
+      </g>
+      <g class="epname" text-anchor="end">
+        <text x="289" y="452" transform="rotate(-38 289 452)">Telemachus</text>
+        <text x="331" y="452" transform="rotate(-38 331 452)">Nestor</text>
+        <text x="373" y="452" transform="rotate(-38 373 452)">Proteus</text>
+        <text x="415" y="452" transform="rotate(-38 415 452)">Calypso</text>
+        <text x="457" y="452" transform="rotate(-38 457 452)">Lotus Eaters</text>
+        <text x="499" y="452" transform="rotate(-38 499 452)">Hades</text>
+        <text x="541" y="452" transform="rotate(-38 541 452)">Aeolus</text>
+        <text x="583" y="452" transform="rotate(-38 583 452)">Lestrygonians</text>
+        <text x="625" y="452" transform="rotate(-38 625 452)">Scylla and Charybdis</text>
+        <text x="667" y="452" transform="rotate(-38 667 452)">Wandering Rocks</text>
+        <text x="709" y="452" transform="rotate(-38 709 452)">Sirens</text>
+        <text x="751" y="452" transform="rotate(-38 751 452)">Cyclops</text>
+        <text x="793" y="452" transform="rotate(-38 793 452)">Nausicaa</text>
+        <text x="835" y="452" transform="rotate(-38 835 452)">Oxen of the Sun</text>
+        <text x="877" y="452" transform="rotate(-38 877 452)">Circe</text>
+        <text x="919" y="452" transform="rotate(-38 919 452)">Eumaeus</text>
+        <text x="961" y="452" transform="rotate(-38 961 452)">Ithaca</text>
+        <text x="1003" y="452" transform="rotate(-38 1003 452)">Penelope</text>
+      </g>
+    </svg>
+
+    <!-- PLANE 4 — Penelope's thirty-eight, as units -->
+    <svg class="plane" id="plane-dots" viewBox="0 0 1040 580" aria-hidden="true">
+      <g class="fill-gold">
+        <circle cx="80"  cy="210" r="15"/><circle cx="130" cy="210" r="15"/>
+        <circle cx="180" cy="210" r="15"/><circle cx="230" cy="210" r="15"/>
+        <circle cx="280" cy="210" r="15"/><circle cx="330" cy="210" r="15"/>
+        <circle cx="380" cy="210" r="15"/><circle cx="430" cy="210" r="15"/>
+        <circle cx="480" cy="210" r="15"/><circle cx="530" cy="210" r="15"/>
+        <circle cx="580" cy="210" r="15"/><circle cx="630" cy="210" r="15"/>
+      </g>
+      <g class="out-gold">
+        <circle cx="680" cy="210" r="14"/><circle cx="730" cy="210" r="14"/>
+        <circle cx="780" cy="210" r="14"/><circle cx="830" cy="210" r="14"/>
+        <circle cx="880" cy="210" r="14"/><circle cx="930" cy="210" r="14"/>
+        <circle cx="980" cy="210" r="14"/>
+      </g>
+      <g class="fill-paper" opacity=".35">
+        <circle cx="80"  cy="320" r="15"/><circle cx="130" cy="320" r="15"/>
+        <circle cx="180" cy="320" r="15"/><circle cx="230" cy="320" r="15"/>
+        <circle cx="280" cy="320" r="15"/><circle cx="330" cy="320" r="15"/>
+        <circle cx="380" cy="320" r="15"/><circle cx="430" cy="320" r="15"/>
+        <circle cx="480" cy="320" r="15"/><circle cx="530" cy="320" r="15"/>
+        <circle cx="580" cy="320" r="15"/><circle cx="630" cy="320" r="15"/>
+        <circle cx="680" cy="320" r="15"/><circle cx="730" cy="320" r="15"/>
+        <circle cx="780" cy="320" r="15"/><circle cx="830" cy="320" r="15"/>
+        <circle cx="880" cy="320" r="15"/><circle cx="930" cy="320" r="15"/>
+        <circle cx="980" cy="320" r="15"/>
+      </g>
+      <g fill="none" stroke="#b9c3d6" stroke-width="1">
+        <path d="M62,244 V252 H648 V244"/>
+        <path d="M662,244 V252 H998 V244"/>
+        <path d="M62,354 V362 H998 V354"/>
+      </g>
+      <g class="tiny" text-anchor="middle">
+        <text x="355" y="274">12 CURIOSITY AND DELIGHT</text>
+        <text x="830" y="274">7 VOICE AND REFERENT</text>
+        <text x="530" y="384">THE OTHER NINETEEN</text>
+      </g>
+      <text class="tiny" x="520" y="440" text-anchor="middle">EPISODE 18 &#183; PENELOPE &#183; 38 PLACED QUESTIONS</text>
+    </svg>
+
+    <!-- PLANE 5 — the sixteen exchanges, dated -->
+    <svg class="plane" id="plane-exch" viewBox="0 0 1040 580" aria-hidden="true">
+      <line class="grid" x1="60" y1="329.1" x2="1000" y2="329.1"/>
+      <line class="grid" x1="60" y1="238.2" x2="1000" y2="238.2"/>
+      <line class="grid" x1="60" y1="147.3" x2="1000" y2="147.3"/>
+      <line class="axis" x1="60" y1="420" x2="1000" y2="420"/>
+      <line class="axis" x1="60" y1="100" x2="60" y2="420"/>
+      <g class="axlab" text-anchor="end">
+        <text x="50" y="424">0</text>
+        <text x="50" y="333">10</text>
+        <text x="50" y="242">20</text>
+        <text x="50" y="151">30</text>
+      </g>
+      <text class="axtitle" x="22" y="260" text-anchor="middle" transform="rotate(-90 22 260)">QUESTIONS PER EXCHANGE</text>
+      <g class="fill-paper">
+        <rect x="70"  y="410.9" width="40" height="9.1"/>
+        <rect x="128" y="383.6" width="40" height="36.4"/>
+        <rect x="186" y="338.2" width="40" height="81.8"/>
+        <rect x="244" y="347.3" width="40" height="72.7"/>
+        <rect x="302" y="347.3" width="40" height="72.7"/>
+        <rect x="360" y="229.1" width="40" height="190.9"/>
+        <rect x="418" y="292.7" width="40" height="127.3"/>
+        <rect x="476" y="210.9" width="40" height="209.1"/>
+        <rect x="534" y="283.6" width="40" height="136.4"/>
+        <rect x="592" y="265.5" width="40" height="154.5"/>
+        <rect x="650" y="256.4" width="40" height="163.6"/>
+        <rect x="708" y="274.5" width="40" height="145.5"/>
+        <rect x="766" y="120.0" width="40" height="300.0"/>
+        <rect x="824" y="265.5" width="40" height="154.5"/>
+        <rect x="882" y="247.3" width="40" height="172.7"/>
+        <rect x="940" y="156.4" width="40" height="263.6"/>
+      </g>
+      <g class="cnt" text-anchor="middle">
+        <text x="90"  y="402">1</text>
+        <text x="148" y="375">4</text>
+        <text x="206" y="330">9</text>
+        <text x="264" y="339">8</text>
+        <text x="322" y="339">8</text>
+        <text x="380" y="221">21</text>
+        <text x="438" y="284">14</text>
+        <text x="496" y="203">23</text>
+        <text x="554" y="275">15</text>
+        <text x="612" y="257">17</text>
+        <text x="670" y="248">18</text>
+        <text x="728" y="266">16</text>
+        <text x="786" y="112">33</text>
+        <text x="844" y="257">17</text>
+        <text x="902" y="239">19</text>
+        <text x="960" y="148">29</text>
+      </g>
+      <g class="tiny" text-anchor="middle">
+        <text x="90"  y="440">1</text><text x="148" y="440">2</text><text x="206" y="440">3</text>
+        <text x="264" y="440">4</text><text x="322" y="440">5</text><text x="380" y="440">6</text>
+        <text x="438" y="440">7</text><text x="496" y="440">8</text><text x="554" y="440">9</text>
+        <text x="612" y="440">10</text><text x="670" y="440">11</text><text x="728" y="440">12</text>
+        <text x="786" y="440">13</text><text x="844" y="440">14</text><text x="902" y="440">15</text>
+        <text x="960" y="440">16</text>
+      </g>
+      <g class="axis" opacity=".5">
+        <line x1="70"  y1="452" x2="110" y2="452"/>
+        <line x1="128" y1="452" x2="284" y2="452"/>
+        <line x1="302" y1="452" x2="342" y2="452"/>
+        <line x1="360" y1="452" x2="458" y2="452"/>
+        <line x1="476" y1="452" x2="516" y2="452"/>
+        <line x1="534" y1="452" x2="574" y2="452"/>
+        <line x1="592" y1="452" x2="748" y2="452"/>
+        <line x1="766" y1="452" x2="806" y2="452"/>
+        <line x1="824" y1="452" x2="922" y2="452"/>
+        <line x1="940" y1="452" x2="980" y2="452"/>
+      </g>
+      <g class="tiny" text-anchor="middle">
+        <text x="90"  y="472">8 JUL</text>
+        <text x="206" y="472">9 JUL</text>
+        <text x="322" y="472">10 JUL</text>
+        <text x="409" y="472">11 JUL</text>
+        <text x="496" y="472">12 JUL</text>
+        <text x="554" y="472">13 JUL</text>
+        <text x="670" y="472">14 JUL</text>
+        <text x="786" y="472">15 JUL</text>
+        <text x="873" y="472">16 JUL</text>
+        <text x="960" y="472">17 JUL</text>
+      </g>
+      <text class="axtitle" x="530" y="512" text-anchor="middle">SIXTEEN DATED EXCHANGES, 2026 &#8594;</text>
+    </svg>
+
+    <!-- PLANE 6 — the record: 117 pages, three sets of marks -->
+    <svg class="plane" id="plane-record" viewBox="0 0 1040 580" aria-hidden="true">
+      <rect x="40" y="230" width="960" height="120" fill="#b9c3d6" opacity=".16"/>
+      <g class="axis" opacity=".6">
+        <line x1="40"    y1="350" x2="40"    y2="362"/>
+        <line x1="114.5" y1="350" x2="114.5" y2="362"/>
+        <line x1="197.2" y1="350" x2="197.2" y2="362"/>
+        <line x1="280.0" y1="350" x2="280.0" y2="362"/>
+        <line x1="362.8" y1="350" x2="362.8" y2="362"/>
+        <line x1="445.5" y1="350" x2="445.5" y2="362"/>
+        <line x1="528.3" y1="350" x2="528.3" y2="362"/>
+        <line x1="611.0" y1="350" x2="611.0" y2="362"/>
+        <line x1="693.8" y1="350" x2="693.8" y2="362"/>
+        <line x1="776.6" y1="350" x2="776.6" y2="362"/>
+        <line x1="859.3" y1="350" x2="859.3" y2="362"/>
+        <line x1="942.1" y1="350" x2="942.1" y2="362"/>
+        <line x1="1000"  y1="350" x2="1000"  y2="362"/>
+      </g>
+      <g class="tiny" text-anchor="middle">
+        <text x="40"    y="380">1</text>
+        <text x="114.5" y="380">10</text>
+        <text x="197.2" y="380">20</text>
+        <text x="280.0" y="380">30</text>
+        <text x="362.8" y="380">40</text>
+        <text x="445.5" y="380">50</text>
+        <text x="528.3" y="380">60</text>
+        <text x="611.0" y="380">70</text>
+        <text x="693.8" y="380">80</text>
+        <text x="776.6" y="380">90</text>
+        <text x="859.3" y="380">100</text>
+        <text x="942.1" y="380">110</text>
+        <text x="1000"  y="380">117</text>
+      </g>
+      <text class="axtitle" x="520" y="468" text-anchor="middle">THE READING COMPANION &#183; PDF PAGE</text>
+
+      <g class="bar" id="r-exch">
+        <g class="pin">
+          <g class="fill-gold">
+            <rect x="63.1"  y="200" width="3.5" height="150"/>
+            <rect x="79.7"  y="200" width="3.5" height="150"/>
+            <rect x="112.8" y="200" width="3.5" height="150"/>
+            <rect x="145.9" y="200" width="3.5" height="150"/>
+            <rect x="170.7" y="200" width="3.5" height="150"/>
+            <rect x="212.1" y="200" width="3.5" height="150"/>
+            <rect x="278.3" y="200" width="3.5" height="150"/>
+            <rect x="336.2" y="200" width="3.5" height="150"/>
+            <rect x="419.0" y="200" width="3.5" height="150"/>
+            <rect x="476.9" y="200" width="3.5" height="150"/>
+            <rect x="534.8" y="200" width="3.5" height="150"/>
+            <rect x="601.0" y="200" width="3.5" height="150"/>
+            <rect x="659.0" y="200" width="3.5" height="150"/>
+            <rect x="783.1" y="200" width="3.5" height="150"/>
+            <rect x="849.3" y="200" width="3.5" height="150"/>
+            <rect x="923.8" y="200" width="3.5" height="150"/>
+          </g>
+          <g class="tiny" text-anchor="end" fill="#dfa93f">
+            <text x="64.8"  y="188" transform="rotate(-60 64.8 188)">p.4</text>
+            <text x="81.4"  y="188" transform="rotate(-60 81.4 188)">p.6</text>
+            <text x="114.5" y="188" transform="rotate(-60 114.5 188)">p.10</text>
+            <text x="147.6" y="188" transform="rotate(-60 147.6 188)">p.14</text>
+            <text x="172.4" y="188" transform="rotate(-60 172.4 188)">p.17</text>
+            <text x="213.8" y="188" transform="rotate(-60 213.8 188)">p.22</text>
+            <text x="280.0" y="188" transform="rotate(-60 280.0 188)">p.30</text>
+            <text x="337.9" y="188" transform="rotate(-60 337.9 188)">p.37</text>
+            <text x="420.7" y="188" transform="rotate(-60 420.7 188)">p.47</text>
+            <text x="478.6" y="188" transform="rotate(-60 478.6 188)">p.54</text>
+            <text x="536.5" y="188" transform="rotate(-60 536.5 188)">p.61</text>
+            <text x="602.7" y="188" transform="rotate(-60 602.7 188)">p.69</text>
+            <text x="660.7" y="188" transform="rotate(-60 660.7 188)">p.76</text>
+            <text x="784.8" y="188" transform="rotate(-60 784.8 188)">p.91</text>
+            <text x="851.0" y="188" transform="rotate(-60 851.0 188)">p.99</text>
+            <text x="925.6" y="188" transform="rotate(-60 925.6 188)">p.108</text>
+          </g>
+          <g class="tiny" text-anchor="middle" fill="#dfa93f">
+            <text x="64.8"  y="404">1</text>
+            <text x="81.4"  y="404">2</text>
+            <text x="114.5" y="404">3</text>
+            <text x="147.6" y="404">4</text>
+            <text x="172.4" y="404">5</text>
+            <text x="213.8" y="404">6</text>
+            <text x="280.0" y="404">7</text>
+            <text x="337.9" y="404">8</text>
+            <text x="420.7" y="404">9</text>
+            <text x="478.6" y="404">10</text>
+            <text x="536.5" y="404">11</text>
+            <text x="602.7" y="404">12</text>
+            <text x="660.7" y="404">13</text>
+            <text x="784.8" y="404">14</text>
+            <text x="851.0" y="404">15</text>
+            <text x="925.6" y="404">16</text>
+          </g>
+          <text class="tiny" x="520" y="430" text-anchor="middle">EXCHANGE NUMBER</text>
+        </g>
+      </g>
+
+      <g class="bar" id="r-surv">
+        <g class="pin">
+          <g class="fill-gold">
+            <rect x="278.3" y="200" width="3.5" height="150"/>
+            <rect x="286.5" y="200" width="3.5" height="150"/>
+            <rect x="361.0" y="200" width="3.5" height="150"/>
+            <rect x="493.4" y="200" width="3.5" height="150"/>
+          </g>
+          <g class="tiny" text-anchor="end" fill="#dfa93f">
+            <text x="280.0" y="188" transform="rotate(-60 280.0 188)">p.30</text>
+            <text x="288.3" y="188" transform="rotate(-60 288.3 188)">p.31</text>
+            <text x="362.8" y="188" transform="rotate(-60 362.8 188)">p.40</text>
+            <text x="495.2" y="188" transform="rotate(-60 495.2 188)">p.56</text>
+          </g>
+        </g>
+      </g>
+
+      <g class="bar" id="r-fail">
+        <g class="pin">
+          <g class="fill-gold">
+            <rect x="112.8" y="200" width="3.5" height="150"/>
+            <rect x="352.8" y="200" width="3.5" height="150"/>
+            <rect x="932.1" y="200" width="3.5" height="150"/>
+            <rect x="940.4" y="200" width="3.5" height="150"/>
+          </g>
+          <g class="tiny" text-anchor="end" fill="#dfa93f">
+            <text x="114.5" y="188" transform="rotate(-60 114.5 188)">p.10</text>
+            <text x="354.5" y="188" transform="rotate(-60 354.5 188)">p.39</text>
+            <text x="933.8" y="188" transform="rotate(-60 933.8 188)">p.109</text>
+            <text x="942.1" y="188" transform="rotate(-60 942.1 188)">p.110</text>
+          </g>
+        </g>
+      </g>
+    </svg>
+
+    <!-- PLANE 7 — heard and meant: the dictation pairs -->
+    <svg class="plane" id="plane-dict" viewBox="0 0 1040 580" aria-hidden="true">
+      <!-- a drawn microphone: the medium that made six of the questions -->
+      <g fill="none" stroke="#dfa93f" stroke-width="3" opacity=".85">
+        <path d="M96 175 A 60 60 0 0 0 96 245"/>
+        <path d="M204 175 A 60 60 0 0 1 204 245"/>
+      </g>
+      <g fill="none" stroke="#dfa93f" stroke-width="2" opacity=".4">
+        <path d="M78 160 A 78 78 0 0 0 78 260"/>
+        <path d="M222 160 A 78 78 0 0 1 222 260"/>
+      </g>
+      <rect class="fill-paper" x="118" y="150" width="64" height="120" rx="32"/>
+      <g stroke="#081a35" stroke-width="3">
+        <line x1="120" y1="186" x2="180" y2="186"/>
+        <line x1="120" y1="198" x2="180" y2="198"/>
+        <line x1="120" y1="210" x2="180" y2="210"/>
+        <line x1="120" y1="222" x2="180" y2="222"/>
+        <line x1="120" y1="234" x2="180" y2="234"/>
+      </g>
+      <rect class="fill-paper" x="142" y="270" width="16" height="52"/>
+      <rect class="fill-paper" x="110" y="322" width="80" height="12" rx="6"/>
+
+      <text class="tiny" x="290" y="115">HEARD</text>
+      <text class="tiny" x="726" y="115">MEANT</text>
+      <line class="grid" x1="290" y1="128" x2="1010" y2="128"/>
+
+      <g class="big">
+        <text x="290" y="172">&#8220;hate speech&#8221;</text>
+        <text x="290" y="242">&#8220;Lenin&#8221;</text>
+        <text x="290" y="312">&#8220;Married to the crazy gnomes&#8221;</text>
+        <text x="290" y="382">&#8220;unification&#8221;</text>
+      </g>
+      <g stroke="#dfa93f" stroke-width="2">
+        <line x1="636" y1="165" x2="694" y2="165"/>
+        <line x1="636" y1="235" x2="694" y2="235"/>
+        <line x1="636" y1="305" x2="694" y2="305"/>
+        <line x1="636" y1="375" x2="694" y2="375"/>
+      </g>
+      <g class="fill-gold">
+        <polygon points="706,165 692,159 692,171"/>
+        <polygon points="706,235 692,229 692,241"/>
+        <polygon points="706,305 692,299 692,311"/>
+        <polygon points="706,375 692,369 692,381"/>
+      </g>
+      <g class="big gold">
+        <text x="726" y="172">Hades</text>
+        <text x="726" y="242">a swindler</text>
+        <text x="726" y="312">a barmaid&#8217;s line</text>
+        <text x="726" y="382">micturition</text>
+      </g>
+      <g class="tiny" text-anchor="end">
+        <text x="1010" y="172">PDF 14</text>
+        <text x="1010" y="242">PDF 47</text>
+        <text x="1010" y="312">PDF 31</text>
+        <text x="1010" y="382">PDF 92</text>
+      </g>
+      <text class="tiny" x="290" y="440">KEPT AS SPOKEN &#183; ANCHOR A6</text>
+    </svg>
+
     <div class="title show" id="title">
       <h1>The Difficulty Curve</h1>
       <div class="works">EIGHTEEN EPISODES &#183; 245 PLACED QUESTIONS</div>
@@ -228,18 +708,40 @@ Dimension 11 &#183; <a href="curve.html">the study</a>.</p>
 <script>
 (function(){
   // Cards: identity labels only — the argument itself is the presenter's, off-site.
+  // Each card names its plane (default "curve") and, on planes that light subsets,
+  // the ids it lights.
   var CARDS = [
     { kind:"title" },
     { kind:"curve", name:"The whole curve",           tag:"eighteen episodes · 245 placed questions" },
     { kind:"set", ids:["e3"], name:"Proteus",         tag:"episode 3 · 0 questions" },
     { kind:"set", ids:["e11","e12","e13","e14"], name:"Sirens to Oxen of the Sun",
       tag:"episodes 11–14 · 12 · 24 · 12 · 14" },
+    { kind:"set", ids:["e12"], name:"Cyclops",        tag:"episode 12 · 24 questions · the first half's highest" },
     { kind:"set", ids:["e15","e17","e18"], name:"Circe · Ithaca · Penelope",
       tag:"the three peaks · 40 · 33 · 38" },
+    { kind:"set", ids:["e16"], name:"Eumaeus",        tag:"episode 16 · 20 questions" },
+    { kind:"plane", plane:"kinds", name:"The nine kinds",
+      tag:"48 · 47 · 42 · 41 · 25 · 22 · 15 · 6 · 6" },
+    { kind:"plane", plane:"matrix", name:"Dominant strains, episode by episode",
+      tag:"nine kinds against eighteen episodes" },
+    { kind:"plane", plane:"dots", name:"Penelope",
+      tag:"episode 18 · 38 questions · 12 delight · 7 referent" },
+    { kind:"plane", plane:"exch", name:"The sixteen exchanges",
+      tag:"8–17 July 2026 · 1 to 33 questions each" },
+    { kind:"plane", plane:"record", ids:["r-exch"], name:"The record",
+      tag:"117 pages · the sixteen exchanges begin here" },
+    { kind:"plane", plane:"record", ids:["r-surv"], name:"The survival language",
+      tag:"four pages · pdf 30 · 31 · 40 · 56" },
+    { kind:"plane", plane:"record", ids:["r-fail"], name:"Four entries, failed verbatim check",
+      tag:"pdf 10 · 39 · 109 · 110 · kept in the counts" },
+    { kind:"plane", plane:"dict", name:"Heard and meant",
+      tag:"dictation and transcription noise · 6 questions" },
     { kind:"all", name:"All eighteen, assembled",     tag:"245 placed questions across one first reading" }
   ];
   var BARS = ["e1","e2","e3","e4","e5","e6","e7","e8","e9","e10",
               "e11","e12","e13","e14","e15","e16","e17","e18"];
+  var PINS = ["r-exch","r-surv","r-fail"];
+  var PLANES = ["curve","kinds","matrix","dots","exch","record","dict"];
   var i = 0;
   var title = document.getElementById("title");
   var caption = document.getElementById("caption");
@@ -262,8 +764,12 @@ Dimension 11 &#183; <a href="curve.html">the study</a>.</p>
 
   function render(){
     var c = CARDS[i];
+    var plane = c.plane || "curve";
+    PLANES.forEach(function(p){
+      document.getElementById("plane-" + p).classList.toggle("show", p === plane);
+    });
     var lit = (c.kind === "all") ? BARS : (c.ids || []);
-    BARS.forEach(function(id){
+    BARS.concat(PINS).forEach(function(id){
       document.getElementById(id).classList.toggle("on", lit.indexOf(id) >= 0);
     });
     title.classList.toggle("show", c.kind === "title");

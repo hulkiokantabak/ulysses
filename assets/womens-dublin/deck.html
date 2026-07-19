@@ -6,11 +6,12 @@
 <title>The Women's Dublin — the deck</title>
 <style>
   /* Dimension 2's presentation register: the audience deck. Image cards only, no
-     explanations (the presenter's material is kept off the public site — C-19). One
-     plane — a bar chart of how each woman first comes onto the page; each card lights a
-     subset of the bars. Muted by default, gold and widened when lit. The last card
-     assembles all six modes. The 1922 family: deep plate, paper, gold, mono factual
-     layer. No animation, so prefers-reduced-motion is honoured by design. */
+     explanations (the presenter's material is kept off the public site — C-19). Seven
+     drawn planes, one visible at a time; each card lights a subset of the marks on the
+     plane it names. Muted by default, gold when lit. The 1922 family: deep plate, paper,
+     gold, mono factual layer. Imagery admitted under C-35 (19 Jul 2026): every mark here
+     is drawn inline as SVG — nothing is fetched, nothing is decorative. No animation, so
+     prefers-reduced-motion is honoured by design. */
   :root {
     --deep:#081a35; --paper:#f4efe2; --gold:#dfa93f; --mute:#b9c3d6;
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
@@ -23,21 +24,44 @@
           margin-inline:auto; padding:1rem 1rem 0; }
   .stage { position:relative; flex:1; display:flex; align-items:center; justify-content:center; }
   svg { display:block; width:100%; height:auto; max-height:72vh; }
-  /* bars default to muted/narrow; JS lights the active mode(s) gold and widens them.
-     The bar height is the datum and never changes — only fill, opacity, width, and the
-     count label respond to state. */
+  /* one plane visible at a time; the title card overlays whichever plane is showing */
+  .plane { display:none; width:100%; }
+  .plane.show { display:block; }
+  /* MODES PLANE: bars default to muted/narrow; JS lights the active mode(s) gold and
+     widens them. The bar height is the datum and never changes — only fill, opacity,
+     width, and the count label respond to state. */
   .pt rect.bar { fill:var(--mute); opacity:.5; transform-box:fill-box;
                  transform-origin:bottom center; }
   .pt.on rect.bar { fill:var(--gold); opacity:1; transform:scaleX(1.34); }
   .pt .cnum { opacity:0; font-family:var(--mono); font-size:24px; fill:var(--gold);
               font-weight:600; }
   .pt.on .cnum { opacity:1; }
+  /* the drawn vocabulary shared by the six later planes */
+  .pt .stroke { fill:none; stroke:var(--mute); stroke-width:2; opacity:.5; }
+  .pt.on .stroke { stroke:var(--gold); opacity:1; }
+  .pt .hair { fill:none; stroke:var(--mute); stroke-width:1; opacity:.4; }
+  .pt.on .hair { stroke:var(--gold); opacity:.85; }
+  .pt .solid { fill:var(--mute); opacity:.5; }
+  .pt.on .solid { fill:var(--gold); opacity:1; }
+  /* NB: no font-size here — a CSS font-size would beat each element's own
+     presentation attribute, and these planes size their labels individually. */
+  .pt .lab { fill:var(--mute); opacity:.6; font-family:var(--mono); }
+  .pt.on .lab { fill:var(--paper); opacity:1; }
+  .pt .num { fill:var(--mute); opacity:.6; font-family:var(--mono); font-weight:600; }
+  .pt.on .num { fill:var(--gold); opacity:1; }
+  .pt .hr { fill:var(--mute); opacity:.4; }
+  .pt.on .hr { fill:var(--gold); opacity:1; }
+  /* static furniture: axes, frames, field labels — never lit */
+  .axis { fill:none; stroke:#b9c3d6; stroke-width:1; opacity:.55; }
+  .frame { fill:none; stroke:#b9c3d6; stroke-width:1.5; opacity:.3; }
+  .field { fill:#b9c3d6; font-family:var(--mono); opacity:.75; }
+  .fieldwide { fill:#b9c3d6; font-family:var(--mono); font-size:13px; letter-spacing:2px; opacity:.75; }
   /* the title card overlays the stage */
   .title { position:absolute; inset:0; display:none; flex-direction:column;
            align-items:center; justify-content:center; text-align:center; }
   .title.show { display:flex; }
   .title h1 { font-size:clamp(2rem,7vw,4rem); margin:0 0 .5rem; letter-spacing:.01em; }
-  .title .works { font-family:var(--mono); color:var(--mute); font-size:clamp(.9rem,2.4vw,1.15rem);
+  .title .works { font-family:var(--mono); color:var(--mute); font-size:clamp(.8rem,2.2vw,1.05rem);
                   letter-spacing:.12em; }
   .title .rule { width:8rem; height:3px; background:var(--gold); margin:1.25rem 0; }
   .title .sub { font-style:italic; color:var(--paper); max-width:34ch; font-size:clamp(1rem,2.6vw,1.3rem); }
@@ -47,12 +71,12 @@
   .caption .ctag { font-family:var(--mono); color:var(--mute); font-size:.9rem; letter-spacing:.04em; display:block; margin-top:.15rem; }
   .caption.hidden { visibility:hidden; }
   /* controls */
-  .bar { display:flex; align-items:center; justify-content:center; gap:1rem;
+  .bar { display:flex; align-items:center; justify-content:center; gap:1rem; flex-wrap:wrap;
          padding:.75rem 0 1.25rem; font-family:var(--mono); }
   button { font:inherit; font-family:var(--mono); font-size:1rem; color:var(--deep);
            background:var(--paper); border:0; padding:.4rem .9rem; cursor:pointer; }
   button:disabled { opacity:.35; cursor:default; }
-  .dots { display:flex; gap:.5rem; }
+  .dots { display:flex; gap:.5rem; flex-wrap:wrap; justify-content:center; }
   .dots button { padding:0; width:.85rem; height:.85rem; border-radius:50%;
                  background:transparent; border:1.5px solid var(--mute); }
   .dots button[aria-current="true"] { background:var(--gold); border-color:var(--gold); }
@@ -61,12 +85,25 @@
   a { color:var(--gold); }
   .foot { text-align:center; font-family:var(--mono); font-size:.75rem; color:var(--mute);
           padding-bottom:1rem; }
+
+@media print {
+  .dots, .nav, nav, button { display: none !important; }
+  .deck, .stage { height: auto !important; min-height: 0 !important; }
+  .plane { display: block !important; position: static !important;
+           visibility: visible !important; page-break-after: always; margin: 0 0 6mm; }
+  .plane svg, .stage > svg { width: 100% !important; height: auto !important; }
+  .title { position: static !important; page-break-after: always; }
+  body { background: #081a35 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
 </style>
 </head>
 <body>
 <div class="deck">
   <div class="stage" id="stage" tabindex="0" role="group" aria-roledescription="slide deck"
        aria-label="The Women's Dublin, an audience deck. Use the left and right arrow keys.">
+
+    <!-- ================= PLANE 1 — MODE OF ENTRY ================= -->
+    <div class="plane show" id="p-modes">
     <svg viewBox="0 0 960 560" aria-hidden="true">
       <!-- gridlines, one per count -->
       <g stroke="#b9c3d6" stroke-width="1" opacity="0.16">
@@ -127,9 +164,396 @@
         <text class="cnum" x="838.3" y="452" text-anchor="middle">0</text>
       </g>
     </svg>
+    </div>
+
+    <!-- ============ PLANE 2 — THE MILK WOMAN'S RECKONING ============ -->
+    <div class="plane" id="p-milk">
+    <svg viewBox="0 0 960 560" aria-hidden="true">
+      <text x="60" y="52" class="fieldwide">THE MILK WOMAN'S ACCOUNT, RECKONED ALOUD — EPISODE 1, THE TOWER</text>
+      <line x1="60" y1="72" x2="900" y2="72" class="axis"/>
+
+      <g class="pt" id="mw-pints">
+        <text x="60" y="140" class="lab" font-size="13">SEVEN MORNINGS · A PINT AT TWOPENCE</text>
+        <g>
+          <circle class="stroke" cx="78"  cy="188" r="17"/><text class="num" x="78"  y="193" text-anchor="middle" font-size="13">2d</text>
+          <circle class="stroke" cx="130" cy="188" r="17"/><text class="num" x="130" y="193" text-anchor="middle" font-size="13">2d</text>
+          <circle class="stroke" cx="182" cy="188" r="17"/><text class="num" x="182" y="193" text-anchor="middle" font-size="13">2d</text>
+          <circle class="stroke" cx="234" cy="188" r="17"/><text class="num" x="234" y="193" text-anchor="middle" font-size="13">2d</text>
+          <circle class="stroke" cx="286" cy="188" r="17"/><text class="num" x="286" y="193" text-anchor="middle" font-size="13">2d</text>
+          <circle class="stroke" cx="338" cy="188" r="17"/><text class="num" x="338" y="193" text-anchor="middle" font-size="13">2d</text>
+          <circle class="stroke" cx="390" cy="188" r="17"/><text class="num" x="390" y="193" text-anchor="middle" font-size="13">2d</text>
+        </g>
+        <text x="440" y="196" class="num" font-size="20">a shilling and twopence over</text>
+      </g>
+
+      <g class="pt" id="mw-quarts">
+        <text x="60" y="272" class="lab" font-size="13">THREE MORNINGS · A QUART AT FOURPENCE</text>
+        <g>
+          <circle class="stroke" cx="84"  cy="320" r="23"/><text class="num" x="84"  y="326" text-anchor="middle" font-size="15">4d</text>
+          <circle class="stroke" cx="150" cy="320" r="23"/><text class="num" x="150" y="326" text-anchor="middle" font-size="15">4d</text>
+          <circle class="stroke" cx="216" cy="320" r="23"/><text class="num" x="216" y="326" text-anchor="middle" font-size="15">4d</text>
+        </g>
+        <text x="440" y="328" class="num" font-size="20">a shilling</text>
+      </g>
+
+      <g class="pt" id="mw-pay">
+        <text x="60" y="404" class="lab" font-size="13">THE FLORIN HANDED OVER · THE CREDIT ALLOWED</text>
+        <g>
+          <circle class="stroke" cx="92" cy="456" r="32"/>
+          <circle class="hair" cx="92" cy="456" r="25"/>
+          <text class="num" x="92" y="463" text-anchor="middle" font-size="18">2s</text>
+          <circle class="stroke" cx="176" cy="456" r="14"/><text class="num" x="176" y="461" text-anchor="middle" font-size="12">1d</text>
+          <circle class="stroke" cx="216" cy="456" r="14"/><text class="num" x="216" y="461" text-anchor="middle" font-size="12">1d</text>
+        </g>
+        <text x="440" y="464" class="num" font-size="20">twopence owed</text>
+      </g>
+
+      <text x="60" y="530" class="fieldwide">TWO SHILLINGS AND TWOPENCE · ONE CALL · ONE EXIT · NO HOME GIVEN</text>
+    </svg>
+    </div>
+
+    <!-- ============ PLANE 3 — MARTHA CLIFFORD, THE POST ============ -->
+    <div class="plane" id="p-post">
+    <svg viewBox="0 0 960 560" aria-hidden="true">
+      <text x="60" y="52" class="fieldwide">WHAT REACHES BLOOM — EPISODES 5, 11, 17</text>
+      <line x1="60" y1="72" x2="900" y2="72" class="axis"/>
+
+      <g class="pt" id="mc-letters">
+        <!-- three typewritten letters: two edges behind, one envelope in front -->
+        <rect class="hair" x="112" y="104" width="520" height="308"/>
+        <rect class="hair" x="126" y="116" width="520" height="308"/>
+        <rect class="stroke" x="140" y="128" width="520" height="308"/>
+        <path class="stroke" d="M140,128 L400,310 L660,128"/>
+        <rect class="hair" x="580" y="150" width="56" height="68"/>
+        <text x="196" y="346" class="lab" font-size="18">Miss Martha Clifford</text>
+        <text x="196" y="374" class="lab" font-size="18">c/o P. O. Dolphin's Barn Lane</text>
+        <text x="196" y="402" class="lab" font-size="18">Dublin.</text>
+        <text x="140" y="466" class="num" font-size="17">3 typewritten letters</text>
+      </g>
+
+      <g class="pt" id="mc-flower">
+        <g>
+          <ellipse class="stroke" cx="790" cy="150" rx="14" ry="30"/>
+          <ellipse class="stroke" cx="790" cy="150" rx="30" ry="14"/>
+          <ellipse class="stroke" cx="790" cy="150" rx="12" ry="28" transform="rotate(45 790 150)"/>
+          <ellipse class="stroke" cx="790" cy="150" rx="28" ry="12" transform="rotate(45 790 150)"/>
+          <circle class="solid" cx="790" cy="150" r="7"/>
+          <path class="stroke" d="M790,180 L790,232"/>
+        </g>
+        <text x="790" y="262" class="lab" text-anchor="middle" font-size="13">a pressed flower</text>
+      </g>
+
+      <g class="pt" id="mc-order">
+        <rect class="stroke" x="700" y="318" width="196" height="94"/>
+        <line class="hair" x1="700" y1="352" x2="896" y2="352"/>
+        <text x="798" y="344" class="lab" text-anchor="middle" font-size="11">POSTAL ORDER</text>
+        <text x="798" y="394" class="num" text-anchor="middle" font-size="30">2s</text>
+        <text x="798" y="440" class="lab" text-anchor="middle" font-size="13">two shillings</text>
+      </g>
+
+      <text x="60" y="530" class="fieldwide">MARTHA CLIFFORD — THE TEXT PLACES HER BODY NOWHERE IN DUBLIN</text>
+    </svg>
+    </div>
+
+    <!-- ============ PLANE 4 — ANN HATHAWAY, SIXTEEN SQUARES ============ -->
+    <div class="plane" id="p-ann">
+    <svg viewBox="0 0 960 560" aria-hidden="true">
+      <text x="60" y="52" class="fieldwide">ANN HATHAWAY — ONE SQUARE PER APPEARANCE</text>
+      <line x1="60" y1="72" x2="900" y2="72" class="axis"/>
+      <!-- static frames and episode numbers -->
+      <g>
+        <rect class="frame" x="114" y="140" width="74" height="74"/>
+        <rect class="frame" x="208" y="140" width="74" height="74"/>
+        <rect class="frame" x="302" y="140" width="74" height="74"/>
+        <rect class="frame" x="396" y="140" width="74" height="74"/>
+        <rect class="frame" x="490" y="140" width="74" height="74"/>
+        <rect class="frame" x="584" y="140" width="74" height="74"/>
+        <rect class="frame" x="678" y="140" width="74" height="74"/>
+        <rect class="frame" x="772" y="140" width="74" height="74"/>
+        <rect class="frame" x="114" y="262" width="74" height="74"/>
+        <rect class="frame" x="208" y="262" width="74" height="74"/>
+        <rect class="frame" x="302" y="262" width="74" height="74"/>
+        <rect class="frame" x="396" y="262" width="74" height="74"/>
+        <rect class="frame" x="490" y="262" width="74" height="74"/>
+        <rect class="frame" x="584" y="262" width="74" height="74"/>
+        <rect class="frame" x="678" y="262" width="74" height="74"/>
+        <rect class="frame" x="772" y="262" width="74" height="74"/>
+      </g>
+      <g class="field" text-anchor="middle" font-size="12">
+        <text x="151" y="232">ep 9</text><text x="245" y="232">ep 9</text>
+        <text x="339" y="232">ep 9</text><text x="433" y="232">ep 9</text>
+        <text x="527" y="232">ep 9</text><text x="621" y="232">ep 9</text>
+        <text x="715" y="232">ep 9</text><text x="809" y="232">ep 9</text>
+        <text x="151" y="354">ep 9</text><text x="245" y="354">ep 9</text>
+        <text x="339" y="354">ep 9</text><text x="433" y="354">ep 9</text>
+        <text x="527" y="354">ep 14</text><text x="621" y="354">ep 15</text>
+        <text x="715" y="354">ep 15</text><text x="809" y="354">ep 15</text>
+      </g>
+      <!-- the fourteen men's-talk appearances -->
+      <g class="pt" id="ah-talk">
+        <rect class="solid" x="122" y="148" width="58" height="58"/>
+        <rect class="solid" x="216" y="148" width="58" height="58"/>
+        <rect class="solid" x="310" y="148" width="58" height="58"/>
+        <rect class="solid" x="404" y="148" width="58" height="58"/>
+        <rect class="solid" x="498" y="148" width="58" height="58"/>
+        <rect class="solid" x="592" y="148" width="58" height="58"/>
+        <rect class="solid" x="686" y="148" width="58" height="58"/>
+        <rect class="solid" x="780" y="148" width="58" height="58"/>
+        <rect class="solid" x="122" y="270" width="58" height="58"/>
+        <rect class="solid" x="216" y="270" width="58" height="58"/>
+        <rect class="solid" x="310" y="270" width="58" height="58"/>
+        <rect class="solid" x="404" y="270" width="58" height="58"/>
+        <rect class="solid" x="498" y="270" width="58" height="58"/>
+        <rect class="solid" x="592" y="270" width="58" height="58"/>
+        <text class="num" x="114" y="418" font-size="20">men's talk · 14</text>
+      </g>
+      <!-- legend -->
+      <g>
+        <rect class="frame" x="480" y="396" width="26" height="26"/>
+        <text x="518" y="418" class="field" font-size="16">hallucination · 2</text>
+      </g>
+      <text x="60" y="500" class="fieldwide">TWELVE IN EPISODE 9 · ONE IN EPISODE 14 · THREE IN EPISODE 15</text>
+      <text x="60" y="530" class="fieldwide">SHE SPEAKS NO WORD ANYWHERE IN THE BOOK</text>
+    </svg>
+    </div>
+
+    <!-- ============ PLANE 5 — SUMS THE TEXT NAMES ============ -->
+    <div class="plane" id="p-sums">
+    <svg viewBox="0 0 960 600" aria-hidden="true">
+      <text x="60" y="46" class="fieldwide">TWELVE SUMS, AS THE 1922 TEXT NAMES THEM</text>
+      <line x1="60" y1="66" x2="900" y2="66" class="axis"/>
+
+      <g class="pt" id="sum-dilly">
+        <circle class="stroke" cx="165" cy="150" r="46"/><circle class="hair" cx="165" cy="150" r="38"/>
+        <text class="num" x="165" y="158" text-anchor="middle" font-size="22">1d</text>
+        <text class="lab" x="165" y="218" text-anchor="middle" font-size="14">Dilly Dedalus</text>
+        <text class="lab" x="165" y="236" text-anchor="middle" font-size="11">the French primer</text>
+      </g>
+      <g class="pt" id="sum-milk">
+        <circle class="stroke" cx="375" cy="150" r="46"/><circle class="hair" cx="375" cy="150" r="38"/>
+        <text class="num" x="375" y="158" text-anchor="middle" font-size="22">2d</text>
+        <text class="lab" x="375" y="218" text-anchor="middle" font-size="14">the milk woman</text>
+        <text class="lab" x="375" y="236" text-anchor="middle" font-size="11">credit allowed</text>
+      </g>
+      <g class="pt" id="sum-cissy">
+        <circle class="stroke" cx="585" cy="150" r="46"/><circle class="hair" cx="585" cy="150" r="38"/>
+        <text class="num" x="585" y="158" text-anchor="middle" font-size="22">1s</text>
+        <text class="lab" x="585" y="218" text-anchor="middle" font-size="14">Cissy Caffrey</text>
+        <text class="lab" x="585" y="236" text-anchor="middle" font-size="11">Nighttown</text>
+      </g>
+      <g class="pt" id="sum-belladam">
+        <circle class="stroke" cx="795" cy="150" r="46"/><circle class="hair" cx="795" cy="150" r="38"/>
+        <text class="num" x="795" y="158" text-anchor="middle" font-size="22">1s</text>
+        <text class="lab" x="795" y="218" text-anchor="middle" font-size="14">Bella Cohen</text>
+        <text class="lab" x="795" y="236" text-anchor="middle" font-size="11">damages, beaten down</text>
+      </g>
+
+      <g class="pt" id="sum-martha">
+        <circle class="stroke" cx="165" cy="320" r="46"/><circle class="hair" cx="165" cy="320" r="38"/>
+        <text class="num" x="165" y="328" text-anchor="middle" font-size="22">2s</text>
+        <text class="lab" x="165" y="388" text-anchor="middle" font-size="14">Martha Clifford</text>
+        <text class="lab" x="165" y="406" text-anchor="middle" font-size="11">the postal order</text>
+      </g>
+      <g class="pt" id="sum-barmaids">
+        <circle class="stroke" cx="375" cy="320" r="46"/><circle class="hair" cx="375" cy="320" r="38"/>
+        <text class="num" x="375" y="328" text-anchor="middle" font-size="22">2s 9d</text>
+        <text class="lab" x="375" y="388" text-anchor="middle" font-size="14">the barmaids</text>
+        <text class="lab" x="375" y="406" text-anchor="middle" font-size="11">black satin, a yard</text>
+      </g>
+      <g class="pt" id="sum-gerty">
+        <circle class="stroke" cx="585" cy="320" r="46"/><circle class="hair" cx="585" cy="320" r="38"/>
+        <text class="num" x="585" y="327" text-anchor="middle" font-size="19">4s 11d</text>
+        <text class="lab" x="585" y="388" text-anchor="middle" font-size="14">Gerty MacDowell</text>
+        <text class="lab" x="585" y="406" text-anchor="middle" font-size="11">the green</text>
+      </g>
+      <g class="pt" id="sum-dignam">
+        <circle class="stroke" cx="795" cy="320" r="46"/><circle class="hair" cx="795" cy="320" r="38"/>
+        <text class="num" x="795" y="328" text-anchor="middle" font-size="22">5s</text>
+        <text class="lab" x="795" y="388" text-anchor="middle" font-size="14">Mrs Dignam</text>
+        <text class="lab" x="795" y="406" text-anchor="middle" font-size="11">In Memoriam P. Dignam</text>
+      </g>
+
+      <g class="pt" id="sum-may">
+        <circle class="stroke" cx="165" cy="490" r="46"/><circle class="hair" cx="165" cy="490" r="38"/>
+        <text class="num" x="165" y="498" text-anchor="middle" font-size="22">8s</text>
+        <text class="lab" x="165" y="558" text-anchor="middle" font-size="14">May Dedalus</text>
+        <text class="lab" x="165" y="576" text-anchor="middle" font-size="11">money order, Paris</text>
+      </g>
+      <g class="pt" id="sum-bellahouse">
+        <circle class="stroke" cx="375" cy="490" r="46"/><circle class="hair" cx="375" cy="490" r="38"/>
+        <text class="num" x="375" y="498" text-anchor="middle" font-size="22">10s</text>
+        <text class="lab" x="375" y="558" text-anchor="middle" font-size="14">Bella Cohen</text>
+        <text class="lab" x="375" y="576" text-anchor="middle" font-size="11">the house price</text>
+      </g>
+      <g class="pt" id="sum-milly">
+        <circle class="stroke" cx="585" cy="490" r="46"/><circle class="hair" cx="585" cy="490" r="38"/>
+        <text class="num" x="585" y="497" text-anchor="middle" font-size="19">12s 6d</text>
+        <text class="lab" x="585" y="558" text-anchor="middle" font-size="14">Milly Bloom</text>
+        <text class="lab" x="585" y="576" text-anchor="middle" font-size="11">a week</text>
+      </g>
+      <g class="pt" id="sum-ann">
+        <circle class="stroke" cx="795" cy="490" r="46"/><circle class="hair" cx="795" cy="490" r="38"/>
+        <text class="num" x="795" y="498" text-anchor="middle" font-size="22">40s</text>
+        <text class="lab" x="795" y="558" text-anchor="middle" font-size="14">Ann Hathaway</text>
+        <text class="lab" x="795" y="576" text-anchor="middle" font-size="11">borrowed, Stratford</text>
+      </g>
+    </svg>
+    </div>
+
+    <!-- ============ PLANE 6 — MOLLY BLOOM, EIGHTEEN EPISODES ============ -->
+    <div class="plane" id="p-molly">
+    <svg viewBox="0 0 960 560" aria-hidden="true">
+      <text x="60" y="52" class="fieldwide">ONE FRAME PER EPISODE — INTERIORITY GRANTED TO MOLLY BLOOM</text>
+      <line x1="60" y1="72" x2="900" y2="72" class="axis"/>
+      <!-- eighteen episode frames -->
+      <g>
+        <rect class="frame" x="127.7" y="130" width="28" height="310"/>
+        <rect class="frame" x="171.0" y="130" width="28" height="310"/>
+        <rect class="frame" x="214.3" y="130" width="28" height="310"/>
+        <rect class="frame" x="257.7" y="130" width="28" height="310"/>
+        <rect class="frame" x="301.0" y="130" width="28" height="310"/>
+        <rect class="frame" x="344.3" y="130" width="28" height="310"/>
+        <rect class="frame" x="387.7" y="130" width="28" height="310"/>
+        <rect class="frame" x="431.0" y="130" width="28" height="310"/>
+        <rect class="frame" x="474.3" y="130" width="28" height="310"/>
+        <rect class="frame" x="517.7" y="130" width="28" height="310"/>
+        <rect class="frame" x="561.0" y="130" width="28" height="310"/>
+        <rect class="frame" x="604.3" y="130" width="28" height="310"/>
+        <rect class="frame" x="647.7" y="130" width="28" height="310"/>
+        <rect class="frame" x="691.0" y="130" width="28" height="310"/>
+        <rect class="frame" x="734.3" y="130" width="28" height="310"/>
+        <rect class="frame" x="777.7" y="130" width="28" height="310"/>
+        <rect class="frame" x="821.0" y="130" width="28" height="310"/>
+        <rect class="frame" x="864.3" y="130" width="28" height="310"/>
+      </g>
+      <line x1="110" y1="440" x2="910" y2="440" class="axis"/>
+      <g class="field" text-anchor="middle" font-size="13">
+        <text x="141.7" y="466">1</text><text x="185.0" y="466">2</text>
+        <text x="228.3" y="466">3</text><text x="271.7" y="466">4</text>
+        <text x="315.0" y="466">5</text><text x="358.3" y="466">6</text>
+        <text x="401.7" y="466">7</text><text x="445.0" y="466">8</text>
+        <text x="488.3" y="466">9</text><text x="531.7" y="466">10</text>
+        <text x="575.0" y="466">11</text><text x="618.3" y="466">12</text>
+        <text x="661.7" y="466">13</text><text x="705.0" y="466">14</text>
+        <text x="748.3" y="466">15</text><text x="791.7" y="466">16</text>
+        <text x="835.0" y="466">17</text><text x="878.3" y="466">18</text>
+      </g>
+      <g class="pt" id="mb-18">
+        <rect class="solid" x="864.3" y="130" width="28" height="310"/>
+        <text class="num" x="878.3" y="118" text-anchor="middle" font-size="18">1</text>
+      </g>
+      <text x="30" y="290" text-anchor="middle" transform="rotate(-90 30 290)" class="fieldwide">EPISODES 1–17 · NONE</text>
+      <text x="60" y="524" class="fieldwide">EPISODE — 1 TO 18</text>
+    </svg>
+    </div>
+
+    <!-- ============ PLANE 7 — THE HOUR OF FIRST ENTRANCE ============ -->
+    <div class="plane" id="p-day">
+    <svg viewBox="0 0 960 560" aria-hidden="true">
+      <line x1="70" y1="430" x2="915" y2="430" class="axis"/>
+      <g class="axis">
+        <line x1="90"  y1="430" x2="90"  y2="440"/><line x1="185.3" y1="430" x2="185.3" y2="440"/>
+        <line x1="280.6" y1="430" x2="280.6" y2="440"/><line x1="375.9" y1="430" x2="375.9" y2="440"/>
+        <line x1="471.2" y1="430" x2="471.2" y2="440"/><line x1="566.5" y1="430" x2="566.5" y2="440"/>
+        <line x1="661.8" y1="430" x2="661.8" y2="440"/><line x1="757.1" y1="430" x2="757.1" y2="440"/>
+        <line x1="852.4" y1="430" x2="852.4" y2="440"/>
+      </g>
+      <g class="field" text-anchor="middle" font-size="12">
+        <text x="90" y="460">8 a.m.</text><text x="185.3" y="460">10</text>
+        <text x="280.6" y="460">noon</text><text x="375.9" y="460">2 p.m.</text>
+        <text x="471.2" y="460">4</text><text x="566.5" y="460">6</text>
+        <text x="661.8" y="460">8 p.m.</text><text x="757.1" y="460">10</text>
+        <text x="852.4" y="460">midnight</text>
+      </g>
+
+      <g class="pt" id="d-molly">
+        <line class="hair" x1="90" y1="430" x2="90" y2="100"/>
+        <circle class="solid" cx="90" cy="100" r="6"/>
+        <text class="lab" x="99" y="105" font-size="13">Molly Bloom<tspan class="hr">  ~8:00 a.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-milly">
+        <line class="hair" x1="90" y1="430" x2="90" y2="140"/>
+        <circle class="solid" cx="90" cy="140" r="6"/>
+        <text class="lab" x="99" y="145" font-size="13">Milly Bloom<tspan class="hr">  ~8:00 a.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-may">
+        <line class="hair" x1="98" y1="430" x2="98" y2="180"/>
+        <circle class="solid" cx="98" cy="180" r="6"/>
+        <text class="lab" x="107" y="185" font-size="13">May Dedalus<tspan class="hr">  ~8:10 a.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-milk">
+        <line class="hair" x1="102" y1="430" x2="102" y2="220"/>
+        <circle class="solid" cx="102" cy="220" r="6"/>
+        <text class="lab" x="111" y="225" font-size="13">the milk woman<tspan class="hr">  ~8:15 a.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-martha">
+        <line class="hair" x1="185" y1="430" x2="185" y2="260"/>
+        <circle class="solid" cx="185" cy="260" r="6"/>
+        <text class="lab" x="194" y="265" font-size="13">Martha Clifford<tspan class="hr">  ~10:00 a.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-riordan">
+        <line class="hair" x1="233" y1="430" x2="233" y2="300"/>
+        <circle class="solid" cx="233" cy="300" r="6"/>
+        <text class="lab" x="242" y="305" font-size="13">Mrs Riordan<tspan class="hr">  ~11:00 a.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-dignam">
+        <line class="hair" x1="245" y1="430" x2="245" y2="340"/>
+        <circle class="solid" cx="245" cy="340" r="6"/>
+        <text class="lab" x="254" y="345" font-size="13">Mrs Dignam<tspan class="hr">  ~11:15 a.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-breen">
+        <line class="hair" x1="328" y1="430" x2="328" y2="100"/>
+        <circle class="solid" cx="328" cy="100" r="6"/>
+        <text class="lab" x="337" y="105" font-size="13">Mrs Breen<tspan class="hr">  ~1:00 p.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-dilly">
+        <line class="hair" x1="332" y1="430" x2="332" y2="140"/>
+        <circle class="solid" cx="332" cy="140" r="6"/>
+        <text class="lab" x="341" y="145" font-size="13">Dilly Dedalus<tspan class="hr">  ~1:05 p.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-mina">
+        <line class="hair" x1="336" y1="430" x2="336" y2="180"/>
+        <circle class="solid" cx="336" cy="180" r="6"/>
+        <text class="lab" x="345" y="185" font-size="13">Mina Purefoy<tspan class="hr">  ~1:10 p.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-ann">
+        <line class="hair" x1="384" y1="430" x2="384" y2="220"/>
+        <circle class="solid" cx="384" cy="220" r="6"/>
+        <text class="lab" x="393" y="225" font-size="13">Ann Hathaway<tspan class="hr">  ~2:10 p.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-barmaids">
+        <line class="hair" x1="447" y1="430" x2="447" y2="260"/>
+        <circle class="solid" cx="447" cy="260" r="6"/>
+        <text class="lab" x="456" y="265" font-size="13">the barmaids<tspan class="hr">  ~3:30 p.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-gerty">
+        <line class="hair" x1="463" y1="430" x2="463" y2="300"/>
+        <circle class="solid" cx="463" cy="300" r="6"/>
+        <text class="lab" x="472" y="305" font-size="13">Gerty MacDowell<tspan class="hr">  ~3–4 p.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-street">
+        <line class="hair" x1="515" y1="430" x2="515" y2="340"/>
+        <circle class="solid" cx="515" cy="340" r="6"/>
+        <text class="lab" x="524" y="345" font-size="13">the streetwalker<tspan class="hr">  ~4:55 p.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-cissy">
+        <line class="hair" x1="662" y1="430" x2="662" y2="100"/>
+        <circle class="solid" cx="662" cy="100" r="6"/>
+        <text class="lab" x="671" y="105" font-size="13">Cissy Caffrey<tspan class="hr">  ~8:00 p.m.</tspan></text>
+      </g>
+      <g class="pt" id="d-bella">
+        <line class="hair" x1="864" y1="430" x2="864" y2="140"/>
+        <circle class="solid" cx="864" cy="140" r="6"/>
+        <text class="lab" x="855" y="145" text-anchor="end" font-size="13">Bella Cohen<tspan class="hr">  ~12:15 a.m.</tspan></text>
+      </g>
+
+      <text x="60" y="524" class="fieldwide">HOUR OF FIRST ENTRANCE — WHEN SHE FIRST COMES ONTO THE PAGE</text>
+    </svg>
+    </div>
+
     <div class="title show" id="title">
       <h1>The Women's Dublin</h1>
-      <div class="works">SIXTEEN WOMEN · SIX MODES OF ENTRY</div>
+      <div class="works">SIXTEEN WOMEN · 181 APPEARANCES · SIX MODES OF ENTRY</div>
       <div class="rule"></div>
       <p class="sub">Who enters the room — and who arrives at a remove.</p>
     </div>
@@ -147,33 +571,72 @@
     <span class="count" id="count"></span>
   </div>
 </div>
-<p class="foot">An audience deck. Sixteen women, each counted once by her first appearance.
-Dimension 2 · The Women's Dublin.</p>
+<p class="foot">An audience deck. Sixteen women, 181 appearances; the census counts each woman
+once, by her first appearance. Dimension 2 · The Women's Dublin.</p>
 
 <script>
 (function(){
   // Cards: identity labels only — the argument itself is the presenter's, off-site.
+  // Each card names the plane it stands on and the marks it lights on that plane.
   var CARDS = [
-    { kind:"title" },
-    { kind:"mode", ids:["b-stage"],  name:"On stage — 4 of 16",
+    { kind:"title", plane:"p-modes" },
+    { plane:"p-modes", ids:["b-stage"],  name:"On stage — 4 of 16",
       tag:"Molly · the milkwoman · Mrs Breen · Cissy Caffrey" },
-    { kind:"mode", ids:["b-glimpse"], name:"A glimpse — 4 of 16",
+    { plane:"p-modes", ids:["b-glimpse"], name:"A glimpse — 4 of 16",
       tag:"Gerty MacDowell · Dilly Dedalus · the streetwalker · Douce & Kennedy" },
-    { kind:"mode", ids:["b-letter"], name:"A letter — 1 of 16",
+    { plane:"p-modes", ids:["b-letter"], name:"A letter — 1 of 16",
       tag:"Martha Clifford · letter to 'Henry Flower' (Bloom's alias)" },
-    { kind:"mode", ids:["b-photo"],  name:"A photograph — 0 of 16",
+    { plane:"p-modes", ids:["b-photo"],  name:"A photograph — 0 of 16",
       tag:"no first entrance is a photograph · Molly's photograph comes later (ep 16)" },
-    { kind:"mode", ids:["b-talk"],   name:"Men's talk — 6 of 16",
-      tag:"Milly · May Dedalus · Bella Cohen · Mrs Dignam · Ann Hathaway" },
-    { kind:"mode", ids:["b-memory"], name:"Memory — 1 of 16",
+    { plane:"p-modes", ids:["b-talk"],   name:"Men's talk — 6 of 16",
+      tag:"Milly · May Dedalus · Bella Cohen · Mrs Dignam · Mina Purefoy · Ann Hathaway" },
+    { plane:"p-modes", ids:["b-memory"], name:"Memory — 1 of 16",
       tag:"Mrs Riordan (Dante)" },
-    { kind:"set",  ids:["b-talk","b-letter","b-photo"], name:"At one remove — 7 of 16",
+    { plane:"p-modes", ids:["b-talk","b-letter","b-photo"], name:"At one remove — 7 of 16",
       tag:"a letter · a photograph · men's talk" },
-    { kind:"all",  ids:["b-stage","b-glimpse","b-memory","b-talk","b-letter","b-photo"],
+    { plane:"p-modes", ids:["b-stage","b-glimpse","b-memory","b-talk","b-letter","b-photo"],
       name:"The Women's Dublin — 16 women, six modes",
-      tag:"on stage 4 · a glimpse 4 · memory 1 · men's talk 6 · a letter 1 · a photograph 0" }
+      tag:"on stage 4 · a glimpse 4 · memory 1 · men's talk 6 · a letter 1 · a photograph 0" },
+
+    { plane:"p-milk", ids:["mw-pints","mw-quarts","mw-pay"],
+      name:"The milk woman — episode 1, ~8:15 a.m.",
+      tag:"seven pints at twopence · three quarts at fourpence · a florin, twopence owed" },
+
+    { plane:"p-post", ids:["mc-letters","mc-flower","mc-order"],
+      name:"Martha Clifford — c/o P. O. Dolphin's Barn Lane",
+      tag:"3 typewritten letters · a pressed flower · a postal order, two shillings" },
+
+    { plane:"p-ann", ids:["ah-talk"],
+      name:"Ann Hathaway — 16 appearances, 14 men's talk",
+      tag:"12 in episode 9 · 1 in episode 14 · 3 in episode 15 · 2 hallucinated" },
+
+    { plane:"p-sums", ids:["sum-milly"],
+      name:"Milly Bloom — twelve and six a week",
+      tag:"the only young woman's wage the text states · Mullingar, the photo business" },
+    { plane:"p-sums", ids:["sum-dilly","sum-milk","sum-cissy","sum-belladam","sum-martha",
+      "sum-barmaids","sum-gerty","sum-dignam","sum-may","sum-bellahouse","sum-milly","sum-ann"],
+      name:"Twelve sums, as the text names them",
+      tag:"1d · 2d · 1s · 1s · 2s · 2s 9d · 4s 11d · 5s · 8s · 10s · 12s 6d · 40s" },
+
+    { plane:"p-molly", ids:["mb-18"],
+      name:"Molly Bloom — interiority: episode 18",
+      tag:"episodes 1–17, none · episode 18, the whole episode" },
+
+    { plane:"p-day", ids:["d-molly","d-milly","d-may","d-milk"],
+      name:"The eight o'clock hour — 4 of 16",
+      tag:"Molly Bloom · Milly Bloom · May Dedalus · the milk woman" },
+    { plane:"p-day", ids:["d-bella"],
+      name:"Bella Cohen — ~12:15 a.m., episode 15",
+      tag:"the last of the sixteen first entrances" },
+    { plane:"p-day", ids:["d-molly","d-milly","d-may","d-milk","d-martha","d-riordan",
+      "d-dignam","d-breen","d-dilly","d-mina","d-ann","d-barmaids","d-gerty","d-street",
+      "d-cissy","d-bella"],
+      name:"Sixteen first entrances — ~8:00 a.m. to ~12:15 a.m.",
+      tag:"one mark for each woman, at the hour she first comes onto the page" }
   ];
-  var pts = ["b-stage","b-glimpse","b-memory","b-talk","b-letter","b-photo"];
+
+  var pts = [].slice.call(document.querySelectorAll(".pt"));
+  var planes = [].slice.call(document.querySelectorAll(".plane"));
   var i = 0;
   var title = document.getElementById("title");
   var caption = document.getElementById("caption");
@@ -197,9 +660,11 @@ Dimension 2 · The Women's Dublin.</p>
   function render(){
     var c = CARDS[i];
     var onset = c.ids || [];
-    pts.forEach(function(id){
-      var el = document.getElementById(id);
-      el.classList.toggle("on", onset.indexOf(id) !== -1);
+    pts.forEach(function(el){
+      el.classList.toggle("on", onset.indexOf(el.id) !== -1);
+    });
+    planes.forEach(function(pl){
+      pl.classList.toggle("show", pl.id === c.plane);
     });
     title.classList.toggle("show", c.kind === "title");
     if (c.kind === "title") {
