@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Reading Log — a tool you keep</title>
+<style>
+  /* Dimension 15's single-file HTML register, and the whole of it. The instrument is
+     the register (base document 04, Type VII). Family: the 1922 system.
+     Nothing here is transmitted. There is no network code in this file at all. */
+  :root {
+    --deep:#081a35; --paper:#f4efe2; --gold:#dfa93f; --gold-paper:#A0701C;
+    --ink-mute:#3d4d68; --deep-mute:#b9c3d6; --rule:rgba(8,26,53,.25);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *,*::before,*::after { box-sizing:border-box; }
+  html,body { margin:0; padding:0; background:var(--paper); color:var(--deep); }
+  body { font-family:var(--serif); font-size:1.0625rem; line-height:1.65; }
+  main { max-width:68ch; margin-inline:auto; padding:1.5rem 1rem 4rem; }
+
+  h1 { font-size:1.728rem; line-height:1.2; margin:0 0 .25rem; }
+  h2 { font-size:1.2rem; margin:2.25rem 0 .5rem; padding-bottom:.2rem;
+       border-bottom:1px solid var(--rule); }
+  h3 { font-size:1rem; margin:1.25rem 0 .35rem; }
+
+  .kicker, .num, .hint, legend, label, button, input, select, textarea, .count, .stamp {
+    font-family:var(--mono); }
+  .kicker { font-size:.875rem; color:var(--ink-mute); letter-spacing:.06em; margin:0 0 1.25rem; }
+  .hint { font-size:.8125rem; color:var(--ink-mute); }
+
+  a { color:var(--deep); text-decoration-color:var(--gold-paper); text-underline-offset:2px; }
+
+  /* The privacy statement is the first thing, on the deep plate, because it is the
+     dimension's whole design constraint and not a disclaimer (C-22). */
+  .plate { background:var(--deep); color:var(--paper); padding:1.15rem 1.25rem; margin:1.5rem 0; }
+  .plate h2 { color:var(--paper); border-bottom-color:var(--gold); margin-top:0; }
+  .plate a { color:var(--paper); text-decoration-color:var(--gold); }
+  .plate .kicker { color:var(--deep-mute); }
+  .plate strong { color:var(--gold); }
+
+  form { margin:0; }
+  fieldset { border:1px solid var(--rule); padding:.9rem 1rem 1.1rem; margin:1.25rem 0; }
+  legend { font-size:.8125rem; letter-spacing:.05em; color:var(--ink-mute); padding:0 .4rem; }
+
+  label { display:block; font-size:.8125rem; color:var(--ink-mute); margin:.85rem 0 .25rem; }
+  input[type=text], input[type=date], input[type=number], textarea, select {
+    width:100%; font-family:var(--mono); font-size:.9375rem; color:var(--deep);
+    background:#fbf8f1; border:1px solid var(--rule); border-radius:0; padding:.45rem .55rem;
+  }
+  textarea { min-height:5.5rem; resize:vertical; line-height:1.55; }
+  input:focus-visible, textarea:focus-visible, select:focus-visible,
+  button:focus-visible, summary:focus-visible {
+    outline:2px solid var(--gold-paper); outline-offset:2px;
+  }
+
+  .row { display:flex; gap:1rem; flex-wrap:wrap; }
+  .row > div { flex:1 1 11rem; }
+
+  .kinds { display:grid; grid-template-columns:repeat(auto-fill,minmax(15rem,1fr)); gap:.15rem .9rem; }
+  .kinds label { display:flex; align-items:flex-start; gap:.5rem; margin:.3rem 0; font-size:.8125rem;
+    color:var(--deep); cursor:pointer; }
+  .kinds input { margin-top:.25rem; flex:0 0 auto; accent-color:var(--gold-paper); }
+  .kinds .k-note { color:var(--ink-mute); }
+
+  button { font-size:.875rem; padding:.5rem .9rem; background:var(--deep); color:var(--paper);
+    border:1px solid var(--deep); cursor:pointer; }
+  button.ghost { background:transparent; color:var(--deep); }
+  button:hover { background:var(--gold-paper); border-color:var(--gold-paper); color:var(--paper); }
+  .actions { display:flex; gap:.6rem; flex-wrap:wrap; margin-top:1.1rem; align-items:center; }
+
+  .entry { border:1px solid var(--rule); padding:.85rem 1rem; margin:.9rem 0; }
+  .entry .stamp { font-size:.8125rem; color:var(--ink-mute); }
+  .entry h3 { margin:.15rem 0 .5rem; font-size:1rem; }
+  .entry dl { margin:.5rem 0 0; }
+  .entry dt { font-family:var(--mono); font-size:.75rem; color:var(--ink-mute);
+    letter-spacing:.04em; margin-top:.6rem; }
+  .entry dd { margin:.15rem 0 0; }
+  .entry .tags { font-family:var(--mono); font-size:.75rem; color:var(--ink-mute); margin-top:.6rem; }
+  .entry .del { float:right; }
+
+  .count { font-size:.8125rem; color:var(--ink-mute); }
+  .empty { font-family:var(--mono); font-size:.875rem; color:var(--ink-mute); }
+
+  table { border-collapse:collapse; width:100%; font-family:var(--mono); font-size:.8125rem; margin:.75rem 0; }
+  th, td { border-bottom:1px solid var(--rule); padding:.35rem .4rem; text-align:left; vertical-align:top; }
+
+  footer { margin-top:3rem; padding-top:1rem; border-top:1px solid var(--rule);
+    font-family:var(--mono); font-size:.75rem; color:var(--ink-mute); }
+
+  /* The reader prints or saves this for themselves — that is the only export the
+     project's zero-collection stance permits (C-22). */
+  @media print {
+    .noprint { display:none !important; }
+    body { font-size:11pt; }
+    .plate { background:#fff; color:#000; border:1px solid #000; }
+    .plate h2, .plate strong { color:#000; }
+    .entry { page-break-inside:avoid; border-color:#666; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+<main>
+
+<h1>The Reading Log</h1>
+<p class="kicker">ULYSSES PROJECT · DIMENSION 15 · TYPE VII, INSTRUMENT · A TOOL YOU KEEP</p>
+
+<p>Dimension 11 of this project measured where one first reader of <em>Ulysses</em> actually
+struggled, from a complete dated record of one accompanied read. This is that study turned
+inside out: the instrument, published, so you can keep the same kind of record of your own
+reading.</p>
+
+<div class="plate">
+  <p class="kicker">HOW THIS WORKS</p>
+  <h2>Nothing you type here leaves your device</h2>
+  <p>This page has <strong>no server, no account, no analytics and no network code of any
+  kind</strong>. What you write is stored by your own browser, on this device, and read back
+  only by this page. Nothing is transmitted. Nothing is collected. The project receives
+  <strong>nothing</strong> — not your entries, not a count of them, not the fact that you
+  opened this page.</p>
+  <p>That is a design decision, not a promise about our intentions: there is nowhere for the
+  data to go. The consequence is yours to manage — <strong>clearing your browser's site data
+  will erase your log</strong>, so use <em>Save a copy</em> below if you want it to outlive
+  this browser.</p>
+</div>
+
+<h2>What to record</h2>
+
+<p>The prompts below come from what one real first reading actually produced — not from a
+theory of difficulty. Dimension 11 sorted 245 logged questions into nine kinds. Eight of them
+are offered here as tags.</p>
+
+<p class="hint">The ninth is left out deliberately. It was <em>dictation and transcription
+noise</em> — difficulty manufactured by the recording medium, because that reader asked his
+questions aloud and they were transcribed as spoken. It is a fact about how that record was
+made, not about reading <em>Ulysses</em>, so it does not generalise to you. Its absence here
+is a decision, and this note is where it is recorded.</p>
+
+<form id="entry-form" class="noprint" autocomplete="off">
+<fieldset>
+  <legend>A session</legend>
+
+  <div class="row">
+    <div>
+      <label for="f-date">Date</label>
+      <input type="date" id="f-date" required>
+    </div>
+    <div>
+      <label for="f-from">Pages, from</label>
+      <input type="number" id="f-from" min="1" inputmode="numeric" placeholder="e.g. 88">
+    </div>
+    <div>
+      <label for="f-to">Pages, to</label>
+      <input type="number" id="f-to" min="1" inputmode="numeric" placeholder="e.g. 140">
+    </div>
+    <div>
+      <label for="f-episode">Episode <span class="hint">(scaffolding)</span></label>
+      <select id="f-episode">
+        <option value="">—</option>
+      </select>
+    </div>
+  </div>
+
+  <label for="f-stall">Where did you stall?</label>
+  <textarea id="f-stall" placeholder="The page, the passage, the moment you stopped moving forward."></textarea>
+
+  <label for="f-asked">What did you want to ask?</label>
+  <textarea id="f-asked" placeholder="In your own words. Do not tidy them up — the record of learning a difficult book is falsified by cleaning."></textarea>
+
+  <label for="f-unblocked">What unblocked you, if anything?</label>
+  <textarea id="f-unblocked" placeholder="A note, a person, a reread, a search, giving up on the sentence and going on."></textarea>
+
+  <fieldset>
+    <legend>What kind of difficulty was it?</legend>
+    <div class="kinds" id="f-kinds"></div>
+  </fieldset>
+
+  <div class="row">
+    <div>
+      <label for="f-stopped">Did you stop reading?</label>
+      <select id="f-stopped">
+        <option value="no">No — carried on</option>
+        <option value="paused">Paused, came back</option>
+        <option value="stopped">Stopped here</option>
+      </select>
+    </div>
+    <div>
+      <label for="f-feeling">How did the session feel?</label>
+      <select id="f-feeling">
+        <option value="">—</option>
+        <option value="delight">Delight</option>
+        <option value="absorbed">Absorbed</option>
+        <option value="mixed">Mixed</option>
+        <option value="effortful">Effortful</option>
+        <option value="survival">Survival</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="submit">Add this session</button>
+    <button type="button" class="ghost" id="btn-clear-form">Clear the form</button>
+  </div>
+</fieldset>
+</form>
+
+<h2>Your log <span class="count" id="log-count"></span></h2>
+<div id="log"></div>
+
+<div class="actions noprint">
+  <button type="button" class="ghost" id="btn-print">Print or save as PDF</button>
+  <button type="button" class="ghost" id="btn-export">Save a copy (file)</button>
+  <button type="button" class="ghost" id="btn-import">Load a saved copy</button>
+  <button type="button" class="ghost" id="btn-wipe">Erase everything</button>
+  <input type="file" id="file-input" accept="application/json,.json" hidden>
+</div>
+<p class="hint noprint">“Save a copy” writes a file to your downloads folder. It goes to your
+disk, not to us — this page cannot send it anywhere.</p>
+
+<h2>Your shape, so far</h2>
+<p class="hint">Counted from your own entries, in your browser. Compare it with dimension 11's
+curve if you like — but one reader is one reader, which is the whole point of that document
+and of this one.</p>
+<div id="summary"></div>
+
+<h2>What this is not</h2>
+<p>This is not a study, and you are not a participant. An earlier version of this dimension
+was framed as a growing dataset the project would gather; the author withdrew that framing
+along with the collection, and the log became a tool the reader keeps. The only dataset this
+project rests on remains its own single reading — <strong>n = 1</strong>, stated in that
+document's own voice.</p>
+
+<p>It is also not a test. There is no completion, no streak and no score, because the finding
+that produced these prompts was that the most-questioned episodes were the ones that reader
+loved loudest and read fastest. Question density tracked engagement at least as much as
+struggle. A log full of entries is not a record of failing to read the book.</p>
+
+<footer>
+  <p>Dimension 15 of the Ulysses Project · the instrument is the register (anchor A8) ·
+  prompts derived from dimension 11's nine kinds of difficulty, eight of them applicable
+  (anchor A15, discharged) · episode titles are scaffolding, and Joyce printed none
+  (anchor A2).</p>
+  <p>This file is self-contained. It works offline, it will keep working if the site goes
+  away, and you may save it and keep it.</p>
+</footer>
+
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  // Dimension 11's kinds, with the counts that reading produced. The ninth — dictation
+  // and transcription noise — is excluded above, and why is stated in the document.
+  var KINDS = [
+    ["plot",       "Plot and orientation tracking",  "losing or checking the thread"],
+    ["allusion",   "Allusion and period reference",  "a reference arriving unglossed"],
+    ["style",      "Style and form shifts",          "the episode's technique itself"],
+    ["vocabulary", "Vocabulary and wordplay",        "a word, an idiom, a pun"],
+    ["voice",      "Voice and referent confusion",   "who is speaking, who is meant"],
+    ["tone",       "Tone, stance, and significance", "is this sarcastic, does it matter"],
+    ["felt",       "Felt but not grasped",           "the music arrives, the logic withholds"],
+    ["delight",    "Curiosity and delight",          "not difficulty — asked from pleasure"]
+  ];
+
+  // Episode titles are scaffolding: Joyce printed none. They are offered because readers
+  // meet them in every edition's apparatus, and labelled for what they are (anchor A2).
+  var EPISODES = ["Telemachus","Nestor","Proteus","Calypso","Lotus Eaters","Hades","Aeolus",
+    "Lestrygonians","Scylla and Charybdis","Wandering Rocks","Sirens","Cyclops","Nausicaa",
+    "Oxen of the Sun","Circe","Eumaeus","Ithaca","Penelope"];
+
+  var KEY = "ulysses-reading-log/v1";
+  var $ = function (id) { return document.getElementById(id); };
+  var entries = [];
+
+  function load() {
+    try {
+      var raw = window.localStorage.getItem(KEY);
+      entries = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(entries)) entries = [];
+    } catch (e) { entries = []; }
+  }
+  function save() {
+    try { window.localStorage.setItem(KEY, JSON.stringify(entries)); }
+    catch (e) {
+      window.alert("This browser would not save the entry — most often because private " +
+        "browsing is on, or site data is full. Your log is still on screen; use " +
+        "“Save a copy” to keep it as a file before you close this page.");
+    }
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+    });
+  }
+
+  function buildKinds() {
+    var wrap = $("f-kinds");
+    KINDS.forEach(function (k) {
+      var id = "kind-" + k[0];
+      var label = document.createElement("label");
+      label.setAttribute("for", id);
+      label.innerHTML = '<input type="checkbox" id="' + id + '" value="' + k[0] + '">' +
+        "<span>" + esc(k[1]) + ' <span class="k-note">— ' + esc(k[2]) + "</span></span>";
+      wrap.appendChild(label);
+    });
+  }
+
+  function buildEpisodes() {
+    var sel = $("f-episode");
+    EPISODES.forEach(function (name, i) {
+      var o = document.createElement("option");
+      o.value = String(i + 1);
+      o.textContent = (i + 1) + " · " + name;
+      sel.appendChild(o);
+    });
+  }
+
+  function kindLabel(key) {
+    for (var i = 0; i < KINDS.length; i++) if (KINDS[i][0] === key) return KINDS[i][1];
+    return key;
+  }
+
+  var STOPPED = { no:"carried on", paused:"paused, came back", stopped:"stopped here" };
+
+  function render() {
+    var box = $("log");
+    $("log-count").textContent = entries.length
+      ? "· " + entries.length + (entries.length === 1 ? " session" : " sessions")
+      : "";
+    if (!entries.length) {
+      box.innerHTML = '<p class="empty">No sessions recorded yet. This is empty because you ' +
+        "have not written anything, not because something is hidden.</p>";
+      renderSummary();
+      return;
+    }
+    var sorted = entries.slice().sort(function (a, b) {
+      return String(b.date).localeCompare(String(a.date));
+    });
+    box.innerHTML = sorted.map(function (e) {
+      var pages = (e.from || e.to)
+        ? "pp. " + esc(e.from || "?") + "–" + esc(e.to || "?")
+        : "pages not noted";
+      var ep = e.episode ? " · episode " + esc(e.episode) + " (scaffolding)" : "";
+      var parts = [];
+      if (e.stall) parts.push("<dt>Where I stalled</dt><dd>" + esc(e.stall) + "</dd>");
+      if (e.asked) parts.push("<dt>What I wanted to ask</dt><dd>" + esc(e.asked) + "</dd>");
+      if (e.unblocked) parts.push("<dt>What unblocked me</dt><dd>" + esc(e.unblocked) + "</dd>");
+      var tags = (e.kinds || []).map(kindLabel).join(" · ");
+      return '<article class="entry">' +
+        '<button class="ghost del noprint" type="button" data-id="' + esc(e.id) + '" ' +
+          'aria-label="Delete the session of ' + esc(e.date) + '">delete</button>' +
+        '<p class="stamp">' + esc(e.date) + " · " + pages + ep + "</p>" +
+        "<h3>" + esc(STOPPED[e.stopped] || e.stopped || "") +
+          (e.feeling ? " · " + esc(e.feeling) : "") + "</h3>" +
+        (parts.length ? "<dl>" + parts.join("") + "</dl>" : "") +
+        (tags ? '<p class="tags">' + esc(tags) + "</p>" : "") +
+        "</article>";
+    }).join("");
+    renderSummary();
+  }
+
+  function renderSummary() {
+    var box = $("summary");
+    if (!entries.length) {
+      box.innerHTML = '<p class="empty">Nothing to count yet.</p>';
+      return;
+    }
+    var counts = {}, pages = 0, stops = 0;
+    entries.forEach(function (e) {
+      (e.kinds || []).forEach(function (k) { counts[k] = (counts[k] || 0) + 1; });
+      var f = parseInt(e.from, 10), t = parseInt(e.to, 10);
+      if (f && t && t >= f) pages += (t - f + 1);
+      if (e.stopped === "stopped") stops++;
+    });
+    var rows = KINDS.filter(function (k) { return counts[k[0]]; })
+      .sort(function (a, b) { return counts[b[0]] - counts[a[0]]; })
+      .map(function (k) {
+        return "<tr><td>" + esc(k[1]) + "</td><td>" + counts[k[0]] + "</td></tr>";
+      }).join("");
+    box.innerHTML =
+      "<table><tbody>" +
+      "<tr><td>Sessions recorded</td><td>" + entries.length + "</td></tr>" +
+      "<tr><td>Pages covered (where noted)</td><td>" + (pages || "—") + "</td></tr>" +
+      "<tr><td>Sessions you stopped at</td><td>" + stops + "</td></tr>" +
+      "</tbody></table>" +
+      (rows ? "<table><thead><tr><th>Kind of difficulty</th><th>Sessions</th></tr></thead>" +
+        "<tbody>" + rows + "</tbody></table>"
+        : '<p class="empty">No kinds tagged yet.</p>');
+  }
+
+  function clearForm() {
+    ["f-stall","f-asked","f-unblocked"].forEach(function (id) { $(id).value = ""; });
+    ["f-from","f-to"].forEach(function (id) { $(id).value = ""; });
+    $("f-episode").value = "";
+    $("f-feeling").value = "";
+    $("f-stopped").value = "no";
+    KINDS.forEach(function (k) { $("kind-" + k[0]).checked = false; });
+  }
+
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + "-" +
+      String(d.getMonth() + 1).padStart(2, "0") + "-" +
+      String(d.getDate()).padStart(2, "0");
+  }
+
+  // ---- wiring ----
+  buildKinds();
+  buildEpisodes();
+  load();
+  render();
+  $("f-date").value = todayISO();
+
+  $("entry-form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var kinds = KINDS.filter(function (k) { return $("kind-" + k[0]).checked; })
+                     .map(function (k) { return k[0]; });
+    entries.push({
+      id: String(Date.now()) + "-" + Math.random().toString(36).slice(2, 8),
+      date: $("f-date").value || todayISO(),
+      from: $("f-from").value,
+      to: $("f-to").value,
+      episode: $("f-episode").value,
+      stall: $("f-stall").value.trim(),
+      asked: $("f-asked").value.trim(),
+      unblocked: $("f-unblocked").value.trim(),
+      kinds: kinds,
+      stopped: $("f-stopped").value,
+      feeling: $("f-feeling").value
+    });
+    save();
+    render();
+    clearForm();
+    $("f-date").value = todayISO();
+    $("f-date").focus();
+  });
+
+  $("btn-clear-form").addEventListener("click", clearForm);
+
+  $("log").addEventListener("click", function (ev) {
+    var btn = ev.target.closest("button[data-id]");
+    if (!btn) return;
+    if (!window.confirm("Delete this session? It cannot be undone.")) return;
+    var id = btn.getAttribute("data-id");
+    entries = entries.filter(function (e) { return String(e.id) !== id; });
+    save();
+    render();
+  });
+
+  $("btn-print").addEventListener("click", function () { window.print(); });
+
+  $("btn-export").addEventListener("click", function () {
+    if (!entries.length) { window.alert("There is nothing to save yet."); return; }
+    var payload = {
+      what: "A reading log kept with the Ulysses Project's instrument (dimension 15).",
+      note: "This file was written by your own browser to your own disk. It was not sent anywhere.",
+      version: 1,
+      entries: entries
+    };
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "ulysses-reading-log.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+  });
+
+  $("btn-import").addEventListener("click", function () { $("file-input").click(); });
+
+  $("file-input").addEventListener("change", function (ev) {
+    var file = ev.target.files && ev.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var data = JSON.parse(String(reader.result));
+        var incoming = Array.isArray(data) ? data : data.entries;
+        if (!Array.isArray(incoming)) throw new Error("shape");
+        var seen = {};
+        entries.forEach(function (e) { seen[e.id] = true; });
+        var added = 0;
+        incoming.forEach(function (e) {
+          if (e && e.id && !seen[e.id]) { entries.push(e); seen[e.id] = true; added++; }
+        });
+        save();
+        render();
+        window.alert(added + (added === 1 ? " session" : " sessions") + " loaded.");
+      } catch (e) {
+        window.alert("That file could not be read as a reading log.");
+      }
+      ev.target.value = "";
+    };
+    reader.readAsText(file);
+  });
+
+  $("btn-wipe").addEventListener("click", function () {
+    if (!entries.length) { window.alert("There is nothing to erase."); return; }
+    if (!window.confirm("Erase every session in this browser? This cannot be undone. " +
+      "If you want a copy, cancel and use “Save a copy” first.")) return;
+    entries = [];
+    try { window.localStorage.removeItem(KEY); } catch (e) {}
+    render();
+  });
+})();
+</script>
+</body>
+</html>

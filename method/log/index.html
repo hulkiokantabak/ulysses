@@ -241,6 +241,46 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-13</strong></td>
 </tr>
 <tr>
+<td>C-25</td>
+<td>07-19</td>
+<td>3</td>
+<td><strong>The README published a growth rule the build did not honour.</strong> &quot;A new artifact = one entry in <code>data/artifacts.json</code> + its file … nothing is hand-maintained&quot; was false: an artifact also had to be added by hand to the passthrough map in <code>eleventy.config.js</code>, to <code>contractedAssets</code> in <code>check.mjs</code>, and to that file's byte-pair list — four edits across three files, and every artifact in the history did all four. Only one of the three was mechanically enforced; omitting the other two left a fully green build with the artifact outside the contracted inventory and outside byte protection. Found while scoping the PDF register, which would have multiplied the tax by five. Note the classification: this is <strong>not</strong> the data-model failure the README's own clause defines (that clause is scoped to adding a <em>dimension</em> and counts <em>data files</em>) — it is a published-accuracy defect, the same class as the stale <code>note</code> fields in this batch</td>
+<td>Artifact entries now carry <code>asset: { source, path }</code>; the passthrough map, the contracted inventory and the byte-pair list are all derived from that one field, and an artifact declaring no asset — or naming a source that does not exist — now fails the check. Negative-tested both branches before commit. The README's claim rewritten to describe what the build actually does, and dated</td>
+<td><strong>L-14</strong></td>
+</tr>
+<tr>
+<td>C-26</td>
+<td>07-19</td>
+<td>—</td>
+<td>Not an error — an author ruling, logged. <strong>Dimension 16 was marked <code>built</code> on a register it does not meet.</strong> Its PDF register was closed by <code>Four_Odysseys_Handoff.pdf</code>, a linear document produced outside this project; byte inspection shows zero link annotations, zero outbound URLs, zero destinations and no bookmark outline, against base document 00's definition of the register as <em>hyperlinked and cross-linked</em>. The written standard had never been relaxed — one status field had been applied inconsistently with it, which left &quot;built&quot; meaning two different things on two pages and left the PDF pipeline with no acceptance bar</td>
+<td>Author ruled 16 is <strong>not</strong> built. Status returned to <code>building</code>, owed: pdf; the dimension note states why. The project now has no <code>built</code> dimension, and says so honestly. The ruling defines the acceptance bar the pipeline must clear</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-27</td>
+<td>07-19</td>
+<td>—</td>
+<td>Not an error — an anchor discharged on its own reasoning, logged. <strong>A15 had outlived both of its legs.</strong> Ginzburg's binding veto (panel session 01) rested on two claims: that an instrument's questions must come from the analysis, and that collection defects cannot be repaired retroactively. Leg one is <strong>satisfied</strong> — dimension 11's nine-kind taxonomy of difficulty is built and published, and those kinds are exactly dimension 15's prompts. Leg two was <strong>dissolved by the author's own later ruling</strong>: C-22 abolished collection entirely, so there are no respondents to fail to return to. The anchor was being read through its four downstream restatements (&quot;complete&quot;, &quot;done&quot;, &quot;analysed&quot;) rather than through the veto's stated reason — the failure mode L-13 names</td>
+<td>A15 rewritten as <strong>discharged, not withdrawn</strong>: it was right, it bound, and it has now been satisfied. Dimension 15 is unblocked and enters the build queue. The distinction is kept in the anchor text so no future session reads this as the panel having been overruled</td>
+<td><strong>L-15</strong></td>
+</tr>
+<tr>
+<td>C-28</td>
+<td>07-19</td>
+<td><strong>4</strong></td>
+<td><strong>The project asserted a verification it never performed — inside the paragraph warning against exactly that.</strong> Dimension 16's confidence field called two facts about Wilson's translation (strict iambic pentameter line-for-line across 12,110 lines; 'slave' where older translations say 'maid') <strong>High</strong> and &quot;independent of any journalism&quot;, on the grounds that they are checkable against Wilson's own book. They are checkable. <strong>Nobody checked them.</strong> Both trace, in this repository, only to the admitted third-model commentary in <code>library/</code> — the same document the same field describes as having a block bibliography in which no individual claim is traceable. The dimension's central finding rests on these two facts. Found by the adversarial audit built into the print-register pipeline, not by reading</td>
+<td>Both facts held at <strong>Medium</strong> and marked as relayed until the translation is actually opened; the confidence field now states plainly that the check was asserted rather than done. Dimension 16's PDF register is <strong>held</strong> — its draft asserts the same thing and will not be published until the marking is honest. Escalated to <strong>L-16</strong></td>
+<td><strong>L-16</strong></td>
+</tr>
+<tr>
+<td>C-29</td>
+<td>07-19</td>
+<td>2</td>
+<td><strong>The print-register audit found four defects in already-published artifacts.</strong> Building a second register over existing work turned out to be a second pass over it. (a) <code>women.html</code> carries Project Gutenberg's plaintext italic delimiters unconverted — <code>_(Eagerly.)_</code> and three others render as literal underscores inside matter the document calls verbatim. (b) <code>instruments.html</code>'s figure caption says the marks concentrate &quot;only at Cyclops and Circe&quot;; its own matrix contradicts that. (c) <code>model.html</code> says sixteen modelling assumptions and lists seventeen, and its inline references number them one behind the printed list. (d) <code>women.html</code> says &quot;the only one of the fifteen&quot; once, among nine correct &quot;sixteen&quot;s</td>
+<td>The print documents carry the corrections and, where the source contradicts itself, show the contradiction rather than resolving it (anchor A4). <strong>The upstream artifacts are not yet fixed</strong> — they are published assets and each correction is its own byte-verified change; queued and named here so the debt is visible rather than forgotten</td>
+<td>—</td>
+</tr>
+<tr>
 <td>C-23</td>
 <td>07-19</td>
 <td>3</td>
@@ -349,6 +389,51 @@ source's; and <strong>date coherence</strong> must be checked, because a citatio
 event it supposedly attests is a gap hiding inside authoritative prose.
 <em>Applied:</em> dimension 16's confidence field; the advisors panel skill (Ginzburg's newest
 test); the <code>external-input-provenance</code> skill's common-ancestor section.</p>
+<p><strong>L-14 — A growth rule that is not derived is not a rule, it is a hope.</strong>
+<em>From C-25.</em> The README promised that adding an artifact costs one entry plus its file.
+Three separate mechanisms — the build's passthrough, the contracted inventory, the
+byte-comparison — each kept its own hand-maintained copy of the same list, and only one
+of the three failed loudly when it drifted. A documented invariant that no code derives
+will be true on the day it is written and false by the fourth artifact, and the project
+will not notice, because <strong>the build stays green when a list is merely incomplete.</strong>
+The test: for every &quot;nothing is hand-maintained&quot; claim, find the code that derives it.
+If there is none, the claim is a wish, and it is worse than no claim, because it is
+published.
+<em>Applied:</em> the <code>asset</code> field on every artifact; passthrough, inventory and byte-pairs all
+derived from it; a check that fails when an artifact declares no asset or names a missing
+source; the README rewritten to describe the mechanism rather than the aspiration.</p>
+<p><strong>L-15 — Discharge an anchor on its own reasoning, not on its restatements.</strong>
+<em>From C-27.</em> A15 was quoted in five places and each restatement compressed it a little
+further — from <em>&quot;the instrument's questions come from the analysis&quot;</em> to the single word
+<em>&quot;complete.&quot;</em> By the fifth telling the anchor appeared to be waiting on a register, which
+is not what the veto said and not what it was protecting. Worse, one of its two legs had
+been quietly dissolved by a later author ruling (C-22 abolished collection), and nobody
+noticed, because nobody had gone back to the original.
+<strong>A binding constraint should be discharged by returning to the sentence that created it
+and asking whether its stated reason still holds.</strong> Being stricter than a rule's reason
+is not rigour; it is deference to a summary. And the same discipline that makes the
+project check whether two sources share an ancestor (L-13) applies to its own documents:
+a claim repeated five times inside one repository is still one claim.
+<em>Applied:</em> A15 marked discharged with its reasoning; dimension 15 unblocked; the anchor
+text now carries the two legs explicitly so the next reader can test them rather than
+inherit a word.</p>
+<p><strong>L-16 — &quot;Checkable&quot; is not &quot;checked&quot;, and the difference is the whole claim.</strong>
+<em>From C-28.</em> A fact that <em>could</em> be verified against a primary source reads, in a
+confidence field, almost exactly like a fact that <em>was</em>. Dimension 16 said two facts about
+Wilson's translation were High because they are checkable against her book — and the
+sentence was true about their checkability and false about their status, because nobody
+had opened the book. The error survived because the phrasing was accurate on the axis the
+reader would test it on.
+<strong>A confidence marking must record what was actually done, not what could be done.</strong>
+Where the project has verified something, name the act: <em>collected against the 1922 text</em>,
+<em>adversarially verified</em>, <em>recomputed at every build</em>. Where it has not, the marking is
+whatever the weakest actual source supports — and a claim relayed by a commentator with a
+block bibliography is a relay, however checkable the underlying fact may be. Note where
+this one was found: not by reading the field, which had been read many times, but by
+building a second register over the same material. <strong>A second register is a second pass.</strong>
+<em>Applied:</em> dimension 16's confidence field rewritten and both facts held at Medium; its
+PDF register held rather than published; the print-register pipeline's adversarial audit
+kept as a standing step rather than a one-off.</p>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
