@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Governed City &#8212; the deck</title>
+<style>
+  /* Dimension 3's presentation register: the audience deck. Image cards only, no
+     explanations (the presenter's material is kept off the public site &#8212; C-19). One
+     plane &#8212; the instruments-by-episodes matrix, drawn once; each card lights a subset
+     of its cells in gold. A title card first; the whole matrix as ambient hum; the two
+     event-concentrations (Cyclops, Circe); rule-as-reputation; the assembled city last.
+     The 1922 family: deep plate, paper, gold, mono factual layer. No animation, so
+     prefers-reduced-motion is honoured by design. */
+  :root {
+    --deep:#081a35; --paper:#f4efe2; --gold:#dfa93f; --mute:#b9c3d6;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *,*::before,*::after { box-sizing:border-box; }
+  html,body { margin:0; padding:0; height:100%; background:var(--deep); color:var(--paper); }
+  body { font-family:var(--serif); display:flex; flex-direction:column; min-height:100vh; }
+  .deck { flex:1; display:flex; flex-direction:column; max-width:74rem; width:100%;
+          margin-inline:auto; padding:1rem 1rem 0; }
+  .stage { position:relative; flex:1; display:flex; align-items:center; justify-content:center; }
+  svg { display:block; width:100%; height:auto; max-height:74vh; }
+  /* cells default to muted marks (the ambient hum); JS lights the active column/row */
+  .cell .m { fill:var(--mute); }
+  .cell .ring { fill:none; stroke:var(--mute); stroke-width:1.5; }
+  .cell.on .m { fill:var(--gold); transform:scale(1.55); transform-box:fill-box; transform-origin:center; }
+  .cell.on .ring { fill:none; stroke:var(--gold); }
+  /* the title card overlays the stage */
+  .title { position:absolute; inset:0; display:none; flex-direction:column;
+           align-items:center; justify-content:center; text-align:center; }
+  .title.show { display:flex; }
+  .title h1 { font-size:clamp(2rem,7vw,4rem); margin:0 0 .5rem; letter-spacing:.01em; }
+  .title .works { font-family:var(--mono); color:var(--mute); font-size:clamp(.9rem,2.4vw,1.15rem);
+                  letter-spacing:.12em; }
+  .title .rule { width:8rem; height:3px; background:var(--gold); margin:1.25rem 0; }
+  .title .sub { font-style:italic; color:var(--paper); max-width:34ch; font-size:clamp(1rem,2.6vw,1.3rem); }
+  /* the caption bar reads the current card &#8212; identity only */
+  .caption { min-height:3.2rem; text-align:center; padding:.5rem 0 .25rem; }
+  .caption .cname { font-size:1.4rem; }
+  .caption .ctag { font-family:var(--mono); color:var(--mute); font-size:.9rem; letter-spacing:.04em; display:block; margin-top:.15rem; }
+  .caption.hidden { visibility:hidden; }
+  /* controls */
+  .bar { display:flex; align-items:center; justify-content:center; gap:1rem;
+         padding:.75rem 0 1.25rem; font-family:var(--mono); }
+  button { font:inherit; font-family:var(--mono); font-size:1rem; color:var(--deep);
+           background:var(--paper); border:0; padding:.4rem .9rem; cursor:pointer; }
+  button:disabled { opacity:.35; cursor:default; }
+  .dots { display:flex; gap:.5rem; }
+  .dots button { padding:0; width:.85rem; height:.85rem; border-radius:50%;
+                 background:transparent; border:1.5px solid var(--mute); }
+  .dots button[aria-current="true"] { background:var(--gold); border-color:var(--gold); }
+  .count { color:var(--mute); font-size:.85rem; min-width:4rem; text-align:center; }
+  :focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+  a { color:var(--gold); }
+  .foot { text-align:center; font-family:var(--mono); font-size:.75rem; color:var(--mute);
+          padding-bottom:1rem; }
+</style>
+</head>
+<body>
+<div class="deck">
+  <div class="stage" id="stage" tabindex="0" role="group" aria-roledescription="slide deck"
+       aria-label="The Governed City, an audience deck. Use the left and right arrow keys.">
+    <svg viewBox="0 0 980 540" aria-hidden="true">
+  <g stroke="none"><line x1="288" y1="64" x2="288" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="326.7" y1="64" x2="326.7" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="365.4" y1="64" x2="365.4" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="404.1" y1="64" x2="404.1" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="442.8" y1="64" x2="442.8" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="481.5" y1="64" x2="481.5" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="520.2" y1="64" x2="520.2" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="558.9" y1="64" x2="558.9" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="597.6" y1="64" x2="597.6" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="636.4" y1="64" x2="636.4" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="675.1" y1="64" x2="675.1" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="713.8" y1="64" x2="713.8" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="752.5" y1="64" x2="752.5" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="791.2" y1="64" x2="791.2" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="829.9" y1="64" x2="829.9" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="868.6" y1="64" x2="868.6" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="907.3" y1="64" x2="907.3" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/><line x1="946" y1="64" x2="946" y2="432" stroke="rgba(244,239,226,.07)" stroke-width="1"/></g>
+  <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12.5" fill="#b9c3d6"><text x="288" y="52" text-anchor="middle">1</text><text x="326.7" y="52" text-anchor="middle">2</text><text x="365.4" y="52" text-anchor="middle">3</text><text x="404.1" y="52" text-anchor="middle">4</text><text x="442.8" y="52" text-anchor="middle">5</text><text x="481.5" y="52" text-anchor="middle">6</text><text x="520.2" y="52" text-anchor="middle">7</text><text x="558.9" y="52" text-anchor="middle">8</text><text x="597.6" y="52" text-anchor="middle">9</text><text x="636.4" y="52" text-anchor="middle">10</text><text x="675.1" y="52" text-anchor="middle">11</text><text x="713.8" y="52" text-anchor="middle">12</text><text x="752.5" y="52" text-anchor="middle">13</text><text x="791.2" y="52" text-anchor="middle">14</text><text x="829.9" y="52" text-anchor="middle">15</text><text x="868.6" y="52" text-anchor="middle">16</text><text x="907.3" y="52" text-anchor="middle">17</text><text x="946" y="52" text-anchor="middle">18</text></g>
+  <g class="rowlabels" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="13" fill="#b9c3d6"><text x="252" y="78.0" text-anchor="end">Police</text><text x="252" y="107.0" text-anchor="end">The garrison</text><text x="252" y="136.0" text-anchor="end">Dublin Castle</text><text x="252" y="165.0" text-anchor="end">The cavalcade</text><text x="252" y="194.0" text-anchor="end">The courts</text><text x="252" y="223.0" text-anchor="end">The gallows</text><text x="252" y="252.0" text-anchor="end">The informer</text><text x="252" y="281.0" text-anchor="end">The Church</text><text x="252" y="310.0" text-anchor="end">The schoolroom</text><text x="252" y="339.0" text-anchor="end">The King&#x27;s English</text><text x="252" y="368.0" text-anchor="end">The Crown in effigy</text><text x="252" y="397.0" text-anchor="end">The paperwork</text><text x="252" y="426.0" text-anchor="end">The parliament</text></g>
+  <text x="617" y="470" text-anchor="middle" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12.5" fill="#b9c3d6" letter-spacing="2">THE EIGHTEEN EPISODES &#183; 8 A.M. TO DEEP NIGHT</text>
+  <text x="22" y="248" text-anchor="middle" transform="rotate(-90 22 248)" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12.5" fill="#b9c3d6" letter-spacing="2">THIRTEEN INSTRUMENTS OF RULE</text>
+  <g class="legend" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12.5" fill="#b9c3d6">
+    <circle cx="300" cy="505" r="5" fill="#b9c3d6"/><text x="314" y="509">present</text>
+    <circle cx="430" cy="505" r="5" fill="none" stroke="#b9c3d6" stroke-width="1.5"/><text x="444" y="509">recalled / reported</text>
+    <path d="M640 499 L646 505 L640 511 L634 505 Z" fill="#b9c3d6"/><text x="654" y="509">hallucinated (Circe)</text>
+  </g>
+  <g id="marks"><g class="cell" data-ep="4" data-inst="0"><circle class="m ring" cx="404.1" cy="74" r="5"/></g><g class="cell" data-ep="6" data-inst="0"><circle class="m dot" cx="481.5" cy="74" r="5"/></g><g class="cell" data-ep="8" data-inst="0"><circle class="m dot" cx="558.9" cy="74" r="5"/></g><g class="cell" data-ep="10" data-inst="0"><circle class="m dot" cx="636.4" cy="74" r="5"/></g><g class="cell" data-ep="11" data-inst="0"><circle class="m ring" cx="675.1" cy="74" r="5"/></g><g class="cell" data-ep="12" data-inst="0"><circle class="m dot" cx="713.8" cy="74" r="5"/></g><g class="cell" data-ep="13" data-inst="0"><circle class="m ring" cx="752.5" cy="74" r="5"/></g><g class="cell" data-ep="14" data-inst="0"><circle class="m ring" cx="791.2" cy="74" r="5"/></g><g class="cell" data-ep="15" data-inst="0"><circle class="m dot" cx="829.9" cy="74" r="5"/></g><g class="cell" data-ep="16" data-inst="0"><circle class="m dot" cx="868.6" cy="74" r="5"/></g><g class="cell" data-ep="17" data-inst="0"><circle class="m ring" cx="907.3" cy="74" r="5"/></g><g class="cell" data-ep="18" data-inst="0"><circle class="m ring" cx="946" cy="74" r="5"/></g><g class="cell" data-ep="1" data-inst="1"><circle class="m dot" cx="288" cy="103" r="5"/></g><g class="cell" data-ep="2" data-inst="1"><circle class="m ring" cx="326.7" cy="103" r="5"/></g><g class="cell" data-ep="3" data-inst="1"><circle class="m ring" cx="365.4" cy="103" r="5"/></g><g class="cell" data-ep="4" data-inst="1"><circle class="m ring" cx="404.1" cy="103" r="5"/></g><g class="cell" data-ep="5" data-inst="1"><circle class="m dot" cx="442.8" cy="103" r="5"/></g><g class="cell" data-ep="6" data-inst="1"><circle class="m ring" cx="481.5" cy="103" r="5"/></g><g class="cell" data-ep="7" data-inst="1"><circle class="m dot" cx="520.2" cy="103" r="5"/></g><g class="cell" data-ep="8" data-inst="1"><circle class="m ring" cx="558.9" cy="103" r="5"/></g><g class="cell" data-ep="9" data-inst="1"><circle class="m ring" cx="597.6" cy="103" r="5"/></g><g class="cell" data-ep="10" data-inst="1"><circle class="m dot" cx="636.4" cy="103" r="5"/></g><g class="cell" data-ep="11" data-inst="1"><circle class="m ring" cx="675.1" cy="103" r="5"/></g><g class="cell" data-ep="12" data-inst="1"><circle class="m ring" cx="713.8" cy="103" r="5"/></g><g class="cell" data-ep="13" data-inst="1"><circle class="m dot" cx="752.5" cy="103" r="5"/></g><g class="cell" data-ep="14" data-inst="1"><circle class="m dot" cx="791.2" cy="103" r="5"/></g><g class="cell" data-ep="15" data-inst="1"><circle class="m dot" cx="829.9" cy="103" r="5"/></g><g class="cell" data-ep="16" data-inst="1"><circle class="m ring" cx="868.6" cy="103" r="5"/></g><g class="cell" data-ep="17" data-inst="1"><circle class="m ring" cx="907.3" cy="103" r="5"/></g><g class="cell" data-ep="18" data-inst="1"><circle class="m ring" cx="946" cy="103" r="5"/></g><g class="cell" data-ep="1" data-inst="2"><circle class="m ring" cx="288" cy="132" r="5"/></g><g class="cell" data-ep="2" data-inst="2"><circle class="m ring" cx="326.7" cy="132" r="5"/></g><g class="cell" data-ep="6" data-inst="2"><circle class="m dot" cx="481.5" cy="132" r="5"/></g><g class="cell" data-ep="7" data-inst="2"><circle class="m ring" cx="520.2" cy="132" r="5"/></g><g class="cell" data-ep="8" data-inst="2"><circle class="m ring" cx="558.9" cy="132" r="5"/></g><g class="cell" data-ep="10" data-inst="2"><circle class="m dot" cx="636.4" cy="132" r="5"/></g><g class="cell" data-ep="12" data-inst="2"><circle class="m dot" cx="713.8" cy="132" r="5"/></g><g class="cell" data-ep="13" data-inst="2"><circle class="m ring" cx="752.5" cy="132" r="5"/></g><g class="cell" data-ep="14" data-inst="2"><circle class="m ring" cx="791.2" cy="132" r="5"/></g><g class="cell" data-ep="15" data-inst="2"><path class="m dia" d="M829.9 126 L835.9 132 L829.9 138 L823.9 132 Z"/></g><g class="cell" data-ep="16" data-inst="2"><circle class="m ring" cx="868.6" cy="132" r="5"/></g><g class="cell" data-ep="8" data-inst="3"><circle class="m dot" cx="558.9" cy="161" r="5"/></g><g class="cell" data-ep="10" data-inst="3"><circle class="m dot" cx="636.4" cy="161" r="5"/></g><g class="cell" data-ep="11" data-inst="3"><circle class="m dot" cx="675.1" cy="161" r="5"/></g><g class="cell" data-ep="12" data-inst="3"><path class="m dia" d="M713.8 155 L719.8 161 L713.8 167 L707.8 161 Z"/></g><g class="cell" data-ep="13" data-inst="3"><circle class="m dot" cx="752.5" cy="161" r="5"/></g><g class="cell" data-ep="15" data-inst="3"><path class="m dia" d="M829.9 155 L835.9 161 L829.9 167 L823.9 161 Z"/></g><g class="cell" data-ep="3" data-inst="4"><circle class="m ring" cx="365.4" cy="190" r="5"/></g><g class="cell" data-ep="5" data-inst="4"><circle class="m ring" cx="442.8" cy="190" r="5"/></g><g class="cell" data-ep="6" data-inst="4"><circle class="m ring" cx="481.5" cy="190" r="5"/></g><g class="cell" data-ep="7" data-inst="4"><circle class="m ring" cx="520.2" cy="190" r="5"/></g><g class="cell" data-ep="8" data-inst="4"><circle class="m dot" cx="558.9" cy="190" r="5"/></g><g class="cell" data-ep="9" data-inst="4"><circle class="m ring" cx="597.6" cy="190" r="5"/></g><g class="cell" data-ep="10" data-inst="4"><circle class="m dot" cx="636.4" cy="190" r="5"/></g><g class="cell" data-ep="11" data-inst="4"><circle class="m ring" cx="675.1" cy="190" r="5"/></g><g class="cell" data-ep="12" data-inst="4"><circle class="m dot" cx="713.8" cy="190" r="5"/></g><g class="cell" data-ep="14" data-inst="4"><circle class="m ring" cx="791.2" cy="190" r="5"/></g><g class="cell" data-ep="15" data-inst="4"><path class="m dia" d="M829.9 184 L835.9 190 L829.9 196 L823.9 190 Z"/></g><g class="cell" data-ep="16" data-inst="4"><circle class="m ring" cx="868.6" cy="190" r="5"/></g><g class="cell" data-ep="17" data-inst="4"><circle class="m ring" cx="907.3" cy="190" r="5"/></g><g class="cell" data-ep="18" data-inst="4"><circle class="m ring" cx="946" cy="190" r="5"/></g><g class="cell" data-ep="3" data-inst="5"><circle class="m ring" cx="365.4" cy="219" r="5"/></g><g class="cell" data-ep="6" data-inst="5"><circle class="m ring" cx="481.5" cy="219" r="5"/></g><g class="cell" data-ep="8" data-inst="5"><circle class="m ring" cx="558.9" cy="219" r="5"/></g><g class="cell" data-ep="10" data-inst="5"><circle class="m ring" cx="636.4" cy="219" r="5"/></g><g class="cell" data-ep="11" data-inst="5"><circle class="m dot" cx="675.1" cy="219" r="5"/></g><g class="cell" data-ep="12" data-inst="5"><circle class="m dot" cx="713.8" cy="219" r="5"/></g><g class="cell" data-ep="14" data-inst="5"><circle class="m ring" cx="791.2" cy="219" r="5"/></g><g class="cell" data-ep="15" data-inst="5"><path class="m dia" d="M829.9 213 L835.9 219 L829.9 225 L823.9 219 Z"/></g><g class="cell" data-ep="16" data-inst="5"><circle class="m ring" cx="868.6" cy="219" r="5"/></g><g class="cell" data-ep="17" data-inst="5"><path class="m dia" d="M907.3 213 L913.3 219 L907.3 225 L901.3 219 Z"/></g><g class="cell" data-ep="18" data-inst="5"><circle class="m ring" cx="946" cy="219" r="5"/></g><g class="cell" data-ep="3" data-inst="6"><circle class="m ring" cx="365.4" cy="248" r="5"/></g><g class="cell" data-ep="4" data-inst="6"><circle class="m ring" cx="404.1" cy="248" r="5"/></g><g class="cell" data-ep="5" data-inst="6"><circle class="m ring" cx="442.8" cy="248" r="5"/></g><g class="cell" data-ep="6" data-inst="6"><circle class="m dot" cx="481.5" cy="248" r="5"/></g><g class="cell" data-ep="7" data-inst="6"><circle class="m dot" cx="520.2" cy="248" r="5"/></g><g class="cell" data-ep="8" data-inst="6"><circle class="m ring" cx="558.9" cy="248" r="5"/></g><g class="cell" data-ep="10" data-inst="6"><circle class="m dot" cx="636.4" cy="248" r="5"/></g><g class="cell" data-ep="11" data-inst="6"><circle class="m ring" cx="675.1" cy="248" r="5"/></g><g class="cell" data-ep="12" data-inst="6"><circle class="m dot" cx="713.8" cy="248" r="5"/></g><g class="cell" data-ep="15" data-inst="6"><circle class="m dot" cx="829.9" cy="248" r="5"/></g><g class="cell" data-ep="16" data-inst="6"><circle class="m dot" cx="868.6" cy="248" r="5"/></g><g class="cell" data-ep="18" data-inst="6"><circle class="m ring" cx="946" cy="248" r="5"/></g><g class="cell" data-ep="1" data-inst="7"><circle class="m dot" cx="288" cy="277" r="5"/></g><g class="cell" data-ep="3" data-inst="7"><circle class="m ring" cx="365.4" cy="277" r="5"/></g><g class="cell" data-ep="4" data-inst="7"><circle class="m dot" cx="404.1" cy="277" r="5"/></g><g class="cell" data-ep="5" data-inst="7"><circle class="m dot" cx="442.8" cy="277" r="5"/></g><g class="cell" data-ep="6" data-inst="7"><circle class="m dot" cx="481.5" cy="277" r="5"/></g><g class="cell" data-ep="7" data-inst="7"><circle class="m dot" cx="520.2" cy="277" r="5"/></g><g class="cell" data-ep="8" data-inst="7"><circle class="m dot" cx="558.9" cy="277" r="5"/></g><g class="cell" data-ep="9" data-inst="7"><circle class="m dot" cx="597.6" cy="277" r="5"/></g><g class="cell" data-ep="10" data-inst="7"><circle class="m dot" cx="636.4" cy="277" r="5"/></g><g class="cell" data-ep="13" data-inst="7"><circle class="m dot" cx="752.5" cy="277" r="5"/></g><g class="cell" data-ep="14" data-inst="7"><circle class="m dot" cx="791.2" cy="277" r="5"/></g><g class="cell" data-ep="15" data-inst="7"><path class="m dia" d="M829.9 271 L835.9 277 L829.9 283 L823.9 277 Z"/></g><g class="cell" data-ep="16" data-inst="7"><circle class="m ring" cx="868.6" cy="277" r="5"/></g><g class="cell" data-ep="17" data-inst="7"><circle class="m dot" cx="907.3" cy="277" r="5"/></g><g class="cell" data-ep="18" data-inst="7"><circle class="m ring" cx="946" cy="277" r="5"/></g><g class="cell" data-ep="1" data-inst="8"><circle class="m ring" cx="288" cy="306" r="5"/></g><g class="cell" data-ep="2" data-inst="8"><circle class="m dot" cx="326.7" cy="306" r="5"/></g><g class="cell" data-ep="3" data-inst="8"><circle class="m ring" cx="365.4" cy="306" r="5"/></g><g class="cell" data-ep="4" data-inst="8"><circle class="m dot" cx="404.1" cy="306" r="5"/></g><g class="cell" data-ep="5" data-inst="8"><circle class="m ring" cx="442.8" cy="306" r="5"/></g><g class="cell" data-ep="6" data-inst="8"><circle class="m dot" cx="481.5" cy="306" r="5"/></g><g class="cell" data-ep="7" data-inst="8"><circle class="m dot" cx="520.2" cy="306" r="5"/></g><g class="cell" data-ep="8" data-inst="8"><circle class="m dot" cx="558.9" cy="306" r="5"/></g><g class="cell" data-ep="9" data-inst="8"><circle class="m dot" cx="597.6" cy="306" r="5"/></g><g class="cell" data-ep="13" data-inst="8"><circle class="m ring" cx="752.5" cy="306" r="5"/></g><g class="cell" data-ep="15" data-inst="8"><path class="m dia" d="M829.9 300 L835.9 306 L829.9 312 L823.9 306 Z"/></g><g class="cell" data-ep="16" data-inst="8"><circle class="m dot" cx="868.6" cy="306" r="5"/></g><g class="cell" data-ep="17" data-inst="8"><circle class="m ring" cx="907.3" cy="306" r="5"/></g><g class="cell" data-ep="18" data-inst="8"><circle class="m ring" cx="946" cy="306" r="5"/></g><g class="cell" data-ep="1" data-inst="9"><circle class="m dot" cx="288" cy="335" r="5"/></g><g class="cell" data-ep="2" data-inst="9"><circle class="m dot" cx="326.7" cy="335" r="5"/></g><g class="cell" data-ep="3" data-inst="9"><circle class="m dot" cx="365.4" cy="335" r="5"/></g><g class="cell" data-ep="4" data-inst="9"><circle class="m dot" cx="404.1" cy="335" r="5"/></g><g class="cell" data-ep="5" data-inst="9"><circle class="m dot" cx="442.8" cy="335" r="5"/></g><g class="cell" data-ep="6" data-inst="9"><circle class="m dot" cx="481.5" cy="335" r="5"/></g><g class="cell" data-ep="7" data-inst="9"><circle class="m dot" cx="520.2" cy="335" r="5"/></g><g class="cell" data-ep="8" data-inst="9"><circle class="m dot" cx="558.9" cy="335" r="5"/></g><g class="cell" data-ep="9" data-inst="9"><circle class="m dot" cx="597.6" cy="335" r="5"/></g><g class="cell" data-ep="10" data-inst="9"><circle class="m dot" cx="636.4" cy="335" r="5"/></g><g class="cell" data-ep="11" data-inst="9"><circle class="m dot" cx="675.1" cy="335" r="5"/></g><g class="cell" data-ep="12" data-inst="9"><circle class="m dot" cx="713.8" cy="335" r="5"/></g><g class="cell" data-ep="13" data-inst="9"><circle class="m dot" cx="752.5" cy="335" r="5"/></g><g class="cell" data-ep="14" data-inst="9"><circle class="m dot" cx="791.2" cy="335" r="5"/></g><g class="cell" data-ep="15" data-inst="9"><circle class="m dot" cx="829.9" cy="335" r="5"/></g><g class="cell" data-ep="16" data-inst="9"><circle class="m dot" cx="868.6" cy="335" r="5"/></g><g class="cell" data-ep="17" data-inst="9"><circle class="m dot" cx="907.3" cy="335" r="5"/></g><g class="cell" data-ep="18" data-inst="9"><circle class="m dot" cx="946" cy="335" r="5"/></g><g class="cell" data-ep="2" data-inst="10"><circle class="m dot" cx="326.7" cy="364" r="5"/></g><g class="cell" data-ep="3" data-inst="10"><circle class="m ring" cx="365.4" cy="364" r="5"/></g><g class="cell" data-ep="6" data-inst="10"><circle class="m dot" cx="481.5" cy="364" r="5"/></g><g class="cell" data-ep="7" data-inst="10"><circle class="m dot" cx="520.2" cy="364" r="5"/></g><g class="cell" data-ep="8" data-inst="10"><circle class="m ring" cx="558.9" cy="364" r="5"/></g><g class="cell" data-ep="10" data-inst="10"><circle class="m dot" cx="636.4" cy="364" r="5"/></g><g class="cell" data-ep="11" data-inst="10"><circle class="m dot" cx="675.1" cy="364" r="5"/></g><g class="cell" data-ep="12" data-inst="10"><circle class="m dot" cx="713.8" cy="364" r="5"/></g><g class="cell" data-ep="15" data-inst="10"><path class="m dia" d="M829.9 358 L835.9 364 L829.9 370 L823.9 364 Z"/></g><g class="cell" data-ep="17" data-inst="10"><circle class="m dot" cx="907.3" cy="364" r="5"/></g><g class="cell" data-ep="18" data-inst="10"><circle class="m ring" cx="946" cy="364" r="5"/></g><g class="cell" data-ep="4" data-inst="11"><circle class="m dot" cx="404.1" cy="393" r="5"/></g><g class="cell" data-ep="6" data-inst="11"><circle class="m dot" cx="481.5" cy="393" r="5"/></g><g class="cell" data-ep="8" data-inst="11"><circle class="m dot" cx="558.9" cy="393" r="5"/></g><g class="cell" data-ep="10" data-inst="11"><circle class="m dot" cx="636.4" cy="393" r="5"/></g><g class="cell" data-ep="12" data-inst="11"><circle class="m dot" cx="713.8" cy="393" r="5"/></g><g class="cell" data-ep="13" data-inst="11"><circle class="m dot" cx="752.5" cy="393" r="5"/></g><g class="cell" data-ep="14" data-inst="11"><circle class="m dot" cx="791.2" cy="393" r="5"/></g><g class="cell" data-ep="15" data-inst="11"><path class="m dia" d="M829.9 387 L835.9 393 L829.9 399 L823.9 393 Z"/></g><g class="cell" data-ep="16" data-inst="11"><circle class="m dot" cx="868.6" cy="393" r="5"/></g><g class="cell" data-ep="17" data-inst="11"><circle class="m dot" cx="907.3" cy="393" r="5"/></g><g class="cell" data-ep="2" data-inst="12"><circle class="m ring" cx="326.7" cy="422" r="5"/></g><g class="cell" data-ep="7" data-inst="12"><circle class="m dot" cx="520.2" cy="422" r="5"/></g><g class="cell" data-ep="8" data-inst="12"><circle class="m dot" cx="558.9" cy="422" r="5"/></g><g class="cell" data-ep="10" data-inst="12"><circle class="m dot" cx="636.4" cy="422" r="5"/></g><g class="cell" data-ep="12" data-inst="12"><circle class="m dot" cx="713.8" cy="422" r="5"/></g><g class="cell" data-ep="16" data-inst="12"><circle class="m ring" cx="868.6" cy="422" r="5"/></g><g class="cell" data-ep="17" data-inst="12"><circle class="m dot" cx="907.3" cy="422" r="5"/></g><g class="cell" data-ep="18" data-inst="12"><circle class="m ring" cx="946" cy="422" r="5"/></g></g>
+</svg>
+    <div class="title show" id="title">
+      <h1>The Governed City</h1>
+      <div class="works">THIRTEEN INSTRUMENTS &#183; EIGHTEEN EPISODES</div>
+      <div class="rule"></div>
+      <p class="sub">Rule as an ambient hum.</p>
+    </div>
+  </div>
+
+  <p class="caption hidden" id="caption" aria-live="polite">
+    <span class="cname" id="cap-name"></span>
+    <span class="ctag" id="cap-tag"></span>
+  </p>
+
+  <div class="bar">
+    <button id="prev" aria-label="Previous card">&#8249; Prev</button>
+    <div class="dots" id="dots" role="tablist" aria-label="Cards"></div>
+    <button id="next" aria-label="Next card">Next &#8250;</button>
+    <span class="count" id="count"></span>
+  </div>
+</div>
+<p class="foot">An audience deck. 88 present
+marks across the eighteen episodes, thickening only at Cyclops and Circe.
+Dimension 3 &#183; <a href="../governed-city/instruments.html">the diagram</a>.</p>
+
+<script>
+(function(){
+  // Cards: identity labels only &#8212; the argument itself is the presenter's, off-site.
+  var CARDS = [
+    { kind:"title" },
+    { kind:"matrix", name:"The instruments of rule", tag:"160 marks · 88 present · 13 instruments · 18 episodes" },
+    { kind:"col", eps:[12], name:"Cyclops · episode 12", tag:"~5 p.m. · 11 instruments lit · 1 hallucinated" },
+    { kind:"col", eps:[15], name:"Circe · episode 15", tag:"~midnight · 12 instruments lit · 8 hallucinated" },
+    { kind:"col", eps:[12,15], name:"Cyclops & Circe", tag:"~5 p.m. & ~midnight · 23 marks lit · 9 hallucinated" },
+    { kind:"row", inst:2, name:"Dublin Castle", tag:"the seat of rule · 11 episodes · 7 recalled, 3 present, 1 hallucinated" },
+    { kind:"row", inst:6, name:"The informer and his reputation", tag:"12 episodes · 6 recalled, 6 present" },
+    { kind:"all", name:"The governed city, assembled", tag:"13 instruments across 18 episodes · all 160 marks lit" }
+  ];
+  var cells = Array.prototype.slice.call(document.querySelectorAll(".cell"));
+  var i = 0;
+  var title = document.getElementById("title");
+  var caption = document.getElementById("caption");
+  var capName = document.getElementById("cap-name");
+  var capTag = document.getElementById("cap-tag");
+  var prev = document.getElementById("prev");
+  var next = document.getElementById("next");
+  var count = document.getElementById("count");
+  var dotsWrap = document.getElementById("dots");
+
+  // build dots
+  CARDS.forEach(function(c, n){
+    var d = document.createElement("button");
+    d.setAttribute("role","tab");
+    d.setAttribute("aria-label","Card " + (n+1));
+    d.addEventListener("click", function(){ go(n); });
+    dotsWrap.appendChild(d);
+  });
+  var dots = dotsWrap.querySelectorAll("button");
+
+  function lit(c, ep, inst){
+    if (c.kind === "all") return true;
+    if (c.kind === "col") return c.eps.indexOf(ep) >= 0;
+    if (c.kind === "row") return inst === c.inst;
+    return false; // title, matrix: nothing lit (the ambient hum)
+  }
+
+  function render(){
+    var c = CARDS[i];
+    cells.forEach(function(cell){
+      var ep = +cell.getAttribute("data-ep");
+      var inst = +cell.getAttribute("data-inst");
+      cell.classList.toggle("on", lit(c, ep, inst));
+    });
+    title.classList.toggle("show", c.kind === "title");
+    if (c.kind === "title") {
+      caption.classList.add("hidden");
+    } else {
+      caption.classList.remove("hidden");
+      capName.textContent = c.name;
+      capTag.textContent = c.tag;
+    }
+    prev.disabled = (i === 0);
+    next.disabled = (i === CARDS.length - 1);
+    count.textContent = (i+1) + " / " + CARDS.length;
+    dots.forEach(function(d, n){ d.setAttribute("aria-current", n === i ? "true" : "false"); });
+  }
+  function go(n){ i = Math.max(0, Math.min(CARDS.length - 1, n)); render(); }
+
+  prev.addEventListener("click", function(){ go(i-1); });
+  next.addEventListener("click", function(){ go(i+1); });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "ArrowRight" || e.key === "PageDown") { go(i+1); e.preventDefault(); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { go(i-1); e.preventDefault(); }
+    else if (e.key === "Home") { go(0); e.preventDefault(); }
+    else if (e.key === "End") { go(CARDS.length-1); e.preventDefault(); }
+  });
+  render();
+})();
+</script>
+</body>
+</html>

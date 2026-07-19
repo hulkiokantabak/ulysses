@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Object Museum — the deck</title>
+<style>
+  /* Dimension 1's presentation register: the audience deck. Image cards only, no
+     explanations (the presenter's material is kept off the public site — C-19). One
+     plane — a day-timeline, 8 a.m. to 2 a.m., a lane per hero object; each card lights
+     one object's lane of stations in gold and reads it across the hours; the last card
+     assembles all seven. The 1922 family: deep plate, paper, gold, mono factual layer.
+     No animation, so prefers-reduced-motion is honoured by design. */
+  :root {
+    --deep:#081a35; --paper:#f4efe2; --gold:#dfa93f; --mute:#b9c3d6;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *,*::before,*::after { box-sizing:border-box; }
+  html,body { margin:0; padding:0; height:100%; background:var(--deep); color:var(--paper); }
+  body { font-family:var(--serif); display:flex; flex-direction:column; min-height:100vh; }
+  .deck { flex:1; display:flex; flex-direction:column; max-width:70rem; width:100%;
+          margin-inline:auto; padding:1rem 1rem 0; }
+  .stage { position:relative; flex:1; display:flex; align-items:center; justify-content:center; }
+  svg { display:block; width:100%; height:auto; max-height:72vh; }
+  /* lanes default to muted/small; JS lights the active object's whole lane */
+  .pt line.lane { stroke:var(--mute); stroke-width:1; opacity:.2; }
+  .pt.on line.lane { stroke:var(--gold); stroke-width:2; opacity:.85; }
+  .pt circle.dot { fill:var(--mute); r:5px; transition:none; }
+  .pt.on circle.dot { fill:var(--gold); r:9px; }
+  .pt .plabel, .pt .ptag { opacity:0; }
+  .pt.on .plabel, .pt.on .ptag { opacity:1; }
+  .plabel { font-family:var(--serif); font-size:17px; fill:var(--paper); }
+  .ptag { font-family:var(--mono); font-size:11px; fill:var(--mute); }
+  /* the title card overlays the stage */
+  .title { position:absolute; inset:0; display:none; flex-direction:column;
+           align-items:center; justify-content:center; text-align:center; }
+  .title.show { display:flex; }
+  .title h1 { font-size:clamp(2rem,7vw,4rem); margin:0 0 .5rem; letter-spacing:.01em; }
+  .title .works { font-family:var(--mono); color:var(--mute); font-size:clamp(.7rem,2vw,1rem);
+                  letter-spacing:.12em; }
+  .title .rule { width:8rem; height:3px; background:var(--gold); margin:1.25rem 0; }
+  .title .sub { font-style:italic; color:var(--paper); max-width:34ch; font-size:clamp(1rem,2.6vw,1.3rem); }
+  /* the caption bar reads the current card — identity only */
+  .caption { min-height:3.2rem; text-align:center; padding:.5rem 0 .25rem; }
+  .caption .cname { font-size:1.4rem; }
+  .caption .ctag { font-family:var(--mono); color:var(--mute); font-size:.9rem; letter-spacing:.04em; display:block; margin-top:.15rem; }
+  .caption.hidden { visibility:hidden; }
+  /* controls */
+  .bar { display:flex; align-items:center; justify-content:center; gap:1rem;
+         padding:.75rem 0 1.25rem; font-family:var(--mono); }
+  button { font:inherit; font-family:var(--mono); font-size:1rem; color:var(--deep);
+           background:var(--paper); border:0; padding:.4rem .9rem; cursor:pointer; }
+  button:disabled { opacity:.35; cursor:default; }
+  .dots { display:flex; gap:.5rem; }
+  .dots button { padding:0; width:.85rem; height:.85rem; border-radius:50%;
+                 background:transparent; border:1.5px solid var(--mute); }
+  .dots button[aria-current="true"] { background:var(--gold); border-color:var(--gold); }
+  .count { color:var(--mute); font-size:.85rem; min-width:4rem; text-align:center; }
+  :focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+  a { color:var(--gold); }
+  .foot { text-align:center; font-family:var(--mono); font-size:.75rem; color:var(--mute);
+          padding-bottom:1rem; }
+</style>
+</head>
+<body>
+<div class="deck">
+  <div class="stage" id="stage" tabindex="0" role="group" aria-roledescription="slide deck"
+       aria-label="The Object Museum, an audience deck. Use the left and right arrow keys.">
+    <svg viewBox="0 0 960 560" aria-hidden="true">
+      <!-- faint hour gridlines, behind the lanes -->
+      <g stroke="#b9c3d6" stroke-width="1" opacity="0.14">
+        <line x1="422" y1="70" x2="422" y2="445"/>
+        <line x1="554" y1="70" x2="554" y2="445"/>
+        <line x1="686" y1="70" x2="686" y2="445"/>
+        <line x1="818" y1="70" x2="818" y2="445"/>
+      </g>
+      <!-- the time axis: origin at 8 a.m., baseline across the day -->
+      <line x1="290" y1="70" x2="290" y2="445" stroke="#b9c3d6" stroke-width="1"/>
+      <line x1="290" y1="445" x2="917" y2="445" stroke="#b9c3d6" stroke-width="1"/>
+      <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="14" fill="#b9c3d6">
+        <text x="290" y="468" text-anchor="middle">8 a.m.</text>
+        <text x="422" y="468" text-anchor="middle">noon</text>
+        <text x="554" y="468" text-anchor="middle">4 p.m.</text>
+        <text x="686" y="468" text-anchor="middle">8 p.m.</text>
+        <text x="818" y="468" text-anchor="middle">midnight</text>
+        <text x="884" y="468" text-anchor="middle">2 a.m.</text>
+        <text x="603" y="500" text-anchor="middle" letter-spacing="2">THE HOURS OF 16 JUNE 1904</text>
+      </g>
+      <text x="20" y="257" text-anchor="middle" transform="rotate(-90 20 257)" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="13" fill="#b9c3d6" letter-spacing="2">THE HERO OBJECTS</text>
+
+      <!-- lane 1: the lemon soap (y=90) -->
+      <g class="pt" id="obj-soap">
+        <line class="lane" x1="364" y1="90" x2="884" y2="90"/>
+        <circle class="dot" cx="364" cy="90"/><circle class="dot" cx="378" cy="90"/>
+        <circle class="dot" cx="389" cy="90"/><circle class="dot" cx="414" cy="90"/>
+        <circle class="dot" cx="439" cy="90"/><circle class="dot" cx="488" cy="90"/>
+        <circle class="dot" cx="719" cy="90"/><circle class="dot" cx="818" cy="90"/>
+        <circle class="dot" cx="825" cy="90"/><circle class="dot" cx="851" cy="90"/>
+        <circle class="dot" cx="884" cy="90"/>
+        <text class="plabel" x="272" y="86" text-anchor="end">the lemon soap</text>
+        <text class="ptag" x="272" y="104" text-anchor="end">11 stations</text>
+      </g>
+      <!-- lane 2: Stephen's wages (y=145) -->
+      <g class="pt" id="obj-wages">
+        <line class="lane" x1="290" y1="145" x2="884" y2="145"/>
+        <circle class="dot" cx="290" cy="145"/><circle class="dot" cx="356" cy="145"/>
+        <circle class="dot" cx="389" cy="145"/><circle class="dot" cx="455" cy="145"/>
+        <circle class="dot" cx="488" cy="145"/><circle class="dot" cx="752" cy="145"/>
+        <circle class="dot" cx="785" cy="145"/><circle class="dot" cx="818" cy="145"/>
+        <circle class="dot" cx="835" cy="145"/><circle class="dot" cx="851" cy="145"/>
+        <circle class="dot" cx="858" cy="145"/><circle class="dot" cx="884" cy="145"/>
+        <text class="plabel" x="272" y="141" text-anchor="end">Stephen's wages</text>
+        <text class="ptag" x="272" y="159" text-anchor="end">12 stations</text>
+      </g>
+      <!-- lane 3: Mr Deasy's letter (y=200) -->
+      <g class="pt" id="obj-deasy">
+        <line class="lane" x1="356" y1="200" x2="851" y2="200"/>
+        <circle class="dot" cx="356" cy="200"/><circle class="dot" cx="389" cy="200"/>
+        <circle class="dot" cx="439" cy="200"/><circle class="dot" cx="488" cy="200"/>
+        <circle class="dot" cx="587" cy="200"/><circle class="dot" cx="752" cy="200"/>
+        <circle class="dot" cx="818" cy="200"/><circle class="dot" cx="851" cy="200"/>
+        <text class="plabel" x="272" y="196" text-anchor="end">Mr Deasy's letter</text>
+        <text class="ptag" x="272" y="214" text-anchor="end">8 stations</text>
+      </g>
+      <!-- lane 4: the Elijah throwaway (y=255) -->
+      <g class="pt" id="obj-elijah">
+        <line class="lane" x1="455" y1="255" x2="884" y2="255"/>
+        <circle class="dot" cx="455" cy="255"/><circle class="dot" cx="462" cy="255"/>
+        <circle class="dot" cx="468" cy="255"/><circle class="dot" cx="521" cy="255"/>
+        <circle class="dot" cx="528" cy="255"/><circle class="dot" cx="538" cy="255"/>
+        <circle class="dot" cx="554" cy="255"/><circle class="dot" cx="818" cy="255"/>
+        <circle class="dot" cx="884" cy="255"/>
+        <text class="plabel" x="272" y="251" text-anchor="end">the Elijah throwaway</text>
+        <text class="ptag" x="272" y="269" text-anchor="end">9 stations</text>
+      </g>
+      <!-- lane 5: Plumtree's potted meat (y=310) -->
+      <g class="pt" id="obj-potted">
+        <line class="lane" x1="356" y1="310" x2="909" y2="310"/>
+        <circle class="dot" cx="356" cy="310"/><circle class="dot" cx="461" cy="310"/>
+        <circle class="dot" cx="472" cy="310"/><circle class="dot" cx="818" cy="310"/>
+        <circle class="dot" cx="892" cy="310"/><circle class="dot" cx="895" cy="310"/>
+        <circle class="dot" cx="906" cy="310"/><circle class="dot" cx="909" cy="310"/>
+        <text class="plabel" x="272" y="306" text-anchor="end">Plumtree's potted meat</text>
+        <text class="ptag" x="272" y="324" text-anchor="end">8 stations</text>
+      </g>
+      <!-- lane 6: Bloom's latchkey, absent (y=365) -->
+      <g class="pt" id="obj-latch">
+        <line class="lane" x1="298" y1="365" x2="901" y2="365"/>
+        <circle class="dot" cx="298" cy="365"/><circle class="dot" cx="364" cy="365"/>
+        <circle class="dot" cx="884" cy="365"/><circle class="dot" cx="887" cy="365"/>
+        <circle class="dot" cx="901" cy="365"/>
+        <text class="plabel" x="272" y="361" text-anchor="end">Bloom's latchkey (absent)</text>
+        <text class="ptag" x="272" y="379" text-anchor="end">5 stations</text>
+      </g>
+      <!-- lane 7: Martha's letter (y=420) -->
+      <g class="pt" id="obj-martha">
+        <line class="lane" x1="290" y1="420" x2="884" y2="420"/>
+        <circle class="dot" cx="290" cy="420"/><circle class="dot" cx="356" cy="420"/>
+        <circle class="dot" cx="361" cy="420"/><circle class="dot" cx="406" cy="420"/>
+        <circle class="dot" cx="455" cy="420"/><circle class="dot" cx="554" cy="420"/>
+        <circle class="dot" cx="570" cy="420"/>
+        <circle class="dot" cx="703" cy="420"/><circle class="dot" cx="818" cy="420"/>
+        <circle class="dot" cx="884" cy="420"/>
+        <text class="plabel" x="272" y="416" text-anchor="end">Martha's letter</text>
+        <text class="ptag" x="272" y="434" text-anchor="end">10 stations</text>
+      </g>
+    </svg>
+    <div class="title show" id="title">
+      <h1>The Object Museum</h1>
+      <div class="works">SOAP · WAGES · A LETTER · A THROWAWAY · POTTED MEAT · A KEY</div>
+      <div class="rule"></div>
+      <p class="sub">Seven things carried through one Dublin day — and everywhere they went.</p>
+    </div>
+  </div>
+
+  <p class="caption hidden" id="caption" aria-live="polite">
+    <span class="cname" id="cap-name"></span>
+    <span class="ctag" id="cap-tag"></span>
+  </p>
+
+  <div class="bar">
+    <button id="prev" aria-label="Previous card">‹ Prev</button>
+    <div class="dots" id="dots" role="tablist" aria-label="Cards"></div>
+    <button id="next" aria-label="Next card">Next ›</button>
+    <span class="count" id="count"></span>
+  </div>
+</div>
+<p class="foot">An audience deck. Hours follow the text approximately; every object converges on 7 Eccles Street in the small hours.
+Dimension 1 · the object museum.</p>
+
+<script>
+(function(){
+  // Cards: identity labels only — the argument itself is the presenter's, off-site.
+  var CARDS = [
+    { kind:"title" },
+    { kind:"work", id:"obj-soap",   name:"the lemon soap",           tag:"11 stations · 10:15 a.m. to 2 a.m." },
+    { kind:"work", id:"obj-wages",  name:"Stephen's wages",          tag:"12 stations · 8 a.m. to 2 a.m." },
+    { kind:"work", id:"obj-deasy",  name:"Mr Deasy's letter",        tag:"8 stations · 10 a.m. to 1 a.m." },
+    { kind:"work", id:"obj-elijah", name:"the Elijah throwaway",     tag:"9 stations · 1 p.m. to 2 a.m." },
+    { kind:"work", id:"obj-potted", name:"Plumtree's potted meat",   tag:"8 stations · 10 a.m. to the small hours" },
+    { kind:"work", id:"obj-latch",  name:"Bloom's latchkey (absent)",tag:"5 stations · 8:15 a.m. to 2:30 a.m." },
+    { kind:"work", id:"obj-martha", name:"Martha's letter",          tag:"10 stations · 8 a.m. to 2 a.m." },
+    { kind:"all",  name:"The seven, assembled",                      tag:"one day · seven things · all converging on 7 Eccles Street" }
+  ];
+  var pts = ["obj-soap","obj-wages","obj-deasy","obj-elijah","obj-potted","obj-latch","obj-martha"];
+  var i = 0;
+  var title = document.getElementById("title");
+  var caption = document.getElementById("caption");
+  var capName = document.getElementById("cap-name");
+  var capTag = document.getElementById("cap-tag");
+  var prev = document.getElementById("prev");
+  var next = document.getElementById("next");
+  var count = document.getElementById("count");
+  var dotsWrap = document.getElementById("dots");
+
+  // build dots
+  CARDS.forEach(function(c, n){
+    var d = document.createElement("button");
+    d.setAttribute("role","tab");
+    d.setAttribute("aria-label","Card " + (n+1));
+    d.addEventListener("click", function(){ go(n); });
+    dotsWrap.appendChild(d);
+  });
+  var dots = dotsWrap.querySelectorAll("button");
+
+  function render(){
+    var c = CARDS[i];
+    pts.forEach(function(id){
+      var el = document.getElementById(id);
+      var on = (c.kind === "all") || (c.kind === "work" && c.id === id);
+      el.classList.toggle("on", on);
+    });
+    title.classList.toggle("show", c.kind === "title");
+    if (c.kind === "title") {
+      caption.classList.add("hidden");
+    } else {
+      caption.classList.remove("hidden");
+      capName.textContent = c.name;
+      capTag.textContent = c.tag;
+    }
+    prev.disabled = (i === 0);
+    next.disabled = (i === CARDS.length - 1);
+    count.textContent = (i+1) + " / " + CARDS.length;
+    dots.forEach(function(d, n){ d.setAttribute("aria-current", n === i ? "true" : "false"); });
+  }
+  function go(n){ i = Math.max(0, Math.min(CARDS.length - 1, n)); render(); }
+
+  prev.addEventListener("click", function(){ go(i-1); });
+  next.addEventListener("click", function(){ go(i+1); });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "ArrowRight" || e.key === "PageDown") { go(i+1); e.preventDefault(); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { go(i-1); e.preventDefault(); }
+    else if (e.key === "Home") { go(0); e.preventDefault(); }
+    else if (e.key === "End") { go(CARDS.length-1); e.preventDefault(); }
+  });
+  render();
+})();
+</script>
+</body>
+</html>

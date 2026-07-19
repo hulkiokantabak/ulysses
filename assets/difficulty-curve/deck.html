@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Difficulty Curve — the deck</title>
+<style>
+  /* Dimension 11's presentation register: the audience deck. Image cards only, no
+     explanations (the presenter's material is kept off the public site — C-19). One
+     plane — the per-episode bar chart of placed questions (the signature device,
+     anchor A7); each card lights a subset of the bars in gold; the last card
+     assembles all eighteen. The 1922 family: deep plate, paper, gold, mono factual
+     layer. No animation, so prefers-reduced-motion is honoured by design. */
+  :root {
+    --deep:#081a35; --paper:#f4efe2; --gold:#dfa93f; --mute:#b9c3d6;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *,*::before,*::after { box-sizing:border-box; }
+  html,body { margin:0; padding:0; height:100%; background:var(--deep); color:var(--paper); }
+  body { font-family:var(--serif); display:flex; flex-direction:column; min-height:100vh; }
+  .deck { flex:1; display:flex; flex-direction:column; max-width:70rem; width:100%;
+          margin-inline:auto; padding:1rem 1rem 0; }
+  .stage { position:relative; flex:1; display:flex; align-items:center; justify-content:center; }
+  svg { display:block; width:100%; height:auto; max-height:74vh; }
+  /* bars default to muted/short; JS lights the active episode(s) gold + enlarged */
+  .bar rect.col { fill:var(--mute); opacity:.5; }
+  .bar.on rect.col { fill:var(--gold); opacity:1;
+                     transform-box:fill-box; transform-origin:50% 100%; transform:scale(1.14,1.04); }
+  .bar .zdot { fill:var(--mute); opacity:.5; }
+  .bar.on .zdot { fill:var(--gold); opacity:1; }
+  .bar .val, .bar .nm { opacity:0; }
+  .bar.on .val, .bar.on .nm { opacity:1; }
+  .val { font-family:var(--mono); font-size:19px; fill:var(--gold); }
+  .nm { font-family:var(--serif); font-size:14px; fill:var(--paper); }
+  .enum { font-family:var(--mono); font-size:13px; fill:var(--mute); }
+  .axis { stroke:#b9c3d6; stroke-width:1; }
+  .grid { stroke:#b9c3d6; stroke-width:1; opacity:.14; }
+  .axlab { font-family:var(--mono); font-size:13px; fill:var(--mute); }
+  .axtitle { font-family:var(--mono); font-size:13px; fill:var(--mute); letter-spacing:2px; }
+  /* the title card overlays the stage */
+  .title { position:absolute; inset:0; display:none; flex-direction:column;
+           align-items:center; justify-content:center; text-align:center; }
+  .title.show { display:flex; }
+  .title h1 { font-size:clamp(2rem,7vw,4rem); margin:0 0 .5rem; letter-spacing:.01em; }
+  .title .works { font-family:var(--mono); color:var(--mute); font-size:clamp(.9rem,2.4vw,1.15rem);
+                  letter-spacing:.12em; }
+  .title .rule { width:8rem; height:3px; background:var(--gold); margin:1.25rem 0; }
+  .title .sub { font-style:italic; color:var(--paper); max-width:34ch; font-size:clamp(1rem,2.6vw,1.3rem); }
+  /* the caption bar reads the current card — identity only */
+  .caption { min-height:3.2rem; text-align:center; padding:.5rem 0 .25rem; }
+  .caption .cname { font-size:1.4rem; }
+  .caption .ctag { font-family:var(--mono); color:var(--mute); font-size:.9rem; letter-spacing:.04em; display:block; margin-top:.15rem; }
+  .caption.hidden { visibility:hidden; }
+  /* controls */
+  .bar-nav { display:flex; align-items:center; justify-content:center; gap:1rem;
+             padding:.75rem 0 1.25rem; font-family:var(--mono); }
+  button { font:inherit; font-family:var(--mono); font-size:1rem; color:var(--deep);
+           background:var(--paper); border:0; padding:.4rem .9rem; cursor:pointer; }
+  button:disabled { opacity:.35; cursor:default; }
+  .dots { display:flex; gap:.5rem; }
+  .dots button { padding:0; width:.85rem; height:.85rem; border-radius:50%;
+                 background:transparent; border:1.5px solid var(--mute); }
+  .dots button[aria-current="true"] { background:var(--gold); border-color:var(--gold); }
+  .count { color:var(--mute); font-size:.85rem; min-width:4rem; text-align:center; }
+  :focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+  a { color:var(--gold); }
+  .foot { text-align:center; font-family:var(--mono); font-size:.75rem; color:var(--mute);
+          padding-bottom:1rem; }
+</style>
+</head>
+<body>
+<div class="deck">
+  <div class="stage" id="stage" tabindex="0" role="group" aria-roledescription="slide deck"
+       aria-label="The Difficulty Curve, an audience deck. Use the left and right arrow keys.">
+    <svg viewBox="0 0 1040 580" aria-hidden="true">
+      <!-- gridlines -->
+      <line class="grid" x1="60" y1="295" x2="1010" y2="295"/>
+      <line class="grid" x1="60" y1="210" x2="1010" y2="210"/>
+      <line class="grid" x1="60" y1="125" x2="1010" y2="125"/>
+      <line class="grid" x1="60" y1="40"  x2="1010" y2="40"/>
+      <!-- axes -->
+      <line class="axis" x1="60" y1="380" x2="1010" y2="380"/>
+      <line class="axis" x1="60" y1="40"  x2="60"   y2="380"/>
+      <!-- y labels -->
+      <g class="axlab" text-anchor="end">
+        <text x="50" y="384">0</text>
+        <text x="50" y="299">10</text>
+        <text x="50" y="214">20</text>
+        <text x="50" y="129">30</text>
+        <text x="50" y="44">40</text>
+      </g>
+      <text class="axtitle" x="22" y="210" text-anchor="middle" transform="rotate(-90 22 210)">QUESTIONS PLACED</text>
+      <text class="axtitle" x="535" y="525" text-anchor="middle">THE EIGHTEEN EPISODES &#8594;</text>
+
+      <g class="bar" id="e1">
+        <rect class="col" x="70.0" y="371.5" width="46.6" height="8.5"/>
+        <text class="val" x="93.3" y="362" text-anchor="middle">1</text>
+        <text class="enum" x="93.3" y="396" text-anchor="middle">1</text>
+        <text class="nm" x="93.3" y="410" text-anchor="end" transform="rotate(-38 93.3 410)">Telemachus</text>
+      </g>
+      <g class="bar" id="e2">
+        <circle class="zdot" cx="145.8" cy="380" r="5"/>
+        <text class="val" x="145.8" y="366" text-anchor="middle">0</text>
+        <text class="enum" x="145.8" y="396" text-anchor="middle">2</text>
+        <text class="nm" x="145.8" y="410" text-anchor="end" transform="rotate(-38 145.8 410)">Nestor</text>
+      </g>
+      <g class="bar" id="e3">
+        <circle class="zdot" cx="198.4" cy="380" r="5"/>
+        <text class="val" x="198.4" y="366" text-anchor="middle">0</text>
+        <text class="enum" x="198.4" y="396" text-anchor="middle">3</text>
+        <text class="nm" x="198.4" y="410" text-anchor="end" transform="rotate(-38 198.4 410)">Proteus</text>
+      </g>
+      <g class="bar" id="e4">
+        <rect class="col" x="227.6" y="337.5" width="46.6" height="42.5"/>
+        <text class="val" x="250.9" y="328" text-anchor="middle">5</text>
+        <text class="enum" x="250.9" y="396" text-anchor="middle">4</text>
+        <text class="nm" x="250.9" y="410" text-anchor="end" transform="rotate(-38 250.9 410)">Calypso</text>
+      </g>
+      <g class="bar" id="e5">
+        <rect class="col" x="280.2" y="363" width="46.6" height="17"/>
+        <text class="val" x="303.5" y="354" text-anchor="middle">2</text>
+        <text class="enum" x="303.5" y="396" text-anchor="middle">5</text>
+        <text class="nm" x="303.5" y="410" text-anchor="end" transform="rotate(-38 303.5 410)">Lotus Eaters</text>
+      </g>
+      <g class="bar" id="e6">
+        <rect class="col" x="332.8" y="295" width="46.6" height="85"/>
+        <text class="val" x="356.1" y="286" text-anchor="middle">10</text>
+        <text class="enum" x="356.1" y="396" text-anchor="middle">6</text>
+        <text class="nm" x="356.1" y="410" text-anchor="end" transform="rotate(-38 356.1 410)">Hades</text>
+      </g>
+      <g class="bar" id="e7">
+        <rect class="col" x="385.3" y="363" width="46.6" height="17"/>
+        <text class="val" x="408.6" y="354" text-anchor="middle">2</text>
+        <text class="enum" x="408.6" y="396" text-anchor="middle">7</text>
+        <text class="nm" x="408.6" y="410" text-anchor="end" transform="rotate(-38 408.6 410)">Aeolus</text>
+      </g>
+      <g class="bar" id="e8">
+        <rect class="col" x="437.9" y="320.5" width="46.6" height="59.5"/>
+        <text class="val" x="461.2" y="311" text-anchor="middle">7</text>
+        <text class="enum" x="461.2" y="396" text-anchor="middle">8</text>
+        <text class="nm" x="461.2" y="410" text-anchor="end" transform="rotate(-38 461.2 410)">Lestrygonians</text>
+      </g>
+      <g class="bar" id="e9">
+        <rect class="col" x="490.4" y="286.5" width="46.6" height="93.5"/>
+        <text class="val" x="513.7" y="277" text-anchor="middle">11</text>
+        <text class="enum" x="513.7" y="396" text-anchor="middle">9</text>
+        <text class="nm" x="513.7" y="410" text-anchor="end" transform="rotate(-38 513.7 410)">Scylla and Charybdis</text>
+      </g>
+      <g class="bar" id="e10">
+        <rect class="col" x="543.0" y="261" width="46.6" height="119"/>
+        <text class="val" x="566.3" y="252" text-anchor="middle">14</text>
+        <text class="enum" x="566.3" y="396" text-anchor="middle">10</text>
+        <text class="nm" x="566.3" y="410" text-anchor="end" transform="rotate(-38 566.3 410)">Wandering Rocks</text>
+      </g>
+      <g class="bar" id="e11">
+        <rect class="col" x="595.5" y="278" width="46.6" height="102"/>
+        <text class="val" x="618.8" y="269" text-anchor="middle">12</text>
+        <text class="enum" x="618.8" y="396" text-anchor="middle">11</text>
+        <text class="nm" x="618.8" y="410" text-anchor="end" transform="rotate(-38 618.8 410)">Sirens</text>
+      </g>
+      <g class="bar" id="e12">
+        <rect class="col" x="648.1" y="176" width="46.6" height="204"/>
+        <text class="val" x="671.4" y="167" text-anchor="middle">24</text>
+        <text class="enum" x="671.4" y="396" text-anchor="middle">12</text>
+        <text class="nm" x="671.4" y="410" text-anchor="end" transform="rotate(-38 671.4 410)">Cyclops</text>
+      </g>
+      <g class="bar" id="e13">
+        <rect class="col" x="700.6" y="278" width="46.6" height="102"/>
+        <text class="val" x="723.9" y="269" text-anchor="middle">12</text>
+        <text class="enum" x="723.9" y="396" text-anchor="middle">13</text>
+        <text class="nm" x="723.9" y="410" text-anchor="end" transform="rotate(-38 723.9 410)">Nausicaa</text>
+      </g>
+      <g class="bar" id="e14">
+        <rect class="col" x="753.2" y="261" width="46.6" height="119"/>
+        <text class="val" x="776.5" y="252" text-anchor="middle">14</text>
+        <text class="enum" x="776.5" y="396" text-anchor="middle">14</text>
+        <text class="nm" x="776.5" y="410" text-anchor="end" transform="rotate(-38 776.5 410)">Oxen of the Sun</text>
+      </g>
+      <g class="bar" id="e15">
+        <rect class="col" x="805.8" y="40" width="46.6" height="340"/>
+        <text class="val" x="829.1" y="31" text-anchor="middle">40</text>
+        <text class="enum" x="829.1" y="396" text-anchor="middle">15</text>
+        <text class="nm" x="829.1" y="410" text-anchor="end" transform="rotate(-38 829.1 410)">Circe</text>
+      </g>
+      <g class="bar" id="e16">
+        <rect class="col" x="858.3" y="210" width="46.6" height="170"/>
+        <text class="val" x="881.6" y="201" text-anchor="middle">20</text>
+        <text class="enum" x="881.6" y="396" text-anchor="middle">16</text>
+        <text class="nm" x="881.6" y="410" text-anchor="end" transform="rotate(-38 881.6 410)">Eumaeus</text>
+      </g>
+      <g class="bar" id="e17">
+        <rect class="col" x="910.9" y="99.5" width="46.6" height="280.5"/>
+        <text class="val" x="934.2" y="90" text-anchor="middle">33</text>
+        <text class="enum" x="934.2" y="396" text-anchor="middle">17</text>
+        <text class="nm" x="934.2" y="410" text-anchor="end" transform="rotate(-38 934.2 410)">Ithaca</text>
+      </g>
+      <g class="bar" id="e18">
+        <rect class="col" x="963.4" y="57" width="46.6" height="323"/>
+        <text class="val" x="986.7" y="48" text-anchor="middle">38</text>
+        <text class="enum" x="986.7" y="396" text-anchor="middle">18</text>
+        <text class="nm" x="986.7" y="410" text-anchor="end" transform="rotate(-38 986.7 410)">Penelope</text>
+      </g>
+    </svg>
+    <div class="title show" id="title">
+      <h1>The Difficulty Curve</h1>
+      <div class="works">EIGHTEEN EPISODES &#183; 245 PLACED QUESTIONS</div>
+      <div class="rule"></div>
+      <p class="sub">One reader. Every question kept.</p>
+    </div>
+  </div>
+
+  <p class="caption hidden" id="caption" aria-live="polite">
+    <span class="cname" id="cap-name"></span>
+    <span class="ctag" id="cap-tag"></span>
+  </p>
+
+  <div class="bar-nav">
+    <button id="prev" aria-label="Previous card">&#8249; Prev</button>
+    <div class="dots" id="dots" role="tablist" aria-label="Cards"></div>
+    <button id="next" aria-label="Next card">Next &#8250;</button>
+    <span class="count" id="count"></span>
+  </div>
+</div>
+<p class="foot">An audience deck. A question is not a unit of difficulty.
+Dimension 11 &#183; <a href="curve.html">the study</a>.</p>
+
+<script>
+(function(){
+  // Cards: identity labels only — the argument itself is the presenter's, off-site.
+  var CARDS = [
+    { kind:"title" },
+    { kind:"curve", name:"The whole curve",           tag:"eighteen episodes · 245 placed questions" },
+    { kind:"set", ids:["e3"], name:"Proteus",         tag:"episode 3 · 0 questions" },
+    { kind:"set", ids:["e11","e12","e13","e14"], name:"Sirens to Oxen of the Sun",
+      tag:"episodes 11–14 · 12 · 24 · 12 · 14" },
+    { kind:"set", ids:["e15","e17","e18"], name:"Circe · Ithaca · Penelope",
+      tag:"the three peaks · 40 · 33 · 38" },
+    { kind:"all", name:"All eighteen, assembled",     tag:"245 placed questions across one first reading" }
+  ];
+  var BARS = ["e1","e2","e3","e4","e5","e6","e7","e8","e9","e10",
+              "e11","e12","e13","e14","e15","e16","e17","e18"];
+  var i = 0;
+  var title = document.getElementById("title");
+  var caption = document.getElementById("caption");
+  var capName = document.getElementById("cap-name");
+  var capTag = document.getElementById("cap-tag");
+  var prev = document.getElementById("prev");
+  var next = document.getElementById("next");
+  var count = document.getElementById("count");
+  var dotsWrap = document.getElementById("dots");
+
+  // build dots
+  CARDS.forEach(function(c, n){
+    var d = document.createElement("button");
+    d.setAttribute("role","tab");
+    d.setAttribute("aria-label","Card " + (n+1));
+    d.addEventListener("click", function(){ go(n); });
+    dotsWrap.appendChild(d);
+  });
+  var dots = dotsWrap.querySelectorAll("button");
+
+  function render(){
+    var c = CARDS[i];
+    var lit = (c.kind === "all") ? BARS : (c.ids || []);
+    BARS.forEach(function(id){
+      document.getElementById(id).classList.toggle("on", lit.indexOf(id) >= 0);
+    });
+    title.classList.toggle("show", c.kind === "title");
+    if (c.kind === "title") {
+      caption.classList.add("hidden");
+    } else {
+      caption.classList.remove("hidden");
+      capName.textContent = c.name;
+      capTag.textContent = c.tag;
+    }
+    prev.disabled = (i === 0);
+    next.disabled = (i === CARDS.length - 1);
+    count.textContent = (i+1) + " / " + CARDS.length;
+    dots.forEach(function(d, n){ d.setAttribute("aria-current", n === i ? "true" : "false"); });
+  }
+  function go(n){ i = Math.max(0, Math.min(CARDS.length - 1, n)); render(); }
+
+  prev.addEventListener("click", function(){ go(i-1); });
+  next.addEventListener("click", function(){ go(i+1); });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "ArrowRight" || e.key === "PageDown") { go(i+1); e.preventDefault(); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { go(i-1); e.preventDefault(); }
+    else if (e.key === "Home") { go(0); e.preventDefault(); }
+    else if (e.key === "End") { go(CARDS.length-1); e.preventDefault(); }
+  });
+  render();
+})();
+</script>
+</body>
+</html>

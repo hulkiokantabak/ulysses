@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Women's Dublin — the deck</title>
+<style>
+  /* Dimension 2's presentation register: the audience deck. Image cards only, no
+     explanations (the presenter's material is kept off the public site — C-19). One
+     plane — a bar chart of how each woman first comes onto the page; each card lights a
+     subset of the bars. Muted by default, gold and widened when lit. The last card
+     assembles all six modes. The 1922 family: deep plate, paper, gold, mono factual
+     layer. No animation, so prefers-reduced-motion is honoured by design. */
+  :root {
+    --deep:#081a35; --paper:#f4efe2; --gold:#dfa93f; --mute:#b9c3d6;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *,*::before,*::after { box-sizing:border-box; }
+  html,body { margin:0; padding:0; height:100%; background:var(--deep); color:var(--paper); }
+  body { font-family:var(--serif); display:flex; flex-direction:column; min-height:100vh; }
+  .deck { flex:1; display:flex; flex-direction:column; max-width:70rem; width:100%;
+          margin-inline:auto; padding:1rem 1rem 0; }
+  .stage { position:relative; flex:1; display:flex; align-items:center; justify-content:center; }
+  svg { display:block; width:100%; height:auto; max-height:72vh; }
+  /* bars default to muted/narrow; JS lights the active mode(s) gold and widens them.
+     The bar height is the datum and never changes — only fill, opacity, width, and the
+     count label respond to state. */
+  .pt rect.bar { fill:var(--mute); opacity:.5; transform-box:fill-box;
+                 transform-origin:bottom center; }
+  .pt.on rect.bar { fill:var(--gold); opacity:1; transform:scaleX(1.34); }
+  .pt .cnum { opacity:0; font-family:var(--mono); font-size:24px; fill:var(--gold);
+              font-weight:600; }
+  .pt.on .cnum { opacity:1; }
+  /* the title card overlays the stage */
+  .title { position:absolute; inset:0; display:none; flex-direction:column;
+           align-items:center; justify-content:center; text-align:center; }
+  .title.show { display:flex; }
+  .title h1 { font-size:clamp(2rem,7vw,4rem); margin:0 0 .5rem; letter-spacing:.01em; }
+  .title .works { font-family:var(--mono); color:var(--mute); font-size:clamp(.9rem,2.4vw,1.15rem);
+                  letter-spacing:.12em; }
+  .title .rule { width:8rem; height:3px; background:var(--gold); margin:1.25rem 0; }
+  .title .sub { font-style:italic; color:var(--paper); max-width:34ch; font-size:clamp(1rem,2.6vw,1.3rem); }
+  /* the caption bar reads the current card — identity only */
+  .caption { min-height:3.2rem; text-align:center; padding:.5rem 0 .25rem; }
+  .caption .cname { font-size:1.4rem; }
+  .caption .ctag { font-family:var(--mono); color:var(--mute); font-size:.9rem; letter-spacing:.04em; display:block; margin-top:.15rem; }
+  .caption.hidden { visibility:hidden; }
+  /* controls */
+  .bar { display:flex; align-items:center; justify-content:center; gap:1rem;
+         padding:.75rem 0 1.25rem; font-family:var(--mono); }
+  button { font:inherit; font-family:var(--mono); font-size:1rem; color:var(--deep);
+           background:var(--paper); border:0; padding:.4rem .9rem; cursor:pointer; }
+  button:disabled { opacity:.35; cursor:default; }
+  .dots { display:flex; gap:.5rem; }
+  .dots button { padding:0; width:.85rem; height:.85rem; border-radius:50%;
+                 background:transparent; border:1.5px solid var(--mute); }
+  .dots button[aria-current="true"] { background:var(--gold); border-color:var(--gold); }
+  .count { color:var(--mute); font-size:.85rem; min-width:4rem; text-align:center; }
+  :focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+  a { color:var(--gold); }
+  .foot { text-align:center; font-family:var(--mono); font-size:.75rem; color:var(--mute);
+          padding-bottom:1rem; }
+</style>
+</head>
+<body>
+<div class="deck">
+  <div class="stage" id="stage" tabindex="0" role="group" aria-roledescription="slide deck"
+       aria-label="The Women's Dublin, an audience deck. Use the left and right arrow keys.">
+    <svg viewBox="0 0 960 560" aria-hidden="true">
+      <!-- gridlines, one per count -->
+      <g stroke="#b9c3d6" stroke-width="1" opacity="0.16">
+        <line x1="160" y1="406.7" x2="900" y2="406.7"/>
+        <line x1="160" y1="343.3" x2="900" y2="343.3"/>
+        <line x1="160" y1="280.0" x2="900" y2="280.0"/>
+        <line x1="160" y1="216.7" x2="900" y2="216.7"/>
+        <line x1="160" y1="153.3" x2="900" y2="153.3"/>
+        <line x1="160" y1="90.0"  x2="900" y2="90.0"/>
+      </g>
+      <!-- axes -->
+      <line x1="160" y1="470" x2="900" y2="470" stroke="#b9c3d6" stroke-width="1"/>
+      <line x1="160" y1="470" x2="160" y2="70" stroke="#b9c3d6" stroke-width="1"/>
+      <!-- y-axis count labels -->
+      <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="14" fill="#b9c3d6">
+        <text x="148" y="474.0" text-anchor="end">0</text>
+        <text x="148" y="410.7" text-anchor="end">1</text>
+        <text x="148" y="347.3" text-anchor="end">2</text>
+        <text x="148" y="284.0" text-anchor="end">3</text>
+        <text x="148" y="220.7" text-anchor="end">4</text>
+        <text x="148" y="157.3" text-anchor="end">5</text>
+        <text x="148" y="94.0"  text-anchor="end">6</text>
+      </g>
+      <text x="30" y="270" text-anchor="middle" transform="rotate(-90 30 270)" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="13" fill="#b9c3d6" letter-spacing="2">WOMEN — COUNT</text>
+      <!-- x-axis mode labels (always visible) -->
+      <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="14" fill="#b9c3d6">
+        <text x="221.7" y="496" text-anchor="middle">on stage</text>
+        <text x="345.0" y="496" text-anchor="middle">a glimpse</text>
+        <text x="468.3" y="496" text-anchor="middle">memory</text>
+        <text x="591.7" y="496" text-anchor="middle">men's talk</text>
+        <text x="715.0" y="496" text-anchor="middle">a letter</text>
+        <text x="838.3" y="496" text-anchor="middle">a photograph</text>
+      </g>
+      <text x="530" y="530" text-anchor="middle" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="13" fill="#b9c3d6" letter-spacing="2">MODE OF ENTRY — HOW SHE COMES ONTO THE PAGE</text>
+      <!-- bars: one <g class="pt"> per mode -->
+      <g class="pt" id="b-stage">
+        <rect class="bar" x="196.7" y="216.7" width="50" height="253.3"/>
+        <text class="cnum" x="221.7" y="202" text-anchor="middle">4</text>
+      </g>
+      <g class="pt" id="b-glimpse">
+        <rect class="bar" x="320.0" y="216.7" width="50" height="253.3"/>
+        <text class="cnum" x="345.0" y="202" text-anchor="middle">4</text>
+      </g>
+      <g class="pt" id="b-memory">
+        <rect class="bar" x="443.3" y="406.7" width="50" height="63.3"/>
+        <text class="cnum" x="468.3" y="392" text-anchor="middle">1</text>
+      </g>
+      <g class="pt" id="b-talk">
+        <rect class="bar" x="566.7" y="90.0" width="50" height="380.0"/>
+        <text class="cnum" x="591.7" y="76" text-anchor="middle">6</text>
+      </g>
+      <g class="pt" id="b-letter">
+        <rect class="bar" x="690.0" y="406.7" width="50" height="63.3"/>
+        <text class="cnum" x="715.0" y="392" text-anchor="middle">1</text>
+      </g>
+      <g class="pt" id="b-photo">
+        <rect class="bar" x="813.3" y="466.0" width="50" height="4.0"/>
+        <text class="cnum" x="838.3" y="452" text-anchor="middle">0</text>
+      </g>
+    </svg>
+    <div class="title show" id="title">
+      <h1>The Women's Dublin</h1>
+      <div class="works">SIXTEEN WOMEN · SIX MODES OF ENTRY</div>
+      <div class="rule"></div>
+      <p class="sub">Who enters the room — and who arrives at a remove.</p>
+    </div>
+  </div>
+
+  <p class="caption hidden" id="caption" aria-live="polite">
+    <span class="cname" id="cap-name"></span>
+    <span class="ctag" id="cap-tag"></span>
+  </p>
+
+  <div class="bar">
+    <button id="prev" aria-label="Previous card">‹ Prev</button>
+    <div class="dots" id="dots" role="tablist" aria-label="Cards"></div>
+    <button id="next" aria-label="Next card">Next ›</button>
+    <span class="count" id="count"></span>
+  </div>
+</div>
+<p class="foot">An audience deck. Sixteen women, each counted once by her first appearance.
+Dimension 2 · The Women's Dublin.</p>
+
+<script>
+(function(){
+  // Cards: identity labels only — the argument itself is the presenter's, off-site.
+  var CARDS = [
+    { kind:"title" },
+    { kind:"mode", ids:["b-stage"],  name:"On stage — 4 of 16",
+      tag:"Molly · the milkwoman · Mrs Breen · Cissy Caffrey" },
+    { kind:"mode", ids:["b-glimpse"], name:"A glimpse — 4 of 16",
+      tag:"Gerty MacDowell · Dilly Dedalus · the streetwalker · Douce & Kennedy" },
+    { kind:"mode", ids:["b-letter"], name:"A letter — 1 of 16",
+      tag:"Martha Clifford · letter to 'Henry Flower' (Bloom's alias)" },
+    { kind:"mode", ids:["b-photo"],  name:"A photograph — 0 of 16",
+      tag:"no first entrance is a photograph · Molly's photograph comes later (ep 16)" },
+    { kind:"mode", ids:["b-talk"],   name:"Men's talk — 6 of 16",
+      tag:"Milly · May Dedalus · Bella Cohen · Mrs Dignam · Ann Hathaway" },
+    { kind:"mode", ids:["b-memory"], name:"Memory — 1 of 16",
+      tag:"Mrs Riordan (Dante)" },
+    { kind:"set",  ids:["b-talk","b-letter","b-photo"], name:"At one remove — 7 of 16",
+      tag:"a letter · a photograph · men's talk" },
+    { kind:"all",  ids:["b-stage","b-glimpse","b-memory","b-talk","b-letter","b-photo"],
+      name:"The Women's Dublin — 16 women, six modes",
+      tag:"on stage 4 · a glimpse 4 · memory 1 · men's talk 6 · a letter 1 · a photograph 0" }
+  ];
+  var pts = ["b-stage","b-glimpse","b-memory","b-talk","b-letter","b-photo"];
+  var i = 0;
+  var title = document.getElementById("title");
+  var caption = document.getElementById("caption");
+  var capName = document.getElementById("cap-name");
+  var capTag = document.getElementById("cap-tag");
+  var prev = document.getElementById("prev");
+  var next = document.getElementById("next");
+  var count = document.getElementById("count");
+  var dotsWrap = document.getElementById("dots");
+
+  // build dots
+  CARDS.forEach(function(c, n){
+    var d = document.createElement("button");
+    d.setAttribute("role","tab");
+    d.setAttribute("aria-label","Card " + (n+1));
+    d.addEventListener("click", function(){ go(n); });
+    dotsWrap.appendChild(d);
+  });
+  var dots = dotsWrap.querySelectorAll("button");
+
+  function render(){
+    var c = CARDS[i];
+    var onset = c.ids || [];
+    pts.forEach(function(id){
+      var el = document.getElementById(id);
+      el.classList.toggle("on", onset.indexOf(id) !== -1);
+    });
+    title.classList.toggle("show", c.kind === "title");
+    if (c.kind === "title") {
+      caption.classList.add("hidden");
+    } else {
+      caption.classList.remove("hidden");
+      capName.textContent = c.name;
+      capTag.textContent = c.tag;
+    }
+    prev.disabled = (i === 0);
+    next.disabled = (i === CARDS.length - 1);
+    count.textContent = (i+1) + " / " + CARDS.length;
+    dots.forEach(function(d, n){ d.setAttribute("aria-current", n === i ? "true" : "false"); });
+  }
+  function go(n){ i = Math.max(0, Math.min(CARDS.length - 1, n)); render(); }
+
+  prev.addEventListener("click", function(){ go(i-1); });
+  next.addEventListener("click", function(){ go(i+1); });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "ArrowRight" || e.key === "PageDown") { go(i+1); e.preventDefault(); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { go(i-1); e.preventDefault(); }
+    else if (e.key === "Home") { go(0); e.preventDefault(); }
+    else if (e.key === "End") { go(CARDS.length-1); e.preventDefault(); }
+  });
+  render();
+})();
+</script>
+</body>
+</html>
