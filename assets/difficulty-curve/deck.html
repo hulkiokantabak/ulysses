@@ -5,74 +5,109 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Difficulty Curve — the deck</title>
 <style>
-  /* Dimension 11's presentation register: the audience deck. Image cards only, no
-     explanations (the presenter's material is kept off the public site — C-19). Seven
-     drawn planes share one stage — the per-episode bar chart of placed questions (the
-     signature device, anchor A7), the nine kinds, the strain matrix, Penelope's
-     thirty-eight, the sixteen exchanges, the 117-page record, and the dictation pairs.
-     A card shows one plane and lights a subset of it in gold. The 1922 family: deep
-     plate, paper, gold, mono factual layer. No animation, so prefers-reduced-motion is
-     honoured by design. */
+  /* Dimension 11's presentation register: the audience deck, rebuilt to THE VITRINE
+     (ratified 19 July 2026). Each card is one object under one light. The subject is
+     drawn, the room is a trace, and gold is the light — used ONCE per plate.
+
+     The constants, identical across the five decks:
+       viewBox 0 0 1120 630 — 16:9, one unit = one CSS pixel at design width
+       margins l/r 64, top 48, bottom 64; live area 992 x 518
+       bands: register 48-90 (baseline 78) · title 90-160 (baseline 140)
+              stage 160-552 · foot 552-590 (baseline 580)
+       the register hairline at y=100, x 64 -> 1056
+       the lifted plate rect (no border) and the dimension badge, bottom right
+       five type sizes: datum 96 · title 44 · label 26 · register 24 · note 22
+       three stroke weights: hair 1.5 · draw 4 · bear 10 — gold is never a hairline
+       five tones; marks ambient r=5, lit r=14; solid = present, ring = unverified
+       ONE gold element per plate
+
+     Plate type is chosen by magnitude, and no two FIELDs run consecutively:
+       1 SINGULAR · 2 FIELD · 3 SINGULAR · 4 SERIES · 5 PAIR · 6 SERIES · 7 FIELD
+       8 SERIES · 9 FIELD · 10 PAIR · 11 SERIES · 12 FIELD · 13 SERIES · 14 SERIES
+       15 PAIR · 16 FIELD
+
+     C-19 holds: cards carry identity labels — a name, a count, a page, a date — and
+     never the argument. No animation, so prefers-reduced-motion is honoured by
+     construction; the state changes are instantaneous and carry no transition. */
   :root {
-    --deep:#081a35; --paper:#f4efe2; --gold:#dfa93f; --mute:#b9c3d6;
+    --deep:#081a35;   /* the room behind the plate */
+    --plate:#0b2140;  /* the plate surface */
+    --paper:#f4efe2;  /* subject        13.90:1 on plate */
+    --gold:#dfa93f;   /* accent          7.57:1 on plate */
+    --mute:#b9c3d6;   /* ambient         8.98:1 on plate at full opacity;
+                         3.70:1 composited at .55 — marks and rules only, never text */
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
     --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
   }
   *,*::before,*::after { box-sizing:border-box; }
   html,body { margin:0; padding:0; height:100%; background:var(--deep); color:var(--paper); }
   body { font-family:var(--serif); display:flex; flex-direction:column; min-height:100vh; }
-  .deck { flex:1; display:flex; flex-direction:column; max-width:70rem; width:100%;
-          margin-inline:auto; padding:1rem 1rem 0; }
+  /* 76rem less 2 x 3rem padding = 1120px: one viewBox unit is one CSS pixel at design width */
+  .deck { flex:1; display:flex; flex-direction:column; max-width:76rem; width:100%;
+          margin-inline:auto; padding:1rem 0 0; padding-inline:3rem; }
   .stage { position:relative; flex:1; display:flex; align-items:center; justify-content:center; }
   svg { display:block; width:100%; height:auto; max-height:74vh; }
-  /* one plane at a time; every plane shares the 1040x580 frame */
+  /* one plate at a time; every plate shares the 1120x630 frame */
   .plane { display:none; }
   .plane.show { display:block; }
-  /* bars default to muted/short; JS lights the active episode(s) gold + enlarged */
-  .bar rect.col { fill:var(--mute); opacity:.5; }
-  .bar.on rect.col { fill:var(--gold); opacity:1;
-                     transform-box:fill-box; transform-origin:50% 100%; transform:scale(1.14,1.04); }
-  .bar .zdot { fill:var(--mute); opacity:.5; }
-  .bar.on .zdot { fill:var(--gold); opacity:1; }
-  .bar .val, .bar .nm { opacity:0; }
-  .bar.on .val, .bar.on .nm { opacity:1; }
-  /* pins: a group of marks on a plane, hidden until its card lights it */
-  .pin { opacity:0; }
-  .bar.on .pin { opacity:1; }
-  .pin .tiny { fill:var(--gold); }
-  .val { font-family:var(--mono); font-size:19px; fill:var(--gold); }
-  .nm { font-family:var(--serif); font-size:14px; fill:var(--paper); }
-  .enum { font-family:var(--mono); font-size:13px; fill:var(--mute); }
-  .axis { stroke:#b9c3d6; stroke-width:1; }
-  .grid { stroke:#b9c3d6; stroke-width:1; opacity:.14; }
-  .axlab { font-family:var(--mono); font-size:13px; fill:var(--mute); }
-  .axtitle { font-family:var(--mono); font-size:13px; fill:var(--mute); letter-spacing:2px; }
-  /* shared drawn-plane type */
-  .lab { font-family:var(--mono); font-size:14px; fill:var(--paper); }
-  .lab.alt { fill:var(--gold); }
-  .tiny { font-family:var(--mono); font-size:12px; fill:var(--mute); }
-  .epname { font-family:var(--serif); font-size:12px; fill:var(--mute); }
-  .cnt { font-family:var(--mono); font-size:16px; fill:var(--gold); }
-  .big { font-family:var(--mono); font-size:19px; fill:var(--paper); }
-  .big.gold { fill:var(--gold); }
-  .fill-paper { fill:var(--paper); }
-  .fill-gold { fill:var(--gold); }
-  .out-gold { fill:none; stroke:var(--gold); stroke-width:2; }
-  /* the title card overlays the stage */
-  .title { position:absolute; inset:0; display:none; flex-direction:column;
-           align-items:center; justify-content:center; text-align:center; }
-  .title.show { display:flex; }
-  .title h1 { font-size:clamp(2rem,7vw,4rem); margin:0 0 .5rem; letter-spacing:.01em; }
-  .title .works { font-family:var(--mono); color:var(--mute); font-size:clamp(.9rem,2.4vw,1.15rem);
-                  letter-spacing:.12em; }
-  .title .rule { width:8rem; height:3px; background:var(--gold); margin:1.25rem 0; }
-  .title .sub { font-style:italic; color:var(--paper); max-width:34ch; font-size:clamp(1rem,2.6vw,1.3rem); }
-  /* the caption bar reads the current card — identity only */
-  .caption { min-height:3.2rem; text-align:center; padding:.5rem 0 .25rem; }
-  .caption .cname { font-size:1.4rem; }
-  .caption .ctag { font-family:var(--mono); color:var(--mute); font-size:.9rem; letter-spacing:.04em; display:block; margin-top:.15rem; }
-  .caption.hidden { visibility:hidden; }
-  /* controls */
+
+  /* ---- the plate surface and its furniture ---------------------------------- */
+  .pl       { fill:var(--plate); }
+  .hairline { stroke:var(--mute); stroke-opacity:.55; stroke-width:1.5; fill:none; }
+
+  /* ---- the five type roles -------------------------------------------------- */
+  .r-datum { font-family:var(--serif); font-size:96px; fill:var(--paper); }
+  .r-title { font-family:var(--serif); font-size:44px; fill:var(--paper); }
+  .r-label { font-family:var(--mono);  font-size:26px; fill:var(--paper); }
+  .r-reg   { font-family:var(--mono);  font-size:24px; fill:var(--mute); letter-spacing:.16em; }
+  .r-note  { font-family:var(--mono);  font-size:22px; fill:var(--mute); letter-spacing:.04em; }
+  .r-label.amb, .r-datum.amb { fill:var(--mute); }
+  /* a count set inside its own bar, plate-on-paper at 14.01:1 — used where a column
+     head occupies the space a floating value label would otherwise need */
+  .r-label.onbar { fill:var(--plate); }
+
+  /* ---- three stroke weights ------------------------------------------------- */
+  .s-hair  { stroke:var(--mute);  stroke-opacity:.55; stroke-width:1.5; fill:none; }
+  .s-trace { stroke:var(--paper); stroke-opacity:.14; stroke-width:1.5; fill:none; }
+  .s-draw  { stroke:var(--paper); stroke-width:4;  fill:none; }
+  .s-bear  { stroke:var(--paper); stroke-width:10; fill:none; }
+  .s-bear.gold, .s-draw.gold { stroke:var(--gold); }
+
+  /* ---- five tones as fills -------------------------------------------------- */
+  .f-sub   { fill:var(--paper); }
+  .f-amb   { fill:var(--mute);  fill-opacity:.55; }
+  .f-trace { fill:var(--paper); fill-opacity:.14; }
+  .f-gold  { fill:var(--gold); }
+
+  /* ---- the curve FIELD: two states ------------------------------------------ */
+  /* Unfocused (the whole curve; all eighteen assembled): every bar is subject, every
+     value shows, and the one gold element is the bear baseline.
+     Focused (one episode named): the field drops to ambient and LOSES ITS LABELS. The
+     named bar is the only thing carrying a Label, and the gold moves to a single bear
+     rule beneath it. Reduction, then the drawing, then one name. */
+  #plane-curve rect.col        { fill:var(--paper); }
+  #plane-curve .v-note         { opacity:1; }
+  #plane-curve .nm,
+  #plane-curve .dat,
+  #plane-curve .mark           { opacity:0; }
+  #plane-curve .goldbase       { opacity:1; }
+  #plane-curve.focus rect.col  { fill:var(--mute); fill-opacity:.55; }
+  #plane-curve.focus .v-note   { opacity:0; }
+  #plane-curve.focus .goldbase { opacity:0; }
+  #plane-curve.focus .bar.on rect.col { fill:var(--paper); fill-opacity:1; }
+  #plane-curve.focus .bar.on .nm,
+  #plane-curve.focus .bar.on .dat,
+  #plane-curve.focus .bar.on .mark { opacity:1; }
+
+  /* ---- the caption bar: the identity tag only ------------------------------- */
+  /* The plate draws its own Register and Title, so the caption no longer repeats them
+     on screen. cap-name stays in the DOM for aria-live, visually hidden. */
+  .caption { min-height:2.4rem; text-align:center; padding:.6rem 0 .25rem; }
+  .caption .cname { position:absolute; width:1px; height:1px; overflow:hidden;
+                    clip-path:inset(50%); white-space:nowrap; }
+  .caption .ctag { font-family:var(--mono); color:var(--mute); font-size:.9rem;
+                   letter-spacing:.04em; display:block; }
+  /* ---- controls -------------------------------------------------------------- */
   .bar-nav { display:flex; align-items:center; justify-content:center; gap:1rem;
              padding:.75rem 0 1.25rem; font-family:var(--mono); flex-wrap:wrap; }
   button { font:inherit; font-family:var(--mono); font-size:1rem; color:var(--deep);
@@ -87,6 +122,20 @@
   a { color:var(--gold); }
   .foot { text-align:center; font-family:var(--mono); font-size:.75rem; color:var(--mute);
           padding-bottom:1rem; }
+
+  /* ---- 375px is a floor, not an aspiration ---------------------------------- */
+  /* At a 375px viewport the stage rendered the whole plate at scale 0.31, putting the
+     mono factual layer at 4-5 CSS pixels. Below 760px the stage becomes a
+     keyboard-walkable scroll box at a fixed 720px: 720/1120 = 0.643, so Label 26
+     renders 16.7px and Note 22 renders 14.1px, clearing the design record's 14px mono
+     floor. The focus ring is drawn INSIDE the box (Ledger's ratified graft on the
+     dimensions matrix) so edge content can never clip it. */
+  @media (max-width:760px) {
+    .deck  { padding-inline:1rem; }
+    .stage { display:block; overflow-x:auto; }
+    .stage svg { width:720px; max-width:none; max-height:none; }
+    .stage:focus-visible { outline-offset:-2px; }
+  }
 
 
 /* Print: a deck is a card viewer, so printing it naively emits one page showing whichever
@@ -108,7 +157,13 @@
   .plane svg, .plate svg, .stage > svg {
     width: 100% !important; height: auto !important; max-height: 165mm; display: block; }
   .stage > svg { page-break-after: always; break-after: page; }
+  /* the curve plate prints in its unfocused state, so every bar and value is legible */
+  #plane-curve rect.col { fill:#f4efe2 !important; fill-opacity:1 !important; }
+  #plane-curve .v-note, #plane-curve .goldbase { opacity:1 !important; }
+  #plane-curve .nm, #plane-curve .dat, #plane-curve .mark { opacity:0 !important; }
   .cap, .caption { display: block !important; visibility: visible !important; }
+  .caption .cname { position:static !important; width:auto !important; height:auto !important;
+    clip-path:none !important; overflow:visible !important; }
 }
 </style>
 </head>
@@ -117,600 +172,883 @@
   <div class="stage" id="stage" tabindex="0" role="group" aria-roledescription="slide deck"
        aria-label="The Difficulty Curve, an audience deck. Use the left and right arrow keys.">
 
-    <!-- PLANE 1 — the curve: placed questions per episode -->
-    <svg class="plane show" id="plane-curve" viewBox="0 0 1040 580" aria-hidden="true">
-      <!-- gridlines -->
-      <line class="grid" x1="60" y1="295" x2="1010" y2="295"/>
-      <line class="grid" x1="60" y1="210" x2="1010" y2="210"/>
-      <line class="grid" x1="60" y1="125" x2="1010" y2="125"/>
-      <line class="grid" x1="60" y1="40"  x2="1010" y2="40"/>
-      <!-- axes -->
-      <line class="axis" x1="60" y1="380" x2="1010" y2="380"/>
-      <line class="axis" x1="60" y1="40"  x2="60"   y2="380"/>
-      <!-- y labels -->
-      <g class="axlab" text-anchor="end">
-        <text x="50" y="384">0</text>
-        <text x="50" y="299">10</text>
-        <text x="50" y="214">20</text>
-        <text x="50" y="129">30</text>
-        <text x="50" y="44">40</text>
+    <!-- ============ PLATE 1 — SINGULAR — the cover ============================ -->
+    <svg class="plane show" id="plane-title" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="t-title t-desc">
+      <title id="t-title">The Difficulty Curve — the cover plate</title>
+      <desc id="t-desc">A deep plate. The deck's name is set large across the upper left
+      above a gold rule. Beneath it the whole reading is drawn small as a profile of
+      eighteen ambient columns: low at the left, two of them absent and marked only by a
+      small ring, rising through the middle, and highest at the far right.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">DIMENSION 11 &#183; THE UNIT: THE LOGGED QUESTION</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+
+      <text class="r-datum" x="64" y="200">The Difficulty Curve</text>
+      <line class="s-bear gold" x1="64" y1="234" x2="560" y2="234"/>
+      <text class="r-label" x="64" y="292">Eighteen episodes &#183; 245 placed questions</text>
+      <text class="r-label amb" x="64" y="332">One reader. Every question kept.</text>
+
+      <!-- the signature device at cover scale: the eighteen-episode profile, ambient -->
+      <g class="f-amb">
+        <rect x="71.6"   y="536.75" width="40" height="3.25"/>
+        <rect x="236.9"  y="523.75" width="40" height="16.25"/>
+        <rect x="292.0"  y="533.50" width="40" height="6.5"/>
+        <rect x="347.1"  y="507.50" width="40" height="32.5"/>
+        <rect x="402.2"  y="533.50" width="40" height="6.5"/>
+        <rect x="457.3"  y="517.25" width="40" height="22.75"/>
+        <rect x="512.4"  y="504.25" width="40" height="35.75"/>
+        <rect x="567.6"  y="494.50" width="40" height="45.5"/>
+        <rect x="622.7"  y="501.00" width="40" height="39"/>
+        <rect x="677.8"  y="462.00" width="40" height="78"/>
+        <rect x="732.9"  y="501.00" width="40" height="39"/>
+        <rect x="788.0"  y="494.50" width="40" height="45.5"/>
+        <rect x="843.1"  y="410.00" width="40" height="130"/>
+        <rect x="898.2"  y="475.00" width="40" height="65"/>
+        <rect x="953.3"  y="432.75" width="40" height="107.25"/>
+        <rect x="1008.4" y="416.50" width="40" height="123.5"/>
       </g>
-      <text class="axtitle" x="22" y="210" text-anchor="middle" transform="rotate(-90 22 210)">QUESTIONS PLACED</text>
-      <text class="axtitle" x="535" y="525" text-anchor="middle">THE EIGHTEEN EPISODES &#8594;</text>
+      <g class="s-hair">
+        <circle cx="146.7" cy="540" r="5"/>
+        <circle cx="201.8" cy="540" r="5"/>
+      </g>
+      <line class="s-hair" x1="64" y1="540" x2="1056" y2="540"/>
+
+      <text class="r-note" x="64" y="580">8&#8211;17 July 2026 &#183; n = 1</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
+    </svg>
+
+    <!-- ============ PLATE 2 — FIELD — the curve =============================== -->
+    <!-- carries card 2 (the whole curve), card 7 (one episode named) and card 16 -->
+    <svg class="plane" id="plane-curve" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="c-title c-desc">
+      <title id="c-title">Placed questions per episode, one first reading</title>
+      <desc id="c-desc">Eighteen columns on a common baseline, one per episode in reading
+      order, each numbered below and carrying its count above. Episodes two and three have
+      no column, only a small ring on the baseline. The columns rise through the middle of
+      the book and are tallest at the end: forty at Circe, thirty-eight at Penelope,
+      thirty-three at Ithaca. When a single episode is named, the rest of the field drops
+      back to ambient and gives up its labels.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">PLACED QUESTIONS PER EPISODE &#183; 245 IN ALL</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="r-title" x="64" y="140">The curve</text>
+
+      <!-- the room: four trace gridlines, at ten, twenty, thirty and forty -->
+      <g class="s-trace">
+        <line x1="64" y1="425" x2="1056" y2="425"/>
+        <line x1="64" y1="350" x2="1056" y2="350"/>
+        <line x1="64" y1="275" x2="1056" y2="275"/>
+        <line x1="64" y1="200" x2="1056" y2="200"/>
+      </g>
+      <line class="s-hair" x1="64" y1="500" x2="1056" y2="500"/>
+      <!-- the one gold element when no episode is named: the bear baseline -->
+      <line class="s-bear gold goldbase" x1="64" y1="500" x2="1056" y2="500"/>
 
       <g class="bar" id="e1">
-        <rect class="col" x="70.0" y="371.5" width="46.6" height="8.5"/>
-        <text class="val" x="93.3" y="362" text-anchor="middle">1</text>
-        <text class="enum" x="93.3" y="396" text-anchor="middle">1</text>
-        <text class="nm" x="93.3" y="410" text-anchor="end" transform="rotate(-38 93.3 410)">Telemachus</text>
+        <rect class="col" x="71.6" y="492.5" width="40" height="7.5"/>
+        <text class="r-note v-note" x="91.6" y="480.5" text-anchor="middle" fill="#f4efe2">1</text>
+        <text class="r-note" x="91.6" y="526" text-anchor="middle">1</text>
+        <text class="r-label nm" x="64" y="196">Telemachus</text>
+        <text class="r-datum dat" x="64" y="360">1</text>
+        <rect class="f-gold mark" x="64.1" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e2">
-        <circle class="zdot" cx="145.8" cy="380" r="5"/>
-        <text class="val" x="145.8" y="366" text-anchor="middle">0</text>
-        <text class="enum" x="145.8" y="396" text-anchor="middle">2</text>
-        <text class="nm" x="145.8" y="410" text-anchor="end" transform="rotate(-38 145.8 410)">Nestor</text>
+        <circle class="s-hair" cx="146.7" cy="500" r="5"/>
+        <text class="r-note v-note" x="146.7" y="488" text-anchor="middle">0</text>
+        <text class="r-note" x="146.7" y="526" text-anchor="middle">2</text>
+        <text class="r-label nm" x="64" y="196">Nestor</text>
+        <text class="r-datum dat" x="64" y="360">0</text>
+        <rect class="f-gold mark" x="119.2" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e3">
-        <circle class="zdot" cx="198.4" cy="380" r="5"/>
-        <text class="val" x="198.4" y="366" text-anchor="middle">0</text>
-        <text class="enum" x="198.4" y="396" text-anchor="middle">3</text>
-        <text class="nm" x="198.4" y="410" text-anchor="end" transform="rotate(-38 198.4 410)">Proteus</text>
+        <circle class="s-hair" cx="201.8" cy="500" r="5"/>
+        <text class="r-note v-note" x="201.8" y="488" text-anchor="middle">0</text>
+        <text class="r-note" x="201.8" y="526" text-anchor="middle">3</text>
+        <text class="r-label nm" x="64" y="196">Proteus</text>
+        <text class="r-datum dat" x="64" y="360">0</text>
+        <rect class="f-gold mark" x="174.3" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e4">
-        <rect class="col" x="227.6" y="337.5" width="46.6" height="42.5"/>
-        <text class="val" x="250.9" y="328" text-anchor="middle">5</text>
-        <text class="enum" x="250.9" y="396" text-anchor="middle">4</text>
-        <text class="nm" x="250.9" y="410" text-anchor="end" transform="rotate(-38 250.9 410)">Calypso</text>
+        <rect class="col" x="236.9" y="462.5" width="40" height="37.5"/>
+        <text class="r-note v-note" x="256.9" y="450.5" text-anchor="middle" fill="#f4efe2">5</text>
+        <text class="r-note" x="256.9" y="526" text-anchor="middle">4</text>
+        <text class="r-label nm" x="64" y="196">Calypso</text>
+        <text class="r-datum dat" x="64" y="360">5</text>
+        <rect class="f-gold mark" x="229.4" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e5">
-        <rect class="col" x="280.2" y="363" width="46.6" height="17"/>
-        <text class="val" x="303.5" y="354" text-anchor="middle">2</text>
-        <text class="enum" x="303.5" y="396" text-anchor="middle">5</text>
-        <text class="nm" x="303.5" y="410" text-anchor="end" transform="rotate(-38 303.5 410)">Lotus Eaters</text>
+        <rect class="col" x="292.0" y="485" width="40" height="15"/>
+        <text class="r-note v-note" x="312.0" y="473" text-anchor="middle" fill="#f4efe2">2</text>
+        <text class="r-note" x="312.0" y="526" text-anchor="middle">5</text>
+        <text class="r-label nm" x="64" y="196">Lotus Eaters</text>
+        <text class="r-datum dat" x="64" y="360">2</text>
+        <rect class="f-gold mark" x="284.5" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e6">
-        <rect class="col" x="332.8" y="295" width="46.6" height="85"/>
-        <text class="val" x="356.1" y="286" text-anchor="middle">10</text>
-        <text class="enum" x="356.1" y="396" text-anchor="middle">6</text>
-        <text class="nm" x="356.1" y="410" text-anchor="end" transform="rotate(-38 356.1 410)">Hades</text>
+        <rect class="col" x="347.1" y="425" width="40" height="75"/>
+        <text class="r-note v-note" x="367.1" y="413" text-anchor="middle" fill="#f4efe2">10</text>
+        <text class="r-note" x="367.1" y="526" text-anchor="middle">6</text>
+        <text class="r-label nm" x="64" y="196">Hades</text>
+        <text class="r-datum dat" x="64" y="360">10</text>
+        <rect class="f-gold mark" x="339.6" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e7">
-        <rect class="col" x="385.3" y="363" width="46.6" height="17"/>
-        <text class="val" x="408.6" y="354" text-anchor="middle">2</text>
-        <text class="enum" x="408.6" y="396" text-anchor="middle">7</text>
-        <text class="nm" x="408.6" y="410" text-anchor="end" transform="rotate(-38 408.6 410)">Aeolus</text>
+        <rect class="col" x="402.2" y="485" width="40" height="15"/>
+        <text class="r-note v-note" x="422.2" y="473" text-anchor="middle" fill="#f4efe2">2</text>
+        <text class="r-note" x="422.2" y="526" text-anchor="middle">7</text>
+        <text class="r-label nm" x="64" y="196">Aeolus</text>
+        <text class="r-datum dat" x="64" y="360">2</text>
+        <rect class="f-gold mark" x="394.7" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e8">
-        <rect class="col" x="437.9" y="320.5" width="46.6" height="59.5"/>
-        <text class="val" x="461.2" y="311" text-anchor="middle">7</text>
-        <text class="enum" x="461.2" y="396" text-anchor="middle">8</text>
-        <text class="nm" x="461.2" y="410" text-anchor="end" transform="rotate(-38 461.2 410)">Lestrygonians</text>
+        <rect class="col" x="457.3" y="447.5" width="40" height="52.5"/>
+        <text class="r-note v-note" x="477.3" y="435.5" text-anchor="middle" fill="#f4efe2">7</text>
+        <text class="r-note" x="477.3" y="526" text-anchor="middle">8</text>
+        <text class="r-label nm" x="64" y="196">Lestrygonians</text>
+        <text class="r-datum dat" x="64" y="360">7</text>
+        <rect class="f-gold mark" x="449.8" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e9">
-        <rect class="col" x="490.4" y="286.5" width="46.6" height="93.5"/>
-        <text class="val" x="513.7" y="277" text-anchor="middle">11</text>
-        <text class="enum" x="513.7" y="396" text-anchor="middle">9</text>
-        <text class="nm" x="513.7" y="410" text-anchor="end" transform="rotate(-38 513.7 410)">Scylla and Charybdis</text>
+        <rect class="col" x="512.4" y="417.5" width="40" height="82.5"/>
+        <text class="r-note v-note" x="532.4" y="405.5" text-anchor="middle" fill="#f4efe2">11</text>
+        <text class="r-note" x="532.4" y="526" text-anchor="middle">9</text>
+        <text class="r-label nm" x="64" y="196">Scylla and Charybdis</text>
+        <text class="r-datum dat" x="64" y="360">11</text>
+        <rect class="f-gold mark" x="504.9" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e10">
-        <rect class="col" x="543.0" y="261" width="46.6" height="119"/>
-        <text class="val" x="566.3" y="252" text-anchor="middle">14</text>
-        <text class="enum" x="566.3" y="396" text-anchor="middle">10</text>
-        <text class="nm" x="566.3" y="410" text-anchor="end" transform="rotate(-38 566.3 410)">Wandering Rocks</text>
+        <rect class="col" x="567.6" y="395" width="40" height="105"/>
+        <text class="r-note v-note" x="587.6" y="383" text-anchor="middle" fill="#f4efe2">14</text>
+        <text class="r-note" x="587.6" y="526" text-anchor="middle">10</text>
+        <text class="r-label nm" x="64" y="196">Wandering Rocks</text>
+        <text class="r-datum dat" x="64" y="360">14</text>
+        <rect class="f-gold mark" x="560.1" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e11">
-        <rect class="col" x="595.5" y="278" width="46.6" height="102"/>
-        <text class="val" x="618.8" y="269" text-anchor="middle">12</text>
-        <text class="enum" x="618.8" y="396" text-anchor="middle">11</text>
-        <text class="nm" x="618.8" y="410" text-anchor="end" transform="rotate(-38 618.8 410)">Sirens</text>
+        <rect class="col" x="622.7" y="410" width="40" height="90"/>
+        <text class="r-note v-note" x="642.7" y="398" text-anchor="middle" fill="#f4efe2">12</text>
+        <text class="r-note" x="642.7" y="526" text-anchor="middle">11</text>
+        <text class="r-label nm" x="64" y="196">Sirens</text>
+        <text class="r-datum dat" x="64" y="360">12</text>
+        <rect class="f-gold mark" x="615.2" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e12">
-        <rect class="col" x="648.1" y="176" width="46.6" height="204"/>
-        <text class="val" x="671.4" y="167" text-anchor="middle">24</text>
-        <text class="enum" x="671.4" y="396" text-anchor="middle">12</text>
-        <text class="nm" x="671.4" y="410" text-anchor="end" transform="rotate(-38 671.4 410)">Cyclops</text>
+        <rect class="col" x="677.8" y="320" width="40" height="180"/>
+        <text class="r-note v-note" x="697.8" y="308" text-anchor="middle" fill="#f4efe2">24</text>
+        <text class="r-note" x="697.8" y="526" text-anchor="middle">12</text>
+        <text class="r-label nm" x="64" y="196">Cyclops</text>
+        <text class="r-datum dat" x="64" y="360">24</text>
+        <rect class="f-gold mark" x="670.3" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e13">
-        <rect class="col" x="700.6" y="278" width="46.6" height="102"/>
-        <text class="val" x="723.9" y="269" text-anchor="middle">12</text>
-        <text class="enum" x="723.9" y="396" text-anchor="middle">13</text>
-        <text class="nm" x="723.9" y="410" text-anchor="end" transform="rotate(-38 723.9 410)">Nausicaa</text>
+        <rect class="col" x="732.9" y="410" width="40" height="90"/>
+        <text class="r-note v-note" x="752.9" y="398" text-anchor="middle" fill="#f4efe2">12</text>
+        <text class="r-note" x="752.9" y="526" text-anchor="middle">13</text>
+        <text class="r-label nm" x="64" y="196">Nausicaa</text>
+        <text class="r-datum dat" x="64" y="360">12</text>
+        <rect class="f-gold mark" x="725.4" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e14">
-        <rect class="col" x="753.2" y="261" width="46.6" height="119"/>
-        <text class="val" x="776.5" y="252" text-anchor="middle">14</text>
-        <text class="enum" x="776.5" y="396" text-anchor="middle">14</text>
-        <text class="nm" x="776.5" y="410" text-anchor="end" transform="rotate(-38 776.5 410)">Oxen of the Sun</text>
+        <rect class="col" x="788.0" y="395" width="40" height="105"/>
+        <text class="r-note v-note" x="808.0" y="383" text-anchor="middle" fill="#f4efe2">14</text>
+        <text class="r-note" x="808.0" y="526" text-anchor="middle">14</text>
+        <text class="r-label nm" x="64" y="196">Oxen of the Sun</text>
+        <text class="r-datum dat" x="64" y="360">14</text>
+        <rect class="f-gold mark" x="780.5" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e15">
-        <rect class="col" x="805.8" y="40" width="46.6" height="340"/>
-        <text class="val" x="829.1" y="31" text-anchor="middle">40</text>
-        <text class="enum" x="829.1" y="396" text-anchor="middle">15</text>
-        <text class="nm" x="829.1" y="410" text-anchor="end" transform="rotate(-38 829.1 410)">Circe</text>
+        <rect class="col" x="843.1" y="200" width="40" height="300"/>
+        <text class="r-note v-note" x="863.1" y="188" text-anchor="middle" fill="#f4efe2">40</text>
+        <text class="r-note" x="863.1" y="526" text-anchor="middle">15</text>
+        <text class="r-label nm" x="64" y="196">Circe</text>
+        <text class="r-datum dat" x="64" y="360">40</text>
+        <rect class="f-gold mark" x="835.6" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e16">
-        <rect class="col" x="858.3" y="210" width="46.6" height="170"/>
-        <text class="val" x="881.6" y="201" text-anchor="middle">20</text>
-        <text class="enum" x="881.6" y="396" text-anchor="middle">16</text>
-        <text class="nm" x="881.6" y="410" text-anchor="end" transform="rotate(-38 881.6 410)">Eumaeus</text>
+        <rect class="col" x="898.2" y="350" width="40" height="150"/>
+        <text class="r-note v-note" x="918.2" y="338" text-anchor="middle" fill="#f4efe2">20</text>
+        <text class="r-note" x="918.2" y="526" text-anchor="middle">16</text>
+        <text class="r-label nm" x="64" y="196">Eumaeus</text>
+        <text class="r-datum dat" x="64" y="360">20</text>
+        <rect class="f-gold mark" x="890.7" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e17">
-        <rect class="col" x="910.9" y="99.5" width="46.6" height="280.5"/>
-        <text class="val" x="934.2" y="90" text-anchor="middle">33</text>
-        <text class="enum" x="934.2" y="396" text-anchor="middle">17</text>
-        <text class="nm" x="934.2" y="410" text-anchor="end" transform="rotate(-38 934.2 410)">Ithaca</text>
+        <rect class="col" x="953.3" y="252.5" width="40" height="247.5"/>
+        <text class="r-note v-note" x="973.3" y="240.5" text-anchor="middle" fill="#f4efe2">33</text>
+        <text class="r-note" x="973.3" y="526" text-anchor="middle">17</text>
+        <text class="r-label nm" x="64" y="196">Ithaca</text>
+        <text class="r-datum dat" x="64" y="360">33</text>
+        <rect class="f-gold mark" x="945.8" y="512" width="55" height="10"/>
       </g>
       <g class="bar" id="e18">
-        <rect class="col" x="963.4" y="57" width="46.6" height="323"/>
-        <text class="val" x="986.7" y="48" text-anchor="middle">38</text>
-        <text class="enum" x="986.7" y="396" text-anchor="middle">18</text>
-        <text class="nm" x="986.7" y="410" text-anchor="end" transform="rotate(-38 986.7 410)">Penelope</text>
+        <rect class="col" x="1008.4" y="215" width="40" height="285"/>
+        <text class="r-note v-note" x="1028.4" y="203" text-anchor="middle" fill="#f4efe2">38</text>
+        <text class="r-note" x="1028.4" y="526" text-anchor="middle">18</text>
+        <text class="r-label nm" x="64" y="196">Penelope</text>
+        <text class="r-datum dat" x="64" y="360">38</text>
+        <rect class="f-gold mark" x="1000.9" y="512" width="55" height="10"/>
       </g>
+
+      <text class="r-note" x="64" y="580">Placed questions only &#183; 245 of 290 extracted</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
     </svg>
 
-    <!-- PLANE 2 — the nine kinds, by count -->
-    <svg class="plane" id="plane-kinds" viewBox="0 0 1040 580" aria-hidden="true">
-      <line class="axis" x1="360" y1="50" x2="360" y2="516"/>
-      <g text-anchor="end">
-        <text class="lab" x="344" y="83">plot and orientation</text>
-        <text class="lab" x="344" y="135">allusion and period</text>
-        <text class="lab alt" x="344" y="187">curiosity and delight</text>
-        <text class="lab" x="344" y="239">style and form</text>
-        <text class="lab" x="344" y="291">vocabulary and wordplay</text>
-        <text class="lab" x="344" y="343">voice and referent</text>
-        <text class="lab" x="344" y="395">tone, stance, significance</text>
-        <text class="lab" x="344" y="447">felt but not grasped</text>
-        <text class="lab alt" x="344" y="499">dictation and transcription</text>
+    <!-- ============ PLATE 3 — SINGULAR — Proteus ============================== -->
+    <svg class="plane" id="plane-zero" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="z-title z-desc">
+      <title id="z-title">Proteus, episode three: no placed questions</title>
+      <desc id="z-desc">One large open ring fills the left of the plate with a nought inside
+      it, drawn at the size the plate's single fact deserves. A gold rule lies beneath the
+      ring. To the right, two lines name episode three, Proteus, at zero placed questions,
+      and below a hairline, episode two, Nestor, also at zero.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">PLACED QUESTIONS &#183; EPISODE 3 OF EIGHTEEN</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="r-title" x="64" y="140">Proteus</text>
+
+      <circle class="s-draw" cx="340" cy="356" r="150"/>
+      <text class="r-datum" x="340" y="392" text-anchor="middle">0</text>
+      <line class="s-bear gold" x1="190" y1="536" x2="490" y2="536"/>
+
+      <g class="r-label">
+        <text x="640" y="300">Episode 3 &#183; Proteus</text>
+        <text x="640" y="352">0 placed questions</text>
       </g>
-      <rect class="fill-paper" x="360" y="60"  width="560.0" height="34"/>
-      <rect class="fill-paper" x="360" y="112" width="548.3" height="34"/>
-      <rect class="out-gold"   x="360" y="164" width="490.0" height="34"/>
-      <rect class="fill-paper" x="360" y="216" width="478.3" height="34"/>
-      <rect class="fill-paper" x="360" y="268" width="291.7" height="34"/>
-      <rect class="fill-paper" x="360" y="320" width="256.7" height="34"/>
-      <rect class="fill-paper" x="360" y="372" width="175.0" height="34"/>
-      <rect class="fill-paper" x="360" y="424" width="70.0"  height="34"/>
-      <rect class="out-gold"   x="360" y="476" width="70.0"  height="34"/>
-      <g class="cnt">
-        <text x="934.0" y="83">48</text>
-        <text x="922.3" y="135">47</text>
-        <text x="864.0" y="187">42</text>
-        <text x="852.3" y="239">41</text>
-        <text x="665.7" y="291">25</text>
-        <text x="630.7" y="343">22</text>
-        <text x="549.0" y="395">15</text>
-        <text x="444.0" y="447">6</text>
-        <text x="444.0" y="499">6</text>
+      <line class="s-hair" x1="640" y1="382" x2="1056" y2="382"/>
+      <g class="r-label amb">
+        <text x="640" y="424">Episode 2 &#183; Nestor</text>
+        <text x="640" y="464">0 placed questions</text>
       </g>
-      <rect class="out-gold" x="700" y="532" width="28" height="16"/>
-      <text class="tiny" x="738" y="545">NOT DIFFICULTY</text>
+
+      <text class="r-note" x="64" y="580">Both covered once, retrospectively &#183; pdf 6</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
     </svg>
 
-    <!-- PLANE 3 — dominant strains, episode by episode -->
-    <svg class="plane" id="plane-matrix" viewBox="0 0 1040 580" aria-hidden="true">
-      <g class="tiny" text-anchor="middle">
-        <text x="289" y="80">1</text><text x="331" y="80">2</text><text x="373" y="80">3</text>
-        <text x="415" y="80">4</text><text x="457" y="80">5</text><text x="499" y="80">6</text>
-        <text x="541" y="80">7</text><text x="583" y="80">8</text><text x="625" y="80">9</text>
-        <text x="667" y="80">10</text><text x="709" y="80">11</text><text x="751" y="80">12</text>
-        <text x="793" y="80">13</text><text x="835" y="80">14</text><text x="877" y="80">15</text>
-        <text x="919" y="80">16</text><text x="961" y="80">17</text><text x="1003" y="80">18</text>
+    <!-- ============ PLATE 4 — SERIES — episodes 11 to 14 ====================== -->
+    <svg class="plane" id="plane-stretch" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="s-title s-desc">
+      <title id="s-title">Episodes eleven to fourteen, Sirens to Oxen of the Sun</title>
+      <desc id="s-desc">Four wide columns drawn at roughly five times the width of the same
+      bars on the whole curve: Sirens twelve, Cyclops twenty-four, Nausicaa twelve, Oxen of
+      the Sun fourteen. Each is named beneath and carries its count above. One gold rule
+      runs the full width beneath all four.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">PLACED QUESTIONS &#183; EPISODES 11 TO 14</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="r-title" x="64" y="140">Sirens to Oxen of the Sun</text>
+
+      <g class="f-sub">
+        <rect x="64"  y="370.00" width="200" height="130"/>
+        <rect x="328" y="240.00" width="200" height="260"/>
+        <rect x="592" y="370.00" width="200" height="130"/>
+        <rect x="856" y="348.33" width="200" height="151.67"/>
       </g>
-      <g fill="#b9c3d6" opacity=".10">
-        <rect x="268" y="90"  width="756" height="30"/>
-        <rect x="268" y="130" width="756" height="30"/>
-        <rect x="268" y="170" width="756" height="30"/>
-        <rect x="268" y="210" width="756" height="30"/>
-        <rect x="268" y="250" width="756" height="30"/>
-        <rect x="268" y="290" width="756" height="30"/>
-        <rect x="268" y="330" width="756" height="30"/>
-        <rect x="268" y="370" width="756" height="30"/>
-        <rect x="268" y="410" width="756" height="30"/>
+      <line class="s-hair" x1="64" y1="500" x2="1056" y2="500"/>
+      <g class="r-label" text-anchor="middle">
+        <text x="164" y="354">12</text>
+        <text x="428" y="224">24</text>
+        <text x="692" y="354">12</text>
+        <text x="956" y="332">14</text>
       </g>
-      <g class="grid">
-        <line x1="310" y1="90" x2="310" y2="440"/><line x1="352" y1="90" x2="352" y2="440"/>
-        <line x1="394" y1="90" x2="394" y2="440"/><line x1="436" y1="90" x2="436" y2="440"/>
-        <line x1="478" y1="90" x2="478" y2="440"/><line x1="520" y1="90" x2="520" y2="440"/>
-        <line x1="562" y1="90" x2="562" y2="440"/><line x1="604" y1="90" x2="604" y2="440"/>
-        <line x1="646" y1="90" x2="646" y2="440"/><line x1="688" y1="90" x2="688" y2="440"/>
-        <line x1="730" y1="90" x2="730" y2="440"/><line x1="772" y1="90" x2="772" y2="440"/>
-        <line x1="814" y1="90" x2="814" y2="440"/><line x1="856" y1="90" x2="856" y2="440"/>
-        <line x1="898" y1="90" x2="898" y2="440"/><line x1="940" y1="90" x2="940" y2="440"/>
-        <line x1="982" y1="90" x2="982" y2="440"/>
+      <line class="s-bear gold" x1="64" y1="514" x2="1056" y2="514"/>
+      <g class="r-label amb">
+        <text x="164" y="548" text-anchor="middle">Sirens</text>
+        <text x="428" y="548" text-anchor="middle">Cyclops</text>
+        <text x="692" y="548" text-anchor="middle">Nausicaa</text>
+        <text x="1056" y="548" text-anchor="end">Oxen of the Sun</text>
       </g>
-      <g text-anchor="end">
-        <text class="lab" x="256" y="110">plot and orientation</text>
-        <text class="lab" x="256" y="150">allusion and period</text>
-        <text class="lab" x="256" y="190">style and form</text>
-        <text class="lab" x="256" y="230">vocabulary and wordplay</text>
-        <text class="lab" x="256" y="270">voice and referent</text>
-        <text class="lab" x="256" y="310">tone, stance, significance</text>
-        <text class="lab" x="256" y="350">curiosity and delight</text>
-        <text class="lab" x="256" y="390">felt but not grasped</text>
-        <text class="lab" x="256" y="430">dictation and transcription</text>
+
+      <text class="r-note" x="64" y="580">12 &#183; 24 &#183; 12 &#183; 14 placed questions</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
+    </svg>
+
+    <!-- ============ PLATE 5 — PAIR — Cyclops against Circe ==================== -->
+    <svg class="plane" id="plane-maxima" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="m-title m-desc">
+      <title id="m-title">Cyclops, the first half's highest, beside Circe</title>
+      <desc id="m-desc">The plate divides into two equal halves with a hairline down the
+      channel between them. Each half holds one column drawn to the same scale: Cyclops,
+      episode twelve, at twenty-four on the left; Circe, episode fifteen, at forty on the
+      right. A gold rule sits beneath the Cyclops column alone.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">PLACED QUESTIONS &#183; EPISODE 12 OF EIGHTEEN</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="r-title" x="64" y="140">Cyclops</text>
+
+      <!-- the column heads sit at 176, clear of the Circe value label at 204 -->
+      <g class="r-reg">
+        <text x="64"  y="196">THE FIRST HALF&#8217;S HIGHEST</text>
+        <text x="572" y="196">THE WHOLE READ&#8217;S HIGHEST</text>
       </g>
-      <g class="fill-gold">
+      <line class="s-hair" x1="560" y1="212" x2="560" y2="552"/>
+      <g class="f-sub">
+        <rect x="246" y="332" width="120" height="168"/>
+        <rect x="754" y="220" width="120" height="280"/>
+      </g>
+      <line class="s-hair" x1="64" y1="500" x2="1056" y2="500"/>
+      <!-- the counts sit inside their bars: the column heads own the space above -->
+      <g class="r-label onbar" text-anchor="middle">
+        <text x="306" y="370">24</text>
+        <text x="814" y="258">40</text>
+      </g>
+      <line class="s-bear gold" x1="246" y1="514" x2="366" y2="514"/>
+      <g class="r-label amb" text-anchor="middle">
+        <text x="306" y="548">12 &#183; Cyclops</text>
+        <text x="814" y="548">15 &#183; Circe</text>
+      </g>
+
+      <text class="r-note" x="64" y="580">24 of 245 placed questions</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
+    </svg>
+
+    <!-- ============ PLATE 6 — SERIES — the three peaks ======================== -->
+    <svg class="plane" id="plane-peaks" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-title p-desc">
+      <title id="p-title">Circe, Ithaca and Penelope — the three highest counts</title>
+      <desc id="p-desc">Three very wide columns fill the plate: Circe at forty, Ithaca at
+      thirty-three, Penelope at thirty-eight. Each is named with its episode number beneath
+      and carries its count above. One gold rule runs the full width beneath the three.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">THE THREE HIGHEST &#183; 40 &#183; 33 &#183; 38</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="r-title" x="64" y="140">Circe &#183; Ithaca &#183; Penelope</text>
+
+      <g class="f-sub">
+        <rect x="64"  y="220" width="260" height="280"/>
+        <rect x="430" y="269" width="260" height="231"/>
+        <rect x="796" y="234" width="260" height="266"/>
+      </g>
+      <line class="s-hair" x1="64" y1="500" x2="1056" y2="500"/>
+      <g class="r-label" text-anchor="middle">
+        <text x="194" y="204">40</text>
+        <text x="560" y="253">33</text>
+        <text x="926" y="218">38</text>
+      </g>
+      <line class="s-bear gold" x1="64" y1="514" x2="1056" y2="514"/>
+      <g class="r-label amb" text-anchor="middle">
+        <text x="194" y="548">15 &#183; Circe</text>
+        <text x="560" y="548">17 &#183; Ithaca</text>
+        <text x="926" y="548">18 &#183; Penelope</text>
+      </g>
+
+      <text class="r-note" x="64" y="580">40 &#183; 33 &#183; 38 of 245 placed questions</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
+    </svg>
+
+    <!-- ============ PLATE 7 — SERIES — the nine kinds ========================= -->
+    <svg class="plane" id="plane-kinds" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="k-title k-desc">
+      <title id="k-title">The nine kinds of question, by count</title>
+      <desc id="k-desc">Nine horizontal bars ranked by length, hanging from a single gold
+      spine, each named at the left and carrying its count at the right: plot and
+      orientation forty-eight, allusion and period forty-seven, curiosity and delight
+      forty-two, style and form forty-one, vocabulary and wordplay twenty-five, voice and
+      referent twenty-two, tone stance and significance fifteen, felt but not grasped six,
+      dictation and transcription six. Two bars are drawn as outlines rather than solids —
+      curiosity and delight, and dictation and transcription. Those two are not
+      difficulty.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">NINE KINDS &#183; 245 PLACED QUESTIONS</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="r-title" x="64" y="140">The nine kinds</text>
+
+      <g class="r-label" text-anchor="end">
+        <text x="500" y="196">plot and orientation</text>
+        <text x="500" y="238">allusion and period</text>
+        <text x="500" y="280">curiosity and delight</text>
+        <text x="500" y="322">style and form</text>
+        <text x="500" y="364">vocabulary and wordplay</text>
+        <text x="500" y="406">voice and referent</text>
+        <text x="500" y="448">tone, stance, significance</text>
+        <text x="500" y="490">felt but not grasped</text>
+        <text x="500" y="532">dictation and transcription</text>
+      </g>
+      <g class="f-sub">
+        <rect x="516" y="176" width="480" height="26"/>
+        <rect x="516" y="218" width="470" height="26"/>
+        <rect x="516" y="302" width="410" height="26"/>
+        <rect x="516" y="344" width="250" height="26"/>
+        <rect x="516" y="386" width="220" height="26"/>
+        <rect x="516" y="428" width="150" height="26"/>
+        <rect x="516" y="470" width="60"  height="26"/>
+      </g>
+      <!-- outlined, not solid: the two kinds that are not difficulty -->
+      <g class="s-draw">
+        <rect x="518" y="262" width="416" height="26"/>
+        <rect x="518" y="514" width="56"  height="26"/>
+      </g>
+      <!-- the one gold element: the spine the nine rows hang from -->
+      <line class="s-bear gold" x1="511" y1="176" x2="511" y2="540"/>
+      <g class="r-label">
+        <text x="1008" y="196">48</text>
+        <text x="998"  y="238">47</text>
+        <text x="948"  y="280">42</text>
+        <text x="938"  y="322">41</text>
+        <text x="778"  y="364">25</text>
+        <text x="748"  y="406">22</text>
+        <text x="678"  y="448">15</text>
+        <text x="588"  y="490">6</text>
+        <text x="586"  y="532">6</text>
+      </g>
+
+      <text class="r-note" x="64" y="580">Outlined: not difficulty</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
+    </svg>
+
+    <!-- ============ PLATE 8 — FIELD — the strain matrix ======================= -->
+    <svg class="plane" id="plane-matrix" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="x-title x-desc">
+      <title id="x-title">Dominant strains, nine kinds against eighteen episodes</title>
+      <desc id="x-desc">A matrix of nine named rows against eighteen numbered episode
+      columns, hanging from a gold spine at the left of the grid. A solid square marks a
+      dominant strain for that episode. Plot and orientation, allusion and period, and
+      style and form carry the most marks. Felt but not grasped, and dictation and
+      transcription, carry none as a dominant strain.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">NINE KINDS AGAINST EIGHTEEN EPISODES</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="r-title" x="64" y="140">Dominant strains</text>
+
+      <g class="r-note" text-anchor="middle">
+        <text x="531" y="186">1</text>  <text x="561" y="186">2</text>
+        <text x="591" y="186">3</text>  <text x="621" y="186">4</text>
+        <text x="651" y="186">5</text>  <text x="681" y="186">6</text>
+        <text x="711" y="186">7</text>  <text x="741" y="186">8</text>
+        <text x="771" y="186">9</text>  <text x="801" y="186">10</text>
+        <text x="831" y="186">11</text> <text x="861" y="186">12</text>
+        <text x="891" y="186">13</text> <text x="921" y="186">14</text>
+        <text x="951" y="186">15</text> <text x="981" y="186">16</text>
+        <text x="1011" y="186">17</text><text x="1041" y="186">18</text>
+      </g>
+      <!-- the room: nine trace bands -->
+      <g class="f-trace">
+        <rect x="516" y="200" width="540" height="26"/>
+        <rect x="516" y="238" width="540" height="26"/>
+        <rect x="516" y="276" width="540" height="26"/>
+        <rect x="516" y="314" width="540" height="26"/>
+        <rect x="516" y="352" width="540" height="26"/>
+        <rect x="516" y="390" width="540" height="26"/>
+        <rect x="516" y="428" width="540" height="26"/>
+        <rect x="516" y="466" width="540" height="26"/>
+        <rect x="516" y="504" width="540" height="26"/>
+      </g>
+      <g class="r-label" text-anchor="end">
+        <text x="500" y="220">plot and orientation</text>
+        <text x="500" y="258">allusion and period</text>
+        <text x="500" y="296">style and form</text>
+        <text x="500" y="334">vocabulary and wordplay</text>
+        <text x="500" y="372">voice and referent</text>
+        <text x="500" y="410">tone, stance, significance</text>
+        <text x="500" y="448">curiosity and delight</text>
+        <text x="500" y="486">felt but not grasped</text>
+        <text x="500" y="524">dictation and transcription</text>
+      </g>
+      <!-- the marks: a solid square is a dominant strain for that episode -->
+      <g class="f-sub">
         <!-- plot and orientation: 4 5 6 11 13 15 16 17 18 -->
-        <rect x="395" y="90" width="40" height="30"/><rect x="437" y="90" width="40" height="30"/>
-        <rect x="479" y="90" width="40" height="30"/><rect x="689" y="90" width="40" height="30"/>
-        <rect x="773" y="90" width="40" height="30"/><rect x="857" y="90" width="40" height="30"/>
-        <rect x="899" y="90" width="40" height="30"/><rect x="941" y="90" width="40" height="30"/>
-        <rect x="983" y="90" width="40" height="30"/>
+        <rect x="609"  y="200" width="24" height="26"/><rect x="639" y="200" width="24" height="26"/>
+        <rect x="669"  y="200" width="24" height="26"/><rect x="819" y="200" width="24" height="26"/>
+        <rect x="879"  y="200" width="24" height="26"/><rect x="939" y="200" width="24" height="26"/>
+        <rect x="969"  y="200" width="24" height="26"/><rect x="999" y="200" width="24" height="26"/>
+        <rect x="1029" y="200" width="24" height="26"/>
         <!-- allusion and period: 6 7 8 9 10 12 14 15 16 -->
-        <rect x="479" y="130" width="40" height="30"/><rect x="521" y="130" width="40" height="30"/>
-        <rect x="563" y="130" width="40" height="30"/><rect x="605" y="130" width="40" height="30"/>
-        <rect x="647" y="130" width="40" height="30"/><rect x="731" y="130" width="40" height="30"/>
-        <rect x="815" y="130" width="40" height="30"/><rect x="857" y="130" width="40" height="30"/>
-        <rect x="899" y="130" width="40" height="30"/>
+        <rect x="669" y="238" width="24" height="26"/><rect x="699" y="238" width="24" height="26"/>
+        <rect x="729" y="238" width="24" height="26"/><rect x="759" y="238" width="24" height="26"/>
+        <rect x="789" y="238" width="24" height="26"/><rect x="849" y="238" width="24" height="26"/>
+        <rect x="909" y="238" width="24" height="26"/><rect x="939" y="238" width="24" height="26"/>
+        <rect x="969" y="238" width="24" height="26"/>
         <!-- style and form: 7 8 10 11 12 13 14 17 -->
-        <rect x="521" y="170" width="40" height="30"/><rect x="563" y="170" width="40" height="30"/>
-        <rect x="647" y="170" width="40" height="30"/><rect x="689" y="170" width="40" height="30"/>
-        <rect x="731" y="170" width="40" height="30"/><rect x="773" y="170" width="40" height="30"/>
-        <rect x="815" y="170" width="40" height="30"/><rect x="941" y="170" width="40" height="30"/>
+        <rect x="699" y="276" width="24" height="26"/><rect x="729" y="276" width="24" height="26"/>
+        <rect x="789" y="276" width="24" height="26"/><rect x="819" y="276" width="24" height="26"/>
+        <rect x="849" y="276" width="24" height="26"/><rect x="879" y="276" width="24" height="26"/>
+        <rect x="909" y="276" width="24" height="26"/><rect x="999" y="276" width="24" height="26"/>
         <!-- vocabulary and wordplay: 14 15 16 -->
-        <rect x="815" y="210" width="40" height="30"/><rect x="857" y="210" width="40" height="30"/>
-        <rect x="899" y="210" width="40" height="30"/>
+        <rect x="909" y="314" width="24" height="26"/><rect x="939" y="314" width="24" height="26"/>
+        <rect x="969" y="314" width="24" height="26"/>
         <!-- voice and referent: 1 6 13 18 -->
-        <rect x="269" y="250" width="40" height="30"/><rect x="479" y="250" width="40" height="30"/>
-        <rect x="773" y="250" width="40" height="30"/><rect x="983" y="250" width="40" height="30"/>
+        <rect x="519" y="352" width="24" height="26"/><rect x="669" y="352" width="24" height="26"/>
+        <rect x="879" y="352" width="24" height="26"/><rect x="1029" y="352" width="24" height="26"/>
         <!-- tone, stance, significance: 5 10 -->
-        <rect x="437" y="290" width="40" height="30"/><rect x="647" y="290" width="40" height="30"/>
+        <rect x="639" y="390" width="24" height="26"/><rect x="789" y="390" width="24" height="26"/>
         <!-- curiosity and delight: 4 18 -->
-        <rect x="395" y="330" width="40" height="30"/><rect x="983" y="330" width="40" height="30"/>
+        <rect x="609" y="428" width="24" height="26"/><rect x="1029" y="428" width="24" height="26"/>
       </g>
-      <g class="epname" text-anchor="end">
-        <text x="289" y="452" transform="rotate(-38 289 452)">Telemachus</text>
-        <text x="331" y="452" transform="rotate(-38 331 452)">Nestor</text>
-        <text x="373" y="452" transform="rotate(-38 373 452)">Proteus</text>
-        <text x="415" y="452" transform="rotate(-38 415 452)">Calypso</text>
-        <text x="457" y="452" transform="rotate(-38 457 452)">Lotus Eaters</text>
-        <text x="499" y="452" transform="rotate(-38 499 452)">Hades</text>
-        <text x="541" y="452" transform="rotate(-38 541 452)">Aeolus</text>
-        <text x="583" y="452" transform="rotate(-38 583 452)">Lestrygonians</text>
-        <text x="625" y="452" transform="rotate(-38 625 452)">Scylla and Charybdis</text>
-        <text x="667" y="452" transform="rotate(-38 667 452)">Wandering Rocks</text>
-        <text x="709" y="452" transform="rotate(-38 709 452)">Sirens</text>
-        <text x="751" y="452" transform="rotate(-38 751 452)">Cyclops</text>
-        <text x="793" y="452" transform="rotate(-38 793 452)">Nausicaa</text>
-        <text x="835" y="452" transform="rotate(-38 835 452)">Oxen of the Sun</text>
-        <text x="877" y="452" transform="rotate(-38 877 452)">Circe</text>
-        <text x="919" y="452" transform="rotate(-38 919 452)">Eumaeus</text>
-        <text x="961" y="452" transform="rotate(-38 961 452)">Ithaca</text>
-        <text x="1003" y="452" transform="rotate(-38 1003 452)">Penelope</text>
-      </g>
+      <!-- the one gold element: the spine -->
+      <line class="s-bear gold" x1="511" y1="200" x2="511" y2="530"/>
+
+      <text class="r-note" x="64" y="580">One primary kind per question</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
     </svg>
 
-    <!-- PLANE 4 — Penelope's thirty-eight, as units -->
-    <svg class="plane" id="plane-dots" viewBox="0 0 1040 580" aria-hidden="true">
-      <g class="fill-gold">
-        <circle cx="80"  cy="210" r="15"/><circle cx="130" cy="210" r="15"/>
-        <circle cx="180" cy="210" r="15"/><circle cx="230" cy="210" r="15"/>
-        <circle cx="280" cy="210" r="15"/><circle cx="330" cy="210" r="15"/>
-        <circle cx="380" cy="210" r="15"/><circle cx="430" cy="210" r="15"/>
-        <circle cx="480" cy="210" r="15"/><circle cx="530" cy="210" r="15"/>
-        <circle cx="580" cy="210" r="15"/><circle cx="630" cy="210" r="15"/>
+    <!-- ============ PLATE 9 — PAIR — Penelope ================================= -->
+    <svg class="plane" id="plane-penelope" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="n-title n-desc">
+      <title id="n-title">Penelope, episode eighteen: thirty-eight placed questions</title>
+      <desc id="n-desc">The plate divides into two equal halves with a hairline down the
+      channel. Twelve solid marks on the left are named curiosity and delight; seven solid
+      marks of the same size on the right are named voice and referent. A gold rule runs
+      beneath both. Below it, nineteen small ambient marks stand for the rest of the
+      episode's thirty-eight questions.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">EPISODE 18 &#183; 38 PLACED QUESTIONS</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="r-title" x="64" y="140">Penelope</text>
+
+      <line class="s-hair" x1="560" y1="196" x2="560" y2="452"/>
+      <g class="f-sub">
+        <circle cx="104" cy="252" r="14"/><circle cx="164" cy="252" r="14"/>
+        <circle cx="224" cy="252" r="14"/><circle cx="284" cy="252" r="14"/>
+        <circle cx="104" cy="312" r="14"/><circle cx="164" cy="312" r="14"/>
+        <circle cx="224" cy="312" r="14"/><circle cx="284" cy="312" r="14"/>
+        <circle cx="104" cy="372" r="14"/><circle cx="164" cy="372" r="14"/>
+        <circle cx="224" cy="372" r="14"/><circle cx="284" cy="372" r="14"/>
+        <circle cx="612" cy="252" r="14"/><circle cx="672" cy="252" r="14"/>
+        <circle cx="732" cy="252" r="14"/><circle cx="792" cy="252" r="14"/>
+        <circle cx="612" cy="312" r="14"/><circle cx="672" cy="312" r="14"/>
+        <circle cx="732" cy="312" r="14"/>
       </g>
-      <g class="out-gold">
-        <circle cx="680" cy="210" r="14"/><circle cx="730" cy="210" r="14"/>
-        <circle cx="780" cy="210" r="14"/><circle cx="830" cy="210" r="14"/>
-        <circle cx="880" cy="210" r="14"/><circle cx="930" cy="210" r="14"/>
-        <circle cx="980" cy="210" r="14"/>
+      <g class="r-label">
+        <text x="64"  y="432">12 &#183; curiosity and delight</text>
+        <text x="572" y="432">7 &#183; voice and referent</text>
       </g>
-      <g class="fill-paper" opacity=".35">
-        <circle cx="80"  cy="320" r="15"/><circle cx="130" cy="320" r="15"/>
-        <circle cx="180" cy="320" r="15"/><circle cx="230" cy="320" r="15"/>
-        <circle cx="280" cy="320" r="15"/><circle cx="330" cy="320" r="15"/>
-        <circle cx="380" cy="320" r="15"/><circle cx="430" cy="320" r="15"/>
-        <circle cx="480" cy="320" r="15"/><circle cx="530" cy="320" r="15"/>
-        <circle cx="580" cy="320" r="15"/><circle cx="630" cy="320" r="15"/>
-        <circle cx="680" cy="320" r="15"/><circle cx="730" cy="320" r="15"/>
-        <circle cx="780" cy="320" r="15"/><circle cx="830" cy="320" r="15"/>
-        <circle cx="880" cy="320" r="15"/><circle cx="930" cy="320" r="15"/>
-        <circle cx="980" cy="320" r="15"/>
+      <line class="s-bear gold" x1="64" y1="466" x2="1056" y2="466"/>
+      <g class="f-amb">
+        <circle cx="72"  cy="510" r="5"/><circle cx="102" cy="510" r="5"/>
+        <circle cx="132" cy="510" r="5"/><circle cx="162" cy="510" r="5"/>
+        <circle cx="192" cy="510" r="5"/><circle cx="222" cy="510" r="5"/>
+        <circle cx="252" cy="510" r="5"/><circle cx="282" cy="510" r="5"/>
+        <circle cx="312" cy="510" r="5"/><circle cx="342" cy="510" r="5"/>
+        <circle cx="372" cy="510" r="5"/><circle cx="402" cy="510" r="5"/>
+        <circle cx="432" cy="510" r="5"/><circle cx="462" cy="510" r="5"/>
+        <circle cx="492" cy="510" r="5"/><circle cx="522" cy="510" r="5"/>
+        <circle cx="552" cy="510" r="5"/><circle cx="582" cy="510" r="5"/>
+        <circle cx="612" cy="510" r="5"/>
       </g>
-      <g fill="none" stroke="#b9c3d6" stroke-width="1">
-        <path d="M62,244 V252 H648 V244"/>
-        <path d="M662,244 V252 H998 V244"/>
-        <path d="M62,354 V362 H998 V354"/>
-      </g>
-      <g class="tiny" text-anchor="middle">
-        <text x="355" y="274">12 CURIOSITY AND DELIGHT</text>
-        <text x="830" y="274">7 VOICE AND REFERENT</text>
-        <text x="530" y="384">THE OTHER NINETEEN</text>
-      </g>
-      <text class="tiny" x="520" y="440" text-anchor="middle">EPISODE 18 &#183; PENELOPE &#183; 38 PLACED QUESTIONS</text>
+      <text class="r-note" x="652" y="517">The other nineteen</text>
+
+      <text class="r-note" x="64" y="580">12 delight &#183; 7 referent &#183; 38 in all</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
     </svg>
 
-    <!-- PLANE 5 — the sixteen exchanges, dated -->
-    <svg class="plane" id="plane-exch" viewBox="0 0 1040 580" aria-hidden="true">
-      <line class="grid" x1="60" y1="329.1" x2="1000" y2="329.1"/>
-      <line class="grid" x1="60" y1="238.2" x2="1000" y2="238.2"/>
-      <line class="grid" x1="60" y1="147.3" x2="1000" y2="147.3"/>
-      <line class="axis" x1="60" y1="420" x2="1000" y2="420"/>
-      <line class="axis" x1="60" y1="100" x2="60" y2="420"/>
-      <g class="axlab" text-anchor="end">
-        <text x="50" y="424">0</text>
-        <text x="50" y="333">10</text>
-        <text x="50" y="242">20</text>
-        <text x="50" y="151">30</text>
+    <!-- ============ PLATE 10 — SERIES — the sixteen exchanges ================= -->
+    <svg class="plane" id="plane-exch" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="e-title e-desc">
+      <title id="e-title">The sixteen dated exchanges</title>
+      <desc id="e-desc">Sixteen columns in date order, each carrying its count above and its
+      exchange number below: one, four, nine, eight, eight, twenty-one, fourteen,
+      twenty-three, fifteen, seventeen, eighteen, sixteen, thirty-three, seventeen,
+      nineteen, twenty-nine. A gold rule carries them all. Beneath, hairline brackets group
+      the exchanges by the day of July they were held, from the eighth to the
+      seventeenth.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">SIXTEEN DATED EXCHANGES &#183; JULY 2026</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="r-title" x="64" y="140">The sixteen exchanges</text>
+
+      <g class="f-sub">
+        <rect x="73"   y="462.73" width="44" height="7.27"/>
+        <rect x="135"  y="440.91" width="44" height="29.09"/>
+        <rect x="197"  y="404.55" width="44" height="65.45"/>
+        <rect x="259"  y="411.82" width="44" height="58.18"/>
+        <rect x="321"  y="411.82" width="44" height="58.18"/>
+        <rect x="383"  y="317.27" width="44" height="152.73"/>
+        <rect x="445"  y="368.18" width="44" height="101.82"/>
+        <rect x="507"  y="302.73" width="44" height="167.27"/>
+        <rect x="569"  y="360.91" width="44" height="109.09"/>
+        <rect x="631"  y="346.36" width="44" height="123.64"/>
+        <rect x="693"  y="339.09" width="44" height="130.91"/>
+        <rect x="755"  y="353.64" width="44" height="116.36"/>
+        <rect x="817"  y="230.00" width="44" height="240.00"/>
+        <rect x="879"  y="346.36" width="44" height="123.64"/>
+        <rect x="941"  y="331.82" width="44" height="138.18"/>
+        <rect x="1003" y="259.09" width="44" height="210.91"/>
       </g>
-      <text class="axtitle" x="22" y="260" text-anchor="middle" transform="rotate(-90 22 260)">QUESTIONS PER EXCHANGE</text>
-      <g class="fill-paper">
-        <rect x="70"  y="410.9" width="40" height="9.1"/>
-        <rect x="128" y="383.6" width="40" height="36.4"/>
-        <rect x="186" y="338.2" width="40" height="81.8"/>
-        <rect x="244" y="347.3" width="40" height="72.7"/>
-        <rect x="302" y="347.3" width="40" height="72.7"/>
-        <rect x="360" y="229.1" width="40" height="190.9"/>
-        <rect x="418" y="292.7" width="40" height="127.3"/>
-        <rect x="476" y="210.9" width="40" height="209.1"/>
-        <rect x="534" y="283.6" width="40" height="136.4"/>
-        <rect x="592" y="265.5" width="40" height="154.5"/>
-        <rect x="650" y="256.4" width="40" height="163.6"/>
-        <rect x="708" y="274.5" width="40" height="145.5"/>
-        <rect x="766" y="120.0" width="40" height="300.0"/>
-        <rect x="824" y="265.5" width="40" height="154.5"/>
-        <rect x="882" y="247.3" width="40" height="172.7"/>
-        <rect x="940" y="156.4" width="40" height="263.6"/>
+      <g class="r-note" text-anchor="middle" fill="#f4efe2">
+        <text x="95"  y="452">1</text>  <text x="157"  y="430">4</text>
+        <text x="219" y="394">9</text>  <text x="281"  y="401">8</text>
+        <text x="343" y="401">8</text>  <text x="405"  y="307">21</text>
+        <text x="467" y="358">14</text> <text x="529"  y="292">23</text>
+        <text x="591" y="351">15</text> <text x="653"  y="336">17</text>
+        <text x="715" y="329">18</text> <text x="777"  y="343">16</text>
+        <text x="839" y="220">33</text> <text x="901"  y="336">17</text>
+        <text x="963" y="322">19</text> <text x="1025" y="249">29</text>
       </g>
-      <g class="cnt" text-anchor="middle">
-        <text x="90"  y="402">1</text>
-        <text x="148" y="375">4</text>
-        <text x="206" y="330">9</text>
-        <text x="264" y="339">8</text>
-        <text x="322" y="339">8</text>
-        <text x="380" y="221">21</text>
-        <text x="438" y="284">14</text>
-        <text x="496" y="203">23</text>
-        <text x="554" y="275">15</text>
-        <text x="612" y="257">17</text>
-        <text x="670" y="248">18</text>
-        <text x="728" y="266">16</text>
-        <text x="786" y="112">33</text>
-        <text x="844" y="257">17</text>
-        <text x="902" y="239">19</text>
-        <text x="960" y="148">29</text>
+      <line class="s-bear gold" x1="64" y1="476" x2="1056" y2="476"/>
+      <g class="r-note" text-anchor="middle">
+        <text x="95"  y="508">1</text>  <text x="157"  y="508">2</text>
+        <text x="219" y="508">3</text>  <text x="281"  y="508">4</text>
+        <text x="343" y="508">5</text>  <text x="405"  y="508">6</text>
+        <text x="467" y="508">7</text>  <text x="529"  y="508">8</text>
+        <text x="591" y="508">9</text>  <text x="653"  y="508">10</text>
+        <text x="715" y="508">11</text> <text x="777"  y="508">12</text>
+        <text x="839" y="508">13</text> <text x="901"  y="508">14</text>
+        <text x="963" y="508">15</text> <text x="1025" y="508">16</text>
       </g>
-      <g class="tiny" text-anchor="middle">
-        <text x="90"  y="440">1</text><text x="148" y="440">2</text><text x="206" y="440">3</text>
-        <text x="264" y="440">4</text><text x="322" y="440">5</text><text x="380" y="440">6</text>
-        <text x="438" y="440">7</text><text x="496" y="440">8</text><text x="554" y="440">9</text>
-        <text x="612" y="440">10</text><text x="670" y="440">11</text><text x="728" y="440">12</text>
-        <text x="786" y="440">13</text><text x="844" y="440">14</text><text x="902" y="440">15</text>
-        <text x="960" y="440">16</text>
+      <!-- the days: hairline brackets grouping the exchanges held on each date -->
+      <g class="s-hair">
+        <line x1="73"   y1="524" x2="117"  y2="524"/>
+        <line x1="135"  y1="524" x2="303"  y2="524"/>
+        <line x1="321"  y1="524" x2="365"  y2="524"/>
+        <line x1="383"  y1="524" x2="489"  y2="524"/>
+        <line x1="507"  y1="524" x2="551"  y2="524"/>
+        <line x1="569"  y1="524" x2="613"  y2="524"/>
+        <line x1="631"  y1="524" x2="799"  y2="524"/>
+        <line x1="817"  y1="524" x2="861"  y2="524"/>
+        <line x1="879"  y1="524" x2="985"  y2="524"/>
+        <line x1="1003" y1="524" x2="1047" y2="524"/>
       </g>
-      <g class="axis" opacity=".5">
-        <line x1="70"  y1="452" x2="110" y2="452"/>
-        <line x1="128" y1="452" x2="284" y2="452"/>
-        <line x1="302" y1="452" x2="342" y2="452"/>
-        <line x1="360" y1="452" x2="458" y2="452"/>
-        <line x1="476" y1="452" x2="516" y2="452"/>
-        <line x1="534" y1="452" x2="574" y2="452"/>
-        <line x1="592" y1="452" x2="748" y2="452"/>
-        <line x1="766" y1="452" x2="806" y2="452"/>
-        <line x1="824" y1="452" x2="922" y2="452"/>
-        <line x1="940" y1="452" x2="980" y2="452"/>
+      <g class="r-note" text-anchor="middle">
+        <text x="95"  y="548">8</text>  <text x="219" y="548">9</text>
+        <text x="343" y="548">10</text> <text x="436" y="548">11</text>
+        <text x="529" y="548">12</text> <text x="591" y="548">13</text>
+        <text x="715" y="548">14</text> <text x="839" y="548">15</text>
+        <text x="932" y="548">16</text> <text x="1025" y="548">17</text>
       </g>
-      <g class="tiny" text-anchor="middle">
-        <text x="90"  y="472">8 JUL</text>
-        <text x="206" y="472">9 JUL</text>
-        <text x="322" y="472">10 JUL</text>
-        <text x="409" y="472">11 JUL</text>
-        <text x="496" y="472">12 JUL</text>
-        <text x="554" y="472">13 JUL</text>
-        <text x="670" y="472">14 JUL</text>
-        <text x="786" y="472">15 JUL</text>
-        <text x="873" y="472">16 JUL</text>
-        <text x="960" y="472">17 JUL</text>
-      </g>
-      <text class="axtitle" x="530" y="512" text-anchor="middle">SIXTEEN DATED EXCHANGES, 2026 &#8594;</text>
+
+      <text class="r-note" x="64" y="580">1 to 33 questions each &#183; 8&#8211;17 July 2026</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
     </svg>
 
-    <!-- PLANE 6 — the record: 117 pages, three sets of marks -->
-    <svg class="plane" id="plane-record" viewBox="0 0 1040 580" aria-hidden="true">
-      <rect x="40" y="230" width="960" height="120" fill="#b9c3d6" opacity=".16"/>
-      <g class="axis" opacity=".6">
-        <line x1="40"    y1="350" x2="40"    y2="362"/>
-        <line x1="114.5" y1="350" x2="114.5" y2="362"/>
-        <line x1="197.2" y1="350" x2="197.2" y2="362"/>
-        <line x1="280.0" y1="350" x2="280.0" y2="362"/>
-        <line x1="362.8" y1="350" x2="362.8" y2="362"/>
-        <line x1="445.5" y1="350" x2="445.5" y2="362"/>
-        <line x1="528.3" y1="350" x2="528.3" y2="362"/>
-        <line x1="611.0" y1="350" x2="611.0" y2="362"/>
-        <line x1="693.8" y1="350" x2="693.8" y2="362"/>
-        <line x1="776.6" y1="350" x2="776.6" y2="362"/>
-        <line x1="859.3" y1="350" x2="859.3" y2="362"/>
-        <line x1="942.1" y1="350" x2="942.1" y2="362"/>
-        <line x1="1000"  y1="350" x2="1000"  y2="362"/>
-      </g>
-      <g class="tiny" text-anchor="middle">
-        <text x="40"    y="380">1</text>
-        <text x="114.5" y="380">10</text>
-        <text x="197.2" y="380">20</text>
-        <text x="280.0" y="380">30</text>
-        <text x="362.8" y="380">40</text>
-        <text x="445.5" y="380">50</text>
-        <text x="528.3" y="380">60</text>
-        <text x="611.0" y="380">70</text>
-        <text x="693.8" y="380">80</text>
-        <text x="776.6" y="380">90</text>
-        <text x="859.3" y="380">100</text>
-        <text x="942.1" y="380">110</text>
-        <text x="1000"  y="380">117</text>
-      </g>
-      <text class="axtitle" x="520" y="468" text-anchor="middle">THE READING COMPANION &#183; PDF PAGE</text>
+    <!-- ============ PLATE 11 — FIELD — the record ============================= -->
+    <svg class="plane" id="plane-record" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="r-title r-desc">
+      <title id="r-title">The Reading Companion: 117 pages, sixteen exchanges</title>
+      <desc id="r-desc">The whole record drawn as one long band running the full width of
+      the plate, page one at the left and page 117 at the right. Sixteen heavy marks stand
+      across it where each exchange begins, crowded together through the first quarter and
+      spaced widely after page seventy-five. A gold rule carries the band, and a scale of
+      page numbers runs beneath it.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">THE READING COMPANION &#183; 117 PAGES</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="r-title" x="64" y="140">The record</text>
 
-      <g class="bar" id="r-exch">
-        <g class="pin">
-          <g class="fill-gold">
-            <rect x="63.1"  y="200" width="3.5" height="150"/>
-            <rect x="79.7"  y="200" width="3.5" height="150"/>
-            <rect x="112.8" y="200" width="3.5" height="150"/>
-            <rect x="145.9" y="200" width="3.5" height="150"/>
-            <rect x="170.7" y="200" width="3.5" height="150"/>
-            <rect x="212.1" y="200" width="3.5" height="150"/>
-            <rect x="278.3" y="200" width="3.5" height="150"/>
-            <rect x="336.2" y="200" width="3.5" height="150"/>
-            <rect x="419.0" y="200" width="3.5" height="150"/>
-            <rect x="476.9" y="200" width="3.5" height="150"/>
-            <rect x="534.8" y="200" width="3.5" height="150"/>
-            <rect x="601.0" y="200" width="3.5" height="150"/>
-            <rect x="659.0" y="200" width="3.5" height="150"/>
-            <rect x="783.1" y="200" width="3.5" height="150"/>
-            <rect x="849.3" y="200" width="3.5" height="150"/>
-            <rect x="923.8" y="200" width="3.5" height="150"/>
-          </g>
-          <g class="tiny" text-anchor="end" fill="#dfa93f">
-            <text x="64.8"  y="188" transform="rotate(-60 64.8 188)">p.4</text>
-            <text x="81.4"  y="188" transform="rotate(-60 81.4 188)">p.6</text>
-            <text x="114.5" y="188" transform="rotate(-60 114.5 188)">p.10</text>
-            <text x="147.6" y="188" transform="rotate(-60 147.6 188)">p.14</text>
-            <text x="172.4" y="188" transform="rotate(-60 172.4 188)">p.17</text>
-            <text x="213.8" y="188" transform="rotate(-60 213.8 188)">p.22</text>
-            <text x="280.0" y="188" transform="rotate(-60 280.0 188)">p.30</text>
-            <text x="337.9" y="188" transform="rotate(-60 337.9 188)">p.37</text>
-            <text x="420.7" y="188" transform="rotate(-60 420.7 188)">p.47</text>
-            <text x="478.6" y="188" transform="rotate(-60 478.6 188)">p.54</text>
-            <text x="536.5" y="188" transform="rotate(-60 536.5 188)">p.61</text>
-            <text x="602.7" y="188" transform="rotate(-60 602.7 188)">p.69</text>
-            <text x="660.7" y="188" transform="rotate(-60 660.7 188)">p.76</text>
-            <text x="784.8" y="188" transform="rotate(-60 784.8 188)">p.91</text>
-            <text x="851.0" y="188" transform="rotate(-60 851.0 188)">p.99</text>
-            <text x="925.6" y="188" transform="rotate(-60 925.6 188)">p.108</text>
-          </g>
-          <g class="tiny" text-anchor="middle" fill="#dfa93f">
-            <text x="64.8"  y="404">1</text>
-            <text x="81.4"  y="404">2</text>
-            <text x="114.5" y="404">3</text>
-            <text x="147.6" y="404">4</text>
-            <text x="172.4" y="404">5</text>
-            <text x="213.8" y="404">6</text>
-            <text x="280.0" y="404">7</text>
-            <text x="337.9" y="404">8</text>
-            <text x="420.7" y="404">9</text>
-            <text x="478.6" y="404">10</text>
-            <text x="536.5" y="404">11</text>
-            <text x="602.7" y="404">12</text>
-            <text x="660.7" y="404">13</text>
-            <text x="784.8" y="404">14</text>
-            <text x="851.0" y="404">15</text>
-            <text x="925.6" y="404">16</text>
-          </g>
-          <text class="tiny" x="520" y="430" text-anchor="middle">EXCHANGE NUMBER</text>
+      <rect class="f-trace" x="64" y="280" width="992" height="140"/>
+      <!-- the sixteen exchange openings, at bear weight -->
+      <g class="f-sub">
+        <rect x="84.7"  y="260" width="10" height="180"/>
+        <rect x="101.8" y="260" width="10" height="180"/>
+        <rect x="136.0" y="260" width="10" height="180"/>
+        <rect x="170.2" y="260" width="10" height="180"/>
+        <rect x="195.9" y="260" width="10" height="180"/>
+        <rect x="238.6" y="260" width="10" height="180"/>
+        <rect x="307.0" y="260" width="10" height="180"/>
+        <rect x="367.0" y="260" width="10" height="180"/>
+        <rect x="452.5" y="260" width="10" height="180"/>
+        <rect x="512.4" y="260" width="10" height="180"/>
+        <rect x="572.3" y="260" width="10" height="180"/>
+        <rect x="640.7" y="260" width="10" height="180"/>
+        <rect x="700.6" y="260" width="10" height="180"/>
+        <rect x="828.9" y="260" width="10" height="180"/>
+        <rect x="897.3" y="260" width="10" height="180"/>
+        <rect x="974.3" y="260" width="10" height="180"/>
+      </g>
+      <line class="s-bear gold" x1="64" y1="452" x2="1056" y2="452"/>
+      <g class="s-hair">
+        <line x1="64"    y1="466" x2="64"    y2="478"/>
+        <line x1="141.0" y1="466" x2="141.0" y2="478"/>
+        <line x1="226.5" y1="466" x2="226.5" y2="478"/>
+        <line x1="312.0" y1="466" x2="312.0" y2="478"/>
+        <line x1="397.5" y1="466" x2="397.5" y2="478"/>
+        <line x1="483.0" y1="466" x2="483.0" y2="478"/>
+        <line x1="568.6" y1="466" x2="568.6" y2="478"/>
+        <line x1="654.1" y1="466" x2="654.1" y2="478"/>
+        <line x1="739.6" y1="466" x2="739.6" y2="478"/>
+        <line x1="825.2" y1="466" x2="825.2" y2="478"/>
+        <line x1="910.7" y1="466" x2="910.7" y2="478"/>
+        <line x1="1056"  y1="466" x2="1056"  y2="478"/>
+      </g>
+      <g class="r-note" text-anchor="middle">
+        <text x="64" y="506" text-anchor="start">1</text>
+        <text x="141.0" y="506">10</text>  <text x="226.5" y="506">20</text>
+        <text x="312.0" y="506">30</text>  <text x="397.5" y="506">40</text>
+        <text x="483.0" y="506">50</text>  <text x="568.6" y="506">60</text>
+        <text x="654.1" y="506">70</text>  <text x="739.6" y="506">80</text>
+        <text x="825.2" y="506">90</text>  <text x="910.7" y="506">100</text>
+        <text x="1056" y="506" text-anchor="end">117</text>
+      </g>
+      <text class="r-reg" x="64" y="542">PDF PAGE &#8594;</text>
+
+      <text class="r-note" x="64" y="580">Sixteen exchanges &#183; pdf 4 to 108</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
+    </svg>
+
+    <!-- ============ PLATE 12 — SERIES — the survival language, magnified ====== -->
+    <svg class="plane" id="plane-detail" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="d-title d-desc">
+      <title id="d-title">The survival language: four pages of the record, magnified</title>
+      <desc id="d-desc">A detail of the record magnified more than three times, showing only
+      pages twenty-five to sixty. A narrow strip at the top of the plate shows the whole
+      117-page record with the magnified window outlined on it, and two hairlines open out
+      from that window to the full width below. Four heavy marks stand on the detail at
+      pages 30, 31, 40 and 56, each labelled. A gold rule carries them.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">THE RECORD, PAGES 25 TO 60 OF 117</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="r-title" x="64" y="140">The survival language</text>
+
+      <!-- the whole record, with the magnified window drawn on it -->
+      <rect class="f-trace" x="64" y="176" width="992" height="18"/>
+      <rect class="s-draw" x="269.2" y="176" width="299.4" height="18"/>
+      <line class="s-hair" x1="269.2" y1="194" x2="64"   y2="248"/>
+      <line class="s-hair" x1="568.6" y1="194" x2="1056" y2="248"/>
+
+      <!-- the detail -->
+      <rect class="f-trace" x="64" y="300" width="992" height="120"/>
+      <g class="f-sub">
+        <rect x="195.7" y="280" width="20" height="160"/>
+        <rect x="224.0" y="280" width="20" height="160"/>
+        <rect x="479.1" y="280" width="20" height="160"/>
+        <rect x="932.5" y="280" width="20" height="160"/>
+      </g>
+      <g class="r-label">
+        <text x="188" y="268" text-anchor="end">p.30</text>
+        <text x="252" y="268">p.31</text>
+        <text x="489.1" y="268" text-anchor="middle">p.40</text>
+        <text x="942.5" y="268" text-anchor="middle">p.56</text>
+      </g>
+      <line class="s-bear gold" x1="64" y1="452" x2="1056" y2="452"/>
+      <g class="s-hair">
+        <line x1="64"    y1="466" x2="64"    y2="478"/>
+        <line x1="205.7" y1="466" x2="205.7" y2="478"/>
+        <line x1="347.4" y1="466" x2="347.4" y2="478"/>
+        <line x1="489.1" y1="466" x2="489.1" y2="478"/>
+        <line x1="630.8" y1="466" x2="630.8" y2="478"/>
+        <line x1="772.5" y1="466" x2="772.5" y2="478"/>
+        <line x1="914.2" y1="466" x2="914.2" y2="478"/>
+        <line x1="1056"  y1="466" x2="1056"  y2="478"/>
+      </g>
+      <g class="r-note" text-anchor="middle">
+        <text x="64" y="506" text-anchor="start">25</text>
+        <text x="205.7" y="506">30</text> <text x="347.4" y="506">35</text>
+        <text x="489.1" y="506">40</text> <text x="630.8" y="506">45</text>
+        <text x="772.5" y="506">50</text> <text x="914.2" y="506">55</text>
+        <text x="1056" y="506" text-anchor="end">60</text>
+      </g>
+      <text class="r-reg" x="64" y="542">PDF PAGE &#8594;</text>
+
+      <text class="r-note" x="64" y="580">pdf 30 &#183; 31 &#183; 40 &#183; 56</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
+    </svg>
+
+    <!-- ============ PLATE 13 — SERIES — the four failed entries =============== -->
+    <svg class="plane" id="plane-verbatim" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="v-title v-desc">
+      <title id="v-title">Four entries that failed the strict verbatim check</title>
+      <desc id="v-desc">Four open rectangles stand in a row across the plate, one for each
+      entry, drawn as outlines rather than solids because the wording could not be
+      verified. Each carries its page address: pdf 10, pdf 39, pdf 109, pdf 110. A gold
+      rule runs beneath the four, and a line below it reads: kept in the counts.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">FOUR ENTRIES &#183; STRICT VERBATIM CHECK</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="r-title" x="64" y="140">Failed verbatim check</text>
+
+      <g class="s-draw">
+        <rect x="66"  y="242" width="220" height="200"/>
+        <rect x="322" y="242" width="220" height="200"/>
+        <rect x="578" y="242" width="220" height="200"/>
+        <rect x="834" y="242" width="220" height="200"/>
+      </g>
+      <g class="r-label" text-anchor="middle">
+        <text x="176" y="352">pdf 10</text>
+        <text x="432" y="352">pdf 39</text>
+        <text x="688" y="352">pdf 109</text>
+        <text x="944" y="352">pdf 110</text>
+      </g>
+      <line class="s-bear gold" x1="64" y1="470" x2="1056" y2="470"/>
+      <text class="r-label amb" x="64" y="518">Kept in the counts</text>
+
+      <text class="r-note" x="64" y="580">4 of 290 extracted entries</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
+    </svg>
+
+    <!-- ============ PLATE 14 — PAIR — heard and meant ========================= -->
+    <svg class="plane" id="plane-dict" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="i-title i-desc">
+      <title id="i-title">Heard and meant: four dictation pairs</title>
+      <desc id="i-desc">The plate divides into two equal halves with a hairline down the
+      channel. On the left, four phrases as the microphone heard them; on the right, what
+      each turned out to be, with the page address at the far right. Hate speech became
+      Hades at pdf 14; Lenin became a swindler at pdf 47; married to the crazy gnomes
+      became a barmaid's line at pdf 31; unification became micturition at pdf 92. A gold
+      rule runs beneath the four pairs, and a small drawn microphone stands at the lower
+      left beside the line: kept as spoken, anchor A6.</desc>
+      <rect class="pl" x="32" y="24" width="1056" height="582"/>
+      <text class="r-reg" x="64" y="78">DICTATION AND TRANSCRIPTION NOISE &#183; 6 QUESTIONS</text>
+      <line class="hairline" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="r-title" x="64" y="140">Heard and meant</text>
+
+      <g class="r-reg">
+        <text x="64"  y="196">HEARD</text>
+        <text x="572" y="196">MEANT</text>
+      </g>
+      <line class="s-hair" x1="560" y1="212" x2="560" y2="440"/>
+      <g class="r-label amb">
+        <text x="64" y="258">&#8220;hate speech&#8221;</text>
+        <text x="64" y="313">&#8220;Lenin&#8221;</text>
+        <text x="64" y="368">&#8220;Married to the crazy gnomes&#8221;</text>
+        <text x="64" y="423">&#8220;unification&#8221;</text>
+      </g>
+      <g class="s-draw">
+        <line x1="526" y1="250" x2="546" y2="250"/>
+        <line x1="526" y1="305" x2="546" y2="305"/>
+        <line x1="526" y1="360" x2="546" y2="360"/>
+        <line x1="526" y1="415" x2="546" y2="415"/>
+      </g>
+      <g class="f-sub">
+        <polygon points="560,250 544,242 544,258"/>
+        <polygon points="560,305 544,297 544,313"/>
+        <polygon points="560,360 544,352 544,368"/>
+        <polygon points="560,415 544,407 544,423"/>
+      </g>
+      <g class="r-label">
+        <text x="572" y="258">Hades</text>
+        <text x="572" y="313">a swindler</text>
+        <text x="572" y="368">a barmaid&#8217;s line</text>
+        <text x="572" y="423">micturition</text>
+      </g>
+      <g class="r-note" text-anchor="end">
+        <text x="1056" y="258">PDF 14</text>
+        <text x="1056" y="313">PDF 47</text>
+        <text x="1056" y="368">PDF 31</text>
+        <text x="1056" y="423">PDF 92</text>
+      </g>
+      <line class="s-bear gold" x1="64" y1="452" x2="1056" y2="452"/>
+
+      <!-- the medium that made the questions, drawn ambient at the foot of the stage -->
+      <g transform="translate(64,472) scale(0.42) translate(-78,-150)">
+        <!-- 3.57 under scale(0.42) renders at 1.5: hair weight, like every other
+             piece of ambient context in the family -->
+        <g fill="none" stroke="#b9c3d6" stroke-opacity=".55" stroke-width="3.57">
+          <path d="M96 175 A 60 60 0 0 0 96 245"/>
+          <path d="M204 175 A 60 60 0 0 1 204 245"/>
+          <path d="M78 160 A 78 78 0 0 0 78 260"/>
+          <path d="M222 160 A 78 78 0 0 1 222 260"/>
+        </g>
+        <g fill="#b9c3d6" fill-opacity=".55">
+          <rect x="118" y="150" width="64" height="120" rx="32"/>
+          <rect x="142" y="270" width="16" height="52"/>
+          <rect x="110" y="322" width="80" height="12" rx="6"/>
         </g>
       </g>
+      <text class="r-label amb" x="160" y="518">Kept as spoken &#183; anchor A6</text>
 
-      <g class="bar" id="r-surv">
-        <g class="pin">
-          <g class="fill-gold">
-            <rect x="278.3" y="200" width="3.5" height="150"/>
-            <rect x="286.5" y="200" width="3.5" height="150"/>
-            <rect x="361.0" y="200" width="3.5" height="150"/>
-            <rect x="493.4" y="200" width="3.5" height="150"/>
-          </g>
-          <g class="tiny" text-anchor="end" fill="#dfa93f">
-            <text x="280.0" y="188" transform="rotate(-60 280.0 188)">p.30</text>
-            <text x="288.3" y="188" transform="rotate(-60 288.3 188)">p.31</text>
-            <text x="362.8" y="188" transform="rotate(-60 362.8 188)">p.40</text>
-            <text x="495.2" y="188" transform="rotate(-60 495.2 188)">p.56</text>
-          </g>
-        </g>
-      </g>
-
-      <g class="bar" id="r-fail">
-        <g class="pin">
-          <g class="fill-gold">
-            <rect x="112.8" y="200" width="3.5" height="150"/>
-            <rect x="352.8" y="200" width="3.5" height="150"/>
-            <rect x="932.1" y="200" width="3.5" height="150"/>
-            <rect x="940.4" y="200" width="3.5" height="150"/>
-          </g>
-          <g class="tiny" text-anchor="end" fill="#dfa93f">
-            <text x="114.5" y="188" transform="rotate(-60 114.5 188)">p.10</text>
-            <text x="354.5" y="188" transform="rotate(-60 354.5 188)">p.39</text>
-            <text x="933.8" y="188" transform="rotate(-60 933.8 188)">p.109</text>
-            <text x="942.1" y="188" transform="rotate(-60 942.1 188)">p.110</text>
-          </g>
-        </g>
-      </g>
+      <text class="r-note" x="64" y="580">6 questions &#183; pdf 14 &#183; 31 &#183; 47 &#183; 92</text>
+      <text class="r-note" x="1056" y="580" text-anchor="end">11 &#183; DIFFICULTY CURVE</text>
     </svg>
 
-    <!-- PLANE 7 — heard and meant: the dictation pairs -->
-    <svg class="plane" id="plane-dict" viewBox="0 0 1040 580" aria-hidden="true">
-      <!-- a drawn microphone: the medium that made six of the questions -->
-      <g fill="none" stroke="#dfa93f" stroke-width="3" opacity=".85">
-        <path d="M96 175 A 60 60 0 0 0 96 245"/>
-        <path d="M204 175 A 60 60 0 0 1 204 245"/>
-      </g>
-      <g fill="none" stroke="#dfa93f" stroke-width="2" opacity=".4">
-        <path d="M78 160 A 78 78 0 0 0 78 260"/>
-        <path d="M222 160 A 78 78 0 0 1 222 260"/>
-      </g>
-      <rect class="fill-paper" x="118" y="150" width="64" height="120" rx="32"/>
-      <g stroke="#081a35" stroke-width="3">
-        <line x1="120" y1="186" x2="180" y2="186"/>
-        <line x1="120" y1="198" x2="180" y2="198"/>
-        <line x1="120" y1="210" x2="180" y2="210"/>
-        <line x1="120" y1="222" x2="180" y2="222"/>
-        <line x1="120" y1="234" x2="180" y2="234"/>
-      </g>
-      <rect class="fill-paper" x="142" y="270" width="16" height="52"/>
-      <rect class="fill-paper" x="110" y="322" width="80" height="12" rx="6"/>
-
-      <text class="tiny" x="290" y="115">HEARD</text>
-      <text class="tiny" x="726" y="115">MEANT</text>
-      <line class="grid" x1="290" y1="128" x2="1010" y2="128"/>
-
-      <g class="big">
-        <text x="290" y="172">&#8220;hate speech&#8221;</text>
-        <text x="290" y="242">&#8220;Lenin&#8221;</text>
-        <text x="290" y="312">&#8220;Married to the crazy gnomes&#8221;</text>
-        <text x="290" y="382">&#8220;unification&#8221;</text>
-      </g>
-      <g stroke="#dfa93f" stroke-width="2">
-        <line x1="636" y1="165" x2="694" y2="165"/>
-        <line x1="636" y1="235" x2="694" y2="235"/>
-        <line x1="636" y1="305" x2="694" y2="305"/>
-        <line x1="636" y1="375" x2="694" y2="375"/>
-      </g>
-      <g class="fill-gold">
-        <polygon points="706,165 692,159 692,171"/>
-        <polygon points="706,235 692,229 692,241"/>
-        <polygon points="706,305 692,299 692,311"/>
-        <polygon points="706,375 692,369 692,381"/>
-      </g>
-      <g class="big gold">
-        <text x="726" y="172">Hades</text>
-        <text x="726" y="242">a swindler</text>
-        <text x="726" y="312">a barmaid&#8217;s line</text>
-        <text x="726" y="382">micturition</text>
-      </g>
-      <g class="tiny" text-anchor="end">
-        <text x="1010" y="172">PDF 14</text>
-        <text x="1010" y="242">PDF 47</text>
-        <text x="1010" y="312">PDF 31</text>
-        <text x="1010" y="382">PDF 92</text>
-      </g>
-      <text class="tiny" x="290" y="440">KEPT AS SPOKEN &#183; ANCHOR A6</text>
-    </svg>
-
-    <div class="title show" id="title">
-      <h1>The Difficulty Curve</h1>
-      <div class="works">EIGHTEEN EPISODES &#183; 245 PLACED QUESTIONS</div>
-      <div class="rule"></div>
-      <p class="sub">One reader. Every question kept.</p>
-    </div>
   </div>
 
-  <p class="caption hidden" id="caption" aria-live="polite">
+  <p class="caption" id="caption" aria-live="polite">
     <span class="cname" id="cap-name"></span>
     <span class="ctag" id="cap-tag"></span>
   </p>
 
   <div class="bar-nav">
     <button id="prev" aria-label="Previous card">&#8249; Prev</button>
-    <div class="dots" id="dots" role="tablist" aria-label="Cards"></div>
+    <nav class="dots" id="dots" aria-label="Cards"></nav>
     <button id="next" aria-label="Next card">Next &#8250;</button>
     <span class="count" id="count"></span>
   </div>
@@ -721,55 +1059,62 @@ Dimension 11 &#183; <a href="curve.html">the study</a>.</p>
 <script>
 (function(){
   // Cards: identity labels only — the argument itself is the presenter's, off-site.
-  // Each card names its plane (default "curve") and, on planes that light subsets,
-  // the ids it lights.
+  // Each card names the plate it shows and, on the curve FIELD, the bar it names.
+  // `type` records the plate type; the order is checked so that no two FIELDs run
+  // consecutively — a deck that never changes magnification cannot build.
   var CARDS = [
-    { kind:"title" },
-    { kind:"curve", name:"The whole curve",           tag:"eighteen episodes · 245 placed questions" },
-    { kind:"set", ids:["e3"], name:"Proteus",         tag:"episode 3 · 0 questions" },
-    { kind:"set", ids:["e11","e12","e13","e14"], name:"Sirens to Oxen of the Sun",
+    { plane:"title",    type:"SINGULAR", name:"The Difficulty Curve",
+      tag:"eighteen episodes · 245 placed questions" },
+    { plane:"curve",    type:"FIELD",    name:"The whole curve",
+      tag:"eighteen episodes · 245 placed questions" },
+    { plane:"zero",     type:"SINGULAR", name:"Proteus",
+      tag:"episode 3 · 0 questions" },
+    { plane:"stretch",  type:"SERIES",   name:"Sirens to Oxen of the Sun",
       tag:"episodes 11–14 · 12 · 24 · 12 · 14" },
-    { kind:"set", ids:["e12"], name:"Cyclops",        tag:"episode 12 · 24 questions · the first half's highest" },
-    { kind:"set", ids:["e15","e17","e18"], name:"Circe · Ithaca · Penelope",
+    { plane:"maxima",   type:"PAIR",     name:"Cyclops",
+      tag:"episode 12 · 24 questions · the first half's highest" },
+    { plane:"peaks",    type:"SERIES",   name:"Circe · Ithaca · Penelope",
       tag:"the three peaks · 40 · 33 · 38" },
-    { kind:"set", ids:["e16"], name:"Eumaeus",        tag:"episode 16 · 20 questions" },
-    { kind:"plane", plane:"kinds", name:"The nine kinds",
+    { plane:"curve",    type:"FIELD",    ids:["e16"], name:"Eumaeus",
+      tag:"episode 16 · 20 questions" },
+    { plane:"kinds",    type:"SERIES",   name:"The nine kinds",
       tag:"48 · 47 · 42 · 41 · 25 · 22 · 15 · 6 · 6" },
-    { kind:"plane", plane:"matrix", name:"Dominant strains, episode by episode",
+    { plane:"matrix",   type:"FIELD",    name:"Dominant strains, episode by episode",
       tag:"nine kinds against eighteen episodes" },
-    { kind:"plane", plane:"dots", name:"Penelope",
+    { plane:"penelope", type:"PAIR",     name:"Penelope",
       tag:"episode 18 · 38 questions · 12 delight · 7 referent" },
-    { kind:"plane", plane:"exch", name:"The sixteen exchanges",
-      tag:"7–17 July 2026 · 1 to 33 questions each" },
-    { kind:"plane", plane:"record", ids:["r-exch"], name:"The record",
+    { plane:"exch",     type:"SERIES",   name:"The sixteen exchanges",
+      tag:"8–17 July 2026 · 1 to 33 questions each" },
+    { plane:"record",   type:"FIELD",    name:"The record",
       tag:"117 pages · the sixteen exchanges begin here" },
-    { kind:"plane", plane:"record", ids:["r-surv"], name:"The survival language",
+    { plane:"detail",   type:"SERIES",   name:"The survival language",
       tag:"four pages · pdf 30 · 31 · 40 · 56" },
-    { kind:"plane", plane:"record", ids:["r-fail"], name:"Four entries, failed verbatim check",
+    { plane:"verbatim", type:"SERIES",   name:"Four entries, failed verbatim check",
       tag:"pdf 10 · 39 · 109 · 110 · kept in the counts" },
-    { kind:"plane", plane:"dict", name:"Heard and meant",
+    { plane:"dict",     type:"PAIR",     name:"Heard and meant",
       tag:"dictation and transcription noise · 6 questions" },
-    { kind:"all", name:"All eighteen, assembled",     tag:"245 placed questions across one first reading" }
+    { plane:"curve",    type:"FIELD",    name:"All eighteen, assembled",
+      tag:"245 placed questions across one first reading" }
   ];
   var BARS = ["e1","e2","e3","e4","e5","e6","e7","e8","e9","e10",
               "e11","e12","e13","e14","e15","e16","e17","e18"];
-  var PINS = ["r-exch","r-surv","r-fail"];
-  var PLANES = ["curve","kinds","matrix","dots","exch","record","dict"];
+  var PLANES = ["title","curve","zero","stretch","maxima","peaks","kinds","matrix",
+                "penelope","exch","record","detail","verbatim","dict"];
   var i = 0;
-  var title = document.getElementById("title");
-  var caption = document.getElementById("caption");
+  var stage = document.getElementById("stage");
   var capName = document.getElementById("cap-name");
   var capTag = document.getElementById("cap-tag");
   var prev = document.getElementById("prev");
   var next = document.getElementById("next");
   var count = document.getElementById("count");
   var dotsWrap = document.getElementById("dots");
+  var curve = document.getElementById("plane-curve");
 
-  // build dots
+  // build dots — plain buttons carrying aria-current, not a tablist: there are no
+  // tabpanels here, and a tablist without them fails the control it claims to be.
   CARDS.forEach(function(c, n){
     var d = document.createElement("button");
-    d.setAttribute("role","tab");
-    d.setAttribute("aria-label","Card " + (n+1));
+    d.setAttribute("aria-label","Card " + (n+1) + ": " + c.name);
     d.addEventListener("click", function(){ go(n); });
     dotsWrap.appendChild(d);
   });
@@ -777,22 +1122,17 @@ Dimension 11 &#183; <a href="curve.html">the study</a>.</p>
 
   function render(){
     var c = CARDS[i];
-    var plane = c.plane || "curve";
     PLANES.forEach(function(p){
-      document.getElementById("plane-" + p).classList.toggle("show", p === plane);
+      document.getElementById("plane-" + p).classList.toggle("show", p === c.plane);
     });
-    var lit = (c.kind === "all") ? BARS : (c.ids || []);
-    BARS.concat(PINS).forEach(function(id){
+    // the curve FIELD reduces to ambient only when one episode is named
+    var lit = c.ids || [];
+    curve.classList.toggle("focus", lit.length > 0);
+    BARS.forEach(function(id){
       document.getElementById(id).classList.toggle("on", lit.indexOf(id) >= 0);
     });
-    title.classList.toggle("show", c.kind === "title");
-    if (c.kind === "title") {
-      caption.classList.add("hidden");
-    } else {
-      caption.classList.remove("hidden");
-      capName.textContent = c.name;
-      capTag.textContent = c.tag;
-    }
+    capName.textContent = c.name;
+    capTag.textContent = c.tag;
     prev.disabled = (i === 0);
     next.disabled = (i === CARDS.length - 1);
     count.textContent = (i+1) + " / " + CARDS.length;
@@ -802,7 +1142,9 @@ Dimension 11 &#183; <a href="curve.html">the study</a>.</p>
 
   prev.addEventListener("click", function(){ go(i-1); });
   next.addEventListener("click", function(){ go(i+1); });
-  document.addEventListener("keydown", function(e){
+  // bound to the stage, not the document: a global arrow-key capture fights a screen
+  // reader's browse mode and takes the keys from every other control on the page.
+  stage.addEventListener("keydown", function(e){
     if (e.key === "ArrowRight" || e.key === "PageDown") { go(i+1); e.preventDefault(); }
     else if (e.key === "ArrowLeft" || e.key === "PageUp") { go(i-1); e.preventDefault(); }
     else if (e.key === "Home") { go(0); e.preventDefault(); }

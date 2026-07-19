@@ -21,9 +21,10 @@
                 register 24 mono UPPER .16em · note 22 mono .04em
        stroke   hair 1.5 · draw 4 · bear 10   (ratio 1 : 2.5 : 6)
        marks    ambient r5 · lit r14 (scale 2.8, ~8x area)
-       tones    ground #081a35 · plate #0b2140 · trace paper .14
-                ambient #b9c3d6 .55 (3.83:1) · subject #f4efe2 (13.90:1)
-                accent #dfa93f (7.57:1)  — computed against the plate, not the ground */
+       tones    ground #081a35 · plate #0b2140 · trace paper .14 (decorative)
+                ambient text #b9c3d6 @1 (9.07:1) · ambient mark #b9c3d6 @.55 (3.70:1)
+                subject #f4efe2 (14.01:1) · accent #dfa93f (7.57:1)
+                all recomputed against the PLATE, not the ground — see the note below */
   :root {
     --deep:#081a35; --plate:#0b2140; --paper:#f4efe2; --gold:#dfa93f; --mute:#b9c3d6;
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
@@ -41,12 +42,16 @@
   .plane.show { display:block; }
 
   /* ---------- shared furniture, identical on every plate ---------- */
+  /* Ambient TEXT is full-opacity mute (9.07:1) — the project's declared, checker-enforced
+     pairing. Only ambient MARKS AND STROKES ride at .55 (3.70:1), where the 3:1 UI floor
+     applies. Compositing the factual layer to .55 would have put every register line,
+     axis label and badge at 3.70:1, under the 4.5 text floor. */
   .reg   { font-family:var(--mono); font-size:24px; letter-spacing:.16em;
-           fill:var(--mute); opacity:.55; }
+           fill:var(--mute); }
   .ptitle{ font-family:var(--serif); font-size:44px; fill:var(--paper); }
   .datum { font-family:var(--serif); font-size:96px; fill:var(--gold); }
   .note  { font-family:var(--mono); font-size:22px; letter-spacing:.04em;
-           fill:var(--mute); opacity:.55; }
+           fill:var(--mute); }
   .covsub{ font-family:var(--serif); font-size:44px; font-style:italic; fill:var(--paper); }
   /* the shoulder: one hairline at y=100 on eighty cards */
   .shoulder { fill:none; stroke:var(--paper); stroke-width:1.5; opacity:.14; }
@@ -75,9 +80,9 @@
   /* labels belong to the subject only — ambient context carries no text at all */
   .pt .lab, .pt .sub { display:none; }
   .pt.on .lab { display:inline; fill:var(--paper); font-family:var(--mono); font-size:26px; }
-  .pt.on .sub { display:inline; fill:var(--mute); opacity:.55; font-family:var(--mono);
+  .pt.on .sub { display:inline; fill:var(--mute); font-family:var(--mono);
                 font-size:22px; letter-spacing:.04em; }
-  .pt.on .lab .hr { fill:var(--mute); opacity:.55; font-size:22px; }
+  .pt.on .lab .hr { fill:var(--mute); font-size:22px; }
   /* one card assembles the whole field; there the shape is the subject, not any name */
   .plane.bare .pt.on .lab, .plane.bare .pt.on .sub { display:none; }
 
@@ -156,7 +161,7 @@
       <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
       <text x="64" y="78" class="reg">AN AUDIENCE DECK · DIMENSION 02</text>
       <line x1="64" y1="100" x2="1056" y2="100" class="shoulder"/>
-      <text x="64" y="140" class="ptitle">The Women's Dublin</text>
+      <text x="64" y="140" class="ptitle" data-role="ptitle">The Women's Dublin</text>
 
       <g class="subfill">
         <circle cx="78"  cy="220" r="14"/><circle cx="124" cy="220" r="14"/>
@@ -173,7 +178,7 @@
       <text x="64" y="424" class="covsub">Who enters the room —</text>
       <text x="64" y="478" class="covsub">and who arrives at a remove.</text>
 
-      <text x="64" y="580" class="note">Dimension 02 · an audience deck</text>
+      <text x="64" y="580" class="note" data-role="cfoot">Dimension 02 · an audience deck</text>
       <text x="1056" y="580" text-anchor="end" class="note">02 · THE WOMEN'S DUBLIN</text>
     </svg>
     </div>
@@ -397,7 +402,7 @@
       <text x="64" y="530" class="reg">SHE SPEAKS NO WORD ANYWHERE IN THE BOOK</text>
 
       <text x="1056" y="548" text-anchor="end" class="datum" data-role="datum">14</text>
-      <text x="64" y="580" class="note" data-role="cfoot">16 appearances · 14 men's talk · 2 hallucinated</text>
+      <text x="64" y="580" class="note" data-role="cfoot">16 appearances · 14 in men's talk</text>
       <text x="1056" y="580" text-anchor="end" class="note">02 · THE WOMEN'S DUBLIN</text>
     </svg>
     </div>
@@ -747,7 +752,7 @@ once, by her first appearance. Dimension 2 · The Women's Dublin.</p>
       tag:"3 typewritten letters · a pressed flower · a postal order, two shillings" },
 
     { plane:"p-ann", ids:["ah-talk"], title:"Ann Hathaway", datum:"14",
-      foot:"16 appearances · 14 men's talk · 2 hallucinated",
+      foot:"16 appearances · 14 in men's talk",
       name:"Ann Hathaway — 16 appearances, 14 men's talk",
       tag:"12 in episode 9 · 1 in episode 14 · 3 in episode 15 · 2 hallucinated" },
 

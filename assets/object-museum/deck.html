@@ -5,62 +5,100 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Object Museum — the deck</title>
 <style>
-  /* Dimension 1's presentation register: the audience deck. Image cards only, no
-     explanations (the presenter's material is kept off the public site — C-19). Cards
-     carry identity labels — a name, an hour, a count — never the argument.
+  /* Dimension 1's presentation register: the audience deck, rebuilt to THE VITRINE
+     (ratified 20 July 2026). The deck is a lit case in a dark room. Every card is one
+     object under one light: the subject is drawn, the room is a trace, and gold is the
+     light, used ONCE per plate. Focus is made by weight and by isolation and only
+     confirmed by gold — never created by it.
 
-     Two kinds of plate, one mechanism. (1) The day-timeline, 8 a.m. to 2 a.m., a lane
-     per hero object; each card lights one object's lane of stations in gold and reads it
-     across the hours; one card assembles all seven. (2) Figure plates — drawn objects,
-     charts and maps, added when the author reversed the design's refusal of imagery
-     (19 July 2026, catch C-35). Every plate is a plane; the card handler shows exactly
-     one. The 1922 family: deep plate, paper, gold, mono factual layer. No animation, so
-     prefers-reduced-motion is honoured by design. Every count, hour, place and name is
-     read from the museum artifact; nothing here is invented. */
+     The constants, identical on every plate: viewBox 1120x630 (16:9, one unit = one CSS
+     pixel at design width); margins 64/48/64; four bands — Register 48-90, Title 90-160,
+     Stage 160-552, Foot 552-590; the shoulder hairline at y=100; the lifted plate rect
+     (#0b2140 on the darker #081a35 room, no border); the dimension badge bottom-right.
+     Five type sizes (96/44/26/24/22); uppercase is confined to the Register role. Three
+     stroke weights (1.5 hair / 4 draw / 10 bear) and five tones. Mark vocabulary: solid
+     = present, hair ring = recalled, diamond = hallucinated. Ambient r=5, lit r=14.
+
+     C-19 holds: cards carry identity labels — a name, an hour, a count, a sum — and never
+     the argument, which belongs to the presenter. No animation, so prefers-reduced-motion
+     is honoured by construction. No network request of any kind. Every count, hour, place
+     and name is read from the museum artifact's thirty-two cases and 301 stations. */
   :root {
-    --deep:#081a35; --paper:#f4efe2; --gold:#dfa93f; --mute:#b9c3d6;
+    --deep:#081a35; --plate:#0b2140; --paper:#f4efe2; --gold:#dfa93f; --mute:#b9c3d6;
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
     --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    /* the five sizes, in viewBox units = CSS px at design width */
+    --t-datum:96px; --t-title:44px; --t-label:26px; --t-reg:24px; --t-note:22px;
   }
   *,*::before,*::after { box-sizing:border-box; }
   html,body { margin:0; padding:0; height:100%; background:var(--deep); color:var(--paper); }
   body { font-family:var(--serif); display:flex; flex-direction:column; min-height:100vh; }
-  .deck { flex:1; display:flex; flex-direction:column; max-width:70rem; width:100%;
-          margin-inline:auto; padding:1rem 1rem 0; }
+  /* 76rem less 2x3rem of padding = 1120px of stage at design width: one unit, one pixel. */
+  .deck { flex:1; display:flex; flex-direction:column; max-width:76rem; width:100%;
+          margin-inline:auto; padding:1rem 3rem 0; }
   .stage { position:relative; flex:1; display:flex; align-items:center; justify-content:center; }
   svg { display:block; width:100%; height:auto; max-height:72vh; }
   /* one plane visible at a time; the card handler switches them */
   .plane { display:none; }
   .plane.show { display:block; }
-  /* lanes default to muted/small; JS lights the active object's whole lane */
-  .pt line.lane { stroke:var(--mute); stroke-width:1; opacity:.2; }
-  .pt.on line.lane { stroke:var(--gold); stroke-width:2; opacity:.85; }
-  .pt circle.dot { fill:var(--mute); r:5px; transition:none; }
-  .pt.on circle.dot { fill:var(--gold); r:9px; }
+
+  /* THE FIVE TYPE ROLES ------------------------------------------------------- */
+  .datum { font-family:var(--serif); font-size:var(--t-datum); fill:var(--paper); }
+  .ttl   { font-family:var(--serif); font-size:var(--t-title); fill:var(--paper); }
+  .lab   { font-family:var(--mono);  font-size:var(--t-label); fill:var(--paper); }
+  .reg   { font-family:var(--mono);  font-size:var(--t-reg); letter-spacing:.16em;
+           fill:var(--mute); fill-opacity:.55; }
+  .note  { font-family:var(--mono);  font-size:var(--t-note); letter-spacing:.04em;
+           fill:var(--mute); fill-opacity:.55; }
+  .gild  { fill:var(--gold); fill-opacity:1; }
+
+  /* THREE WEIGHTS, FIVE TONES ------------------------------------------------- */
+  .trace { stroke:var(--paper); stroke-opacity:.14; stroke-width:1.5; fill:none; }
+  .hair  { stroke:var(--mute);  stroke-opacity:.55; stroke-width:1.5; fill:none; }
+  .draw  { stroke:var(--paper); stroke-width:4; fill:none; }
+  .bear  { stroke:var(--paper); stroke-width:10; fill:none; }
+  .gbear { stroke:var(--gold);  stroke-width:10; fill:none; }
+  .amb   { fill:var(--mute); fill-opacity:.55; }   /* ambient mark, r=5 */
+  .subj  { fill:var(--paper); }                    /* the drawn subject */
+
+  /* THE DAY-TIMELINE ---------------------------------------------------------- */
+  /* Reduce: unlit lanes drop to hair weight and a field of r=5 ambient marks, and lose
+     their labels entirely. Draw: the lit lane rises to a paper bear rule under r=9 paper
+     marks and is the only lane carrying a Label. Name once: its terminal station, gold. */
+  .pt line.lane     { stroke:var(--mute); stroke-opacity:.55; stroke-width:1.5; }
+  .pt.on line.lane  { stroke:var(--paper); stroke-opacity:1; stroke-width:10; }
+  .pt circle.dot    { fill:var(--mute); fill-opacity:.55; r:5px; transition:none; }
+  .pt.on circle.dot { fill:var(--paper); fill-opacity:1; r:9px; }
+  .pt circle.last   { r:5px; }
+  .pt.on circle.last{ fill:var(--gold); fill-opacity:1; r:14px; }
   .pt .plabel, .pt .ptag { opacity:0; }
   .pt.on .plabel, .pt.on .ptag { opacity:1; }
-  .plabel { font-family:var(--serif); font-size:17px; fill:var(--paper); }
-  .ptag { font-family:var(--mono); font-size:11px; fill:var(--mute); }
-  /* figure plates: the mono factual layer, drawn */
-  .fig text { font-family:var(--mono); fill:var(--mute); font-size:13px; }
-  .fig .fname { font-family:var(--serif); fill:var(--paper); font-size:14px; }
-  .fig .fhead { letter-spacing:.14em; font-size:14px; fill:var(--mute); }
-  .fig .fnum { fill:var(--gold); }
-  .fig .fsm { font-size:11px; }
-  .fig .frule { stroke:var(--mute); stroke-width:1; opacity:.35; }
-  /* the title card overlays the stage */
-  .title { position:absolute; inset:0; display:none; flex-direction:column;
-           align-items:center; justify-content:center; text-align:center; }
-  .title.show { display:flex; }
-  .title h1 { font-size:clamp(2rem,7vw,4rem); margin:0 0 .5rem; letter-spacing:.01em; }
-  .title .works { font-family:var(--mono); color:var(--mute); font-size:clamp(.7rem,2vw,1rem);
-                  letter-spacing:.12em; }
-  .title .rule { width:8rem; height:3px; background:var(--gold); margin:1.25rem 0; }
-  .title .sub { font-style:italic; color:var(--paper); max-width:34ch; font-size:clamp(1rem,2.6vw,1.3rem); }
-  /* the caption bar reads the current card — identity only */
-  .caption { min-height:3.2rem; text-align:center; padding:.5rem 0 .25rem; }
-  .caption .cname { font-size:1.4rem; }
-  .caption .ctag { font-family:var(--mono); color:var(--mute); font-size:.9rem; letter-spacing:.04em; display:block; margin-top:.15rem; }
+  #converge { opacity:0; }
+  /* The assembled card lights all seven at once, so the plate re-composes rather than
+     repeating itself seven times over: lanes stand down to draw weight, the seven gold
+     terminals stand down to paper, the counts stand down (each is on its own card), and
+     the single gold element becomes the 2 a.m. rule they all run into. */
+  .assembled .pt.on line.lane   { stroke-width:4; }
+  .assembled .pt.on circle.last { fill:var(--paper); fill-opacity:1; r:9px; }
+  .assembled .pt .ptag          { opacity:0; }
+  .assembled #converge          { opacity:1; }
+
+  /* The title card is a drawn plate like every other card (p-title), not an HTML caption
+     floating over a live timeline — which is what it was, and what made the deck open on a
+     lit chart it was not yet talking about. The h1 stays in the document, visually hidden,
+     so the page keeps a real heading; the plate carries the visible one. */
+  .vh { position:absolute; width:1px; height:1px; overflow:hidden;
+        clip-path:inset(50%); white-space:nowrap; }
+  /* the title plate's standfirst: the Title size, italic, because it is prose and not a label */
+  .sub { font-family:var(--serif); font-style:italic; fill:var(--paper); font-size:var(--t-title); }
+  /* The caption bar reads the current card — the identity tag only. The name stays in the
+     DOM for aria-live but is visually hidden: the plate already draws its own title, and
+     double-titling every card was costing each plate its top-left. */
+  .caption { min-height:2.4rem; text-align:center; padding:.5rem 0 .25rem; }
+  .caption .cname { position:absolute; width:1px; height:1px; overflow:hidden;
+                    clip-path:inset(50%); white-space:nowrap; }
+  .caption .ctag { font-family:var(--mono); color:var(--mute); font-size:.9rem;
+                   letter-spacing:.04em; display:block; }
   .caption.hidden { visibility:hidden; }
   /* controls */
   .bar { display:flex; align-items:center; justify-content:center; gap:1rem; flex-wrap:wrap;
@@ -78,6 +116,16 @@
   .foot { text-align:center; font-family:var(--mono); font-size:.75rem; color:var(--mute);
           padding-bottom:1rem; }
 
+  /* 375px. The stage becomes a keyboard-walkable scroll box at a fixed 720px, which is
+     0.64 of design width: Label 26 renders at 16.6px and Note 22 at 14.1px, clearing the
+     design record's 14px mono floor. The focus ring is drawn INSIDE (Ledger's graft on
+     the dimensions matrix) so it can never be clipped at the scroll edge. */
+  @media (max-width:760px) {
+    .deck { padding:1rem .75rem 0; }
+    .stage { overflow-x:auto; display:block; }
+    .stage svg { width:720px; max-width:none; max-height:none; }
+    .stage:focus-visible { outline-offset:-2px; }
+  }
 
 /* Print: a deck is a card viewer, so printing it naively emits one page showing whichever
    card is current. These rules unstack the cards and break a page between them. The first
@@ -99,6 +147,9 @@
     width: 100% !important; height: auto !important; max-height: 165mm; display: block; }
   .stage > svg { page-break-after: always; break-after: page; }
   .cap, .caption { display: block !important; visibility: visible !important; }
+  /* the printed timeline shows every lane named, not one lane and six rows of grey dots */
+  .plane .pt .plabel { opacity: 1 !important; }
+  .plane .pt .ptag { opacity: 0 !important; }
 }
 </style>
 </head>
@@ -107,595 +158,657 @@
   <div class="stage" id="stage" tabindex="0" role="group" aria-roledescription="slide deck"
        aria-label="The Object Museum, an audience deck. Use the left and right arrow keys.">
 
-    <!-- PLANE 1 — the day-timeline, seven hero lanes -->
-    <svg class="plane show" id="p-hours" viewBox="0 0 960 560" aria-hidden="true">
-      <!-- faint hour gridlines, behind the lanes -->
-      <g stroke="#b9c3d6" stroke-width="1" opacity="0.14">
-        <line x1="422" y1="70" x2="422" y2="445"/>
-        <line x1="554" y1="70" x2="554" y2="445"/>
-        <line x1="686" y1="70" x2="686" y2="445"/>
-        <line x1="818" y1="70" x2="818" y2="445"/>
-      </g>
-      <!-- the time axis: origin at 8 a.m., baseline across the day -->
-      <line x1="290" y1="70" x2="290" y2="445" stroke="#b9c3d6" stroke-width="1"/>
-      <line x1="290" y1="445" x2="917" y2="445" stroke="#b9c3d6" stroke-width="1"/>
-      <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="14" fill="#b9c3d6">
-        <text x="290" y="468" text-anchor="middle">8 a.m.</text>
-        <text x="422" y="468" text-anchor="middle">noon</text>
-        <text x="554" y="468" text-anchor="middle">4 p.m.</text>
-        <text x="686" y="468" text-anchor="middle">8 p.m.</text>
-        <text x="818" y="468" text-anchor="middle">midnight</text>
-        <text x="884" y="468" text-anchor="middle">2 a.m.</text>
-        <text x="603" y="500" text-anchor="middle" letter-spacing="2">THE HOURS OF 16 JUNE 1904</text>
-      </g>
-      <text x="20" y="257" text-anchor="middle" transform="rotate(-90 20 257)" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="13" fill="#b9c3d6" letter-spacing="2">THE HERO OBJECTS</text>
+    <!-- PLANE 1 — the day-timeline, seven hero lanes. SERIES when one lane is lit;
+         FIELD when all seven are assembled. -->
+    <svg class="plane" id="p-hours" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-hours-t p-hours-d">
+      <title id="p-hours-t">The day-timeline: seven hero objects across the hours of 16 June 1904</title>
+      <desc id="p-hours-d">A lane for each of seven objects, running left to right from 8 a.m. to
+        2 a.m. A mark on a lane is one station. The lanes, top to bottom, are the lemon soap
+        (11 stations), Stephen's wages (12), Mr Deasy's letter (8), the Elijah throwaway (9),
+        Plumtree's potted meat (8), Bloom's latchkey, absent (5), and Martha's letter (10).
+        One lane at a time is drawn heavy and named; the rest are dimmed and unlabelled.</desc>
+      <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+      <text class="reg" x="64" y="78">8 A.M. TO 2 A.M. · SEVEN HERO OBJECTS</text>
+      <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="ttl" x="64" y="140">The day-timeline</text>
 
-      <!-- lane 1: the lemon soap (y=90) -->
+      <!-- the hours: four ticks and four gridlines -->
+      <g class="reg">
+        <text x="444" y="180" text-anchor="end">8 A.M.</text>
+        <text x="579.2" y="180" text-anchor="middle">NOON</text>
+        <text x="706.3" y="180" text-anchor="middle">4 P.M.</text>
+        <text x="960.6" y="180" text-anchor="middle">MIDNIGHT</text>
+      </g>
+      <line class="hair" x1="452" y1="196" x2="1056" y2="196"/>
+      <g class="trace">
+        <line x1="579.2" y1="210" x2="579.2" y2="546"/>
+        <line x1="706.3" y1="210" x2="706.3" y2="546"/>
+        <line x1="833.5" y1="210" x2="833.5" y2="546"/>
+        <line x1="960.6" y1="210" x2="960.6" y2="546"/>
+      </g>
+      <!-- the one gold element of the assembled card: the 2 a.m. rule they all run into -->
+      <line class="gbear" id="converge" x1="1024.2" y1="212" x2="1024.2" y2="536"/>
+
       <g class="pt" id="obj-soap">
-        <line class="lane" x1="364" y1="90" x2="884" y2="90"/>
-        <circle class="dot" cx="364" cy="90"/><circle class="dot" cx="378" cy="90"/>
-        <circle class="dot" cx="389" cy="90"/><circle class="dot" cx="414" cy="90"/>
-        <circle class="dot" cx="439" cy="90"/><circle class="dot" cx="488" cy="90"/>
-        <circle class="dot" cx="719" cy="90"/><circle class="dot" cx="818" cy="90"/>
-        <circle class="dot" cx="825" cy="90"/><circle class="dot" cx="851" cy="90"/>
-        <circle class="dot" cx="884" cy="90"/>
-        <text class="plabel" x="272" y="86" text-anchor="end">the lemon soap</text>
-        <text class="ptag" x="272" y="104" text-anchor="end">11 stations</text>
+        <line class="lane" x1="523.3" y1="236" x2="1024.2" y2="236"/>
+        <circle class="dot" cx="523.3" cy="236"/><circle class="dot" cx="536.8" cy="236"/><circle class="dot" cx="547.4" cy="236"/><circle class="dot" cx="571.5" cy="236"/>
+        <circle class="dot" cx="595.5" cy="236"/><circle class="dot" cx="642.7" cy="236"/><circle class="dot" cx="865.3" cy="236"/><circle class="dot" cx="960.6" cy="236"/>
+        <circle class="dot" cx="967.4" cy="236"/><circle class="dot" cx="992.4" cy="236"/><circle class="dot last" cx="1024.2" cy="236"/>
+        <text class="lab plabel" x="424" y="245" text-anchor="end">the lemon soap</text>
+        <text class="note ptag" x="424" y="273" text-anchor="end">11 stations</text>
       </g>
-      <!-- lane 2: Stephen's wages (y=145) -->
       <g class="pt" id="obj-wages">
-        <line class="lane" x1="290" y1="145" x2="884" y2="145"/>
-        <circle class="dot" cx="290" cy="145"/><circle class="dot" cx="356" cy="145"/>
-        <circle class="dot" cx="389" cy="145"/><circle class="dot" cx="455" cy="145"/>
-        <circle class="dot" cx="488" cy="145"/><circle class="dot" cx="752" cy="145"/>
-        <circle class="dot" cx="785" cy="145"/><circle class="dot" cx="818" cy="145"/>
-        <circle class="dot" cx="835" cy="145"/><circle class="dot" cx="851" cy="145"/>
-        <circle class="dot" cx="858" cy="145"/><circle class="dot" cx="884" cy="145"/>
-        <text class="plabel" x="272" y="141" text-anchor="end">Stephen's wages</text>
-        <text class="ptag" x="272" y="159" text-anchor="end">12 stations</text>
+        <line class="lane" x1="452" y1="282" x2="1024.2" y2="282"/>
+        <circle class="dot" cx="452" cy="282"/><circle class="dot" cx="515.6" cy="282"/><circle class="dot" cx="547.4" cy="282"/><circle class="dot" cx="610.9" cy="282"/>
+        <circle class="dot" cx="642.7" cy="282"/><circle class="dot" cx="897.1" cy="282"/><circle class="dot" cx="928.8" cy="282"/><circle class="dot" cx="960.6" cy="282"/>
+        <circle class="dot" cx="977" cy="282"/><circle class="dot" cx="992.4" cy="282"/><circle class="dot" cx="999.2" cy="282"/><circle class="dot last" cx="1024.2" cy="282"/>
+        
+        <text class="lab plabel" x="424" y="291" text-anchor="end">Stephen's wages</text>
+        <text class="note ptag" x="424" y="319" text-anchor="end">12 stations</text>
       </g>
-      <!-- lane 3: Mr Deasy's letter (y=200) -->
       <g class="pt" id="obj-deasy">
-        <line class="lane" x1="356" y1="200" x2="851" y2="200"/>
-        <circle class="dot" cx="356" cy="200"/><circle class="dot" cx="389" cy="200"/>
-        <circle class="dot" cx="439" cy="200"/><circle class="dot" cx="488" cy="200"/>
-        <circle class="dot" cx="587" cy="200"/><circle class="dot" cx="752" cy="200"/>
-        <circle class="dot" cx="818" cy="200"/><circle class="dot" cx="851" cy="200"/>
-        <text class="plabel" x="272" y="196" text-anchor="end">Mr Deasy's letter</text>
-        <text class="ptag" x="272" y="214" text-anchor="end">8 stations</text>
+        <line class="lane" x1="515.6" y1="328" x2="992.4" y2="328"/>
+        <circle class="dot" cx="515.6" cy="328"/><circle class="dot" cx="547.4" cy="328"/><circle class="dot" cx="595.5" cy="328"/><circle class="dot" cx="642.7" cy="328"/>
+        <circle class="dot" cx="738.1" cy="328"/><circle class="dot" cx="897.1" cy="328"/><circle class="dot" cx="960.6" cy="328"/><circle class="dot last" cx="992.4" cy="328"/>
+        
+        <text class="lab plabel" x="424" y="337" text-anchor="end">Mr Deasy's letter</text>
+        <text class="note ptag" x="424" y="365" text-anchor="end">8 stations</text>
       </g>
-      <!-- lane 4: the Elijah throwaway (y=255) -->
       <g class="pt" id="obj-elijah">
-        <line class="lane" x1="455" y1="255" x2="884" y2="255"/>
-        <circle class="dot" cx="455" cy="255"/><circle class="dot" cx="462" cy="255"/>
-        <circle class="dot" cx="468" cy="255"/><circle class="dot" cx="521" cy="255"/>
-        <circle class="dot" cx="528" cy="255"/><circle class="dot" cx="538" cy="255"/>
-        <circle class="dot" cx="554" cy="255"/><circle class="dot" cx="818" cy="255"/>
-        <circle class="dot" cx="884" cy="255"/>
-        <text class="plabel" x="272" y="251" text-anchor="end">the Elijah throwaway</text>
-        <text class="ptag" x="272" y="269" text-anchor="end">9 stations</text>
+        <line class="lane" x1="610.9" y1="374" x2="1024.2" y2="374"/>
+        <circle class="dot" cx="610.9" cy="374"/><circle class="dot" cx="617.7" cy="374"/><circle class="dot" cx="623.5" cy="374"/><circle class="dot" cx="674.5" cy="374"/>
+        <circle class="dot" cx="681.3" cy="374"/><circle class="dot" cx="690.9" cy="374"/><circle class="dot" cx="706.3" cy="374"/><circle class="dot" cx="960.6" cy="374"/>
+        <circle class="dot last" cx="1024.2" cy="374"/>
+        <text class="lab plabel" x="424" y="383" text-anchor="end">the Elijah throwaway</text>
+        <text class="note ptag" x="424" y="411" text-anchor="end">9 stations</text>
       </g>
-      <!-- lane 5: Plumtree's potted meat (y=310) -->
       <g class="pt" id="obj-potted">
-        <line class="lane" x1="356" y1="310" x2="909" y2="310"/>
-        <circle class="dot" cx="356" cy="310"/><circle class="dot" cx="461" cy="310"/>
-        <circle class="dot" cx="472" cy="310"/><circle class="dot" cx="818" cy="310"/>
-        <circle class="dot" cx="892" cy="310"/><circle class="dot" cx="895" cy="310"/>
-        <circle class="dot" cx="906" cy="310"/><circle class="dot" cx="909" cy="310"/>
-        <text class="plabel" x="272" y="306" text-anchor="end">Plumtree's potted meat</text>
-        <text class="ptag" x="272" y="324" text-anchor="end">8 stations</text>
+        <line class="lane" x1="515.6" y1="420" x2="1048.3" y2="420"/>
+        <circle class="dot" cx="515.6" cy="420"/><circle class="dot" cx="616.7" cy="420"/><circle class="dot" cx="627.3" cy="420"/><circle class="dot" cx="960.6" cy="420"/>
+        <circle class="dot" cx="1031.9" cy="420"/><circle class="dot" cx="1034.8" cy="420"/><circle class="dot" cx="1045.4" cy="420"/><circle class="dot last" cx="1048.3" cy="420"/>
+        
+        <text class="lab plabel" x="424" y="429" text-anchor="end">Plumtree's potted meat</text>
+        <text class="note ptag" x="424" y="457" text-anchor="end">8 stations</text>
       </g>
-      <!-- lane 6: Bloom's latchkey, absent (y=365) -->
       <g class="pt" id="obj-latch">
-        <line class="lane" x1="298" y1="365" x2="901" y2="365"/>
-        <circle class="dot" cx="298" cy="365"/><circle class="dot" cx="364" cy="365"/>
-        <circle class="dot" cx="884" cy="365"/><circle class="dot" cx="887" cy="365"/>
-        <circle class="dot" cx="901" cy="365"/>
-        <text class="plabel" x="272" y="361" text-anchor="end">Bloom's latchkey (absent)</text>
-        <text class="ptag" x="272" y="379" text-anchor="end">5 stations</text>
+        <line class="lane" x1="459.7" y1="466" x2="1040.6" y2="466"/>
+        <circle class="dot" cx="459.7" cy="466"/><circle class="dot" cx="523.3" cy="466"/><circle class="dot" cx="1024.2" cy="466"/><circle class="dot" cx="1027.1" cy="466"/>
+        <circle class="dot last" cx="1040.6" cy="466"/>
+        <text class="lab plabel" x="424" y="475" text-anchor="end">Bloom's latchkey (absent)</text>
+        <text class="note ptag" x="424" y="503" text-anchor="end">5 stations</text>
       </g>
-      <!-- lane 7: Martha's letter (y=420) -->
       <g class="pt" id="obj-martha">
-        <line class="lane" x1="290" y1="420" x2="884" y2="420"/>
-        <circle class="dot" cx="290" cy="420"/><circle class="dot" cx="356" cy="420"/>
-        <circle class="dot" cx="361" cy="420"/><circle class="dot" cx="406" cy="420"/>
-        <circle class="dot" cx="455" cy="420"/><circle class="dot" cx="554" cy="420"/>
-        <circle class="dot" cx="570" cy="420"/>
-        <circle class="dot" cx="703" cy="420"/><circle class="dot" cx="818" cy="420"/>
-        <circle class="dot" cx="884" cy="420"/>
-        <text class="plabel" x="272" y="416" text-anchor="end">Martha's letter</text>
-        <text class="ptag" x="272" y="434" text-anchor="end">10 stations</text>
+        <line class="lane" x1="452" y1="512" x2="1024.2" y2="512"/>
+        <circle class="dot" cx="452" cy="512"/><circle class="dot" cx="515.6" cy="512"/><circle class="dot" cx="520.4" cy="512"/><circle class="dot" cx="563.7" cy="512"/>
+        <circle class="dot" cx="610.9" cy="512"/><circle class="dot" cx="706.3" cy="512"/><circle class="dot" cx="721.7" cy="512"/><circle class="dot" cx="849.9" cy="512"/>
+        <circle class="dot" cx="960.6" cy="512"/><circle class="dot last" cx="1024.2" cy="512"/>
+        <text class="lab plabel" x="424" y="521" text-anchor="end">Martha's letter</text>
+        <text class="note ptag" x="424" y="549" text-anchor="end">10 stations</text>
       </g>
+      <text class="note" x="64" y="580">One lane to an object; one mark to a station</text>
+      <text class="note" x="1056" y="580" text-anchor="end">01 · OBJECT MUSEUM</text>
     </svg>
 
-    <!-- PLANE 2 — the census: thirty-two cases ranked by station count -->
-    <svg class="plane fig" id="p-census" viewBox="0 0 960 560" aria-hidden="true">
-      <text class="fhead" x="480" y="46" text-anchor="middle">THE CENSUS — THIRTY-TWO OBJECTS, 301 STATIONS</text>
-      <line class="frule" x1="60" y1="64" x2="900" y2="64"/>
+    <!-- PLANE 2 — the census. FIELD: thirty-two cases, ranked, one lit. -->
+    <svg class="plane" id="p-census" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-census-t p-census-d">
+      <title id="p-census-t">The census: thirty-two objects, 301 stations, ranked by station count</title>
+      <desc id="p-census-d">Thirty-two named cases in two ranked columns, each with its station
+        count and a rule whose length is that count. The ranking runs from Stephen's ashplant
+        at 21 stations down to the seedcake on Howth and the torn Gold Cup betting tickets at
+        2 each. The longest rule, Stephen's ashplant, is drawn lit with a gold mark at its tip.</desc>
+      <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+      <text class="reg" x="64" y="78">THIRTY-TWO CASES · 301 STATIONS</text>
+      <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="ttl" x="64" y="140">The census</text>
       <g>
-        <text class="fname" x="248" y="94" text-anchor="end">Stephen's ashplant</text><rect x="256" y="83" width="150" height="14" fill="#dfa93f"/><text class="fnum fsm" x="413" y="94">21</text>
-        <text class="fname" x="248" y="119" text-anchor="end">Bloom's high grade hat</text><rect x="256" y="108" width="114" height="14" fill="#dfa93f"/><text class="fnum fsm" x="377" y="119">16</text>
-        <text class="fname" x="248" y="144" text-anchor="end">the Freeman's Journal</text><rect x="256" y="133" width="114" height="14" fill="#dfa93f"/><text class="fnum fsm" x="377" y="144">16</text>
-        <text class="fname" x="248" y="169" text-anchor="end">Stephen's Latin Quarter hat</text><rect x="256" y="158" width="107" height="14" fill="#dfa93f"/><text class="fnum fsm" x="370" y="169">15</text>
-        <text class="fname" x="248" y="194" text-anchor="end">the Keyes ad cutting</text><rect x="256" y="183" width="107" height="14" fill="#dfa93f"/><text class="fnum fsm" x="370" y="194">15</text>
-        <text class="fname" x="248" y="219" text-anchor="end">Sweets of Sin</text><rect x="256" y="208" width="100" height="14" fill="#dfa93f"/><text class="fnum fsm" x="363" y="219">14</text>
-        <text class="fname" x="248" y="244" text-anchor="end">the Agendath Netaim flyer</text><rect x="256" y="233" width="93" height="14" fill="#dfa93f"/><text class="fnum fsm" x="356" y="244">13</text>
-        <text class="fname" x="248" y="269" text-anchor="end">Stephen's wages</text><rect x="256" y="258" width="86" height="14" fill="#dfa93f"/><text class="fnum fsm" x="349" y="269">12</text>
-        <text class="fname" x="248" y="294" text-anchor="end">Molly's uncollected lotion</text><rect x="256" y="283" width="79" height="14" fill="#dfa93f"/><text class="fnum fsm" x="342" y="294">11</text>
-        <text class="fname" x="248" y="319" text-anchor="end">the lemon soap</text><rect x="256" y="308" width="79" height="14" fill="#dfa93f"/><text class="fnum fsm" x="342" y="319">11</text>
-        <text class="fname" x="248" y="344" text-anchor="end">the brown macintosh</text><rect x="256" y="333" width="71" height="14" fill="#dfa93f"/><text class="fnum fsm" x="334" y="344">10</text>
-        <text class="fname" x="248" y="369" text-anchor="end">Martha Clifford's letter</text><rect x="256" y="358" width="71" height="14" fill="#dfa93f"/><text class="fnum fsm" x="334" y="369">10</text>
-        <text class="fname" x="248" y="394" text-anchor="end">the U.p: up postcard</text><rect x="256" y="383" width="71" height="14" fill="#dfa93f"/><text class="fnum fsm" x="334" y="394">10</text>
-        <text class="fname" x="248" y="419" text-anchor="end">the Jacobs' biscuit tin</text><rect x="256" y="408" width="64" height="14" fill="#dfa93f"/><text class="fnum fsm" x="327" y="419">9</text>
-        <text class="fname" x="248" y="444" text-anchor="end">the Elijah throwaway</text><rect x="256" y="433" width="64" height="14" fill="#dfa93f"/><text class="fnum fsm" x="327" y="444">9</text>
-        <text class="fname" x="248" y="469" text-anchor="end">the blind stripling's cane</text><rect x="256" y="458" width="64" height="14" fill="#dfa93f"/><text class="fnum fsm" x="327" y="469">9</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="159" width="378" height="27"/><text class="lab" x="94" y="180" text-anchor="end">21</text><text class="lab" x="122" y="180">Stephen's ashplant</text><circle class="gild" cx="490" cy="172" r="8"/>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="187" width="288" height="21"/><text class="note" x="94" y="204" text-anchor="end">16</text><text class="note" x="122" y="204">Bloom's high grade hat</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="211" width="288" height="21"/><text class="note" x="94" y="228" text-anchor="end">16</text><text class="note" x="122" y="228">the Freeman's Journal</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="235" width="270" height="21"/><text class="note" x="94" y="252" text-anchor="end">15</text><text class="note" x="122" y="252">Stephen's Latin Quarter hat</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="259" width="270" height="21"/><text class="note" x="94" y="276" text-anchor="end">15</text><text class="note" x="122" y="276">the Keyes ad cutting</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="283" width="252" height="21"/><text class="note" x="94" y="300" text-anchor="end">14</text><text class="note" x="122" y="300">Sweets of Sin</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="307" width="234" height="21"/><text class="note" x="94" y="324" text-anchor="end">13</text><text class="note" x="122" y="324">the Agendath Netaim flyer</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="331" width="216" height="21"/><text class="note" x="94" y="348" text-anchor="end">12</text><text class="note" x="122" y="348">Stephen's wages</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="355" width="198" height="21"/><text class="note" x="94" y="372" text-anchor="end">11</text><text class="note" x="122" y="372">Molly's uncollected lotion</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="379" width="198" height="21"/><text class="note" x="94" y="396" text-anchor="end">11</text><text class="note" x="122" y="396">the lemon soap</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="403" width="180" height="21"/><text class="note" x="94" y="420" text-anchor="end">10</text><text class="note" x="122" y="420">the brown macintosh</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="427" width="180" height="21"/><text class="note" x="94" y="444" text-anchor="end">10</text><text class="note" x="122" y="444">Martha Clifford's letter</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="451" width="180" height="21"/><text class="note" x="94" y="468" text-anchor="end">10</text><text class="note" x="122" y="468">the U.p: up postcard</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="475" width="162" height="21"/><text class="note" x="94" y="492" text-anchor="end">9</text><text class="note" x="122" y="492">the Jacobs' biscuit tin</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="499" width="162" height="21"/><text class="note" x="94" y="516" text-anchor="end">9</text><text class="note" x="122" y="516">the Elijah throwaway</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="112" y="523" width="162" height="21"/><text class="note" x="94" y="540" text-anchor="end">9</text><text class="note" x="122" y="540">the blind stripling's cane</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="163" width="144" height="21"/><text class="note" x="566" y="180" text-anchor="end">8</text><text class="note" x="594" y="180">the shrivelled potato</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="187" width="144" height="21"/><text class="note" x="566" y="204" text-anchor="end">8</text><text class="note" x="594" y="204">the Henry Flower card</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="211" width="144" height="21"/><text class="note" x="566" y="228" text-anchor="end">8</text><text class="note" x="594" y="228">the Martello tower key</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="235" width="144" height="21"/><text class="note" x="566" y="252" text-anchor="end">8</text><text class="note" x="594" y="252">Mr Deasy's letter</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="259" width="144" height="21"/><text class="note" x="566" y="276" text-anchor="end">8</text><text class="note" x="594" y="276">Plumtree's potted meat</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="283" width="126" height="21"/><text class="note" x="566" y="300" text-anchor="end">7</text><text class="note" x="594" y="300">the orangekeyed chamberpot</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="307" width="126" height="21"/><text class="note" x="566" y="324" text-anchor="end">7</text><text class="note" x="594" y="324">Boylan's letter to Mrs Marion Bloom</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="331" width="126" height="21"/><text class="note" x="566" y="348" text-anchor="end">7</text><text class="note" x="594" y="348">Milly's letter</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="355" width="126" height="21"/><text class="note" x="566" y="372" text-anchor="end">7</text><text class="note" x="594" y="372">Blazes Boylan's straw hat</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="379" width="126" height="21"/><text class="note" x="566" y="396" text-anchor="end">7</text><text class="note" x="594" y="396">the red carnation</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="403" width="108" height="21"/><text class="note" x="566" y="420" text-anchor="end">6</text><text class="note" x="594" y="420">Stephen's boots</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="427" width="90" height="21"/><text class="note" x="566" y="444" text-anchor="end">5</text><text class="note" x="594" y="444">the moustachecup</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="451" width="90" height="21"/><text class="note" x="566" y="468" text-anchor="end">5</text><text class="note" x="594" y="468">Bloom's latchkey (absent)</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="475" width="90" height="21"/><text class="note" x="566" y="492" text-anchor="end">5</text><text class="note" x="594" y="492">Boylan's fruit basket</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="499" width="36" height="21"/><text class="note" x="566" y="516" text-anchor="end">2</text><text class="note" x="594" y="516">the seedcake on Howth</text>
+        <rect fill="#f4efe2" fill-opacity="0.14" x="584" y="523" width="36" height="21"/><text class="note" x="566" y="540" text-anchor="end">2</text><text class="note" x="594" y="540">the torn Gold Cup betting tickets</text>
       </g>
+      <text class="note" x="64" y="580">One bar to a case; its length is its station count</text>
+      <text class="note" x="1056" y="580" text-anchor="end">01 · OBJECT MUSEUM</text>
+    </svg>
+    <!-- PLANE 3 — the three states. SERIES of three, against the whole. -->
+    <svg class="plane" id="p-states" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-states-t p-states-d">
+      <title id="p-states-t">The museum's three states: present, recalled, hallucinated</title>
+      <desc id="p-states-d">The 301 stations divided into three unequal parts drawn end to end on
+        one measure: present 194, recalled 72, hallucinated 35. Present is a solid block,
+        recalled an outlined one, hallucinated a hairline one, and each is repeated below as
+        its mark — a filled circle, an open ring, a diamond — beside its count and name.</desc>
+      <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+      <text class="reg" x="64" y="78">301 STATIONS · THREE STATES</text>
+      <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="ttl" x="64" y="140">Present, recalled, hallucinated</text>
+
+      <text class="datum" x="64" y="250">301</text>
+      <text class="note" x="64" y="288">stations in all</text>
+
+      <!-- the measure: 716 units for 301 stations -->
+      <rect class="subj" x="340" y="196" width="462" height="48"/>
+      <rect class="draw" x="804" y="198" width="167" height="44"/>
+      <rect class="hair" x="973" y="198" width="81" height="44"/>
+      <!-- the one gold element: the whole measure, named once -->
+      <line class="gbear" x1="340" y1="266" x2="1056" y2="266"/>
+
       <g>
-        <text class="fname" x="700" y="94" text-anchor="end">the shrivelled potato</text><rect x="708" y="83" width="57" height="14" fill="#dfa93f"/><text class="fnum fsm" x="772" y="94">8</text>
-        <text class="fname" x="700" y="119" text-anchor="end">the Henry Flower card</text><rect x="708" y="108" width="57" height="14" fill="#dfa93f"/><text class="fnum fsm" x="772" y="119">8</text>
-        <text class="fname" x="700" y="144" text-anchor="end">the Martello tower key</text><rect x="708" y="133" width="57" height="14" fill="#dfa93f"/><text class="fnum fsm" x="772" y="144">8</text>
-        <text class="fname" x="700" y="169" text-anchor="end">Mr Deasy's letter</text><rect x="708" y="158" width="57" height="14" fill="#dfa93f"/><text class="fnum fsm" x="772" y="169">8</text>
-        <text class="fname" x="700" y="194" text-anchor="end">Plumtree's potted meat</text><rect x="708" y="183" width="57" height="14" fill="#dfa93f"/><text class="fnum fsm" x="772" y="194">8</text>
-        <text class="fname" x="700" y="219" text-anchor="end">the orangekeyed chamberpot</text><rect x="708" y="208" width="50" height="14" fill="#dfa93f"/><text class="fnum fsm" x="765" y="219">7</text>
-        <text class="fname" x="700" y="244" text-anchor="end">Boylan's letter to Mrs Marion Bloom</text><rect x="708" y="233" width="50" height="14" fill="#dfa93f"/><text class="fnum fsm" x="765" y="244">7</text>
-        <text class="fname" x="700" y="269" text-anchor="end">Milly's letter</text><rect x="708" y="258" width="50" height="14" fill="#dfa93f"/><text class="fnum fsm" x="765" y="269">7</text>
-        <text class="fname" x="700" y="294" text-anchor="end">Blazes Boylan's straw hat</text><rect x="708" y="283" width="50" height="14" fill="#dfa93f"/><text class="fnum fsm" x="765" y="294">7</text>
-        <text class="fname" x="700" y="319" text-anchor="end">the red carnation</text><rect x="708" y="308" width="50" height="14" fill="#dfa93f"/><text class="fnum fsm" x="765" y="319">7</text>
-        <text class="fname" x="700" y="344" text-anchor="end">Stephen's boots</text><rect x="708" y="333" width="43" height="14" fill="#dfa93f"/><text class="fnum fsm" x="758" y="344">6</text>
-        <text class="fname" x="700" y="369" text-anchor="end">the moustachecup</text><rect x="708" y="358" width="36" height="14" fill="#dfa93f"/><text class="fnum fsm" x="751" y="369">5</text>
-        <text class="fname" x="700" y="394" text-anchor="end">Bloom's latchkey (absent)</text><rect x="708" y="383" width="36" height="14" fill="#dfa93f"/><text class="fnum fsm" x="751" y="394">5</text>
-        <text class="fname" x="700" y="419" text-anchor="end">Boylan's fruit basket</text><rect x="708" y="408" width="36" height="14" fill="#dfa93f"/><text class="fnum fsm" x="751" y="419">5</text>
-        <text class="fname" x="700" y="444" text-anchor="end">the seedcake on Howth</text><rect x="708" y="433" width="14" height="14" fill="#dfa93f"/><text class="fnum fsm" x="729" y="444">2</text>
-        <text class="fname" x="700" y="469" text-anchor="end">the torn Gold Cup betting tickets</text><rect x="708" y="458" width="14" height="14" fill="#dfa93f"/><text class="fnum fsm" x="729" y="469">2</text>
+        <circle class="subj" cx="84" cy="400" r="14"/>
+        <text class="lab" x="120" y="409">194</text>
+        <text class="lab" x="64" y="458">present</text>
+        <text class="note" x="64" y="492">in the scene</text>
+
+        <circle class="draw" cx="432" cy="400" r="14"/>
+        <text class="lab" x="468" y="409">72</text>
+        <text class="lab" x="412" y="458">recalled</text>
+        <text class="note" x="412" y="492">in memory or thought</text>
+
+        <path class="draw" d="M780 386 L794 400 L780 414 L766 400 Z"/>
+        <text class="lab" x="816" y="409">35</text>
+        <text class="lab" x="760" y="458">hallucinated</text>
+        <text class="note" x="760" y="492">in vision or dream</text>
       </g>
-      <line class="frule" x1="60" y1="492" x2="900" y2="492"/>
-      <text class="fsm" x="480" y="514" text-anchor="middle" letter-spacing="1.5">ONE BAR TO A CASE; ITS LENGTH IS ITS NUMBER OF STATIONS</text>
+      <text class="note" x="64" y="580">Thirty-two cases · present, recalled, hallucinated</text>
+      <text class="note" x="1056" y="580" text-anchor="end">01 · OBJECT MUSEUM</text>
     </svg>
 
-    <!-- PLANE 3 — the three states -->
-    <svg class="plane fig" id="p-states" viewBox="0 0 960 560" aria-hidden="true">
-      <text class="fhead" x="480" y="58" text-anchor="middle">THE MUSEUM'S THREE STATES</text>
-      <line class="frule" x1="80" y1="152" x2="880" y2="152"/>
-      <line class="frule" x1="80" y1="146" x2="80" y2="158"/>
-      <line class="frule" x1="880" y1="146" x2="880" y2="158"/>
-      <text x="480" y="140" text-anchor="middle" letter-spacing="2">301 STATIONS</text>
-      <rect x="80" y="185" width="516" height="110" fill="#dfa93f"/>
-      <rect x="596" y="185" width="191" height="110" fill="#dfa93f" opacity="0.42"/>
-      <rect x="787" y="185" width="93" height="110" fill="none" stroke="#dfa93f" stroke-width="2" stroke-dasharray="7 5"/>
-      <g text-anchor="middle">
-        <text class="fnum" x="338" y="358" font-size="38">194</text>
-        <text class="fname" x="338" y="390" font-size="19">present</text>
-        <text class="fsm" x="338" y="414">IN THE SCENE</text>
-        <text class="fnum" x="691" y="358" font-size="38">72</text>
-        <text class="fname" x="691" y="390" font-size="19">recalled</text>
-        <text class="fsm" x="691" y="414">IN MEMORY OR THOUGHT</text>
-        <text class="fnum" x="833" y="358" font-size="38">35</text>
-        <text class="fname" x="833" y="390" font-size="19">hallucinated</text>
-        <text class="fsm" x="833" y="414">IN VISION OR DREAM</text>
-      </g>
-      <line class="frule" x1="80" y1="452" x2="880" y2="452"/>
-      <text class="fsm" x="480" y="478" text-anchor="middle" letter-spacing="1.5">THIRTY-TWO CASES · THE THREE STATES ARE KEPT APART, NEVER MERGED</text>
+    <!-- PLANE 4 — stations by episode. FIELD: eighteen columns, one lit. -->
+    <svg class="plane" id="p-episodes" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-episodes-t p-episodes-d">
+      <title id="p-episodes-t">301 stations, episode by episode</title>
+      <desc id="p-episodes-d">Eighteen columns, one to an episode, each column's height its number
+        of stations. The counts in order are 11, 2, 11, 18, 19, 17, 8, 21, 8, 18, 21, 12, 10, 8,
+        55, 12, 34 and 16. Episode 15 stands far above the rest at 55 and is drawn in gold;
+        episode 17 is next at 34; episode 2 is lowest at 2.</desc>
+      <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+      <text class="reg" x="64" y="78">EIGHTEEN EPISODES · 301 STATIONS</text>
+      <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="ttl" x="64" y="140">Stations, episode by episode</text>
+      <g><rect class="amb" x="70" y="440.6" width="34" height="59.4"/><rect class="amb" x="125" y="489.2" width="34" height="10.8"/><rect class="amb" x="180" y="440.6" width="34" height="59.4"/><rect class="amb" x="235" y="402.8" width="34" height="97.2"/><rect class="amb" x="290" y="397.4" width="34" height="102.6"/><rect class="amb" x="345" y="408.2" width="34" height="91.8"/><rect class="amb" x="400" y="456.8" width="34" height="43.2"/><rect class="amb" x="455" y="386.6" width="34" height="113.4"/><rect class="amb" x="510" y="456.8" width="34" height="43.2"/><rect class="amb" x="565" y="402.8" width="34" height="97.2"/><rect class="amb" x="620" y="386.6" width="34" height="113.4"/><rect class="amb" x="675" y="435.2" width="34" height="64.8"/><rect class="amb" x="730" y="446" width="34" height="54"/><rect class="amb" x="785" y="456.8" width="34" height="43.2"/><rect class="gild" x="840" y="203" width="34" height="297"/><rect class="amb" x="895" y="435.2" width="34" height="64.8"/><rect class="amb" x="950" y="316.4" width="34" height="183.6"/><rect class="amb" x="1005" y="413.6" width="34" height="86.4"/></g>
+      <line class="hair" x1="64" y1="500" x2="1056" y2="500"/>
+      <g><text class="note" x="87" y="430.6" text-anchor="middle">11</text><text class="note" x="142" y="479.2" text-anchor="middle">2</text><text class="note" x="197" y="430.6" text-anchor="middle">11</text><text class="note" x="252" y="392.8" text-anchor="middle">18</text><text class="note" x="307" y="387.4" text-anchor="middle">19</text><text class="note" x="362" y="398.2" text-anchor="middle">17</text><text class="note" x="417" y="446.8" text-anchor="middle">8</text><text class="note" x="472" y="376.6" text-anchor="middle">21</text><text class="note" x="527" y="446.8" text-anchor="middle">8</text><text class="note" x="582" y="392.8" text-anchor="middle">18</text><text class="note" x="637" y="376.6" text-anchor="middle">21</text><text class="note" x="692" y="425.2" text-anchor="middle">12</text><text class="note" x="747" y="436" text-anchor="middle">10</text><text class="note" x="802" y="446.8" text-anchor="middle">8</text><text class="lab" x="857" y="193" text-anchor="middle">55</text><text class="note" x="912" y="425.2" text-anchor="middle">12</text><text class="note" x="967" y="306.4" text-anchor="middle">34</text><text class="note" x="1022" y="403.6" text-anchor="middle">16</text></g>
+      <g><text class="note" x="87" y="528" text-anchor="middle">1</text><text class="note" x="142" y="528" text-anchor="middle">2</text><text class="note" x="197" y="528" text-anchor="middle">3</text><text class="note" x="252" y="528" text-anchor="middle">4</text><text class="note" x="307" y="528" text-anchor="middle">5</text><text class="note" x="362" y="528" text-anchor="middle">6</text><text class="note" x="417" y="528" text-anchor="middle">7</text><text class="note" x="472" y="528" text-anchor="middle">8</text><text class="note" x="527" y="528" text-anchor="middle">9</text><text class="note" x="582" y="528" text-anchor="middle">10</text><text class="note" x="637" y="528" text-anchor="middle">11</text><text class="note" x="692" y="528" text-anchor="middle">12</text><text class="note" x="747" y="528" text-anchor="middle">13</text><text class="note" x="802" y="528" text-anchor="middle">14</text><text class="lab" x="857" y="528" text-anchor="middle">15</text><text class="note" x="912" y="528" text-anchor="middle">16</text><text class="note" x="967" y="528" text-anchor="middle">17</text><text class="note" x="1022" y="528" text-anchor="middle">18</text></g>
+      <text class="note" x="64" y="580">One column to an episode; its height is its count</text>
+      <text class="note" x="1056" y="580" text-anchor="end">01 · OBJECT MUSEUM</text>
     </svg>
 
-    <!-- PLANE 4 — stations by episode -->
-    <svg class="plane fig" id="p-episodes" viewBox="0 0 960 560" aria-hidden="true">
-      <text class="fhead" x="480" y="46" text-anchor="middle">301 STATIONS, EPISODE BY EPISODE</text>
-      <line x1="80" y1="450" x2="900" y2="450" stroke="#b9c3d6" stroke-width="1"/>
-      <g fill="#dfa93f">
-        <rect x="99"  y="384" width="30" height="66"/>
-        <rect x="143" y="438" width="30" height="12"/>
-        <rect x="187" y="384" width="30" height="66"/>
-        <rect x="231" y="342" width="30" height="108"/>
-        <rect x="275" y="336" width="30" height="114"/>
-        <rect x="319" y="348" width="30" height="102"/>
-        <rect x="363" y="402" width="30" height="48"/>
-        <rect x="407" y="324" width="30" height="126"/>
-        <rect x="451" y="402" width="30" height="48"/>
-        <rect x="495" y="342" width="30" height="108"/>
-        <rect x="539" y="324" width="30" height="126"/>
-        <rect x="583" y="378" width="30" height="72"/>
-        <rect x="627" y="390" width="30" height="60"/>
-        <rect x="671" y="402" width="30" height="48"/>
-        <rect x="715" y="120" width="30" height="330"/>
-        <rect x="759" y="378" width="30" height="72"/>
-        <rect x="803" y="246" width="30" height="204"/>
-        <rect x="847" y="354" width="30" height="96"/>
-      </g>
-      <g class="fnum fsm" text-anchor="middle">
-        <text x="114" y="376">11</text><text x="158" y="430">2</text><text x="202" y="376">11</text>
-        <text x="246" y="334">18</text><text x="290" y="328">19</text><text x="334" y="340">17</text>
-        <text x="378" y="394">8</text><text x="422" y="316">21</text><text x="466" y="394">8</text>
-        <text x="510" y="334">18</text><text x="554" y="316">21</text><text x="598" y="370">12</text>
-        <text x="642" y="382">10</text><text x="686" y="394">8</text><text x="730" y="112">55</text>
-        <text x="774" y="370">12</text><text x="818" y="238">34</text><text x="862" y="346">16</text>
-      </g>
-      <g text-anchor="middle" class="fsm">
-        <text x="114" y="472">1</text><text x="158" y="472">2</text><text x="202" y="472">3</text>
-        <text x="246" y="472">4</text><text x="290" y="472">5</text><text x="334" y="472">6</text>
-        <text x="378" y="472">7</text><text x="422" y="472">8</text><text x="466" y="472">9</text>
-        <text x="510" y="472">10</text><text x="554" y="472">11</text><text x="598" y="472">12</text>
-        <text x="642" y="472">13</text><text x="686" y="472">14</text><text x="730" y="472">15</text>
-        <text x="774" y="472">16</text><text x="818" y="472">17</text><text x="862" y="472">18</text>
-      </g>
-      <text class="fsm" x="480" y="506" text-anchor="middle" letter-spacing="2">EPISODE</text>
-      <text class="fsm" x="24" y="285" text-anchor="middle" transform="rotate(-90 24 285)" letter-spacing="2">STATIONS</text>
-    </svg>
+    <!-- PLANE 5 — the lemon soap. SERIES of eleven, against the drawn coat. -->
+    <svg class="plane" id="p-soap" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-soap-t p-soap-d">
+      <title id="p-soap-t">The lemon soap, pocket by pocket: eleven stations</title>
+      <desc id="p-soap-d">Eleven stations down one spine, each with its hour and its place, from
+        Sweny's counter at about a quarter past ten in the morning to the kitchen sink at
+        7 Eccles Street at about two the next morning. The ninth, the eastern sky at about
+        midnight, is drawn as a diamond because it is hallucinated; the last is drawn in gold.
+        To the right, a coat and trousers in outline with the four positions the soap rode in
+        marked on them.</desc>
+      <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+      <text class="reg" x="64" y="78">ELEVEN STATIONS · ~10:15 A.M. TO ~2 A.M.</text>
+      <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="ttl" x="64" y="140">The lemon soap, pocket by pocket</text>
 
-    <!-- PLANE 5 — the lemon soap, pocket by pocket -->
-    <svg class="plane fig" id="p-soap" viewBox="0 0 960 560" aria-hidden="true">
-      <text class="fhead" x="480" y="46" text-anchor="middle">THE LEMON SOAP — ELEVEN STATIONS</text>
-      <line class="frule" x1="60" y1="64" x2="900" y2="64"/>
-      <!-- the coat and trousers, diagrammatic -->
-      <g fill="none" stroke="#b9c3d6" stroke-width="1.6">
-        <rect x="230" y="150" width="120" height="182" rx="10"/>
-        <path d="M262 150 L290 178 L318 150"/>
-        <rect x="240" y="338" width="48" height="142" rx="6"/>
-        <rect x="292" y="338" width="48" height="142" rx="6"/>
-        <path d="M230 168 L206 190 L206 300 L226 300"/>
-        <path d="M350 168 L374 190 L374 300 L354 300"/>
-      </g>
-      <!-- the four positions on the body -->
-      <g fill="none" stroke="#dfa93f" stroke-width="2">
-        <rect x="244" y="178" width="56" height="30"/>
-        <rect x="304" y="228" width="38" height="30"/>
-        <rect x="244" y="270" width="56" height="26"/>
-        <rect x="248" y="366" width="34" height="26"/>
-      </g>
-      <g class="fsm" text-anchor="end">
-        <text x="196" y="196">the folded Freeman</text>
-        <text x="196" y="234">the inner</text>
-        <text x="196" y="252">handkerchief pocket</text>
-        <text x="196" y="292">the waistcoat</text>
-        <text x="196" y="382">the hip pocket</text>
-      </g>
-      <g class="frule">
-        <line x1="200" y1="192" x2="244" y2="192"/>
-        <line x1="200" y1="248" x2="304" y2="248"/>
-        <line x1="200" y1="288" x2="244" y2="288"/>
-        <line x1="200" y1="378" x2="248" y2="378"/>
-      </g>
-      <text class="fsm" x="290" y="512" text-anchor="middle" letter-spacing="2">WHERE IT RODE</text>
-      <!-- the ordered stations -->
-      <line x1="420" y1="112" x2="420" y2="434" stroke="#dfa93f" stroke-width="1" opacity="0.45"/>
+      <line class="hair" x1="240" y1="178" x2="240" y2="498"/>
       <g>
-        <circle cx="420" cy="112" r="5" fill="#dfa93f"/><text x="442" y="117">~10:15 a.m.</text><text class="fname" x="552" y="117">Sweny's counter, then Bloom's left hand</text>
-        <circle cx="420" cy="144" r="5" fill="#dfa93f"/><text x="442" y="149">~10:40 a.m.</text><text class="fname" x="552" y="149">lodged in the folded Freeman</text>
-        <circle cx="420" cy="176" r="5" fill="#dfa93f"/><text x="442" y="181">~11 a.m.</text><text class="fname" x="552" y="181">the hip pocket, the funeral carriage</text>
-        <circle cx="420" cy="208" r="5" fill="#dfa93f"/><text x="442" y="213">~11:45 a.m.</text><text class="fname" x="552" y="213">the inner handkerchief pocket</text>
-        <circle cx="420" cy="240" r="5" fill="#dfa93f"/><text x="442" y="245">~12:30 p.m.</text><text class="fname" x="552" y="245">the hip pocket again</text>
-        <circle cx="420" cy="272" r="5" fill="#dfa93f"/><text x="442" y="277">~2 p.m.</text><text class="fname" x="552" y="277">the hip pocket, the museum gate</text>
-        <circle cx="420" cy="304" r="5" fill="#dfa93f"/><text x="442" y="309">~9 p.m.</text><text class="fname" x="552" y="309">on his person, Sandymount Strand</text>
-        <circle cx="420" cy="336" r="5" fill="#dfa93f"/><text x="442" y="341">~midnight</text><text class="fname" x="552" y="341">the pocket, Mabbot Street</text>
-        <circle cx="420" cy="368" r="5" fill="none" stroke="#dfa93f" stroke-width="2"/><text x="442" y="373">~midnight</text><text class="fname" x="552" y="373">the eastern sky</text><text class="fsm" x="838" y="373">hallucinated</text>
-        <circle cx="420" cy="400" r="5" fill="#dfa93f"/><text x="442" y="405">~1 a.m.</text><text class="fname" x="552" y="405">the pocket; suds on a handkerchief</text>
-        <circle cx="420" cy="434" r="7" fill="#dfa93f"/><text x="442" y="439">~2 a.m.</text><text class="fname" x="552" y="439">the kitchen sink, 7 Eccles Street</text>
+        <circle class="amb" cx="240" cy="178" r="5"/><text class="note" x="224" y="187" text-anchor="end">~10:15 a.m.</text><text class="lab" x="264" y="187">Sweny's counter, then Bloom's left hand</text>
+        <circle class="amb" cx="240" cy="210" r="5"/><text class="note" x="224" y="219" text-anchor="end">~10:40 a.m.</text><text class="lab" x="264" y="219">lodged in the folded Freeman</text>
+        <circle class="amb" cx="240" cy="242" r="5"/><text class="note" x="224" y="251" text-anchor="end">~11 a.m.</text><text class="lab" x="264" y="251">the hip pocket, the funeral carriage</text>
+        <circle class="amb" cx="240" cy="274" r="5"/><text class="note" x="224" y="283" text-anchor="end">~11:45 a.m.</text><text class="lab" x="264" y="283">the inner handkerchief pocket</text>
+        <circle class="amb" cx="240" cy="306" r="5"/><text class="note" x="224" y="315" text-anchor="end">~12:30 p.m.</text><text class="lab" x="264" y="315">the hip pocket again</text>
+        <circle class="amb" cx="240" cy="338" r="5"/><text class="note" x="224" y="347" text-anchor="end">~2 p.m.</text><text class="lab" x="264" y="347">the hip pocket, the museum gate</text>
+        <circle class="amb" cx="240" cy="370" r="5"/><text class="note" x="224" y="379" text-anchor="end">~9 p.m.</text><text class="lab" x="264" y="379">on his person, Sandymount Strand</text>
+        <circle class="amb" cx="240" cy="402" r="5"/><text class="note" x="224" y="411" text-anchor="end">~midnight</text><text class="lab" x="264" y="411">the pocket, Mabbot Street</text>
+        <path class="draw" d="M240 422 L252 434 L240 446 L228 434 Z"/><text class="note" x="224" y="443" text-anchor="end">~midnight</text><text class="lab" x="264" y="443">the eastern sky</text><text class="note" x="524" y="443">hallucinated</text>
+        <circle class="amb" cx="240" cy="466" r="5"/><text class="note" x="224" y="475" text-anchor="end">~1 a.m.</text><text class="lab" x="264" y="475">the pocket; suds on a handkerchief</text>
+        <circle class="gild" cx="240" cy="498" r="14"/><text class="note" x="212" y="507" text-anchor="end">~2 a.m.</text><text class="lab" x="264" y="507">the kitchen sink, 7 Eccles Street</text>
       </g>
-      <line class="frule" x1="420" y1="464" x2="900" y2="464"/>
-      <text class="fsm" x="420" y="490" letter-spacing="1.5">BOUGHT ON CREDIT FOR FOURPENCE · STILL UNPAID AT THE SINK</text>
+
+      <!-- the coat and trousers, and the four positions it rode in -->
+      <text class="note" x="862" y="176">where it rode</text>
+      <g class="hair">
+        <rect x="887.2" y="190" width="126" height="191.1" rx="10.5"/>
+        <path d="M920.8 190 L950.2 219.4 L979.6 190"/>
+        <rect x="897.7" y="387.4" width="50.4" height="149.1" rx="6.3"/>
+        <rect x="952.3" y="387.4" width="50.4" height="149.1" rx="6.3"/>
+        <path d="M887.2 208.9 L862 232 L862 347.5 L883 347.5"/>
+        <path d="M1013.2 208.9 L1038.4 232 L1038.4 347.5 L1017.4 347.5"/>
+      </g>
+      <g class="draw">
+        <rect x="901.9" y="219.4" width="58.8" height="31.5"/>
+        <rect x="964.9" y="271.9" width="39.9" height="31.5"/>
+        <rect x="901.9" y="316" width="58.8" height="27.3"/>
+        <rect x="906.1" y="416.8" width="35.7" height="27.3"/>
+      </g>
+      <text class="note" x="64" y="580">Bought on credit for fourpence · still unpaid</text>
+      <text class="note" x="1056" y="580" text-anchor="end">01 · OBJECT MUSEUM</text>
     </svg>
 
-    <!-- PLANE 6 — Stephen's wages: the payment and the descent -->
-    <svg class="plane fig" id="p-wages" viewBox="0 0 960 560" aria-hidden="true">
-      <text class="fhead" x="480" y="42" text-anchor="middle">STEPHEN'S WAGES — THE PAYMENT, AND WHAT IS LEFT OF IT</text>
-      <!-- what Deasy counted onto the tablecloth -->
-      <g>
-        <rect x="170" y="80" width="70" height="44" rx="3" fill="none" stroke="#f4efe2" stroke-width="1.6"/>
-        <text class="fname" x="205" y="108" text-anchor="middle" font-size="16">£1</text>
-        <rect x="250" y="80" width="70" height="44" rx="3" fill="none" stroke="#f4efe2" stroke-width="1.6"/>
-        <text class="fname" x="285" y="108" text-anchor="middle" font-size="16">£1</text>
-        <circle cx="360" cy="102" r="24" fill="#dfa93f"/>
-        <text x="360" y="107" text-anchor="middle" fill="#081a35" font-size="14">£1</text>
-        <circle cx="428" cy="102" r="20" fill="#dfa93f"/>
-        <text x="428" y="107" text-anchor="middle" fill="#081a35" font-size="12">5s</text>
-        <circle cx="486" cy="102" r="20" fill="#dfa93f"/>
-        <text x="486" y="107" text-anchor="middle" fill="#081a35" font-size="12">5s</text>
-        <circle cx="540" cy="102" r="15" fill="#dfa93f"/>
-        <text x="540" y="106" text-anchor="middle" fill="#081a35" font-size="10">1s</text>
-        <circle cx="584" cy="102" r="15" fill="#dfa93f"/>
-        <text x="584" y="106" text-anchor="middle" fill="#081a35" font-size="10">1s</text>
-        <text class="fname" x="624" y="110" font-size="22">=</text>
-        <text class="fname" x="654" y="114" font-size="30">£3-12-0</text>
-      </g>
-      <g class="fsm" text-anchor="middle">
-        <text x="245" y="146">two notes</text>
-        <text x="360" y="146">a sovereign</text>
-        <text x="457" y="146">two crowns</text>
-        <text x="562" y="146">two shillings</text>
-      </g>
-      <line class="frule" x1="110" y1="168" x2="890" y2="168"/>
-      <!-- the descent -->
-      <path d="M120 214 L690 214 L690 265 L809 265 L809 389 L880 389 L880 470 L120 470 Z"
-            fill="#dfa93f" opacity="0.13"/>
-      <path d="M120 214 L690 214 L690 265 L809 265 L809 389 L880 389"
-            fill="none" stroke="#dfa93f" stroke-width="3"/>
-      <line x1="110" y1="470" x2="890" y2="470" stroke="#b9c3d6" stroke-width="1"/>
-      <g>
-        <circle cx="120" cy="214" r="5" fill="#dfa93f"/>
-        <circle cx="690" cy="214" r="5" fill="#dfa93f"/>
-        <circle cx="809" cy="265" r="5" fill="#dfa93f"/>
-        <circle cx="880" cy="389" r="7" fill="#dfa93f"/>
-      </g>
-      <g class="fname" font-size="19">
-        <text x="400" y="202" text-anchor="middle">£3-12-0</text>
-        <text x="748" y="253" text-anchor="middle">£2-19-0</text>
-        <text x="844" y="377" text-anchor="middle">£1-7-0</text>
-      </g>
-      <g class="fsm">
-        <text x="120" y="236">~10 a.m. · Deasy's tablecloth</text>
-        <text x="690" y="236" text-anchor="middle">~10 p.m. · Holles street</text>
-        <text x="806" y="288" text-anchor="end">~12:30 a.m. · Bloom takes custody</text>
-        <text x="884" y="412" text-anchor="end">~2 a.m. · returned, 7 Eccles Street</text>
-      </g>
-      <text class="fsm" x="120" y="504">~1 a.m. — one half-crown lent to Corley, out of another pocket</text>
-      <text class="fsm" x="890" y="504" text-anchor="end" letter-spacing="1.5">SEVENTEEN HOURS</text>
-    </svg>
+    <!-- PLANE 6 — Stephen's wages. PAIR: the payment against what is left of it. -->
+    <svg class="plane" id="p-wages" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-wages-t p-wages-d">
+      <title id="p-wages-t">Stephen's wages: the payment, and what is left of it</title>
+      <desc id="p-wages-d">Two panels side by side. On the left, three pounds twelve shillings as
+        Deasy counted it out at about ten in the morning: two notes drawn as rectangles, then a
+        sovereign, two crowns and two shillings drawn as circles of falling size. On the right,
+        three measures at one scale falling from three pounds twelve at about ten in the morning,
+        to two pounds nineteen at Holles street at about ten at night, to one pound seven,
+        which is returned to Stephen at 7 Eccles Street at about two in the morning after
+        Bloom takes custody of it at about half past twelve. The last measure is drawn in gold.</desc>
+      <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+      <text class="reg" x="64" y="78">SEVENTEEN HOURS · ~10 A.M. TO ~2 A.M.</text>
+      <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="ttl" x="64" y="140">Three pounds twelve, and what is left of it</text>
+      <line class="hair" x1="560" y1="176" x2="560" y2="556"/>
 
-    <!-- PLANE 7 — the Elijah throwaway on the Liffey -->
-    <svg class="plane fig" id="p-liffey" viewBox="0 0 960 560" aria-hidden="true">
-      <text class="fhead" x="480" y="46" text-anchor="middle">THE ELIJAH THROWAWAY ON THE LIFFEY — ~1 P.M. TO ~4 P.M.</text>
-      <path d="M70 285 L400 278 L650 268 L910 248 L910 372 L650 352 L400 338 L70 325 Z"
-            fill="#b9c3d6" opacity="0.12"/>
-      <path d="M70 285 L400 278 L650 268 L910 248" fill="none" stroke="#b9c3d6" stroke-width="1.2" opacity="0.55"/>
-      <path d="M70 325 L400 338 L650 352 L910 372" fill="none" stroke="#b9c3d6" stroke-width="1.2" opacity="0.55"/>
-      <!-- the bridges -->
-      <g fill="#081a35" stroke="#f4efe2" stroke-width="1.4">
-        <rect x="170" y="266" width="20" height="64"/>
-        <rect x="320" y="268" width="18" height="68"/>
+      <!-- left: the payment -->
+      <text class="datum" x="64" y="250">£3-12-0</text>
+      <text class="lab" x="64" y="290">the payment</text>
+      <g class="draw">
+        <rect x="64" y="322" width="88" height="56" rx="3"/>
+        <rect x="164" y="322" width="88" height="56" rx="3"/>
       </g>
-      <text class="fsm" x="180" y="256" text-anchor="middle">O'CONNELL BR.</text>
-      <text class="fsm" x="329" y="256" text-anchor="middle">LOOPLINE BR.</text>
-      <!-- gulls over the first station -->
-      <g fill="none" stroke="#b9c3d6" stroke-width="1.4" opacity="0.75">
-        <path d="M150 228 l8 -7 l8 7"/><path d="M176 216 l8 -7 l8 7"/><path d="M200 232 l8 -7 l8 7"/>
+      <g class="subj">
+        <circle cx="296" cy="350" r="28"/>
+        <circle cx="364" cy="350" r="23"/>
+        <circle cx="420" cy="350" r="23"/>
+        <circle cx="470" cy="350" r="17"/>
+        <circle cx="512" cy="350" r="17"/>
+      </g>
+      <!-- the coins carry no labels: four glosses will not fit on one baseline in a 484-unit
+           column, and on two they read as a run-on. The foot line enumerates them in the
+           order they are drawn, which is the order Deasy counted them out. -->
+      <text class="note" x="64" y="440">~10 a.m. · Deasy's tablecloth</text>
+      <text class="note" x="64" y="490">~1 a.m. — one half-crown lent to Corley,</text>
+      <text class="note" x="64" y="518">out of another pocket</text>
+
+      <!-- right: what is left. Three sums, three measures, at one scale. -->
+      <text class="datum" x="572" y="250">£1-7-0</text>
+      <text class="lab" x="572" y="290">returned to Stephen</text>
+      <text class="lab"  x="572" y="336">£3-12-0</text>
+      <text class="note" x="1056" y="336" text-anchor="end">~10 a.m.</text>
+      <rect class="amb" x="572" y="344" width="432" height="22"/>
+      <text class="lab"  x="572" y="400">£2-19-0</text>
+      <text class="note" x="1056" y="400" text-anchor="end">~10 p.m. · Holles street</text>
+      <rect class="amb" x="572" y="408" width="354" height="22"/>
+      <text class="lab"  x="572" y="464">£1-7-0</text>
+      <rect class="gild" x="572" y="472" width="162" height="22"/>
+      <text class="note" x="572" y="524">~12:30 a.m. · Bloom takes custody</text>
+      <text class="note" x="572" y="552">~2 a.m. · returned, 7 Eccles Street</text>
+      <text class="note" x="64" y="580">Two notes, a sovereign, two crowns, two shillings</text>
+      <text class="note" x="1056" y="580" text-anchor="end">01 · OBJECT MUSEUM</text>
+    </svg>
+    <!-- PLANE 7 — the Elijah throwaway on the Liffey. SERIES of four sightings. -->
+    <svg class="plane" id="p-liffey" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-liffey-t p-liffey-d">
+      <title id="p-liffey-t">The Elijah throwaway on the Liffey, about one to about four in the afternoon</title>
+      <desc id="p-liffey-d">The river drawn as a band widening eastward across the plate, with
+        O'Connell bridge and the Loopline bridge crossing it, gulls above the first sighting and
+        two hulls downriver. Four folded-paper marks sit on the water: at about one, crumpled and
+        thrown to the gulls; at about three, shooting the rapids at the bridgepiers; at about
+        three, rocked on the ferrywash at the North wall; and at about three to four, by flanks
+        of ships and trawlers. The last is drawn in gold.</desc>
+      <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+      <text class="reg" x="64" y="78">NINE STATIONS IN ALL · FOUR OF THEM ON THE LIFFEY</text>
+      <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="ttl" x="64" y="140">The throwaway on the Liffey</text>
+
+      <!-- the river -->
+      <path fill="#f4efe2" fill-opacity="0.14"
+            d="M64 335.8 L453.7 329 L749 319.4 L1056 300 L1056 420 L749 400.7 L453.7 387.1 L64 374.5 Z"/>
+      <path class="hair" d="M64 335.8 L453.7 329 L749 319.4 L1056 300"/>
+      <path class="hair" d="M64 374.5 L453.7 387.1 L749 400.7 L1056 420"/>
+      <!-- the two bridges -->
+      <g class="draw">
+        <rect x="182.1" y="317.4" width="23.6" height="62"/>
+        <rect x="359.3" y="319.4" width="21.3" height="65.8"/>
+      </g>
+      <text class="note" x="200" y="310">O'Connell br.</text>
+      <text class="note" x="386" y="310">Loopline br.</text>
+      <!-- gulls over the first sighting -->
+      <g class="hair">
+        <path d="M158.4 280.6 l9.4 -8.3 l9.4 8.3"/>
+        <path d="M189.2 268.9 l9.4 -8.3 l9.4 8.3"/>
+        <path d="M217.5 284.5 l9.4 -8.3 l9.4 8.3"/>
       </g>
       <!-- hulls, downriver -->
-      <g fill="none" stroke="#b9c3d6" stroke-width="1.3" opacity="0.6">
-        <path d="M742 300 l52 0 l-9 16 l-34 0 Z"/><line x1="768" y1="300" x2="768" y2="278"/>
-        <path d="M826 316 l58 0 l-10 17 l-38 0 Z"/><line x1="855" y1="316" x2="855" y2="290"/>
+      <g class="hair">
+        <path d="M857.6 350.3 l61 0 l-10.6 18.9 l-40 0 Z"/><line x1="888.3" y1="350.3" x2="888.3" y2="324.3"/>
+        <path d="M956.8 365.8 l68.5 0 l-11.8 20 l-44.9 0 Z"/><line x1="991" y1="365.8" x2="991" y2="335.1"/>
       </g>
-      <!-- the four sightings, as folded paper -->
-      <g fill="#dfa93f">
-        <path d="M172 300 l22 -10 l6 14 l-22 10 Z"/>
-        <path d="M336 302 l22 -10 l6 14 l-22 10 Z"/>
-        <path d="M550 300 l22 -10 l6 14 l-22 10 Z"/>
-        <path d="M790 296 l22 -10 l6 14 l-22 10 Z"/>
+      <!-- the four sightings, as folded paper: three drawn, the last lit -->
+      <g class="draw">
+        <path d="M184.5 350.3 l26 -11.8 l7.1 16.5 l-26 11.8 Z"/>
+        <path d="M378.2 352.2 l26 -11.8 l7.1 16.5 l-26 11.8 Z"/>
+        <path d="M631 350.3 l26 -11.8 l7.1 16.5 l-26 11.8 Z"/>
       </g>
-      <g class="frule">
-        <line x1="182" y1="288" x2="182" y2="234"/>
-        <line x1="560" y1="288" x2="560" y2="234"/>
-        <line x1="348" y1="316" x2="348" y2="388"/>
-        <line x1="800" y1="312" x2="800" y2="388"/>
+      <path class="gild" d="M914.4 346.4 l26 -11.8 l7.1 16.5 l-26 11.8 Z"/>
+      <g class="hair">
+        <line x1="184.5" y1="336" x2="184.5" y2="246"/>
+        <line x1="631" y1="344" x2="631" y2="296"/>
+        <line x1="378.2" y1="382" x2="378.2" y2="424"/>
+        <line x1="914.4" y1="362" x2="914.4" y2="474"/>
       </g>
-      <g text-anchor="middle">
-        <text class="fnum" x="182" y="200">~1 p.m.</text>
-        <text class="fname" x="182" y="222">crumpled, thrown to the gulls</text>
-        <text class="fnum" x="560" y="200">~3 p.m.</text>
-        <text class="fname" x="560" y="222">rocked on the ferrywash, the North wall</text>
-        <text class="fnum" x="348" y="410">~3 p.m.</text>
-        <text class="fname" x="348" y="432">shooting the rapids at the bridgepiers</text>
-        <text class="fnum" x="800" y="410">~3–4 p.m.</text>
-        <text class="fname" x="800" y="432">by flanks of ships and trawlers</text>
-      </g>
-      <line class="frule" x1="70" y1="474" x2="910" y2="474"/>
-      <text class="fsm" x="70" y="498" letter-spacing="1.5">NINE STATIONS IN ALL · FOUR OF THEM ON THE LIFFEY</text>
-      <text class="fsm" x="910" y="498" text-anchor="end" letter-spacing="2">EASTWARD, TO THE SEA</text>
+      <text class="note" x="64" y="200">~1 p.m.</text>
+      <text class="lab"  x="64" y="232">crumpled, thrown to the gulls</text>
+      <text class="note" x="1056" y="250" text-anchor="end">~3 p.m.</text>
+      <text class="lab"  x="1056" y="282" text-anchor="end">rocked on the ferrywash, the North wall</text>
+      <text class="note" x="64" y="440">~3 p.m.</text>
+      <text class="lab"  x="64" y="472">shooting the rapids at the bridgepiers</text>
+      <text class="note" x="1056" y="490" text-anchor="end">~3–4 p.m.</text>
+      <text class="lab"  x="1056" y="522" text-anchor="end">by flanks of ships and trawlers</text>
+      <text class="note" x="64" y="580">Eastward, to the sea</text>
+      <text class="note" x="1056" y="580" text-anchor="end">01 · OBJECT MUSEUM</text>
     </svg>
 
-    <!-- PLANE 8 — two instruments of tenure -->
-    <svg class="plane fig" id="p-keys" viewBox="0 0 960 560" aria-hidden="true">
-      <text class="fhead" x="480" y="52" text-anchor="middle">TWO INSTRUMENTS OF TENURE</text>
-      <line class="frule" x1="480" y1="100" x2="480" y2="470"/>
-      <!-- the tower key: present, brass, handed over -->
-      <g fill="#dfa93f">
-        <path d="M104 208 a46 46 0 1 0 0 92 a46 46 0 1 0 0 -92 Z M104 232 a22 22 0 1 1 0 44 a22 22 0 1 1 0 -44 Z" fill-rule="evenodd"/>
-        <rect x="146" y="243" width="214" height="22"/>
-        <rect x="322" y="265" width="16" height="34"/>
-        <rect x="352" y="265" width="14" height="26"/>
+    <!-- PLANE 8 — two instruments of tenure. PAIR: same key, drawn twice, one absent. -->
+    <svg class="plane" id="p-keys" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-keys-t p-keys-d">
+      <title id="p-keys-t">Two instruments of tenure: the Martello tower key and Bloom's latchkey</title>
+      <desc id="p-keys-d">Two keys of identical size drawn side by side. On the left the Martello
+        tower key, solid, with a gold rule beneath it: 8 stations, about a quarter past eight in
+        the morning to about half past one at night; turned in the lock at about a quarter past
+        eight, laid on Mulligan's heaped clothes at about twenty to nine. On the right Bloom's
+        latchkey, drawn in broken hairline because it is absent: 5 stations, about a quarter past
+        eight in the morning to about half past two at night; missed on the doorstep, and the
+        area railings climbed over at about five past two.</desc>
+      <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+      <text class="reg" x="64" y="78">TWO KEYS</text>
+      <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="ttl" x="64" y="140">Two instruments of tenure</text>
+      <line class="hair" x1="560" y1="176" x2="560" y2="500"/>
+
+      <!-- left: present, handled, brass -->
+      <g class="subj">
+        <path fill-rule="evenodd" d="M158.7 220 a66.7 66.7 0 1 0 0 133.4 a66.7 66.7 0 1 0 0 -133.4 Z M158.7 254.8 a31.9 31.9 0 1 1 0 63.8 a31.9 31.9 0 1 1 0 -63.8 Z"/>
+        <rect x="219.6" y="270.8" width="310.3" height="31.9"/>
+        <rect x="474.8" y="302.7" width="23.2" height="49.3"/>
+        <rect x="518.3" y="302.7" width="20.3" height="37.7"/>
       </g>
-      <text class="fname" x="240" y="352" text-anchor="middle" font-size="22">the Martello tower key</text>
-      <text x="240" y="380" text-anchor="middle">8 stations · ~8:15 a.m. to ~1:30 a.m.</text>
-      <text class="fsm" x="240" y="404" text-anchor="middle" letter-spacing="1.2">TURNED IN THE LOCK AT ~8:15 A.M.</text>
-      <text class="fsm" x="240" y="424" text-anchor="middle" letter-spacing="1.2">LAID ON MULLIGAN'S HEAPED CLOTHES AT ~8:40 A.M.</text>
-      <text class="fsm" x="240" y="460" text-anchor="middle" letter-spacing="2">INSTRUMENT OF TENURE</text>
-      <!-- the latchkey: absent, never on the page -->
-      <g fill="none" stroke="#b9c3d6" stroke-width="2.5" stroke-dasharray="8 6">
-        <circle cx="594" cy="254" r="46"/>
-        <circle cx="594" cy="254" r="22"/>
-        <rect x="636" y="243" width="184" height="22"/>
-        <rect x="782" y="265" width="16" height="34"/>
-        <rect x="812" y="265" width="14" height="26"/>
+      <line class="gbear" x1="92" y1="392" x2="538" y2="392"/>
+      <text class="lab"  x="64" y="440">the Martello tower key</text>
+      <text class="note" x="64" y="472">8 stations · ~8:15 a.m. to ~1:30 a.m.</text>
+      <text class="note" x="64" y="500">turned in the lock at ~8:15 a.m.</text>
+      <text class="note" x="64" y="524">laid on Mulligan's heaped clothes</text>
+      <text class="note" x="64" y="550">at ~8:40 a.m.</text>
+
+      <!-- right: absent, never on the page -->
+      <g class="hair" stroke-dasharray="11 8">
+        <circle cx="666.7" cy="286.7" r="66.7"/>
+        <circle cx="666.7" cy="286.7" r="31.9"/>
+        <rect x="727.6" y="270.8" width="310.3" height="31.9"/>
+        <rect x="982.8" y="302.7" width="23.2" height="49.3"/>
+        <rect x="1026.3" y="302.7" width="20.3" height="37.7"/>
       </g>
-      <text class="fname" x="720" y="352" text-anchor="middle" font-size="22">Bloom's latchkey</text>
-      <text x="720" y="380" text-anchor="middle">5 stations · ~8:15 a.m. to ~2:30 a.m.</text>
-      <text class="fsm" x="720" y="404" text-anchor="middle" letter-spacing="1.2">MISSED ON THE DOORSTEP AT ~8:15 A.M.</text>
-      <text class="fsm" x="720" y="424" text-anchor="middle" letter-spacing="1.2">OVER THE AREA RAILINGS AT ~2:05 A.M.</text>
-      <text class="fsm" x="720" y="460" text-anchor="middle" letter-spacing="2">INSTRUMENT OF TENURE IN NEGATIVE</text>
-      <line class="frule" x1="60" y1="492" x2="900" y2="492"/>
-      <text class="fsm" x="480" y="516" text-anchor="middle" letter-spacing="1.5">THE LEFT KEY IS HANDLED ALL MORNING · THE RIGHT ONE NEVER APPEARS ON THE PAGE</text>
+      <text class="lab"  x="572" y="440">Bloom's latchkey</text>
+      <text class="note" x="572" y="472">5 stations · ~8:15 a.m. to ~2:30 a.m.</text>
+      <text class="note" x="572" y="500">missed on the doorstep at ~8:15 a.m.</text>
+      <text class="note" x="572" y="524">over the area railings at ~2:05 a.m.</text>
+      <text class="note" x="1056" y="550" text-anchor="end">drawn solid; drawn dashed</text>
+
+      <text class="note" x="64" y="580">Martello tower key · Bloom's latchkey</text>
+      <text class="note" x="1056" y="580" text-anchor="end">01 · OBJECT MUSEUM</text>
     </svg>
 
-    <!-- PLANE 9 — the hat and the card it hides -->
-    <svg class="plane fig" id="p-hat" viewBox="0 0 960 560" aria-hidden="true">
-      <text class="fhead" x="480" y="46" text-anchor="middle">BLOOM'S HIGH GRADE HAT, AND THE CARD BEHIND THE BAND</text>
-      <!-- the hat in section -->
-      <path d="M340 330 Q340 178 480 178 Q620 178 620 330" fill="none" stroke="#f4efe2" stroke-width="2"/>
-      <ellipse cx="480" cy="330" rx="192" ry="26" fill="none" stroke="#f4efe2" stroke-width="2"/>
-      <path d="M340 330 Q480 356 620 330" fill="none" stroke="#f4efe2" stroke-width="1" opacity="0.5"/>
-      <path d="M436 196 Q480 174 524 196" fill="none" stroke="#f4efe2" stroke-width="1" opacity="0.5"/>
-      <!-- the leather headband -->
-      <rect x="356" y="282" width="248" height="28" fill="none" stroke="#dfa93f" stroke-width="2"/>
-      <!-- the card behind it -->
-      <rect x="418" y="286" width="94" height="20" fill="#f4efe2"/>
-      <text x="465" y="300" text-anchor="middle" fill="#081a35" font-size="9" letter-spacing="0.6">HENRY FLOWER</text>
-      <g class="frule">
-        <line x1="330" y1="296" x2="356" y2="296"/>
-        <line x1="630" y1="296" x2="700" y2="296"/>
-        <line x1="700" y1="212" x2="628" y2="212"/>
-      </g>
-      <text class="fsm" x="324" y="300" text-anchor="end">the leather headband</text>
-      <text class="fsm" x="706" y="300">the card, behind the band</text>
-      <text class="fsm" x="706" y="216">Plasto's, 1 Great Brunswick street</text>
+    <!-- PLANE 9 — the hat and the card behind the band. SINGULAR: the hat, drawn. -->
+    <svg class="plane" id="p-hat" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-hat-t p-hat-d">
+      <title id="p-hat-t">Bloom's high grade hat, and the card behind the band</title>
+      <desc id="p-hat-d">The hat drawn large in section: the crown in outline, the brim as an
+        ellipse, and the leather headband as a band across it. Tucked behind the headband is a
+        small gold card, the Henry Flower card. The hat carries 16 stations and the card 8; the
+        hat is Plasto's, of 1 Great Brunswick street. Below, the card's four moves: checked
+        behind the headband in the hall at 7 Eccles Street at about eight; headband to waistcoat
+        pocket at Westland Row at about a quarter to ten; handed through the brass grill at the
+        post office at about ten; and back behind the headband at All Hallows at about half past
+        ten.</desc>
+      <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+      <text class="reg" x="64" y="78">SIXTEEN STATIONS · THE CARD, EIGHT</text>
+      <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="ttl" x="64" y="140">Bloom's hat, and the card behind the band</text>
+
+      <!-- the hat, in section -->
+      <path class="draw" d="M128.5 383.4 Q128.5 195 302.1 195 Q475.7 195 475.7 383.4"/>
+      <ellipse class="draw" cx="302.1" cy="383.4" rx="238.1" ry="32.2"/>
+      <path class="hair" d="M128.5 383.4 Q302.1 415.7 475.7 383.4"/>
+      <path class="hair" d="M247.5 217.3 Q302.1 190 356.6 217.3"/>
+      <rect class="draw" x="148.3" y="323.9" width="307.5" height="34.7"/>
+      <!-- the card behind the band: the one gold element -->
+      <rect class="gild" x="225.2" y="328.9" width="116.6" height="24.8"/>
+      <path class="hair" d="M341.8 341.3 L520 341.3 L520 244 L564 244"/>
+
+      <text class="lab"  x="572" y="250">the Henry Flower card</text>
+      <text class="note" x="572" y="282">behind the leather headband</text>
+      <text class="note" x="572" y="314">Plasto's, 1 Great Brunswick street</text>
+      <text class="note" x="572" y="356">the hat: 16 stations</text>
+      <text class="note" x="572" y="380">the card: 8 stations</text>
+
       <!-- the card's four moves -->
-      <line class="frule" x1="200" y1="382" x2="760" y2="382"/>
-      <g>
-        <circle cx="212" cy="408" r="5" fill="#dfa93f"/><text x="234" y="413">~8 a.m.</text><text class="fname" x="330" y="413">checked behind the headband, the hall at 7 Eccles Street</text>
-        <circle cx="212" cy="436" r="5" fill="#dfa93f"/><text x="234" y="441">~9:45 a.m.</text><text class="fname" x="330" y="441">headband to waistcoat pocket, Westland Row</text>
-        <circle cx="212" cy="464" r="5" fill="#dfa93f"/><text x="234" y="469">~10 a.m.</text><text class="fname" x="330" y="469">handed through the brass grill, the post office</text>
-        <circle cx="212" cy="492" r="5" fill="#dfa93f"/><text x="234" y="497">~10:30 a.m.</text><text class="fname" x="330" y="497">back behind the headband, All Hallows</text>
-      </g>
-      <text class="fsm" x="900" y="497" text-anchor="end" letter-spacing="1.5">THE HAT: 16 STATIONS</text>
-      <text class="fsm" x="900" y="517" text-anchor="end" letter-spacing="1.5">THE CARD: 8 STATIONS</text>
+      <line class="hair" x1="64" y1="436" x2="1056" y2="436"/>
+      <text class="lab"  x="64" y="466">checked behind the headband, the hall at 7 Eccles Street</text>
+      <text class="note" x="1056" y="466" text-anchor="end">~8 a.m.</text>
+      <text class="lab"  x="64" y="494">headband to waistcoat pocket, Westland Row</text>
+      <text class="note" x="1056" y="494" text-anchor="end">~9:45 a.m.</text>
+      <text class="lab"  x="64" y="522">handed through the brass grill, the post office</text>
+      <text class="note" x="1056" y="522" text-anchor="end">~10 a.m.</text>
+      <text class="lab"  x="64" y="550">back behind the headband, All Hallows</text>
+      <text class="note" x="1056" y="550" text-anchor="end">~10:30 a.m.</text>
+      <text class="note" x="64" y="580">Four moves of the card, ~8 a.m. to ~10:30 a.m.</text>
+      <text class="note" x="1056" y="580" text-anchor="end">01 · OBJECT MUSEUM</text>
     </svg>
+    <!-- PLANE 10 — Stephen's ashplant. SERIES of twenty-one along the hours. -->
+    <svg class="plane" id="p-ash" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-ash-t p-ash-d">
+      <title id="p-ash-t">Stephen's ashplant: twenty-one stations, the longest case in the museum</title>
+      <desc id="p-ash-d">The ashplant drawn as a long tapering stick lying across the hours from
+        8 a.m. to 2 a.m., with its twenty-one stations marked along it. Four are named: leaving
+        the Martello tower at about half past eight in the morning; across Stephen's knee at the
+        National Library at about half past two; grabbed up in the stampede from Holles street at
+        about eleven at night; and in procession to the garden of 7 Eccles Street at about two in
+        the morning, drawn in gold. One station, at about midnight, is a diamond because it is
+        hallucinated. Ten of the twenty-one fall between midnight and one.</desc>
+      <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+      <text class="reg" x="64" y="78">TWENTY-ONE STATIONS · THE LONGEST CASE</text>
+      <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="ttl" x="64" y="140">Stephen's ashplant</text>
 
-    <!-- PLANE 10 — Stephen's ashplant, the longest case -->
-    <svg class="plane fig" id="p-ash" viewBox="0 0 960 560" aria-hidden="true">
-      <text class="fhead" x="480" y="46" text-anchor="middle">STEPHEN'S ASHPLANT — TWENTY-ONE STATIONS</text>
-      <!-- the stick, drawn along the hours -->
-      <path d="M118 240 L900 246 L900 258 L118 262 Z" fill="#b9c3d6" opacity="0.28"/>
-      <path d="M118 240 L900 246 M118 262 L900 258" stroke="#f4efe2" stroke-width="1.4" fill="none"/>
-      <path d="M118 240 a13 13 0 0 0 0 22" fill="none" stroke="#f4efe2" stroke-width="1.8"/>
-      <line x1="300" y1="248" x2="640" y2="250" stroke="#f4efe2" stroke-width="0.8" opacity="0.4"/>
-      <!-- the stations, at their hours -->
-      <g fill="#dfa93f">
-        <circle cx="132" cy="251" r="5"/><circle cx="139" cy="251" r="5"/><circle cx="143" cy="251" r="5"/>
-        <circle cx="251" cy="251" r="5"/><circle cx="262" cy="251" r="5"/><circle cx="273" cy="251" r="5"/>
-        <circle cx="392" cy="251" r="5"/><circle cx="403" cy="251" r="5"/><circle cx="424" cy="251" r="5"/>
-        <circle cx="760" cy="251" r="5"/>
-        <circle cx="803" cy="251" r="5"/><circle cx="807" cy="251" r="5"/>
-        <circle cx="823" cy="251" r="5"/>
-        <circle cx="832" cy="251" r="5"/><circle cx="836" cy="251" r="5"/><circle cx="840" cy="251" r="5"/>
-        <circle cx="844" cy="251" r="5"/><circle cx="847" cy="251" r="5"/><circle cx="851" cy="251" r="5"/>
-        <circle cx="890" cy="251" r="6"/>
+      <text class="lab" x="64" y="196">~8:30 a.m. — leaving the Martello tower</text>
+      <text class="lab" x="64" y="228">~2:30 p.m. — across Stephen's knee, the National Library</text>
+      <text class="lab" x="64" y="260">~11 p.m. — grabbed up in the stampede from Holles street</text>
+      <text class="lab" x="64" y="292">~2 a.m. — in procession to the garden of 7 Eccles Street</text>
+
+      <!-- the stick -->
+      <path fill="#f4efe2" fill-opacity="0.14" d="M120 318 L1010 322 L1010 340 L120 344 Z"/>
+      <path class="hair" d="M120 318 L1010 322 M120 344 L1010 340"/>
+      <path class="hair" d="M120 318 a15 15 0 0 0 0 26"/>
+      <!-- the twenty-one stations -->
+      <g><circle class="amb" cx="144.8" cy="330" r="5"/><circle class="subj" cx="152.7" cy="330" r="9"/><circle class="amb" cx="157.2" cy="330" r="5"/><circle class="amb" cx="279.1" cy="330" r="5"/><circle class="amb" cx="291.5" cy="330" r="5"/><circle class="amb" cx="303.9" cy="330" r="5"/><circle class="subj" cx="438.2" cy="330" r="9"/><circle class="amb" cx="450.6" cy="330" r="5"/><circle class="amb" cx="474.3" cy="330" r="5"/><circle class="subj" cx="853.3" cy="330" r="9"/><circle class="amb" cx="901.8" cy="330" r="5"/><circle class="amb" cx="906.4" cy="330" r="5"/><circle class="amb" cx="924.4" cy="330" r="5"/><circle class="amb" cx="934.6" cy="330" r="5"/><circle class="amb" cx="939.1" cy="330" r="5"/><circle class="amb" cx="943.6" cy="330" r="5"/><circle class="amb" cx="948.1" cy="330" r="5"/><circle class="amb" cx="951.5" cy="330" r="5"/><circle class="amb" cx="956" cy="330" r="5"/></g>
+      <path class="draw" d="M931.2 321 L940.2 330 L931.2 339 L922.2 330 Z"/>
+      <circle class="gild" cx="1000" cy="330" r="14"/>
+      <!-- midnight to one -->
+      <g class="hair">
+        <line x1="901.8" y1="380" x2="956" y2="380"/>
+        <line x1="901.8" y1="374" x2="901.8" y2="386"/>
+        <line x1="956" y1="374" x2="956" y2="386"/>
       </g>
-      <circle cx="829" cy="251" r="5" fill="none" stroke="#dfa93f" stroke-width="2"/>
       <!-- the hour axis -->
-      <line x1="110" y1="330" x2="900" y2="330" stroke="#b9c3d6" stroke-width="1"/>
-      <g class="frule">
-        <line x1="110" y1="330" x2="110" y2="338"/><line x1="283" y1="330" x2="283" y2="338"/>
-        <line x1="457" y1="330" x2="457" y2="338"/><line x1="630" y1="330" x2="630" y2="338"/>
-        <line x1="803" y1="330" x2="803" y2="338"/><line x1="890" y1="330" x2="890" y2="338"/>
+      <line class="hair" x1="120" y1="430" x2="1010" y2="430"/>
+      <g class="hair">
+        <line x1="120" y1="430" x2="120" y2="440"/><line x1="315.2" y1="430" x2="315.2" y2="440"/>
+        <line x1="511.5" y1="430" x2="511.5" y2="440"/><line x1="706.7" y1="430" x2="706.7" y2="440"/>
+        <line x1="901.8" y1="430" x2="901.8" y2="440"/><line x1="1000" y1="430" x2="1000" y2="440"/>
       </g>
-      <g class="fsm" text-anchor="middle">
-        <text x="110" y="354">8 a.m.</text><text x="283" y="354">noon</text><text x="457" y="354">4 p.m.</text>
-        <text x="630" y="354">8 p.m.</text><text x="803" y="354">midnight</text><text x="890" y="354">2 a.m.</text>
+      <g class="note" text-anchor="middle">
+        <text x="120" y="464">8 a.m.</text><text x="315.2" y="464">noon</text>
+        <text x="511.5" y="464">4 p.m.</text><text x="706.7" y="464">8 p.m.</text>
+        <text x="901.8" y="464">midnight</text>
       </g>
-      <!-- named stations -->
-      <g class="frule">
-        <line x1="138" y1="188" x2="138" y2="236"/>
-        <line x1="392" y1="220" x2="392" y2="236"/>
-        <line x1="760" y1="188" x2="760" y2="236"/>
-      </g>
-      <text class="fname" x="120" y="182">~8:30 a.m. — leaving the Martello tower</text>
-      <text class="fname" x="380" y="214">~2:30 p.m. — across Stephen's knee, the National Library</text>
-      <text class="fname" x="742" y="182" text-anchor="end">~11 p.m. — grabbed up in the stampede from Holles street</text>
-      <g class="frule"><line x1="837" y1="290" x2="837" y2="388"/></g>
-      <text class="fname" x="700" y="410" text-anchor="middle">ten of the twenty-one fall between midnight and one</text>
-      <line class="frule" x1="110" y1="448" x2="900" y2="448"/>
-      <text class="fname" x="110" y="474">~2 a.m. — in procession to the garden of 7 Eccles Street</text>
-      <text class="fsm" x="900" y="474" text-anchor="end" letter-spacing="1.5">THE LONGEST CASE IN THE MUSEUM</text>
-      <text class="fsm" x="110" y="506" letter-spacing="1.2">FILLED CIRCLE, PRESENT · OPEN CIRCLE, HALLUCINATED</text>
+      <text class="note" x="1056" y="500" text-anchor="end">ten of the twenty-one fall between midnight and one</text>
+      <text class="note" x="64" y="580">Filled circle, present · diamond, hallucinated</text>
+      <text class="note" x="1056" y="580" text-anchor="end">01 · OBJECT MUSEUM</text>
     </svg>
 
-    <!-- PLANE 11 — the seedcake: recalled only -->
-    <svg class="plane fig" id="p-seedcake" viewBox="0 0 960 560" aria-hidden="true">
-      <text class="fhead" x="480" y="52" text-anchor="middle">THE SEEDCAKE ON HOWTH — RECALLED ONLY</text>
+    <!-- PLANE 11 — the seedcake on Howth. SINGULAR: two stations, and no hand holds it. -->
+    <svg class="plane" id="p-seedcake" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-seedcake-t p-seedcake-d">
+      <title id="p-seedcake-t">The seedcake on Howth: two stations, recalled only</title>
+      <desc id="p-seedcake-d">A seedcake drawn very large as a broken circle, because it ceased to
+        exist on Howth Head in 1888, with six seeds inside it. Sixteen years are measured off to
+        its right. Its two stations on 16 June 1904 are both memories: Bloom's, at the burgundy in
+        Davy Byrne's at about half past one in the afternoon, and Molly's, in the bed at 7 Eccles
+        Street at about two to three in the morning. Each is marked with an open ring, the
+        museum's mark for a thing recalled rather than present.</desc>
+      <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+      <text class="reg" x="64" y="78">TWO STATIONS · RECALLED ONLY</text>
+      <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="ttl" x="64" y="140">The seedcake on Howth</text>
+
       <!-- the cake that no longer exists -->
-      <circle cx="200" cy="268" r="52" fill="none" stroke="#b9c3d6" stroke-width="2.5" stroke-dasharray="8 7"/>
-      <g fill="#b9c3d6" opacity="0.6">
-        <circle cx="184" cy="252" r="2.6"/><circle cx="212" cy="248" r="2.6"/><circle cx="196" cy="276" r="2.6"/>
-        <circle cx="220" cy="282" r="2.6"/><circle cx="176" cy="284" r="2.6"/><circle cx="206" cy="262" r="2.6"/>
+      <circle class="draw" cx="560" cy="300" r="120" stroke-dasharray="18 15"/>
+      <g class="amb">
+        <circle cx="516" cy="256" r="5"/><circle cx="596.6" cy="244.3" r="5"/>
+        <circle cx="550.5" cy="325.1" r="5"/><circle cx="619.7" cy="342.4" r="5"/>
+        <circle cx="492.8" cy="348.2" r="5"/><circle cx="579.3" cy="284.7" r="5"/>
       </g>
-      <text class="fname" x="200" y="356" text-anchor="middle" font-size="19">Howth Head, 1888</text>
-      <text class="fsm" x="200" y="382" text-anchor="middle">CEASED TO EXIST IN 1888</text>
-      <!-- the sixteen years -->
-      <line x1="270" y1="268" x2="560" y2="268" stroke="#b9c3d6" stroke-width="1" stroke-dasharray="4 6"/>
-      <line class="frule" x1="270" y1="224" x2="270" y2="240"/>
-      <line class="frule" x1="560" y1="224" x2="560" y2="240"/>
-      <line class="frule" x1="270" y1="232" x2="560" y2="232"/>
-      <text class="fsm" x="415" y="216" text-anchor="middle" letter-spacing="2">SIXTEEN YEARS</text>
-      <!-- 16 June 1904: two mouths -->
-      <line x1="560" y1="150" x2="560" y2="400" stroke="#b9c3d6" stroke-width="1"/>
-      <text class="fsm" x="560" y="138" text-anchor="middle" letter-spacing="2">16 JUNE 1904</text>
-      <g>
-        <circle cx="560" cy="228" r="7" fill="#dfa93f"/>
-        <text class="fnum" x="582" y="222">~1:30 p.m.</text>
-        <text class="fname" x="582" y="246">Bloom's memory, at the burgundy in Davy Byrne's</text>
-        <circle cx="560" cy="308" r="7" fill="#dfa93f"/>
-        <text class="fnum" x="582" y="302">~2–3 a.m.</text>
-        <text class="fname" x="582" y="326">Molly's memory, the bed at 7 Eccles Street</text>
+
+      <text class="datum gild" x="64" y="280">2</text>
+      <text class="note" x="64" y="318">stations, both recalled</text>
+
+      <text class="lab" x="760" y="256">Howth Head, 1888</text>
+      <text class="note" x="1056" y="288" text-anchor="end">ceased to exist in 1888</text>
+      <g class="hair">
+        <line x1="760" y1="352" x2="1056" y2="352"/>
+        <line x1="760" y1="344" x2="760" y2="360"/>
+        <line x1="1056" y1="344" x2="1056" y2="360"/>
       </g>
-      <line class="frule" x1="60" y1="440" x2="900" y2="440"/>
-      <text class="fsm" x="480" y="466" text-anchor="middle" letter-spacing="1.5">TWO STATIONS · NO HAND HOLDS IT ON 16 JUNE 1904</text>
+      <text class="note" x="908" y="336" text-anchor="middle">sixteen years</text>
+      <text class="note" x="908" y="388" text-anchor="middle">to 16 June 1904</text>
+
+      <circle class="hair" cx="88" cy="452" r="14"/>
+      <text class="note" x="120" y="461">~1:30 p.m.</text>
+      <text class="lab"  x="284" y="461">Bloom's memory, at the burgundy in Davy Byrne's</text>
+      <circle class="hair" cx="88" cy="492" r="14"/>
+      <text class="note" x="120" y="501">~2–3 a.m.</text>
+      <text class="lab"  x="284" y="501">Molly's memory, the bed at 7 Eccles Street</text>
+
+      <text class="note" x="64" y="580">No hand holds it on 16 June 1904</text>
+      <text class="note" x="1056" y="580" text-anchor="end">01 · OBJECT MUSEUM</text>
     </svg>
 
-    <!-- PLANE 12 — 7 Eccles Street in the small hours -->
-    <svg class="plane fig" id="p-eccles" viewBox="0 0 960 560" aria-hidden="true">
-      <text class="fhead" x="480" y="42" text-anchor="middle">7 ECCLES STREET — LAST STATIONS, ~2 A.M. TO ~2:40 A.M.</text>
-      <!-- the house in section -->
-      <g fill="none" stroke="#f4efe2" stroke-width="1.8">
-        <rect x="180" y="120" width="250" height="380"/>
-        <line x1="180" y1="232" x2="430" y2="232"/>
-        <line x1="180" y1="312" x2="430" y2="312"/>
-      </g>
-      <!-- street level and the area -->
-      <line x1="80" y1="312" x2="180" y2="312" stroke="#b9c3d6" stroke-width="1.4"/>
-      <g stroke="#b9c3d6" stroke-width="1.4" fill="none">
-        <line x1="118" y1="312" x2="118" y2="500"/><line x1="176" y1="312" x2="176" y2="500"/>
-        <line x1="118" y1="500" x2="176" y2="500"/>
-        <line x1="126" y1="272" x2="126" y2="312"/><line x1="140" y1="272" x2="140" y2="312"/>
-        <line x1="154" y1="272" x2="154" y2="312"/><line x1="168" y1="272" x2="168" y2="312"/>
-        <line x1="118" y1="272" x2="176" y2="272"/>
-      </g>
-      <!-- the garden -->
-      <g stroke="#b9c3d6" stroke-width="1.4" fill="none">
-        <line x1="430" y1="312" x2="510" y2="312"/>
-        <line x1="470" y1="312" x2="470" y2="286"/>
-        <path d="M470 286 a14 14 0 1 0 0.1 0"/>
-      </g>
-      <g class="fsm">
-        <text x="192" y="142">THE BEDROOM</text>
-        <text x="192" y="254">THE FRONT ROOM</text>
-        <text x="192" y="334">THE BASEMENT KITCHEN</text>
-        <text x="84" y="336">THE AREA</text>
-        <text x="436" y="352">THE GARDEN</text>
-      </g>
-      <!-- the ten last stations -->
-      <g font-size="12" text-anchor="middle">
-        <circle cx="212" cy="470" r="11" fill="#dfa93f"/><text x="212" y="474" fill="#081a35">1</text>
-        <circle cx="292" cy="424" r="11" fill="#dfa93f"/><text x="292" y="428" fill="#081a35">2</text>
-        <circle cx="392" cy="404" r="11" fill="#dfa93f"/><text x="392" y="408" fill="#081a35">3</text>
-        <circle cx="240" cy="278" r="11" fill="#dfa93f"/><text x="240" y="282" fill="#081a35">4</text>
-        <circle cx="470" cy="252" r="11" fill="#dfa93f"/><text x="470" y="256" fill="#081a35">5</text>
-        <circle cx="147" cy="292" r="11" fill="#dfa93f"/><text x="147" y="296" fill="#081a35">6</text>
-        <circle cx="392" cy="364" r="11" fill="#dfa93f"/><text x="392" y="368" fill="#081a35">7</text>
-        <circle cx="352" cy="470" r="11" fill="#dfa93f"/><text x="352" y="474" fill="#081a35">8</text>
-        <circle cx="326" cy="424" r="11" fill="#dfa93f"/><text x="326" y="428" fill="#081a35">9</text>
-        <circle cx="300" cy="184" r="11" fill="#dfa93f"/><text x="300" y="188" fill="#081a35">10</text>
-      </g>
-      <!-- the legend -->
-      <g>
-        <text class="fnum" x="556" y="120">1</text><text x="576" y="120">~2 a.m.</text><text class="fname" x="652" y="120">the sink: the lemon soap, used</text>
-        <text class="fnum" x="556" y="154">2</text><text x="576" y="154">~2 a.m.</text><text class="fname" x="652" y="154">the table: £1-7-0 returned to Stephen</text>
-        <text class="fnum" x="556" y="188">3</text><text x="576" y="188">~2 a.m.</text><text class="fname" x="652" y="188">the dresser apron: two torn betting tickets</text>
-        <text class="fnum" x="556" y="222">4</text><text x="576" y="222">~2 a.m.</text><text class="fname" x="652" y="222">the first drawer: Martha's letter, filed fourth</text>
-        <text class="fnum" x="556" y="256">5</text><text x="576" y="256">~2 a.m.</text><text class="fname" x="652" y="256">the garden: Stephen's ashplant</text>
-        <text class="fnum" x="556" y="290">6</text><text x="576" y="290">~2:05 a.m.</text><text class="fname" x="672" y="290">the area railings, climbed over</text>
-        <text class="fnum" x="556" y="324">7</text><text x="576" y="324">~2:15 a.m.</text><text class="fname" x="672" y="324">the dresser: the empty Plumtree pot</text>
-        <text class="fnum" x="556" y="358">8</text><text x="576" y="358">~2:15 a.m.</text><text class="fname" x="672" y="358">the larder shelf: Boylan's basket and port</text>
-        <text class="fnum" x="556" y="392">9</text><text x="576" y="392">~2:20 a.m.</text><text class="fname" x="672" y="392">the table: Sweets of Sin, opened</text>
-        <text class="fnum" x="556" y="426">10</text><text x="576" y="426">~2:40 a.m.</text><text class="fname" x="672" y="426">the bed: flakes of potted meat</text>
-      </g>
-      <line class="frule" x1="80" y1="524" x2="900" y2="524"/>
-      <text class="fsm" x="480" y="548" text-anchor="middle" letter-spacing="1.5">TEN OBJECTS · ONE ADDRESS · FORTY MINUTES</text>
-    </svg>
+    <!-- PLANE 12 — 7 Eccles Street. SERIES of ten last stations, against the drawn house. -->
+    <svg class="plane" id="p-eccles" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-eccles-t p-eccles-d">
+      <title id="p-eccles-t">7 Eccles Street: the last stations, about two to about twenty to three
+        in the morning</title>
+      <desc id="p-eccles-d">The house drawn in section on the left — the bedroom, the front room and
+        the basement kitchen, with the railed area in front and the garden behind — carrying ten
+        marks where ten objects come to rest. The last of them, flakes of potted meat in the bed
+        at about twenty to three, is drawn in gold. On the right the ten stations are listed in
+        order with their hours, from the lemon soap at the sink to the flakes in the bed.</desc>
+      <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+      <text class="reg" x="64" y="78">TEN OBJECTS · ONE ADDRESS · FORTY MINUTES</text>
+      <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="ttl" x="64" y="140">7 Eccles Street, the small hours</text>
 
-    <div class="title show" id="title">
-      <h1>The Object Museum</h1>
-      <div class="works">SOAP · WAGES · A LETTER · A THROWAWAY · POTTED MEAT · A KEY · AN ASHPLANT · A HAT</div>
-      <div class="rule"></div>
-      <p class="sub">Thirty-two things carried through one Dublin day — and everywhere they went.</p>
-    </div>
+      <!-- The house in section: the area and its railings, three floors, the garden and its
+           tree. The room names are not drawn on it — at this scale a twenty-character name
+           is wider than the room it names, and five of them buried the plan. They are in the
+           desc, which is where ambient context belongs, and every place is named again in
+           the list to the right. -->
+      <g class="draw">
+        <rect x="119" y="230" width="137.5" height="209"/>
+        <line x1="119" y1="291.6" x2="256.5" y2="291.6"/>
+        <line x1="119" y1="335.6" x2="256.5" y2="335.6"/>
+      </g>
+      <g class="hair">
+        <line x1="64" y1="335.6" x2="119" y2="335.6"/>
+        <line x1="84.9" y1="335.6" x2="84.9" y2="439"/>
+        <line x1="116.8" y1="335.6" x2="116.8" y2="439"/>
+        <line x1="84.9" y1="439" x2="116.8" y2="439"/>
+        <line x1="84.9" y1="313.6" x2="116.8" y2="313.6"/>
+        <line x1="89.3" y1="313.6" x2="89.3" y2="335.6"/>
+        <line x1="97" y1="313.6" x2="97" y2="335.6"/>
+        <line x1="104.7" y1="313.6" x2="104.7" y2="335.6"/>
+        <line x1="112.4" y1="313.6" x2="112.4" y2="335.6"/>
+        <line x1="256.5" y1="335.6" x2="300.5" y2="335.6"/>
+        <line x1="278.5" y1="335.6" x2="278.5" y2="329"/>
+        <circle cx="278.5" cy="321.3" r="7.7"/>
+      </g>
+      <!-- the ten last stations, on the plan -->
+      <g class="amb">
+        <circle cx="136.6" cy="422.5" r="5"/><circle cx="180.6" cy="397.2" r="5"/>
+        <circle cx="235.6" cy="386.2" r="5"/><circle cx="152" cy="316.9" r="5"/>
+        <circle cx="278.5" cy="302.6" r="5"/><circle cx="100.9" cy="324.6" r="5"/>
+        <circle cx="235.6" cy="364.2" r="5"/><circle cx="213.6" cy="422.5" r="5"/>
+        <circle cx="199.3" cy="397.2" r="5"/>
+      </g>
+      <circle class="gild" cx="185" cy="265.2" r="14"/>
+
+      <!-- the ten last stations, in order -->
+      <g>
+        <text class="note" x="320" y="190">the sink: the lemon soap, used</text><text class="note" x="1056" y="190" text-anchor="end">~2 a.m.</text>
+        <text class="note" x="320" y="224">the table: £1-7-0 returned to Stephen</text><text class="note" x="1056" y="224" text-anchor="end">~2 a.m.</text>
+        <text class="note" x="320" y="258">the dresser apron: two torn betting tickets</text><text class="note" x="1056" y="258" text-anchor="end">~2 a.m.</text>
+        <text class="note" x="320" y="292">the first drawer: Martha's letter, filed fourth</text><text class="note" x="1056" y="292" text-anchor="end">~2 a.m.</text>
+        <text class="note" x="320" y="326">the garden: Stephen's ashplant</text><text class="note" x="1056" y="326" text-anchor="end">~2 a.m.</text>
+        <text class="note" x="320" y="360">the area railings, climbed over</text><text class="note" x="1056" y="360" text-anchor="end">~2:05 a.m.</text>
+        <text class="note" x="320" y="394">the dresser: the empty Plumtree pot</text><text class="note" x="1056" y="394" text-anchor="end">~2:15 a.m.</text>
+        <text class="note" x="320" y="428">the larder shelf: Boylan's basket and port</text><text class="note" x="1056" y="428" text-anchor="end">~2:15 a.m.</text>
+        <text class="note" x="320" y="462">the table: Sweets of Sin, opened</text><text class="note" x="1056" y="462" text-anchor="end">~2:20 a.m.</text>
+        <text class="lab"  x="320" y="498">the bed: flakes of potted meat</text><text class="lab"  x="1056" y="498" text-anchor="end">~2:40 a.m.</text>
+      </g>
+      <text class="note" x="64" y="580">The last station of ten cases</text>
+      <text class="note" x="1056" y="580" text-anchor="end">01 · OBJECT MUSEUM</text>
+    </svg>
+    <!-- PLANE 0 — the title card, a plate like the rest. -->
+    <svg class="plane show" id="p-title" viewBox="0 0 1120 630" role="img"
+         aria-labelledby="p-title-t p-title-d">
+      <title id="p-title-t">The Object Museum — an audience deck</title>
+      <desc id="p-title-d">The title plate. The Object Museum: thirty-two things carried through
+        one Dublin day, and everywhere they went. Thirty-two cases and 301 stations. The hero
+        objects are the lemon soap, Stephen's wages, a letter, a throwaway, potted meat, a key,
+        an ashplant and a hat.</desc>
+      <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
+      <text class="reg" x="64" y="78">AN AUDIENCE DECK · 32 CASES · 301 STATIONS</text>
+      <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
+      <text class="datum" x="64" y="280">The Object Museum</text>
+      <line class="gbear" x1="64" y1="330" x2="1056" y2="330"/>
+      <text class="sub" x="64" y="410">Thirty-two things carried through</text>
+      <text class="sub" x="64" y="462">one Dublin day — and everywhere they went.</text>
+      <text class="reg" x="64" y="524">SOAP · WAGES · A LETTER · A THROWAWAY</text>
+      <text class="reg" x="64" y="552">POTTED MEAT · A KEY · AN ASHPLANT · A HAT</text>
+      <text class="note" x="1056" y="580" text-anchor="end">01 · OBJECT MUSEUM</text>
+    </svg>
   </div>
+  <h1 class="vh">The Object Museum</h1>
 
   <p class="caption hidden" id="caption" aria-live="polite">
     <span class="cname" id="cap-name"></span>
@@ -704,12 +817,12 @@
 
   <div class="bar">
     <button id="prev" aria-label="Previous card">‹ Prev</button>
-    <div class="dots" id="dots" role="tablist" aria-label="Cards"></div>
+    <nav class="dots" id="dots" aria-label="Cards"></nav>
     <button id="next" aria-label="Next card">Next ›</button>
     <span class="count" id="count"></span>
   </div>
 </div>
-<p class="foot">An audience deck. Hours follow the text approximately; every object converges on 7 Eccles Street in the small hours.
+<p class="foot">An audience deck. Hours follow the text approximately; the last stations fall between 2 a.m. and 2:40 a.m.
 Every count, hour, place and name on these cards is read from the museum's thirty-two cases and 301 stations.
 Dimension 1 · the object museum.</p>
 
@@ -718,7 +831,7 @@ Dimension 1 · the object museum.</p>
   // Cards: identity labels only — the argument itself is the presenter's, off-site.
   // Each card names the plane it shows; "p-hours" (the day-timeline) is the default.
   var CARDS = [
-    { kind:"title" },
+    { kind:"title", plane:"p-title" },
     { kind:"fig",  plane:"p-census",   name:"The census",
       tag:"32 objects · 301 stations · ranked by station count" },
     { kind:"fig",  plane:"p-states",   name:"Present, recalled, hallucinated",
@@ -748,11 +861,11 @@ Dimension 1 · the object museum.</p>
       tag:"2 stations · recalled only · Howth 1888, remembered twice on 16 June 1904" },
     { kind:"fig",  plane:"p-eccles",   name:"7 Eccles Street, the small hours",
       tag:"ten objects at their last stations · 2 a.m. to 2:40 a.m." },
-    { kind:"all",  name:"The seven, assembled",                      tag:"one day · seven things · all converging on 7 Eccles Street" }
+    { kind:"all",  name:"The seven, assembled",                      tag:"one day · seven things · their hours" }
   ];
   var pts = ["obj-soap","obj-wages","obj-deasy","obj-elijah","obj-potted","obj-latch","obj-martha"];
   var i = 0;
-  var title = document.getElementById("title");
+  var stage = document.getElementById("stage");
   var caption = document.getElementById("caption");
   var capName = document.getElementById("cap-name");
   var capTag = document.getElementById("cap-tag");
@@ -762,10 +875,10 @@ Dimension 1 · the object museum.</p>
   var dotsWrap = document.getElementById("dots");
   var planes = document.querySelectorAll(".plane");
 
-  // build dots
+  // build dots. A plain nav of buttons carrying aria-current, not a tablist: the deck has
+  // no tabpanels, and the honest control passes where the borrowed pattern did not.
   CARDS.forEach(function(c, n){
     var d = document.createElement("button");
-    d.setAttribute("role","tab");
     d.setAttribute("aria-label","Card " + (n+1));
     d.addEventListener("click", function(){ go(n); });
     dotsWrap.appendChild(d);
@@ -783,7 +896,8 @@ Dimension 1 · the object museum.</p>
       var on = (c.kind === "all") || (c.kind === "work" && c.id === id);
       el.classList.toggle("on", on);
     });
-    title.classList.toggle("show", c.kind === "title");
+    // the assembled card re-composes the timeline rather than lighting it seven times
+    stage.classList.toggle("assembled", c.kind === "all");
     if (c.kind === "title") {
       caption.classList.add("hidden");
     } else {
@@ -794,13 +908,18 @@ Dimension 1 · the object museum.</p>
     prev.disabled = (i === 0);
     next.disabled = (i === CARDS.length - 1);
     count.textContent = (i+1) + " / " + CARDS.length;
-    dots.forEach(function(d, n){ d.setAttribute("aria-current", n === i ? "true" : "false"); });
+    dots.forEach(function(d, n){
+      if (n === i) { d.setAttribute("aria-current","true"); }
+      else { d.removeAttribute("aria-current"); }
+    });
   }
   function go(n){ i = Math.max(0, Math.min(CARDS.length - 1, n)); render(); }
 
   prev.addEventListener("click", function(){ go(i-1); });
   next.addEventListener("click", function(){ go(i+1); });
-  document.addEventListener("keydown", function(e){
+  // bound to the stage, not the document: a document-level handler captured the arrow keys
+  // globally and fought a screen reader's browse mode. The stage already carries tabindex.
+  stage.addEventListener("keydown", function(e){
     if (e.key === "ArrowRight" || e.key === "PageDown") { go(i+1); e.preventDefault(); }
     else if (e.key === "ArrowLeft" || e.key === "PageUp") { go(i-1); e.preventDefault(); }
     else if (e.key === "Home") { go(0); e.preventDefault(); }

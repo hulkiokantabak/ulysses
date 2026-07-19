@@ -265,6 +265,14 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-41</td>
+<td>07-20</td>
+<td><strong>4</strong></td>
+<td><strong>A deck card published the one sentence its own presenter notes twice forbid putting on a card.</strong> The Object Museum's deck foot read <em>&quot;every object converges on 7 Eccles Street in the small hours&quot;</em> — and <code>presenter-decks/object-museum.md</code> names that exact claim twice as <strong>&quot;the quiet thesis, kept off the cards&quot;</strong> and <strong>&quot;the through-line, spoken once and never printed on a card.&quot;</strong> It was also spoken to screen-reader users as the final card's <code>aria-live</code> tag, so the argument reached the one audience with no way to look away from it. Three more on the same deck: a plate carried the argument three times over (register line, drawn note, foot), and two further foot lines stated the museum's method rather than naming its content. <strong>The sentence was byte-identical to the previous build — it survived a redesign because nobody re-read the foot.</strong> Found by the design pass's own adversarial audit, not by me</td>
+<td>Six strings replaced with identity labels: names, hours, counts, and <em>drawn solid; drawn dashed</em>. <strong>The wider finding is worse and is recorded rather than fixed:</strong> the audit's verdict on the redesign was that it <em>&quot;improved, but not along the axis the author's verdict named&quot;</em> — thirteen plates gained <code>role=img</code> + <code>title</code> + <code>desc</code> where the old file had none, which is a real accessibility floor raised, and inline <code>font-size</code>/<code>stroke-width</code> went from 23/36 to 0/0 — but the drawing inventory moved by one path and one ellipse. It is the same plates rescaled with the typography regularised: <strong>a systematisation pass, not the design upgrade that was asked for.</strong> The author's verdict that the decks are poor therefore still stands</td>
+<td><strong>L-24</strong></td>
+</tr>
+<tr>
 <td>C-40</td>
 <td>07-20</td>
 <td><strong>4</strong></td>
@@ -630,6 +638,20 @@ promised to keep private. Neither decision was wrong on its own; nobody re-read 
 other. <strong>When a page makes a promise stronger than the site's default, the default must be checked
 against the promise — and the exception must carry its reason inline</strong>, or someone will restore
 consistency and quietly break it again.</p>
+<p><strong>L-24 — A redesign re-reads the pictures and inherits the words.</strong>
+<em>From C-41.</em> Five decks were rebuilt to a new grid, a new type scale and a new stroke system, and
+every caption, foot line and register label came across untouched — including one sentence the
+project's own presenter notes forbid twice, in bold, on a card. It survived because a visual pass
+looks at visuals. Nobody re-read the foot, because the foot was not what was being changed.
+<strong>When you change how a thing looks, re-read everything it says.</strong> The words are the part a
+redesign is least likely to touch and most likely to carry forward unexamined — and on this project
+the words are where the rules live (C-19 governs what a card may say, not how it may look).
+Second finding from the same pass, and the more uncomfortable one: <strong>a measurable improvement is
+not necessarily the improvement that was asked for.</strong> The rebuild could show real gains — thirteen
+text alternatives where there had been none, inline styling eliminated — while the actual complaint,
+that the decks are visually poor, went unaddressed, because the drawing inventory barely moved.
+Systematising a thing is easier than redesigning it and produces a more impressive report.
+<em>Applied:</em> the six strings replaced; C-41 records that the author's verdict still stands.</p>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
