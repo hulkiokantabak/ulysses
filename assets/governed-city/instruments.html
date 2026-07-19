@@ -39,10 +39,28 @@
   :focus-visible { outline:2px solid #A0701C; outline-offset:2px; }
   ul li { margin-block-end:.375rem; }
   @media print { .plate { background:#fff; color:var(--deep); border:1px solid var(--deep); width:auto; margin-inline:0; } }
+
+  /* The way back (panel session 03, catch C-34). Mono factual layer, ink-mute on paper
+     at 7.5:1, the file's existing gold underline and focus ring. No icon, no glyph, no
+     uppercase, nothing sticky or fixed, nothing on or in a quotation. */
+  .whence { font-family:var(--mono); font-size:.8125rem; line-height:1.5;
+            letter-spacing:.05em; color:var(--ink-mute); margin:0 0 1rem; }
+  .whence a { color:var(--ink-mute); }
+  .whence.up { margin:.125rem 0 .5rem; }
+  .whence.foot { margin:1.5rem 0 0; padding-block-start:.625rem;
+                 border-block-start:1px solid var(--rule); }
+  .whence .addr { display:block; margin-block-start:.25rem; word-break:break-all; }
+  @media print { .whence.up { display:none; } }
 </style>
 </head>
 <body>
 <main>
+<nav id="contents" class="whence" aria-label="Where this sits">
+  <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a>
+  <span aria-hidden="true"> &#183; </span>
+  <a href="https://hulkiokantabak.github.io/ulysses/dimensions/governed-city/" target="_top">Dimension 3, The Governed City</a>
+</nav>
+
   <h1>The Governed City</h1>
   <p class="kicker">DIMENSION 3 · TYPE I, INVENTORY · DIAGRAM REGISTER · THE UNIT: THE INSTRUMENT OF RULE</p>
 
@@ -104,6 +122,7 @@
 
   <section class="case" id="dmp-police">
     <h2>The Dublin Metropolitan Police — the constable on his beat</h2>
+  <p class="whence up"><a href="#contents">the instruments</a></p>
     <p class="kind">POLICE</p>
     <p>The uniformed force is ambient regulation rather than event: it feeds and marches, salutes priest and viceroy, swaps gossip with undertakers, and is known by number like street furniture. Its one arrest of the day happens only in hallucination; at the real street violence it arrives late and is talked around by Corny Kelleher, while Bloom indicts it as perjured and class-serving, Gerty fears its station, and Molly imagines it being told on her.</p>
     <div class="scroll"><table>
@@ -134,6 +153,7 @@
   </section>
   <section class="case" id="the-garrison">
     <h2>The garrison — barracks, regiments, navy and the army as career</h2>
+  <p class="whence up"><a href="#contents">the instruments</a></p>
     <p class="kind">BARRACKS-GARRISON</p>
     <p>Present in every episode, the garrison is empire at its most ordinary: landlord (the Martello tower), employer and career (Tweedy, Seymour, Gardner, Bannon&#x27;s cornetcy), spectacle (recruiting posters, Highland bands, sailor suits on four-year-olds), and sexual economy (the soldiers&#x27; walk, Monto beside the barracks). It frames the whole book — a War Office gun-tower at eight in the morning, Molly&#x27;s Gibraltar of bugles and sentries at the end — and it delivers the only violence that actually lands all day: Private Carr&#x27;s fist.</p>
     <div class="scroll"><table>
@@ -166,6 +186,7 @@
   </section>
   <section class="case" id="dublin-castle">
     <h2>Dublin Castle and the offices of imperial administration</h2>
+  <p class="whence up"><a href="#contents">the instruments</a></p>
     <p class="kind">CASTLE</p>
     <p>The Castle almost never appears as a building and constantly as a network: landlord of the ground the book opens on, employer of cousins, paymaster of informers, source of authoritative knowledge (&#x27;We know that in the castle&#x27;) and of quiet fixes (Mallon&#x27;s hint). It is reached not through doors but through patronage — rent, departments lobbied, babies named for office-holding relatives, scandals hushed — rule as an office, mostly invisible.</p>
     <div class="scroll"><table>
@@ -189,6 +210,7 @@
   </section>
   <section class="case" id="viceregal-cavalcade">
     <h2>The viceregal cavalcade</h2>
+  <p class="whence up"><a href="#contents">the instruments</a></p>
     <p class="kind">CASTLE</p>
     <p>The one daylight transit of the governing power through the governed city: announced by street placard at one, driven from Phoenix Park through the centre toward Ballsbridge at four while every citizen is catalogued by salute, snub or blindness, heard as ringing steel and a newspaper query at the Ormond, and burned off over Sandymount at nine as charity fireworks — then returning at midnight only as hallucination.</p>
     <div class="scroll"><table>
@@ -212,6 +234,7 @@
   </section>
   <section class="case" id="courts-and-law">
     <h2>The courts — bench, bar, coroner, writ and bailiff</h2>
+  <p class="whence up"><a href="#contents">the instruments</a></p>
     <p class="kind">COURT</p>
     <p>English law as the city&#x27;s working machinery and favourite theatre, running the whole day: coroners and famous trials furnish the morning&#x27;s talk, writs and the subsheriff actually seize and menace at three, the bench is mimicked in the pub at five, retold at the hospital at ten, hallucinated at midnight — and by night the apparatus is fully internalized, as Bloom&#x27;s magistrate fantasy and penal taxonomy and Molly&#x27;s contempt for the legal class.</p>
     <div class="scroll"><table>
@@ -241,6 +264,7 @@
   </section>
   <section class="case" id="gallows-and-jail">
     <h2>The gallows, the jail and the memory of state killing</h2>
+  <p class="whence up"><a href="#contents">the instruments</a></p>
     <p class="kind">COURT</p>
     <p>The state&#x27;s terminal instruments never operate in the flesh on 16 June: all day they enter as recalled wall and motto, sung ballad, printed last words, a hangman&#x27;s letter and pub lore, then perform their killings for real only inside Circe&#x27;s hallucinations — and the day closes with the jailer folded into Bloom&#x27;s falling-asleep litany and Molly testing the gallows at its gender limit.</p>
     <div class="scroll"><table>
@@ -268,6 +292,7 @@
   </section>
   <section class="case" id="the-informer">
     <h2>The informer and his reputation</h2>
+  <p class="whence up"><a href="#contents">the instruments</a></p>
     <p class="kind">INFORMER</p>
     <p>Surveillance as ambient civic assumption: the day keeps a permanent ledger of who informed (Carey at his communion, the sham squire in his violet gloves, the hypothetical Dannyman), and reads every kitchen-door courtship, blotting-pad and pub acquaintance as a possible reporting channel to the Castle. Along that ledger one working figure, Corny Kelleher, hardens from flicker (&#x27;Policeman&#x27;s shoulders&#x27;) through rumour (&#x27;police tout&#x27;) into demonstrated fact when his word squares the watch over Stephen&#x27;s body at one in the morning.</p>
     <div class="scroll"><table>
@@ -292,6 +317,7 @@
   </section>
   <section class="case" id="church-as-rule">
     <h2>The Church as parallel government</h2>
+  <p class="whence up"><a href="#contents">the instruments</a></p>
     <p class="kind">CHURCH-AS-RULE</p>
     <p>Stephen&#x27;s second master governs alongside the Castle without needing a single soldier: named as an imperial power at 8 a.m., analysed by Bloom as an apparatus (confession as intelligence, doctrine ruling reproduction and the childbed), it walks the city in Conmee exchanging salutes with the police, absorbs the orphans of the dead, scores the evening on the strand with a litany, breaks Parnell when he crosses it, and keeps the day&#x27;s hours at both ends with the bells of St George&#x27;s.</p>
     <div class="scroll"><table>
@@ -316,6 +342,7 @@
   </section>
   <section class="case" id="the-schoolroom">
     <h2>The schoolroom — from national school to Trinity</h2>
+  <p class="whence up"><a href="#contents">the instruments</a></p>
     <p class="kind">LANGUAGE</p>
     <p>The teaching apparatus as rule&#x27;s transmission belt, seen from both sides of the desk: Stephen is paid three twelve to drill imperial history into the sons of the comfortable while national-school rote (&#x27;Ahbeesee defeegee&#x27;, &#x27;joggerfry&#x27;) drifts over Bloom&#x27;s walks, and MacHugh confesses to teaching the conqueror&#x27;s Latin. Above the rote sits the sorting machine — intermediate exhibition, Trinity&#x27;s surly front, the crown-chartered royal university — which removes Reggy Wylie from Gerty&#x27;s window, stamps Stephen&#x27;s career in the Ithaca catechism, and survives in Molly as one verbatim grammar sentence.</p>
     <div class="scroll"><table>
@@ -342,6 +369,7 @@
   </section>
   <section class="case" id="language-of-rule">
     <h2>The King&#x27;s English — anthem, placename and the language question</h2>
+  <p class="whence up"><a href="#contents">the instruments</a></p>
     <p class="kind">LANGUAGE</p>
     <p>The instrument works by saturation, not decree: the day is lived in English, the anthem and its scraps are the day&#x27;s small change (a sweets-warrant sign at 1 p.m., a maimed veteran&#x27;s begged bar at 3, a soldier&#x27;s oath at 12:50 a.m. that starts the only real violence), and Irish survives as an Englishman&#x27;s hobby, a council row conducted in English, and a hallucinated password. From Deasy&#x27;s schoolroom catechism to Molly&#x27;s paid concert loyalism against her living Spanish, the language marks who belongs and prices loyalty — and the counter-speech (Taylor, Emmet, Sinn Fein amhain) is itself made in the ruler&#x27;s tongue.</p>
     <div class="scroll"><table>
@@ -377,6 +405,7 @@
   </section>
   <section class="case" id="crown-in-effigy">
     <h2>The Crown in effigy — king, coin, flag and monument</h2>
+  <p class="whence up"><a href="#contents">the instruments</a></p>
     <p class="kind">OTHER</p>
     <p>The sovereign rules the day entirely by reproduction — a tartan print on a schoolmaster&#x27;s wall, initials on the mailcars, a queen&#x27;s head on the coin every round of drinks passes through, a pillar at the tram terminus, a furled flag by Bloom&#x27;s own hearth — furniture handled constantly and saluted almost never, its one consistent Dublin use being mockery (onehandled adulterer, old hag with the yellow teeth). The king appears in person only as a hallucination, levitating over the riot his soldiers cause; the real cavalcade of episode 10 passes under a Protestant king&#x27;s stone horse while citizens salute or fail to.</p>
     <div class="scroll"><table>
@@ -402,6 +431,7 @@
   </section>
   <section class="case" id="ambient-administration">
     <h2>The paperwork of rule — post, licence, rate, land and register</h2>
+  <p class="whence up"><a href="#contents">the instruments</a></p>
     <p class="kind">OTHER</p>
     <p>The standardizing machinery beneath the visible instruments runs through the whole day without a uniform in sight: Bloom is dressed out of the lost property office at 8 a.m., letters drop into royal pillarboxes at 3, the pub talk at 5 is all muzzling orders, water rates, licences and deedpolls, the cattle economy ships itself to the Liverpool boats under a slaughter question, and a night watchman sleeps on the parish rates under the Custom House. Ithaca finally x-rays the system — committee, prosecution, pauper ration, 1901 census, ordnance survey, and the deedpoll that made Virag into Bloom — as the registers through which a life is legible to rule.</p>
     <div class="scroll"><table>
@@ -430,6 +460,7 @@
   </section>
   <section class="case" id="absent-parliament">
     <h2>The absent parliament — College green extinguished, Westminster far away</h2>
+  <p class="whence up"><a href="#contents">the instruments</a></p>
     <p class="kind">OTHER</p>
     <p>The instrument is a legislature that governs by not being there: the old house on College green stands in the day as a bank with pigeons and a statue bidding halt, while the real chamber sits in London — reachable only by mailboat, answering in the negative, and able to unmake an Irish leader by committee-room procedure. Every contact with it in the text is a journey out (Blackwood&#x27;s ride, Nannetti&#x27;s crossing), a dead paper (the 1886 bill, sealed and never unsealed), or a courtship promise no longer believed.</p>
     <div class="scroll"><table>
@@ -475,6 +506,15 @@
 
   <p class="voice">SOURCE — the 1922 text of Ulysses (public domain; Project Gutenberg
   #4300); hours from base document 03.</p>
+
+<nav class="whence foot" aria-label="Where this sits">
+  <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a>
+  <span aria-hidden="true"> &#183; </span>
+  <a href="https://hulkiokantabak.github.io/ulysses/dimensions/governed-city/" target="_top">Dimension 3, The Governed City</a>
+  <span aria-hidden="true"> &#183; </span>
+  <a href="#contents">the instruments</a>
+  <span class="addr">hulkiokantabak.github.io/assets/governed-city/instruments.html</span>
+</nav>
 </main>
 </body>
 </html>

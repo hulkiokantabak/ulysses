@@ -38,10 +38,28 @@
   a { color:var(--deep); text-decoration-color:#A0701C; text-decoration-thickness:1px; }
   :focus-visible { outline:2px solid #A0701C; outline-offset:2px; }
   ul li { margin-block-end:.375rem; }
+
+  /* The way back (panel session 03, catch C-34). Mono factual layer, ink-mute on paper
+     at 7.5:1, the file's existing gold underline and focus ring. No icon, no glyph, no
+     uppercase, nothing sticky or fixed, nothing on or in a quotation. */
+  .whence { font-family:var(--mono); font-size:.8125rem; line-height:1.5;
+            letter-spacing:.05em; color:var(--ink-mute); margin:0 0 1rem; }
+  .whence a { color:var(--ink-mute); }
+  .whence.up { margin:.125rem 0 .5rem; }
+  .whence.foot { margin:1.5rem 0 0; padding-block-start:.625rem;
+                 border-block-start:1px solid var(--rule); }
+  .whence .addr { display:block; margin-block-start:.25rem; word-break:break-all; }
+  @media print { .whence.up { display:none; } }
 </style>
 </head>
 <body>
 <main>
+<nav id="contents" class="whence" aria-label="Where this sits">
+  <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a>
+  <span aria-hidden="true"> &#183; </span>
+  <a href="https://hulkiokantabak.github.io/ulysses/dimensions/object-museum/" target="_top">Dimension 1, The Object Museum</a>
+</nav>
+
   <h1>The Object Museum</h1>
   <p class="kicker">DIMENSION 1 · TYPE I, INVENTORY · THE UNIT: THE OBJECT — POSITION HOUR BY HOUR, HAND TO HAND</p>
 
@@ -103,6 +121,7 @@
 
   <section class="case" id="potato-talisman">
     <h2>the shrivelled potato</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">VEGETABLE TALISMAN — A HARD BLACK SHRIVELLED POTATO, INHERITED FROM BLOOM&#X27;S MOTHER · EPISODES 4, 8, 15, 15, 15, 15, 15, 15</p>
     <p class="why">Famine memory as heirloom: checked on the doorstep, verified at the Museum gate, taken into Zoe&#x27;s stocking-top and formally reclaimed — &#x27;a relic of poor mamma&#x27; — the one object Bloom will negotiate to recover.</p>
     <p>Famine memory as heirloom: a tuber carried mother-to-son against plague and rheumatism, checked at every threshold like the latchkey it outlasts. It leaves Bloom&#x27;s pocket only once in the whole day — into Zoe&#x27;s stocking-top at a brothel door — and it is the one object he formally negotiates to recover.</p>
@@ -121,6 +140,7 @@
   </section>
   <section class="case" id="sweets-of-sin">
     <h2>Sweets of Sin</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">EROTIC NOVEL IN CHEAP COVERS, TAKEN FROM A HAWKER&#X27;S BOOKCART FOR MOLLY · EPISODES 10, 11, 11, 13, 15, 15, 15, 15, 15, 16, 17, 17, 18, 18</p>
     <p class="why">Bought off a hawker&#x27;s cart for Molly and carried against Bloom&#x27;s breast through pub, strand, brothel and kitchen — where its blank endpaper becomes writing paper — desire purchased secondhand and put to domestic use.</p>
     <p>A shilling-trade erotic novel chosen off a bookcart in mid-afternoon and carried in the bookpocket for eleven hours — commercial desire in cheap covers moving through pub, strand, brothel and kitchen, its phrases colonizing Bloom&#x27;s inner speech, until its blank endpaper serves as household writing paper and the object itself is delivered as a marital gift.</p>
@@ -145,6 +165,7 @@
   </section>
   <section class="case" id="uncollected-lotion">
     <h2>Molly&#x27;s uncollected lotion (Sweny&#x27;s)</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">PHARMACEUTICAL PREPARATION — ORDERED, NEVER COLLECTED · EPISODES 5, 5, 8, 8, 11, 11, 13, 15, 15, 15, 18</p>
     <p class="why">Ordered at ten, remembered guiltily at four, at eleven, and in bed — an object that never arrives, structuring the day as the errand not run: deferral itself given a bottle&#x27;s shape, twin to the unpaid soap.</p>
     <p>An object that never arrives: made up at ten and left on Sweny&#x27;s counter with two and nine owing (twin to the fourpenny soap), it structures Bloom&#x27;s day as the errand not run — surfacing at one, at two, at four, at five, at nine, in three hallucinations at midnight, and finally in the audit of the wife who told him to get it made up.</p>
@@ -166,6 +187,7 @@
   </section>
   <section class="case" id="blooms-high-grade-hat">
     <h2>Bloom&#x27;s high grade hat (Plasto&#x27;s)</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">CLOTHING / CONCEALMENT — A MASS-PRODUCED ARTICLE OF THE DUBLIN HATTING TRADE DOUBLING AS A PRIVATE SAFE · EPISODES 4, 5, 6, 6, 6, 6, 6, 8, 11, 11, 14, 15, 15, 17, 17, 17</p>
     <p class="why">A hat that is also a safe: the sweated legend in its crown hides the Henry Flower card, so every doffing at funeral, church and shopfront carries a secret second life on Bloom&#x27;s head.</p>
     <p>A commodity of the hat trade that is also the day&#x27;s one secure hiding place: the crown doffed to every public authority — funeral, church, the watch — carries in its leather headband the card that funds Bloom&#x27;s second, postal life as Henry Flower. The same shop, Plasto&#x27;s of 1 Great Brunswick street, hats both husband and lover: Boylan&#x27;s dressy straw (11) is from the same counter, and the funeral carriage rolls past the shopfront at eleven.</p>
@@ -192,6 +214,7 @@
   </section>
   <section class="case" id="agendath-netaim">
     <h2>the Agendath Netaim flyer</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">PRINTED PROSPECTUS — A CUT SHEET USED AS BUTCHER&#X27;S WRAPPING PAPER · EPISODES 4, 4, 4, 4, 8, 8, 11, 13, 14, 15, 15, 17, 17</p>
     <p class="why">A Zionist planters&#x27; prospectus picked up at the pork butcher&#x27;s, carried all day as a pocket dream of orange groves, and burned at midnight to light an incense cone — diaspora, longing and disposal in one folded page.</p>
     <p>A Berlin land-company&#x27;s prospectus reaches Dublin as wrapping paper on a pork butcher&#x27;s counter: the print economy of Zionist colonization circulating as packaging. Bloom carries the folded page sixteen hours in a waistcoat pocket — a paper acre of Palestine — and at day&#x27;s end it completes the full life-cycle of promotional print: advertisement, daydream, kindling.</p>
@@ -215,6 +238,7 @@
   </section>
   <section class="case" id="biscuit-tin">
     <h2>the Jacobs&#x27; biscuit tin</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">MASS-PRODUCED PACKAGING / IMPROVISED WEAPON · EPISODES 12, 12, 12, 12, 12, 12, 12, 15, 15</p>
     <p class="why">An empty branded tin scraped for a dog, rifled by a cadger, and finally hurled after Bloom&#x27;s escaping car with earthquake fanfare — mass-produced packaging as the day&#x27;s one weapon, nationalism armed with what the shop sells.</p>
     <p>A branded tin, already empty of what it was sold to contain, is the one piece of common property in Barney Kiernan&#x27;s: it feeds a dog, is scavenged by the broke, and ends as the afternoon&#x27;s only ordnance. The shop&#x27;s packaging does the throwing that the nation&#x27;s rhetoric threatens.</p>
@@ -234,6 +258,7 @@
   </section>
   <section class="case" id="stephens-ashplant">
     <h2>Stephen&#x27;s ashplant</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">WALKING STICK OF ASH · EPISODES 1, 1, 1, 3, 3, 3, 9, 9, 10, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 17</p>
     <p class="why">The one possession the dispossessed man keeps all day — familiar, augur&#x27;s rod, sword — until it smashes the brothel chandelier and passes briefly into Bloom&#x27;s safekeeping: property as identity for a man who owns almost nothing else.</p>
     <p>The single durable good of a man who surrenders his key at breakfast: familiar, sword, augur&#x27;s rod and weapon by turns, it does the day&#x27;s whole work of property — carried, lent, thrown down, abandoned, held in trust by a stranger, and restored.</p>
@@ -265,6 +290,7 @@
   </section>
   <section class="case" id="latin-quarter-hat">
     <h2>Stephen&#x27;s Latin Quarter hat</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">HEADGEAR — A SOFT BROAD-BRIMMED HAT FROM PARIS · EPISODES 1, 3, 3, 3, 9, 9, 10, 15, 15, 15, 15, 16, 16, 17, 17</p>
     <p class="why">The Paris affectation worn through mourning, argued over as &#x27;one hat is one hat,&#x27; knocked off in Nighttown and handed back by Bloom — costume as the thin membrane between the artist Stephen claims to be and the pauper he is.</p>
     <p>Costume as fixed capital: a Paris hat worn through mourning declares the artist Stephen cannot yet afford to be. It leaves his head only under other men&#x27;s hands — flung by Mulligan at morning, knocked to a Nighttown wall at night — and both times a hand gives it back.</p>
@@ -290,6 +316,7 @@
   </section>
   <section class="case" id="stephens-wages">
     <h2>Stephen&#x27;s wages (three pounds twelve)</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">MONEY (TWO NOTES, A SOVEREIGN, TWO CROWNS, TWO SHILLINGS) · EPISODES 1, 2, 3, 7, 9, 14, 14, 15, 15, 15, 16, 17</p>
     <p class="why">Paid onto Deasy&#x27;s tablecloth at ten and traceable coin by coin through drinks stood, rounds at Burke&#x27;s, a half-crown to Corley, and the £1-7-0 Bloom counts back at Eccles street — a single salary dissolving through the city&#x27;s drink economy in fourteen hours.</p>
     <p>The day&#x27;s only earned salary is mortgaged before it is paid and dissolved through the city&#x27;s drink economy within fourteen hours — Mooney&#x27;s, the Moira, Larchet&#x27;s, Holles street, Burke&#x27;s, a half-crown to Corley — until a stranger&#x27;s custody saves the last one pound seven and returns it, without interest, in a basement kitchen.</p>
@@ -312,6 +339,7 @@
   </section>
   <section class="case" id="henry-flower-card">
     <h2>the Henry Flower card</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">CARD (PRINTED PASTEBOARD, FALSE NAME) · EPISODES 4, 5, 5, 5, 11, 15, 15, 17</p>
     <p class="why">A false name on pasteboard, kept behind a leather headband and produced only at the post office grill — the minimal apparatus of a double life, carried on the body all day and betrayed only in hallucination.</p>
     <p>The minimal apparatus of a double life: one printed name, a rented pigeonhole at Westland Row, and a hiding place a hand&#x27;s breadth from the owner&#x27;s forehead. Carried on the body all day, produced once at a brass grill, and betrayed only in hallucination — while its paper trail accumulates in a locked drawer at home.</p>
@@ -330,6 +358,7 @@
   </section>
   <section class="case" id="the-macintosh">
     <h2>the brown macintosh</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">GARMENT (RUBBERIZED RAINCOAT) · EPISODES 6, 6, 10, 12, 13, 14, 15, 15, 16, 17</p>
     <p class="why">A garment that generates a man: mishearing at the graveside turns a raincoat into &#x27;M&#x27;Intosh,&#x27; who crosses the viceroy&#x27;s path eating dry bread, appears at Burke&#x27;s, and enters the newspaper of record as a mourner who never existed.</p>
     <p>Cheap rubberized rainwear, the anonymous uniform of the walking poor: one unclaimed specimen at a graveside generates a man, and the structures of the day — gossip, the viceregal route, the pub, the newspaper of record — absorb him as fact. The coat is the only body he ever has.</p>
@@ -350,6 +379,7 @@
   </section>
   <section class="case" id="chamberpot">
     <h2>the orangekeyed chamberpot</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">HOUSEHOLD VESSEL (SANITARY WARE) · EPISODES 4, 15, 16, 17, 18, 18, 18</p>
     <p class="why">Under the bed at morning, imagined from the cabman&#x27;s shelter, catalogued at midnight, used in the small hours — the humblest vessel in the house frames the whole day, the body&#x27;s schedule outlasting every drama above it.</p>
     <p>A house with one outdoor privy and no plumbing above stairs keeps its nights in crockery: the pot under the bed is the body&#x27;s fixed schedule, bought over a Moore street counter and outlasting every drama enacted above it. The day opens with it touched by accident, is haunted by it at midnight, catalogues it at two, and ends with a woman sitting on it.</p>
@@ -367,6 +397,7 @@
   </section>
   <section class="case" id="martha-letter">
     <h2>Martha Clifford&#x27;s letter (and Bloom&#x27;s reply)</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">LETTER · EPISODES 4, 5, 5, 6, 8, 11, 11, 13, 15, 17</p>
     <p class="why">The clandestine postal economy entire: letter through the grill, pin thrown to the road, flower to the heart pocket, reply written behind a screening newspaper with a two-and-six postal order, and the fourth letter filed at midnight in the locked drawer with three others.</p>
     <p>A parallel postal economy running under the official one: a card kept behind a hatband, a poste-restante pigeonhole, a pin, a flower, a shredded envelope, a two-and-six postal order — and at day&#x27;s end a locked drawer holding four letters. The infrastructure of a correspondence that never becomes a meeting.</p>
@@ -387,6 +418,7 @@
   </section>
   <section class="case" id="boylans-letter">
     <h2>Boylan&#x27;s letter to Mrs Marion Bloom</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">LETTER · EPISODES 4, 4, 4, 5, 11, 13, 18</p>
     <p class="why">Three items on a hallfloor and one torn strip of envelope under a pillow — the wound of the day delivered by ordinary post, its trace haunting Bloom every hour until Molly herself weighs the letter and finds it wanting.</p>
     <p>One item of ordinary morning post — bold hand, addressed to the wife under her own style — that structures the whole day: picked up by the husband, hidden under the pillow, reduced to a strip of torn envelope, and returning to Bloom&#x27;s mind at ten, at four, at eight, until Molly herself, at the end, weighs it and finds it wanting.</p>
@@ -404,6 +436,7 @@
   </section>
   <section class="case" id="millys-letter">
     <h2>Milly&#x27;s letter (&#x27;Dearest Papli&#x27;)</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">LETTER · EPISODES 4, 4, 4, 6, 13, 17, 18</p>
     <p class="why">The daughter as correspondence: read twice at breakfast, drifting back through the funeral carriage, preserved at night beside her infant copybook — family held together, at one remove, by paper.</p>
     <p>The family held together at one remove by paper: the daughter arrives each morning as post from Mullingar, is read twice over a kidney, drifts back through the funeral carriage and the evening strand, and survives at night in the drawer as an infantile epistle beside her copybook — the correspondence begun in childhood, still running.</p>
@@ -421,6 +454,7 @@
   </section>
   <section class="case" id="freemans-journal">
     <h2>the Freeman&#x27;s Journal (Bloom&#x27;s copy)</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">NEWSPAPER (PENNY DAILY) · EPISODES 4, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 8, 11, 11, 17, 17</p>
     <p class="why">A newspaper used as baton, screen for secret reading, kneeling pad, soap wrapper and accidental racing tip before being abandoned in the Ormond — the day&#x27;s proof that print&#x27;s material uses outnumber its textual ones.</p>
     <p>A penny&#x27;s worth of newsprint whose uses on 16 June are almost entirely non-textual — baton, prop of careless air, screen for a secret letter twice over, church-floor kneeling pad, soap wrapper — and whose one textual transaction, offered to Bantam Lyons with the words &#x27;throw it away&#x27;, misfires into the rumour that dogs Bloom all day. Abandoned in the Ormond at four; surviving after that only as a line in the household budget.</p>
@@ -447,6 +481,7 @@
   </section>
   <section class="case" id="moustachecup">
     <h2>the imitation Crown Derby moustachecup</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">CHINA (SHAM PORCELAIN) · EPISODES 4, 17, 17, 17, 18</p>
     <p class="why">Milly&#x27;s birthday gift, used for breakfast and pointedly NOT used at midnight when Bloom serves Stephen in an identical cup — a piece of sham china that maps the household&#x27;s hierarchy of affection and hospitality.</p>
     <p>Sham porcelain of the lower-middle-class table: a child&#x27;s birthday gift that fixes a domestic ritual of service. Who drinks from it, who is pointedly not served in it, and who plans to fill it maps the household&#x27;s hierarchy of affection across eighteen hours.</p>
@@ -462,6 +497,7 @@
   </section>
   <section class="case" id="tower-key">
     <h2>the Martello tower key</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">INSTRUMENT OF TENURE — ONE HEAVY BRASS FACT OF WAR OFFICE PROPERTY, WORKED LOOSE FROM THE RENT-BOOK · EPISODES 1, 1, 1, 1, 1, 3, 14, 16</p>
     <p class="why">Turned, pocketed, then surrendered onto Mulligan&#x27;s heaped clothes before nine in the morning — rent paid by Stephen, key kept by another: usurpation made brass, and the reason Stephen has nowhere to sleep tonight.</p>
     <p>Possession of the key, not payment of the rent, is what holds the tower: turned by Stephen at eight, pocketed at half past, surrendered onto Mulligan&#x27;s heaped clothes on the bathing rocks before nine. That one small transfer of metal fixes the structure of the entire night — Stephen has wages in his pocket and no bed, and every later station of the key is an echo of the morning&#x27;s usurpation.</p>
@@ -480,6 +516,7 @@
   </section>
   <section class="case" id="blooms-latchkey">
     <h2>Bloom&#x27;s latchkey (absent)</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">INSTRUMENT OF TENURE IN NEGATIVE — A KEY THAT ACTS ALL DAY WITHOUT ONCE APPEARING ON THE PAGE · EPISODES 4, 5, 17, 17, 17</p>
     <p class="why">An object present only as an absence — left in the everyday trousers because of the funeral suit, it governs the whole day&#x27;s structure of home and returns Bloom to his own house over the area railings, a &#x27;competent keyless citizen.&#x27;</p>
     <p>Left in the everyday trousers by the change into mourning, the latchkey structures the whole day as an absence: it is patted for at eight, remembered at ten, and at two in the morning it turns the master of 7 Eccles Street into his own burglar — one half of the &#x27;keyless couple&#x27; with the dispossessed Stephen, and never once seen or touched in the flesh.</p>
@@ -495,6 +532,7 @@
   </section>
   <section class="case" id="stephens-boots">
     <h2>Stephen&#x27;s boots (Mulligan&#x27;s castoffs)</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">CLOTHING (BORROWED FOOTWEAR) · EPISODES 1, 3, 3, 7, 9, 16</p>
     <p class="why">Dependence made wearable: &#x27;my two feet in his boots&#x27; on the strand, read by Bloom across the newspaper office as a poverty-index — the borrowed thing that cannot be handed back because it is being walked in all day.</p>
     <p>Patronage made wearable: the castoff traffic runs one way, from Mulligan&#x27;s trunk to Stephen&#x27;s feet, and unlike the key or the money it cannot be handed back, because it is being walked in all day. Others read the boots as prosperity; the wearer counts the creases of the man who wore them first.</p>
@@ -511,6 +549,7 @@
   </section>
   <section class="case" id="deasys-letter">
     <h2>Mr Deasy&#x27;s foot-and-mouth letter</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">DOCUMENT (TYPESCRIPT, TWO COPIES) · EPISODES 2, 3, 7, 9, 12, 14, 15, 16</p>
     <p class="why">The day&#x27;s most complete paper itinerary — typed in Dalkey, torn for a poem on the strand, delivered to two newspapers, in print by nightfall: how an opinion physically travels through the 1904 information system, cattle-plague, patronage and all.</p>
     <p>A provincial opinion enters the 1904 information system at a Dalkey typewriter at ten and is in a Dublin evening paper by nightfall. The carriage is done free, by patronage: an unpaid usher&#x27;s literary acquaintance moves the cattle-plague cause from schoolroom to press to Parliament, and the same sheet serves the poet as scrap paper on the way.</p>
@@ -529,6 +568,7 @@
   </section>
   <section class="case" id="plumtrees-potted-meat">
     <h2>Plumtree&#x27;s potted meat (ad, pot and crumbs)</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">BRANDED FOOD PRODUCT — JINGLE, 4 OZ POT, RESIDUE · EPISODES 5, 8, 8, 15, 17, 17, 17, 18</p>
     <p class="why">An advertising jingle that becomes physical evidence — &#x27;What is home without…&#x27; read at noon, the empty pot on the dresser at midnight, flakes brushed from the marriage bed: the whole Braudelian arc from print to product to residue in one brand.</p>
     <p>One brand&#x27;s complete circuit through material life in sixteen hours: a jingle read in the morning paper, twice deprecated by the adman who knows where it was placed (under the obituaries), quoted back in a midnight hallucination, and finally physical evidence — the empty pot on the kitchen dresser, the flakes brushed from the marriage bed. Print becomes product becomes residue, and the slogan&#x27;s question (&#x27;What is home without—&#x27;) is answered in Bloom&#x27;s own house.</p>
@@ -547,6 +587,7 @@
   </section>
   <section class="case" id="lemon-soap">
     <h2>the lemon soap</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">TOILETRY — A WRAPPED CAKE OF SOAP · EPISODES 5, 5, 6, 6, 7, 8, 13, 15, 15, 16, 17</p>
     <p class="why">Fourpence of credit that rides Bloom&#x27;s pockets thirteen hours — bought, sat on, transferred pocket to pocket, sweated on, hallucinated as a singing sun, and finally used at the sink still unpaid for: the day&#x27;s whole economy of small debt and the body carried in one wrapped cake.</p>
     <p>A structure of small credit and bodily care: fourpence owed at Sweny&#x27;s rides Bloom&#x27;s pockets for thirteen hours, scented, sat on, shifted at every threshold of the day, and is discharged not in money but in use — at the kitchen sink, the debt still standing.</p>
@@ -568,6 +609,7 @@
   </section>
   <section class="case" id="boylans-straw-hat">
     <h2>Blazes Boylan&#x27;s straw hat</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">GARMENT · EPISODES 6, 8, 10, 11, 11, 15, 15</p>
     <p class="why">A white disc flashed from a doorway, sighted in sunlight, tipped to barmaids, hung in hallucination on Bloom&#x27;s antlered head — the rival reduced to his most legible object, tracked across the city like a signal flag.</p>
     <p>Mass-produced summer millinery working as a signalling system: a white disc legible at street distance, by which Bloom tracks his rival across the city without ever once looking at his face — flashed from a doorway at eleven, fled from at two, paraded past the viceroy at four, tipped to barmaids, and at midnight hung by hallucination on the husband&#x27;s own antlered head.</p>
@@ -585,6 +627,7 @@
   </section>
   <section class="case" id="keyes-ad">
     <h2>the Keyes ad cutting</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">NEWSPAPER CUTTING (ADVERTISEMENT DESIGN) · EPISODES 6, 7, 7, 7, 7, 8, 8, 9, 12, 13, 15, 16, 17, 17, 18</p>
     <p class="why">Bloom&#x27;s livelihood in a scrap of newsprint — sliced out by shears, carried through the printingworks, negotiated by telephone, chased into the Kilkenny People files: the crossed-keys design that puns the whole book&#x27;s key motif while paying the rent.</p>
     <p>Bloom&#x27;s actual work for the day in a scrap of newsprint: sliced out by Red Murray&#x27;s shears at noon, laid on Nannetti&#x27;s desk, drawn in crossed forefingers, negotiated by telephone and at Dillon&#x27;s, chased toward the Kilkenny People files in the National Library — a two-month renewal worth about two pounds ten in commission, still unlanded at nightfall. The crossed keys of a tea merchant carry the book&#x27;s key motif and pay Bloom&#x27;s rent; Molly can name the account in her sleep.</p>
@@ -610,6 +653,7 @@
   </section>
   <section class="case" id="elijah-throwaway">
     <h2>the Elijah throwaway</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">HANDBILL (PRINTED EPHEMERA) · EPISODES 8, 8, 8, 10, 10, 10, 11, 15, 17</p>
     <p class="why">A handbill pressed into Bloom&#x27;s hand, crumpled off O&#x27;Connell bridge, and then given its own narrative life sailing the Liffey past the whole city — print at its cheapest becoming the book&#x27;s most literal moving object, and the seed of the Throwaway pun.</p>
     <p>Print at its cheapest: handed out free, read in under a minute, thrown to the gulls — and then moved for three more hours by the river&#x27;s own timetable, past ferries, schooners and the port&#x27;s commerce. The object outlives its message, and its phrasing (&#x27;throw it away&#x27;) accidentally seeds the day&#x27;s central rumour.</p>
@@ -629,6 +673,7 @@
   </section>
   <section class="case" id="up-postcard">
     <h2>the U.p: up postcard</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">DOCUMENT · EPISODES 8, 8, 10, 10, 12, 12, 13, 15, 15, 18</p>
     <p class="why">An anonymous penny card that sets a man trudging Dublin all day with two law tomes seeking ten thousand pounds — libel, madness and the postal system&#x27;s power to wound, passed from handbag to hand and back.</p>
     <p>A halfpenny of postal infrastructure weaponized: one anonymous card, delivered at breakfast, sets an old man walking the whole legal geography of Dublin — solicitor, solicitor, subsheriff, detective — while the card itself travels in a handbag and the phrase travels faster than the man, mouth to mouth, into the pubs and finally into the marriage bed&#x27;s last monologue.</p>
@@ -649,6 +694,7 @@
   </section>
   <section class="case" id="seedcake">
     <h2>the seedcake on Howth</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">FOOD — RECALLED ONLY; CEASED TO EXIST IN 1888 · EPISODES 8, 18</p>
     <p class="why">Recalled only, in two mouths sixteen years apart — Bloom&#x27;s at the burgundy, Molly&#x27;s at the final Yes — the book&#x27;s deepest shared possession is food that ceased to exist in 1888, memory as the one object both still hold.</p>
     <p>No hand holds it on 16 June 1904; it exists solely as a mouthful passed on Howth Head sixteen years before, kept in two memories and produced twice — by the husband over burgundy at one, by the wife at the final yes. The marriage&#x27;s one jointly held property is a food that no longer exists.</p>
@@ -661,6 +707,7 @@
   </section>
   <section class="case" id="striplings-cane">
     <h2>the blind stripling&#x27;s tapping cane</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">INSTRUMENT · EPISODES 8, 10, 10, 11, 11, 11, 15, 15, 17</p>
     <p class="why">The city measured by a cane&#x27;s tap — guided across Dawson street by Bloom, brushed aside by Farrell, and tap-tap-tapping back to the Ormond for a forgotten tuningfork: infrastructure experienced at the pace of the excluded body.</p>
     <p>The city&#x27;s streets measured at the pace of the excluded body: the same cane that a stranger&#x27;s kindness steers across Dawson street is knocked aside by a lunatic&#x27;s dustcoat an hour later, and by five o&#x27;clock its tap has become the metronome of an entire episode, beating the blind piano tuner back along the quays for a forgotten tuningfork.</p>
@@ -680,6 +727,7 @@
   </section>
   <section class="case" id="red-carnation">
     <h2>the red carnation</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">FLOWER — A WORN BADGE, COST NOTHING · EPISODES 10, 10, 10, 10, 11, 11, 15</p>
     <p class="why">Taken free from a shopgirl&#x27;s stemglass and worn between the teeth to the four o&#x27;clock assignation — desire&#x27;s cheapest badge, its provenance a small theft the barmaids read at once: &#x27;who gave him?&#x27;</p>
     <p>A flower lifted unpaid from a shop&#x27;s stemglass at three and worn to the four o&#x27;clock assignation: its whole economy is theft and display, and every witness on the route — the shopgirl, a boy in mourning, the vicereine, two barmaids — reads it correctly at sight. It survives the day only in Bloom&#x27;s midnight hallucination, still in the adulterer&#x27;s mouth.</p>
@@ -697,6 +745,7 @@
   </section>
   <section class="case" id="fruit-basket">
     <h2>Boylan&#x27;s fruit basket (port and peaches)</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">PROVISIONS HAMPER — WICKER, BOTTLE, JAR, FRUIT · EPISODES 10, 10, 17, 18, 18</p>
     <p class="why">Adultery announced by grocery: assembled at Thornton&#x27;s, sent ahead by tram &#x27;for an invalid,&#x27; consumed that afternoon, its port and potted meat surfacing in the larder and in Molly&#x27;s recollection — commerce as courtship&#x27;s advance guard.</p>
     <p>Adultery moves through the city first as groceries: assembled and paid for at Thornton&#x27;s at three, dispatched by tram under the alibi of an invalid, at the door of 7 Eccles Street before four, consumed that afternoon — and inventoried at two the next morning as remains on the larder shelf, one Jersey pear and half a bottle of invalid port. Commerce as courtship&#x27;s advance guard, receipts and residue at both ends.</p>
@@ -712,6 +761,7 @@
   </section>
   <section class="case" id="betting-tickets">
     <h2>the torn Gold Cup betting tickets</h2>
+  <p class="whence up"><a href="#contents">the cases</a></p>
     <p class="kind">PAPER (BOOKMAKER&#X27;S RECEIPTS) · EPISODES 17, 18</p>
     <p class="why">Twenty quid of Boylan&#x27;s confidence lacerated on the dresser apron — the material terminus of the Throwaway rumour that got Bloom nearly lynched, gambling&#x27;s paper passing from hope to litter in an afternoon.</p>
     <p>Printed paper of the turf economy: a bookmaker&#x27;s receipt carries twenty pounds of expectation for one afternoon and is waste by nightfall. The fragments left on the dresser are the day&#x27;s only material residue of Boylan [inferred: his authorship rests on Molly’s episode 18 memory, not on Ithaca] inside the kitchen — the whole cycle of the wager, stake to litter, completed within the house.</p>
@@ -746,6 +796,15 @@
   <p class="voice">SOURCE — the 1922 text of Ulysses (public domain; Project Gutenberg
   #4300); hours from base document 03, the itinerary. Sourced and inferred are
   separated (A5): inferred holders are marked [inferred] in their rows.</p>
+
+<nav class="whence foot" aria-label="Where this sits">
+  <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a>
+  <span aria-hidden="true"> &#183; </span>
+  <a href="https://hulkiokantabak.github.io/ulysses/dimensions/object-museum/" target="_top">Dimension 1, The Object Museum</a>
+  <span aria-hidden="true"> &#183; </span>
+  <a href="#contents">the cases</a>
+  <span class="addr">hulkiokantabak.github.io/assets/object-museum/museum.html</span>
+</nav>
 </main>
 </body>
 </html>
