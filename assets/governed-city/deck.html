@@ -75,14 +75,27 @@
   .foot { text-align:center; font-family:var(--mono); font-size:.75rem; color:var(--mute);
           padding-bottom:1rem; }
 
+
+/* Print: a deck is a card viewer, so printing it naively emits one page showing whichever
+   card is current. These rules unstack the cards and break a page between them. The first
+   attempt named only .plane and missed .plate entirely — two of the five decks use the other
+   name — and it left the stage clipping its overflow, so even the decks it did match
+   collapsed to two pages. Screen behaviour is untouched. */
 @media print {
-  .dots, .nav, nav, button { display: none !important; }
-  .deck, .stage { height: auto !important; min-height: 0 !important; }
-  .plane { display: block !important; position: static !important;
-           visibility: visible !important; page-break-after: always; margin: 0 0 6mm; }
-  .plane svg, .stage > svg { width: 100% !important; height: auto !important; }
-  .title { position: static !important; page-break-after: always; }
-  body { background: #081a35 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .dots, .nav, button, .foot { display: none !important; }
+  html, body { background: #081a35 !important; height: auto !important;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .deck, .stage { height: auto !important; min-height: 0 !important; max-height: none !important;
+    overflow: visible !important; display: block !important; position: static !important; }
+  .plane, .plate, .title {
+    display: block !important; visibility: visible !important; position: static !important;
+    opacity: 1 !important; height: auto !important; max-height: none !important;
+    overflow: visible !important; page-break-after: always; break-after: page;
+    margin: 0 0 4mm; inset: auto !important; }
+  .plane svg, .plate svg, .stage > svg {
+    width: 100% !important; height: auto !important; max-height: 165mm; display: block; }
+  .stage > svg { page-break-after: always; break-after: page; }
+  .cap, .caption { display: block !important; visibility: visible !important; }
 }
 </style>
 </head>
