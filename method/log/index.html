@@ -265,6 +265,30 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-44</td>
+<td>07-20</td>
+<td>3</td>
+<td><strong>The advisors panel sat for eleven sessions and found eight defects in already-published work, three of them the same defect wearing different clothes.</strong> Full record in <code>docs/panel-session-04-interim-report.md</code>; every claim below re-verified against the repository by the chair before it was written down, and two panel claims that did <strong>not</strong> survive that check are recorded there as well. <strong>The systemic one: a rule the project publishes and no code enforces.</strong> (a) <strong>Anchor A11's Type-I cap is rendered to the reader</strong> — <code>site/dimensions/index.njk:84</code> prints &quot;No more than three Type-I dimensions are built (anchor A11)&quot; — while <code>buildCap</code>, <code>A11</code> and <code>Type-I</code> appear in <strong>no file in <code>tools/</code></strong>. The count sits at three because the fourth has not shipped, not because anything refuses it, and <code>state.mjs</code> never reads the <code>type</code> field at all. Twelve lines below it, a hand-asserted &quot;six of the Type-I dimensions may be dropped&quot; is accurate by coincidence. (b) <strong><code>readingAnchors</code> — the field connecting every dimension's claims to the reading record — is opened by no tool</strong>; <code>grep readingAnchor tools/*</code> returns nothing. (c) <strong><code>check.mjs</code> contained the string <code>atlas</code> zero times</strong>, so the one file carrying legal consequence was the one file no check touched. <strong>The rest:</strong> (d) <code>artifacts/constraint-model/four-and-nine.html</code> is a total orphan — 22 ids, zero hrefs, in no data file, no build output and no document — because the orphan check runs <strong>one direction only</strong>: it catches output that source does not derive, and nothing catches source the ledger does not claim. (e) <strong>All 301 quoted stations are wrapped in curly quotation marks the 1922 text does not print</strong>, unmarked as the project's, though A2 marks episode titles as the project's on identical grounds. (f) <strong>126 of 181 <code>women.html</code> rows are recalled or hallucinated and every one carries a clock value under a column headed &quot;Hour&quot;</strong> — Ann Hathaway, dead 1623, carries timestamps on 16 June 1904; the column records position in the <em>text</em>, and nothing says so. (g) &quot;Sixteen women&quot; is sixteen table <strong>sections</strong>, one of which is &quot;Miss Lydia Douce and Miss Mina Kennedy&quot; — seventeen named women minimum, and the caveats say the selection is a selection while the number that travels does not. (h) The URL contract calls <code>/dimensions/</code> a &quot;faceted index&quot;; the built page carries <strong>zero</strong> filter controls. <strong>And the counting pattern Eames named, which is the reason to log these together: A11 counts declarations not deliveries, the deck tools count inputs not outputs, <code>state.mjs</code> counts artifacts that exist not artifacts that work — three floors, one error of kind</strong></td>
+<td><strong>PARTLY FIXED.</strong> (c) is fixed: a checker section now enforces the Atlas no-caption rule and, because dimension 14 is unbuilt, reports &quot;armed but NOT yet exercised — 0 of 54 manifest slots inspected&quot; rather than a green line that would read as compliance. (a), (b), (d), (e), (f), (g) and (h) are <strong>named here and not fixed</strong> — (e), (f) and (g) are byte-verified published artifacts and each correction is its own change, the same debt shape as C-29; (a) is the worst of them, because the site tells a reader a rule is in force that nothing enforces. The panel's carried ballot, its vetoes with the arguments that carried them, and the nine questions only the author can settle are in the interim report</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-43</td>
+<td>07-20</td>
+<td>3</td>
+<td><strong>Three more vacuous checks, one of them total, inside the checker written to prevent them.</strong> Found by an adversarial audit of <code>check.mjs</code> that mutation-tested every section rather than reading it. (a) <strong>The document-text sampler was structurally blind to every markdown table.</strong> Its regex rejects any line containing a pipe, and <code>catches.md</code> is 43 table rows out of 50 — so the two lines it sampled were the preamble sentences. Stripping every <code>&lt;table&gt;</code> from all fourteen rendered document pages left the section green: <strong>the entire catch log could have vanished from <code>/method/log/</code> and the build would not have noticed.</strong> (b) The canonical check's regex matched <code>rel</code> before <code>href</code> only, and swallowed the null when the order was reversed, so an off-base canonical passed both halves. (c) A latent trapdoor: <code>walk()</code> returns only files named <code>index.html</code> or <code>404.html</code>, so any HTML emitted at another permalink escaped the orphan, canonical, styling and internal-link sections <strong>at once</strong> — armed, not fired, since no current template hits it</td>
+<td><strong>FIXED, and negative-tested before commit.</strong> The sampler now also samples table cells (29 of them across the fourteen pages, where it sampled none); the canonical check finds the tag first and then reads its href, and fails a canonical with no readable href rather than passing it; a new section asserts that every HTML file in the output is either a walked page or a contracted artifact. C-39's §10 defect is fixed in the same pass: skips are counted, named in the ok line, and a missing sibling now <strong>fails</strong> unless the dimension's own register budget explains it. Each of the four was verified by breaking it and watching the check go red</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-42</td>
+<td>07-20</td>
+<td><strong>4</strong></td>
+<td><strong>C-38's resolution was never performed, and the falsehood it logged went on to misdirect the next session.</strong> C-38 records its fix as <em>&quot;00-method rewritten … HANDOFF and README corrected.&quot;</em> The commit that logged it, <code>9cc12c5</code>, touched neither file — its eleven paths include <code>00-method.md</code> and not the other two. Both still carried, verbatim, the sentences C-38 quotes as false: <code>HANDOFF.md</code> said <em>&quot;<strong>PDF</strong> — <strong>not one has been built by this project</strong> … the project's largest open gap&quot;</em> and recommended <em>&quot;Build the hyperlinked-PDF pipeline. <strong>Start here.</strong>&quot;</em> when six hyperlinked PDFs were already on disk; <code>README.md</code> said <em>&quot;0 of 16 dimensions built, and the site says so honestly&quot;</em> when the site said five. <strong>The next session read HANDOFF.md first, as instructed, and was told to rebuild a pipeline that already existed.</strong> The same staleness reached the author's own handoff prompt, which stated &quot;thirty-six catches and twenty-one learnings&quot; against an actual 41 and 24 — a figure last true two commits <em>before</em> the document containing it was written, so it was never true on any commit where it appeared. Every count was wrong and not one claim was false in substance: L-17 exactly</td>
+<td><strong>FIXED, structurally rather than by rewriting.</strong> Rewriting is what C-38 tried; it is a fix that has to be remembered in a second place, and it was not. <code>tools/state.mjs</code> now <strong>derives</strong> the state — dimension statuses, artifact and register counts, which PDFs are genuinely hyperlinked (by inspecting their bytes for link annotations and an outline), C-34 coverage, and the catch and learning counts with their gaps — into <code>docs/STATE.md</code>. <code>npm run check</code> regenerates and byte-compares, so a stale state file fails the build the way a stale artifact does. <code>HANDOFF.md</code>, <code>README.md</code> and <code>CODE-PROMPT-NEXT.md</code> now point at it and state no counts of their own. Escalated to <strong>L-25</strong></td>
+<td><strong>L-25</strong></td>
+</tr>
+<tr>
 <td>C-41</td>
 <td>07-20</td>
 <td><strong>4</strong></td>
@@ -652,6 +676,27 @@ text alternatives where there had been none, inline styling eliminated — while
 that the decks are visually poor, went unaddressed, because the drawing inventory barely moved.
 Systematising a thing is easier than redesigning it and produces a more impressive report.
 <em>Applied:</em> the six strings replaced; C-41 records that the author's verdict still stands.</p>
+<p><strong>L-25 — &quot;Fixed&quot; is a claim, and this project verifies claims.</strong>
+<em>From C-42.</em> The catch log's resolution column is the only prose in this repository that asserts
+work was done and is checked by nothing. Every artifact is byte-compared to its source; every
+colour pairing is recomputed; every internal link is resolved. The sentence <em>&quot;HANDOFF and README
+corrected&quot;</em> was believed because it was written down. The commit that wrote it touched neither
+file, and the falsehoods it quoted verbatim were still sitting there two commits later, where they
+told the next session to build a pipeline the project had already built.
+<strong>A catch is not closed when the resolution is written. It is closed when something outside the log
+can show it.</strong> The test is cheap and it is the same one L-14 asks: for every resolution that claims
+a file changed, name the commit; for every one that claims a count is now right, derive the count;
+for every one that claims a check was added, break it and watch it go red.
+Two things make this failure mode specific rather than a restatement of L-22. First, <strong>the fix that
+must be applied in two places will be applied in one</strong> — C-38's remedy was <em>rewrite three
+documents</em>, which is three chances to forget and no mechanism that notices. That is why C-42's
+remedy is a generator and a byte-comparison rather than a better-worded correction. Second, and
+worse: <strong>the error log is the project's memory of its own mistakes, so a false entry in it is a
+corrupted memory, not merely a stale sentence.</strong> A reader trusts C-38 precisely because the project
+publishes its failures — the honesty of the log is what made its one dishonest cell invisible.
+<em>Applied:</em> <code>tools/state.mjs</code> derives the state into <code>docs/STATE.md</code>; <code>npm run check</code> fails when it
+drifts; HANDOFF, README and the handoff prompt carry no counts of their own; C-42 and C-43 record
+what was verified rather than what was intended.</p>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the

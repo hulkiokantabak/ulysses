@@ -42,10 +42,26 @@
   a { color:var(--deep); text-decoration-color:#A0701C; text-decoration-thickness:1px; }
   :focus-visible { outline:2px solid #A0701C; outline-offset:2px; }
   @media print { .plate { background:#fff; color:var(--deep); border:1px solid var(--deep); width:auto; margin-inline:0; } }
+  /* The way back (panel session 03). No new chrome: the file's own factual layer,
+     ink-mute on paper at 7.5:1, the existing gold underline and focus ring.
+     No icon, no glyph, no uppercase, nothing sticky or fixed, nothing on or in a quotation. */
+  .whence { font-family:var(--mono); font-size:.8125rem; line-height:1.5;
+            letter-spacing:.05em; color:var(--ink-mute); margin:0 0 1rem; }
+  .whence a { color:var(--ink-mute); }
+  .whence.up { margin:.125rem 0 .5rem; }
+  .whence.foot { margin:1.5rem 0 0; padding-block-start:.625rem;
+                 border-block-start:1px solid var(--rule); }
+  .whence .addr { display:block; margin-block-start:.25rem; word-break:break-all; }
+  @media print { .whence.up { display:none; } }
 </style>
 </head>
 <body>
 <main>
+  <nav class="whence" aria-label="Where this sits">
+    <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a>
+    <span aria-hidden="true"> &#183; </span>
+    <a href="https://hulkiokantabak.github.io/ulysses/dimensions/difficulty-curve/" target="_top">Dimension 11, The Difficulty Curve</a>
+  </nav>
   <h1>The Difficulty Curve</h1>
   <p class="kicker">DIMENSION 11 &#183; TYPE III, CASE STUDY &#183; THE UNIT: THE LOGGED QUESTION</p>
 
@@ -186,6 +202,13 @@
   <a href="../reading/Ulysses_Reading_Companion_QA.pdf">the full 117-page PDF</a>.
   The reader's questions are reproduced as spoken (anchor A6); sourced and inferred
   are separated (A5); contradictions are shown, not resolved (A4).</p>
+
+  <nav class="whence foot" aria-label="Where this sits">
+    <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a>
+    <span aria-hidden="true"> &#183; </span>
+    <a href="https://hulkiokantabak.github.io/ulysses/dimensions/difficulty-curve/" target="_top">Dimension 11, The Difficulty Curve</a>
+    <span class="addr">hulkiokantabak.github.io/ulysses/assets/difficulty-curve/curve.html</span>
+  </nav>
 </main>
 </body>
 </html>

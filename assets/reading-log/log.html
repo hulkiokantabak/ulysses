@@ -98,10 +98,29 @@
     .entry { page-break-inside:avoid; border-color:#666; }
   }
   @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
+
+  /* The way back (panel session 03, catch C-34). Mono factual layer, ink-mute on paper
+     at 7.5:1, the file's existing gold underline and focus ring. No icon, no glyph, no
+     uppercase, nothing sticky or fixed, nothing on or in a quotation. Static markup only:
+     no script, and nothing here touches storage or the network (C-22, C-37). */
+  .whence { font-family:var(--mono); font-size:.8125rem; line-height:1.5;
+            letter-spacing:.05em; color:var(--ink-mute); margin:0 0 1rem; }
+  .whence a { color:var(--ink-mute); }
+  .whence.up { margin:.125rem 0 .5rem; }
+  .whence.foot { margin:1.5rem 0 0; padding-block-start:.625rem;
+                 border-block-start:1px solid var(--rule); }
+  .whence .addr { display:block; margin-block-start:.25rem; word-break:break-all; }
+  @media print { .whence.up { display:none; } }
 </style>
 </head>
 <body>
 <main>
+
+<nav class="whence" aria-label="Where this sits">
+  <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a>
+  <span aria-hidden="true"> &#183; </span>
+  <a href="https://hulkiokantabak.github.io/ulysses/dimensions/reading-log/" target="_top">Dimension 15, The Reading Log</a>
+</nav>
 
 <h1>The Reading Log</h1>
 <p class="kicker">ULYSSES PROJECT · DIMENSION 15 · TYPE VII, INSTRUMENT · A TOOL YOU KEEP</p>
@@ -244,6 +263,13 @@ struggle. A log full of entries is not a record of failing to read the book.</p>
   <p>This file is self-contained. It works offline, it will keep working if the site goes
   away, and you may save it and keep it.</p>
 </footer>
+
+<nav class="whence foot" aria-label="Where this sits">
+  <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a>
+  <span aria-hidden="true"> &#183; </span>
+  <a href="https://hulkiokantabak.github.io/ulysses/dimensions/reading-log/" target="_top">Dimension 15, The Reading Log</a>
+  <span class="addr">hulkiokantabak.github.io/ulysses/assets/reading-log/log.html</span>
+</nav>
 
 </main>
 

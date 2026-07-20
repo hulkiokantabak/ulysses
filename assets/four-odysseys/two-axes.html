@@ -32,10 +32,29 @@
   th { color: var(--paper); font-weight: 600; }
   a { color: var(--gold); }
   :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  /* The way back (panel session 03). No new chrome: the file's own factual layer,
+     the muted ink already used for the chart's axes and captions, the existing
+     gold focus ring. No icon, no glyph, no uppercase, nothing sticky or fixed,
+     nothing on or in a quotation. */
+  .whence { font-family: var(--mono); font-size: .8125rem; line-height: 1.5;
+            letter-spacing: .05em; color: var(--mute); margin: 0 0 1rem; }
+  .whence a { color: var(--mute); }
+  .whence.up { margin: .125rem 0 .5rem; }
+  .whence.foot { margin: 1.5rem 0 0; padding-block-start: .625rem;
+                 border-block-start: 1px solid var(--mute); }
+  .whence .addr { display: block; margin-block-start: .25rem; word-break: break-all; }
+  @media print { .whence.up { display: none; } }
 </style>
 </head>
 <body>
 <main>
+  <nav class="whence" aria-label="Where this sits">
+    <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a>
+    <span aria-hidden="true"> &#183; </span>
+    <a href="https://hulkiokantabak.github.io/ulysses/dimensions/four-odysseys/" target="_top">Dimension 16, Four Odysseys</a>
+  </nav>
+
   <h1>Four Odysseys on two axes</h1>
   <p>DIMENSION 16 · COMPARATIVE · HOMER — WILSON 2017 — NOLAN 2026 — JOYCE 1922</p>
 
@@ -137,6 +156,13 @@
       <tr><th scope="row">Joyce (1922)</th><td>~0% — plot abandoned</td><td>maximal, structural</td><td>genre transformation — myth as scaffolding</td></tr>
     </tbody>
   </table>
+
+  <nav class="whence foot" aria-label="Where this sits">
+    <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a>
+    <span aria-hidden="true"> &#183; </span>
+    <a href="https://hulkiokantabak.github.io/ulysses/dimensions/four-odysseys/" target="_top">Dimension 16, Four Odysseys</a>
+    <span class="addr">hulkiokantabak.github.io/ulysses/assets/four-odysseys/two-axes.html</span>
+  </nav>
 </main>
 </body>
 </html>

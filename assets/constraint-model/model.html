@@ -31,6 +31,18 @@
   ol.assump li { margin-block-end:.6rem; }
   .src { font-family:var(--mono); font-size:.8125rem; color:var(--ink-mute); }
 
+  /* The way back (panel session 03). No new chrome: the file's own factual layer,
+     ink-mute on paper at 7.5:1, the existing gold underline and focus ring.
+     No icon, no glyph, no uppercase, nothing sticky or fixed, nothing on or in a quotation. */
+  .whence { font-family:var(--mono); font-size:.8125rem; line-height:1.5;
+            letter-spacing:.05em; color:var(--ink-mute); margin:0 0 1rem; }
+  .whence a { color:var(--ink-mute); }
+  .whence.up { margin:.125rem 0 .5rem; }
+  .whence.foot { margin:1.5rem 0 0; padding-block-start:.625rem;
+                 border-block-start:1px solid var(--rule); }
+  .whence .addr { display:block; margin-block-start:.25rem; word-break:break-all; }
+  @media print { .whence.up { display:none; } }
+
   /* ---- the plate: the operable instrument ---- */
   .plate { background:var(--deep); color:var(--paper); padding:1.25rem 1rem; margin:1.75rem 0;
            width:min(100vw - 2rem, 71rem); margin-inline:calc(50% - min(100vw - 2rem, 71rem)/2);
@@ -75,6 +87,11 @@
 </head>
 <body>
 <main>
+  <nav class="whence" aria-label="Where this sits">
+    <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a>
+    <span aria-hidden="true"> &#183; </span>
+    <a href="https://hulkiokantabak.github.io/ulysses/dimensions/constraint-model/" target="_top">Dimension 13, The Constraint Model</a>
+  </nav>
   <h1>The Constraint Model</h1>
   <p class="kicker">DIMENSION 13 &#183; TYPE V, MODEL</p>
 
@@ -241,6 +258,13 @@
   book does not appear in the model at all &#8212; the episode with no hour and no
   movement has no place in a routing problem. That absence is a confession about
   what kind of thing this is, and it is the most accurate line in it.</p>
+
+  <nav class="whence foot" aria-label="Where this sits">
+    <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a>
+    <span aria-hidden="true"> &#183; </span>
+    <a href="https://hulkiokantabak.github.io/ulysses/dimensions/constraint-model/" target="_top">Dimension 13, The Constraint Model</a>
+    <span class="addr">hulkiokantabak.github.io/ulysses/assets/constraint-model/model.html</span>
+  </nav>
 </main>
 
 <script>
