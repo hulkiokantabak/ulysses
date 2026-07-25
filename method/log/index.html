@@ -265,6 +265,46 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-53</td>
+<td>07-25</td>
+<td>3</td>
+<td><strong>C-51's own fix was refuted, on a better ground, by the next adversarial pass — and the grading it introduced is withdrawn.</strong> C-51's remedy was to declare each passage's sourcing strength as a tier: <em>scene</em> where the study named a locus narrower than the episode, <em>chapter</em> where it named only the episode, <em>motif</em> where it named a recurring thing. Three lenses took that apart and two findings held. <strong>(1) The tiers drew evidence from three different regions of <code>curve.html</code> and treated them as one region.</strong> Only the sixteen-exchanges table summarises the reading record and carries a page a reader can open; the episode-by-episode rows and the peak-quote cite lines are <strong>this project's own prose</strong>. So <em>&quot;the record names Nausicaa's fireworks scene&quot;</em> was pointing a reader at record p.48, where that phrase does not appear — the phrase is the project's, in its own cite line. Same for <em>&quot;The Sirens overture&quot;</em> (p.31) and <em>&quot;closing the Cyclops day&quot;</em> (p.40, and the study's own gloss says that reading day spanned the end of Sirens <strong>and all of Cyclops</strong> — broader than the episode, not narrower). Meanwhile the identical evidence class was demoted elsewhere in the same pass: episode 16's <em>&quot;the M'Intosh thread paid off&quot;</em> is also a sentence from the project's episode table, and it was pushed <strong>down</strong> to <em>motif</em> while episode 11's overture, from the very same table region, sat at the <strong>top</strong> tier. <strong>(2) The grading was applied unevenly, and in the project's own favour.</strong> Every demotion landed on a newly-adjudicated entry; not one of the four already-published pilot passages was re-examined. And episodes 6 and 8 were decided by different rules in the same pass — <em>&quot;the funeral carriage&quot;</em> kept as a locus while <em>&quot;the lunch&quot;</em> was demoted, though the carriage runs about half of Hades and the lunch about a quarter of Lestrygonians. One further defect: episode 11's second passage was labelled with the first passage's evidence, and the p.30 cite it actually carries names two episodes and no locus — the same string on which the episode 10 candidate had just been rejected</td>
+<td><strong>The grade is withdrawn, and with it the thing that could be leaned on.</strong> Nothing now rates how strongly the record sources a passage. Each entry publishes the evidence instead: the exchange whose title is its warrant, that <strong>title verbatim</strong>, its date, and its page of the reading record — so a reader sees how much the title names rather than taking the project's word for it. Two facts about the title are recorded separately and neither is inferred: <code>namesEpisode</code> (the title contains the episode's scaffolding title) and <code>namesInside</code> (a phrase of the title naming something in the episode, or null). Where <code>namesEpisode</code> is false — episodes 1 and 4, whose exchanges are titled by subject rather than by episode — the placement rests on the held 1922 text alone, which the checker already verifies against the source's own episode markers, and <strong>the page says so</strong>. <code>check.mjs</code> §11f now enforces the region: an exchange title must be verbatim in the sixteen-exchanges table, must match that exchange's own row for page and URL, and <strong>must not appear in the episode rows or in any cite line</strong>. All sixteen passages were re-anchored under one rule, the ratified pilot's five included — which is what the second finding required. The wider lesson: an evidence <em>region</em> is part of a citation, and a project with several audited surfaces of its own will quote itself unless the admissible region is named and enforced</td>
+<td><strong>L-28</strong></td>
+</tr>
+<tr>
+<td>C-52</td>
+<td>07-25</td>
+<td>2</td>
+<td><strong>The constraint model's departure minutes were one render away from being published as arrival times.</strong> Step 3's first derivation labelled every entry of the model's <code>CANON</code> array as <em>&quot;Bloom · canonical stop · PLACE at HH:MM&quot;</em>. <code>CANON</code>'s own comment one line above it reads <em>&quot;departure minute -&gt; destination&quot;</em>: the minute is when the canonical day SETS OUT for the place, not when it is there — so <code>[645,&quot;newbridge&quot;]</code> would have told a reader Bloom was at Newbridge Avenue at 10:45 when 10:45 is when he leaves for it. The same pass marked every Boylan window as sourced, while the model's own comment says <em>&quot;fix = the stated hour; window = fix +/-30 min (assumption 8)&quot;</em> — the hour is 03's, the window is the model's, and the window is an approximation in every row whether or not its <code>src</code> line carries a marker. Both are L-17 exactly: the claim was right, the qualifier was wrong. Found by reading the derived output against the arrays' own comments; <strong>nothing reached a published surface</strong></td>
+<td>Each track now carries the array's own comment as a <code>basis</code> field and a verb that comment supports — <em>is documented at</em>, <em>is sighted at</em>, <em>sets out for</em> — and Boylan's windows are marked approximate by construction rather than by regex. <code>tools/build-substrate.mjs</code> throws if any of the three arrays parses to nothing or loses its basis comment, so the model's times can never be published without the model's terms. The join to the day is on 03's own section numbers, never on the clock: episodes 1–3 and 4–6 share their hours, so a clock join would be ambiguous by construction</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-51</td>
+<td>07-25</td>
+<td>3</td>
+<td><strong>Nine of eleven passage selections claimed the reading record &quot;names a scene&quot; when what it named was the episode.</strong> Step 1's first draft went to two adversarial verifiers per episode — twenty-two verdicts — and <strong>every one of the eleven was refuted</strong>, on one uniform pattern: the passage was well chosen, both anchors resolved byte-exact and unique, the evidence string was character-for-character verbatim — and the <strong>attribution was one notch too strong</strong>. <em>&quot;the tower&quot;</em> is the setting of all of episode 1; <em>&quot;the newspaper office&quot;</em>, <em>&quot;the lunch&quot;</em> and <em>&quot;the Shakespeare debate&quot;</em> are likewise coextensive with their episodes; <em>&quot;the M'Intosh thread paid off&quot;</em> names a motif; and <em>&quot;the hour Boylan goes to Eccles Street&quot;</em> names a movement <strong>that does not happen in the episode it was attached to</strong> — the chosen id even promised a fruit basket that sat outside its own anchors. Two further defects, each its own class. (a) <strong>The project's own alias list was cited back as the record speaking</strong>: to find which episode an exchange belonged to, the brief supplied aliases (<em>&quot;the tower&quot;</em> for Telemachus, <em>&quot;The Bloom household&quot;</em> for Calypso) and recorded the match; a selection then offered that match as corroboration that the record named the scene. (b) <strong>Two selections filed evidence taken from the study's episode table under an exchange's page of the record</strong> — the episode table carries no page, so the citation would have sent a reader to a page that does not hold the sentence being quoted (L-20). The vocabulary needed to say this honestly already existed and was used exactly once: the pilot's Oxen entry reads <em>&quot;the exchange names the chapter, not a line&quot;</em></td>
+<td><strong>FIXED by making the strength of the sourcing a declared, checked field rather than an argument.</strong> Every passage now carries <code>evidence.tier</code> — <strong>scene</strong> where the study names a locus narrower than the episode, <strong>chapter</strong> where it names only the episode or its setting or occasion, <strong>motif</strong> where it names a recurring thing — and <code>check.mjs</code> §11f enforces it: a <code>scene</code> tier must name the locus, that phrase must be verbatim <strong>inside</strong> its own evidence quote, and the quote must be verbatim in the study; <code>chapter</code> and <code>motif</code> must carry no locus at all; evidence drawn from the episode table may cite no page of the record; and every evidence URL must resolve. Episode 10 was re-selected under the honest frame and its id now names only what its anchors hold. The tier split is published on <code>/episodes/</code> and in all eighteen reports, and the per-tier counts are derived into <code>docs/STATE.md</code>. Escalated to <strong>L-26</strong> and <strong>L-27</strong>. <strong>Named and NOT fixed:</strong> <code>curve.html</code>'s rendered cite reads <em>&quot;the scene is the exchange's&quot;</em> for all five pilot passages, Oxen included, whose own data says the exchange names the chapter — correcting the artifact means rebuilding its PDF and its deck, so it is queued and named here rather than done silently (the C-29 pattern)</td>
+<td><strong>L-26</strong>, <strong>L-27</strong></td>
+</tr>
+<tr>
+<td>C-50</td>
+<td>07-25</td>
+<td>3</td>
+<td><strong>One stray NUL byte made the checker invisible to grep — inside the file whose own comment records that lesson.</strong> <code>tools/check.mjs</code> carried a single literal NUL at offset 35405, as the fallback in a sentinel: <code>WORDS[t.buildCap] ?? &quot;\0&quot;</code>, in anchor A11's cap-note comparison. Functionally harmless. But <strong>ripgrep classifies any file containing a NUL as binary</strong>, so every grep over the checker returned <em>nothing at all</em>, silently — and grepping <code>tools/</code> for rule names is precisely how catch C-44 found its worst defects (<em>&quot;<code>grep readingAnchor tools/*</code> returns nothing&quot;</em>, <em>&quot;<code>check.mjs</code> contained the string <code>atlas</code> zero times&quot;</em>). A zero result from a binary file and a zero result from a genuine absence are indistinguishable, so the audit method this project most relies on had quietly stopped working on its most important file. Fourth instance of the C-08/C-16/C-18 stray-byte family — and it survived inside the very function-neighbour whose comment reads <em>&quot;the first version used NUL bytes, and this repository has three catches about stray bytes in source files&quot;</em>: the sentinel was removed from <code>plain()</code> and left standing twenty lines away</td>
+<td>The sentinel is <strong>removed rather than re-encoded</strong>, which is the fix <code>plain()</code> had already learned: <code>const word = WORDS[t.buildCap]</code> and a <code>word &amp;&amp; …</code> guard, so nothing needs a stand-in value. A11's two gates were then negative-tested — the cap itself by promoting a fourth Type-I dimension to <code>building</code>, the cap-note by moving <code>buildCap</code> under the note the site prints — and both went red, so the fix did not cost the coverage. The class is closed structurally by new section <strong>§11l</strong>: every text source under <code>tools/</code>, <code>site/</code>, <code>data/</code>, <code>docs/</code>, <code>design/</code> and <code>public-repo/</code> is scanned for a NUL byte on every build, because three catches taught the encoding lesson and not one of them could catch the next instance</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-49</td>
+<td>07-25</td>
+<td>3</td>
+<td><strong>Dimension 9 was kept off the episode index for a day on a reason its own document contradicts in its second sentence.</strong> <code>/episodes/</code> listed the Concordance of Failures among the dimensions that <em>&quot;do not key to episodes&quot;</em>, with the reason <strong>&quot;keyed to Homeric episodes, not to the day's eighteen&quot;</strong>. The artifact opens: <em>&quot;Not the Homeric correspondences … the eighteen places where Joyce refuses Homer. <strong>One row per episode</strong>, each anchored in the 1922 text.&quot;</em> Its rows carry <code>id=&quot;ep1&quot;</code>…<code>id=&quot;ep18&quot;</code> with the day's own scaffolding titles; its distribution table counts the day's episode numbers (<em>&quot;the register is lowered · 8 · 1, 4, 5, 7, 9, 11, 13, 15&quot;</em>); and its <code>unit</code> field in the data model reads <em>&quot;one column, eighteen rows&quot;</em>. The dimension is keyed to <strong>the day's</strong> eighteen episodes, each compared against a Homeric moment — the reason had the relation backwards. It was not a slip in one place: the ratified plan's step 4 inherited the same sentence (<em>&quot;Dimension 9 is keyed to Homer's episodes, not the day's — the index says so honestly&quot;</em>), so the falsehood was carried into the document the author ratified. L-17 on the qualifier, L-15 on a claim repeated being still one claim. Found by step 4's own investigation, which the plan had scheduled as <em>&quot;first an investigation, then only what the rows support&quot;</em></td>
+<td>The reason is retired and <strong>dimension 9 joins the episode index</strong>: every section carries its refusal — the kind, the A3 state, the row's own confidence, whether it is transacted in money — and a deep link that opens the concordance at that episode's row, all parsed from the artifact's own bytes. <strong>Dimension 13's exclusion goes with it</strong> on the same pass: <em>&quot;keyed to hours and routes from base document 03, not to episodes&quot;</em> was true of the model and beside the point, because 03 maps its hours to episodes by section and every <code>src</code> field in the model already cites the section. Two dimensions leave <code>notEpisodeKeyed</code>, which now holds only the two that genuinely do not key to the day. Two new guards: <code>build-substrate.mjs</code> cross-checks the eighteen parsed rows against the artifact's <strong>own</strong> distribution table and throws rather than publishing a disagreement, and <code>check.mjs</code> <strong>§11j</strong> reads the concordance PDF's destination table so that none of the eighteen published deep-links can name a destination the file does not carry (L-20)</td>
+<td>—</td>
+</tr>
+<tr>
 <td>C-48</td>
 <td>07-25</td>
 <td>—</td>
@@ -729,6 +769,88 @@ publishes its failures — the honesty of the log is what made its one dishonest
 <em>Applied:</em> <code>tools/state.mjs</code> derives the state into <code>docs/STATE.md</code>; <code>npm run check</code> fails when it
 drifts; HANDOFF, README and the handoff prompt carry no counts of their own; C-42 and C-43 record
 what was verified rather than what was intended.</p>
+<p><strong>L-26 — Your own scaffolding is not a witness.</strong>
+<em>From C-51.</em> To decide which episode an exchange of the reading record belonged to, the project
+supplied an alias list — &quot;the tower&quot; for Telemachus, &quot;The Bloom household&quot; for Calypso — and
+recorded, mechanically, which alias each exchange title matched. A passage selection then cited
+that match as a second support for the claim that <strong>the record names this scene</strong>: the evidence
+string, <em>and</em> the fact that the brief's <code>matchedOn</code> field agreed with it. The alias was the
+project's. The match was arithmetic on the project's own list. The two together were presented
+as the record speaking twice.
+This is <strong>L-13's common-ancestor test turned inward.</strong> L-13 asks whether two documents share a
+source before their agreement raises a confidence marking. The harder case is when one of the
+two is not a document at all but a step in your own derivation — a lookup table, a slug map, a
+normalisation, an alias. Those steps feel like machinery rather than testimony, which is exactly
+why they get quoted: they carry the authority of having been computed.
+<strong>Anything a build computes in order to ASK a question must not be quoted as part of the
+ANSWER.</strong> The test is one line and it is cheap: for every sourced claim, name the file the
+string came from, and check that file was not written by this project. If it was, the claim is
+an inference wearing a citation.
+<em>Applied:</em> the alias list is gone from the exchange placement entirely — an exchange is placed
+only when its own title contains the episode's scaffolding title, three exchanges are therefore
+unplaced, and the page says so and lists them; every passage's <code>evidence.quote</code> must be verbatim
+in the study artifact and is checked against it at every build; the tier that rests on that
+quote must name a phrase found inside it.</p>
+<p><strong>L-27 — A marking must carry the phrase it rests on.</strong>
+<em>From C-51.</em> L-16 established that a confidence marking records what was <em>done</em>, not what could
+be done. This is the next turn of the same screw: where a marking rests on a source's own words,
+<strong>the marking must carry those words, and a build must check them.</strong>
+Nine selections out of eleven wrote a paragraph arguing that the reading record named a scene.
+The paragraphs were careful, specific, and in several cases beautiful. Not one of them survived
+being asked a much smaller question — <em>point at the noun.</em> Once the noun had to be quoted
+verbatim, had to sit inside the evidence string, and had to be narrower than the episode, the
+argument was no longer available: &quot;the tower&quot; cannot be narrower than an episode set in the
+tower, and no amount of prose changes that.
+So the generalisation is about the SHAPE of a claim, not its honesty. <strong>Make the strongest claim
+carry the shortest quotable thing.</strong> A tier, a noun, a verbatim string — checkable in one line —
+beats a paragraph of justification, because a paragraph can be made true of almost anything
+while a quoted noun cannot. Prose defends a claim; a quoted phrase exposes it. And note which
+way the incentives run: the paragraph is what a careful worker naturally produces, and it is the
+form that hides the defect best.
+A companion observation, recorded because it was the pleasant surprise: the honest vocabulary
+already existed in this repository and had been used exactly once — the pilot's Oxen entry reads
+<em>&quot;the exchange names the chapter, not a line.&quot;</em> One entry's good instinct, enforced nowhere, did
+not survive contact with ten more entries. <strong>A distinction that lives in one item's prose is not
+a rule; it is a coincidence</strong> (the same lesson as L-14, applied to vocabulary instead of lists).
+<em>Applied:</em> <code>evidence.tier</code> on every passage with scene / chapter / motif; the checker requiring
+a <code>scene</code> tier to name its locus and that locus to be verbatim inside a quote that is itself
+verbatim in the study; <code>chapter</code> and <code>motif</code> forbidden from carrying a locus at all; the tiers
+and their per-episode spread derived into <code>docs/STATE.md</code> and printed on <code>/episodes/</code>.</p>
+<p><strong>L-28 — A project with audited surfaces of its own will quote itself. Name the admissible region.</strong>
+<em>From C-53.</em> Every passage's sourcing pointed at one file, <code>artifacts/difficulty-curve/curve.html</code>,
+and that felt like enough: the file is a built artifact, audited, machine-verified, with its quotes
+checked against the 1922 text at every build. But it holds three different kinds of sentence, and
+only one of them is a summary of the reading record:</p>
+<ul>
+<li>the <strong>sixteen-exchange titles</strong>, each with a date and a page of the record you can open;</li>
+<li>the <strong>episode-by-episode rows</strong>, which are the project's own analysis;</li>
+<li>the <strong>peak-quote cite lines</strong>, which are the project's own address labels.
+Quoting the second or third and writing <em>&quot;the record names …&quot;</em> sent readers to a page of the
+record where the phrase does not occur. <em>&quot;Nausicaa's fireworks scene&quot;</em> is nowhere in the reading
+record; it is a phrase this project coined, in its own cite line, and then cited as a source.
+The failure is not carelessness about provenance — provenance was tracked to the file. <strong>It is
+that the file was the wrong unit.</strong> A citation names a document; a <em>check</em> needs a region. And the
+danger scales with how good your own artifacts are: the more audited a surface is, the more it
+feels like evidence, and the easier it is to forget that its analytic prose is yours. L-13 warns
+about two documents with one ancestor; L-26 warns about your own scaffolding; this is the third
+face of the same thing — <strong>your own conclusions, stored in a trustworthy place, read back as
+input.</strong>
+The test that survives: for every sourced claim, name the region, not the file — and make a build
+refuse a string found in the wrong one. Here that is three lines of checker: the warrant must be
+verbatim in the exchange table, and must <strong>not</strong> appear in the episode rows or the cite lines.
+A second, more uncomfortable lesson from the same pass. The grading this replaced was invented to
+fix an earlier overclaim, and it failed for a reason worth keeping: <strong>a judgement introduced to
+enforce honesty becomes the next place dishonesty lives.</strong> Every demotion the grade produced
+landed on work still being adjudicated; not one landed on the four passages already published.
+Nobody decided that. A grade applied by the party it judges will drift that way on its own, which
+is why the remedy was to delete the grade and publish the evidence — the reader can see how much
+<em>&quot;the tower&quot;</em> names without being told.
+<em>Applied:</em> <code>evidence.exchangeTitle</code>, published verbatim, with its exchange number, date and record
+page; <code>namesEpisode</code> and <code>namesInside</code> recorded as two separate facts, both checked against the
+title; the tiers removed from the data model, the templates, the reports and <code>docs/STATE.md</code>;
+<code>check.mjs</code> §11f enforcing the region and the row; all sixteen passages re-anchored under one rule,
+the ratified pilot's five included.</li>
+</ul>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
