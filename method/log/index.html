@@ -47,12 +47,12 @@ escalated to <code>learnings.md</code>.</p>
 <table>
 <thead>
 <tr>
-<th>#</th>
-<th>Date</th>
-<th>Sev</th>
-<th>Catch</th>
-<th>Resolution</th>
-<th>Escalated</th>
+<th scope="col">#</th>
+<th scope="col">Date</th>
+<th scope="col">Sev</th>
+<th scope="col">Catch</th>
+<th scope="col">Resolution</th>
+<th scope="col">Escalated</th>
 </tr>
 </thead>
 <tbody>
@@ -263,6 +263,22 @@ escalated to <code>learnings.md</code>.</p>
 <td>Not an error — an anchor discharged on its own reasoning, logged. <strong>A15 had outlived both of its legs.</strong> Ginzburg's binding veto (panel session 01) rested on two claims: that an instrument's questions must come from the analysis, and that collection defects cannot be repaired retroactively. Leg one is <strong>satisfied</strong> — dimension 11's nine-kind taxonomy of difficulty is built and published, and those kinds are exactly dimension 15's prompts. Leg two was <strong>dissolved by the author's own later ruling</strong>: C-22 abolished collection entirely, so there are no respondents to fail to return to. The anchor was being read through its four downstream restatements (&quot;complete&quot;, &quot;done&quot;, &quot;analysed&quot;) rather than through the veto's stated reason — the failure mode L-13 names</td>
 <td>A15 rewritten as <strong>discharged, not withdrawn</strong>: it was right, it bound, and it has now been satisfied. Dimension 15 is unblocked and enters the build queue. The distinction is kept in the anchor text so no future session reads this as the panel having been overruled</td>
 <td><strong>L-15</strong></td>
+</tr>
+<tr>
+<td>C-68</td>
+<td>07-25</td>
+<td>3</td>
+<td><strong>The structural floor the reader's own voice needs was failing on fourteen pages, and it is the reason the panel refused a speech button rather than an argument against one.</strong> Panel session 06's Tier 1, completed. Measured on the built site: <strong>three pages carried no single <code>h1</code></strong> — <code>/method/panel/masters-session/</code>, <code>/reference/characters/</code> and <code>/reference/day/</code> each rendered a base document whose own <code>#</code> headings became the page's headings, so a voice had several places to be told it was; <strong>one page skipped from h2 to h4</strong>, because <code>docs/01-character-map.md</code> set its sections as <code>#</code> and the people inside them as <code>###</code>, with nothing at <code>##</code> at all; and <strong>79 table header cells across eleven pages carried no <code>scope</code></strong>, so a reader moving through the catch log or the dimensions table by keyboard heard values with no headings attached to them. None of this is a missing feature. It is the page failing to say what it already contains — and a speech control laid on top of it would have sat over a page the voice could not navigate, which is the displacement the panel named</td>
+<td>The three pages pass <code>renderdoc(1)</code>, the shift the filter already supported and they were not using, and each gained its own <code>&lt;h1&gt;</code>; the character map's sections are promoted from <code>#</code> to <code>##</code> so the outline runs h1 → h2 → h3 with no gap, its text untouched and its ids unchanged; and <code>markdown-it</code>'s <code>th_open</code> rule now emits <code>scope=&quot;col&quot;</code> — one renderer rule, all eleven pages, because markdown's own table syntax puts headers in a <code>thead</code> row and every <code>&lt;th&gt;</code> here heads a column. <strong>A row-header table would need <code>scope=&quot;row&quot;</code> and this project's markdown cannot express one; if that changes the rule changes with it.</strong> New section <strong>§11t</strong> holds all three, with floors under the walk so a run that inspects no page or no header cell fails rather than printing green</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-67</td>
+<td>07-25</td>
+<td>—</td>
+<td>Not an error — <strong>an author ruling that removes a door, logged.</strong> Panel session 06 refused a synthetic read-aloud and offered, in its place, <strong>one recorded human voice</strong> — a short spoken preface, no words of the 1922 text, one surface, never the Reading Log, <code>&lt;audio controls preload=&quot;none&quot;&gt;</code> as a declared artifact with a named speaker and a date. The panel said plainly that a recommendation requiring a person to perform is a commission and not a design, and that it was the author's to accept or decline. <strong>He declined it the same day: <em>&quot;There will not be a recorded human voice. Strike that out from the project. Restructure without it.&quot;</em></strong></td>
+<td>The tier is <strong>struck through in <code>docs/panel-session-06.md</code></strong> with the ruling quoted beside it (A4), and — the part that matters — <strong>the narrow <code>&lt;audio&gt;</code> exemption is removed from <code>docs/06-design.md</code> and from <code>tools/check.mjs</code> rather than left standing unused.</strong> Media of every kind is now refused outright: <code>&lt;audio&gt;</code>, <code>&lt;video&gt;</code>, <code>&lt;embed&gt;</code>, <code>&lt;object&gt;</code>, <code>&lt;source&gt;</code>, <code>&lt;track&gt;</code>, with no declared-class escape. <strong>An unused exemption is a door</strong>, and the next session tidying up for consistency finds a door and no argument against walking through it — which is L-23's shape (the honesty marker undone by a later decision nobody re-read against it). The replacing rule is simpler and stronger: <strong>this site has no sound.</strong> Negative-tested: the exemption's own former form, <code>&lt;audio controls preload=&quot;none&quot; class=&quot;declared-media&quot;&gt;</code>, now turns the build red</td>
+<td>—</td>
 </tr>
 <tr>
 <td>C-66</td>

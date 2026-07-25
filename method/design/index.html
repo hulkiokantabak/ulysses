@@ -100,10 +100,16 @@ runs on this repository can observe what a browser sends</strong>: the voices th
 overwhelmingly the ones where <code>localService</code> is false, which post the text to a vendor, and on
 <code>/dimensions/reading-log/</code> that text would be the reader's own entries from the page that
 promises they never leave their device (C-37).</p>
-<p>Also refused with it: <code>&lt;audio&gt;</code> and <code>&lt;video&gt;</code> on any surface rendering a declared passage, the
-Reading Log, or a generated page; autoplay; loop; <code>preload=&quot;auto&quot;</code>; and any off-origin media
-<code>src</code>. One narrow exemption exists for a future recorded human voice — <code>&lt;audio controls preload=&quot;none&quot;&gt;</code> on the contracted base, declared as an artifact with a named speaker and a
-date — and a second such file reconvenes the panel.</p>
+<p><strong>Refused with it: audio and video of any kind, anywhere on this site.</strong> Not narrowed to the
+Reading Log, not narrowed to the passages, and with no exemption held open. <code>&lt;audio&gt;</code>,
+<code>&lt;video&gt;</code>, <code>&lt;embed&gt;</code>, <code>&lt;object&gt;</code>, <code>&lt;source&gt;</code>, <code>&lt;track&gt;</code>, autoplay, loop, <code>preload</code>, and any
+off-origin media <code>src</code>.</p>
+<p><em>This clause shipped on 25 July 2026 with one narrow exemption held open for a future recorded
+human voice — the panel's own recommendation, left to the author. <strong>The author ruled the same
+day that there will be no recorded voice, and asked for it to be struck rather than parked.</strong>
+So the exemption is gone rather than left standing unused. An unused exemption is a door, and
+the next session tidying up for consistency finds a door and no argument against walking
+through it. What replaces it is the simpler and stronger rule: this site has no sound.</em></p>
 <p><strong>Recorded as a refusal rather than left as an absence</strong>, so restoring consistency cannot
 quietly reverse it. What ships in its place is the read-aloud that already happens, made
 correct: the held transcription's italic markers set as italics rather than published as
