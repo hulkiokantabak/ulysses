@@ -393,10 +393,16 @@ and links back to NLS anyway, and Wikimedia Commons holds no OS Ireland Dublin s
 all. One build constraint follows: the NLS image server caps a request at about half a
 megapixel, so there is no whole-sheet download and the panels must tile at 512×512 or
 smaller.</p>
-<p><strong>What remains is sourcing.</strong> The author reopened the dimension on 25 July 2026 (catch
-C-48). Only the object layer has been surveyed; the place and document layers have not.
-The sequencing is binding: sourcing first, batch by layer, and no panel is assembled
-before the slots are filled.</p>
+<p><s>Only the object layer has been surveyed; the place and document layers have not.</s></p>
+<p><strong>What remains is acquisition.</strong> The author reopened the dimension on 25 July 2026 (catch
+C-48). <strong>All three layers are surveyed</strong> — the object layer cleared on 19 July (C-33) and acquired
+on 25 July; the place layer in <code>data/atlas-place-candidates.json</code>; the document layer in
+<code>data/atlas-document-survey.json</code> (C-62). Eight place slots stay open by the author's ruling
+(C-64) and are <strong>not a gap</strong>: base document 03 documents several places for six episodes and
+none for two, and choosing among them is editorial. One gate reopened — NLS returns HTTP 405
+to any tool, so its licence tag cannot be re-read and nothing is sourced from it until a
+person reads the box (C-63). The sequencing is binding: sourcing first, batch by layer, and
+no panel is assembled before the slots are filled.</p>
 <p><strong>Routes to:</strong> <code>exposure</code> for the series discipline; <code>visual-arts-experts</code> for the panel
 review.
 <strong>Registers:</strong> 4 primarily, then 1 and 3. This is also the strongest candidate for the
@@ -716,9 +722,11 @@ author's own later ruling. C-22 removed collection from the project entirely: th
 runs in the reader's browser, keeps its entries on the reader's device, and returns
 nothing. There are no respondents to fail to return to, and therefore no irreparable
 defect to guard against. The leg did not fail — its subject was removed.
-<em>What survives:</em> dimension 11's PDF register is still owed, and 15's prompts must
-actually derive from those nine kinds rather than from intuition — which is what the
-veto was for. Recorded as catch C-27 and learning L-15.</li>
+<em>What survives:</em> 15's prompts must actually derive from those nine kinds rather than
+from intuition — which is what the veto was for. Recorded as catch C-27 and learning
+L-15. <em>Corrected 25 July 2026: this clause also read &quot;dimension 11's PDF register is
+still owed&quot;. That PDF shipped on 19 July 2026 — the first the project produced by its
+own pipeline and the first to meet base document 00's definition of the register.</em></li>
 <li><strong>A17 <em>(new, 18 Jul; revised by the author 19 Jul)</em></strong> <strong>Build independence, now
 selective.</strong> <em>Original clause:</em> this build uses only the author's own reading and this
 chair's work; output from other models is deliberately excluded so a second,
@@ -765,9 +773,16 @@ elision marks) is declared as the project's.</li>
 <hr>
 <h2 id="open-questions-for-the-author">OPEN QUESTIONS FOR THE AUTHOR</h2>
 <ol>
-<li><strong>The Type-I cap.</strong> The chair recommends building three of the nine inventories and
+<li><s><strong>The Type-I cap.</strong> The chair recommends building three of the nine inventories and
 dropping the rest. This is the single most consequential proposal in this document.
-Accept, adjust the number, or reject.</li>
+Accept, adjust the number, or reject.</s>
+<strong>Answered by the author 18 July 2026, and re-affirmed 25 July 2026 (catch C-64):
+A11 stands.</strong> Type I sits at three, the cap is enforced in <code>tools/check.mjs</code> §11a and
+negative-tested — a fourth Type-I at <code>building</code> turns the build red — and the six
+unbuilt inventories stay planned <strong>by design, not by omission</strong>. Reopening A11 is a
+deliberate, logged decision, not one a session may take by promoting a seventh
+inventory. The cap is the fix for catch C-07, where ten of twelve dimensions were the
+same operation.</li>
 <li><strong>Sequencing.</strong> 11 → 15 → 1 → 13 → 14. The panel ranked 1 first.</li>
 <li><s><strong>Dimension 15 makes the project a study</strong></s> — <strong>answered by the author, 18 July
 2026: it does not.</strong> The site is static, zero-dependence, zero-maintenance; the log
