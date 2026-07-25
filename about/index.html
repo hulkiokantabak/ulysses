@@ -138,8 +138,36 @@ revision surveyed 1906–1909 and printed 1909–1912, which is the layer this p
 <strong>Two doors that look right and are not:</strong> the Digital Repository of Ireland applies its
 own CC BY-NC-ND reuse licence, which fails this bar, and links back to NLS anyway; and
 Wikimedia Commons holds no OS Ireland Dublin sheets at all. Go to NLS directly.
-<em>Build constraint:</em> the NLS IIIF server caps a request at roughly half a megapixel, so
-there is no whole-sheet download — the Atlas must tile at 512×512 or smaller.</li>
+<s><em>Build constraint:</em> the NLS IIIF server caps a request at roughly half a megapixel, so
+there is no whole-sheet download — the Atlas must tile at 512×512 or smaller.</s>
+<em><strong>Corrected 25 July 2026, by testing it instead of repeating it (L-31).</strong></em> The conclusion
+holds and the number was wrong by nearly half. The server declares <code>&quot;maxArea&quot;: 270000</code> in its
+own <code>info.json</code> and enforces it to the pixel: 600×450 (270,000) returns 200, and 601×450
+(270,450) returns <strong>403</strong>. So the cap is about <strong>0.27</strong> megapixels, not 0.5. A 512×512 tile is
+262,144 pixels — <strong>97.1% of the cap</strong>, not half of it. The tiling conclusion survives by three
+per cent rather than by a factor of two, and a session that had trusted &quot;roughly half a
+megapixel&quot; would have sized its tiles at around 700×700 and collected 403s. <code>info.json</code> also
+declares <code>tiles: [{width: 512, height: 512, …}]</code>, so 512 is the server's own tile size and
+departing from it buys at most 34 requests out of 759 while losing the tile-aligned cache.
+<strong>One sheet is 33 × 23 = 759 tiles</strong>, roughly 14 MB and about nine minutes at a polite request
+rate. The whole-sheet claim is confirmed: the only pre-rendered sizes offered are three
+thumbnails, the largest 521 px wide.</li>
+<li><strong>The NLS front door is shut to any tool, and that has a consequence for this clause.</strong>
+<code>maps.nls.uk</code> sits behind an AWS WAF: every non-browser request returns <strong>HTTP 405 &quot;Human
+Verification&quot;</strong>, and a real browser gets a security-check interstitial. <strong>So the per-image
+<code>Re-use: CC-BY (NLS)</code> tag recorded above could not be re-read on 25 July 2026.</strong> It was read
+once, on 19 July 2026, by the survey that produced catch C-33; nothing since has confirmed it,
+the Wayback Machine holds no capture of any Irish six-inch sheet's view page, and the archived
+copyright page of 3 December 2025 agrees with what is written here but is not the per-image
+tag. <strong>Stated as a limit rather than left implied (L-18): this clause's licence line is
+currently unverifiable by tool, and someone should open
+<code>https://maps.nls.uk/view/247667874</code> by hand and read the box.</strong> Nothing is being sourced from
+NLS until that is done.
+<em>The acquisition route itself does not need the front door,</em> and is recorded in
+<code>data/atlas-document-survey.json</code>: <code>geoserver.nls.uk</code>'s WFS sheet index → the sheet's <code>IMAGE</code>
+id → <code>map-view.nls.uk</code>'s IIIF endpoint. Both are ungated. A public S3 XYZ tileset of the same
+edition also exists at <code>mapseries-tilesets.s3.amazonaws.com/os/dublin_2nd/{z}/{x}/{y}.png</code>.
+Neither route changes the licence question; they only mean the WAF is not the obstacle.</li>
 <li><strong>The object layer cleared 17 of 18</strong> (catch C-33), each with a named licence at a named
 URL. The panel that could not be cleared (episode 17) is ruled to take a period document
 in that slot instead, which is still a second layer. <em>Stated exactly, 25 July 2026: that
