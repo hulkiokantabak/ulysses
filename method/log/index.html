@@ -265,6 +265,30 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-61</td>
+<td>07-25</td>
+<td><strong>4</strong></td>
+<td><strong>The dimension record's prose was read by no tool, and the no-caption gate had three defects waiting for the first panel.</strong> <code>tools/check.mjs</code> opened five fields of a dimension record — <code>slug</code>, <code>status</code>, <code>type</code>, <code>registerBudget.html</code>, <code>readingAnchors</code> — and <strong>none of the four that carry prose.</strong> <code>sources</code>, <code>confidence</code>, <code>note</code> and <code>unit</code> render verbatim onto every dimension page through <code>site/dimensions/dimension.njk</code>, and all four were replaced with fabricated text in a mutation run that left the build <strong>green</strong>. That is the enabling defect beneath C-59 and C-60: not that the Atlas record went stale, but that nothing could notice. It is C-44a's exact shape — a rule the reader sees and the build does not — one turn further out, because here there was no rule at all. <strong>And §11b, the no-caption rule, carried three defects, all found while zero panels exist, which is the only time a gate is cheap to fix.</strong> (a) The panel interior was captured non-greedily and closed on the <strong>first</strong> nested <code>&lt;/figure&gt;</code>, <code>&lt;/section&gt;</code> or <code>&lt;/div&gt;</code>, so a credit paragraph or a <code>&lt;figcaption&gt;</code> sitting after any inner wrapper fell outside the capture and past all four sub-checks — in the one gate whose failure breaches every share-alike licence on a panel at once (L-19). (b) Its 54-slot denominator was derived from the very file it guards, with no floor: deleting six manifest slots printed <em>&quot;0 of 48&quot;</em> and stayed green. (c) Its coverage assertion compared panel ELEMENTS against SLOTS, so a correctly built Atlas — eighteen panels, fifty-four slots — would have failed for ever, because 18 is always less than 54</td>
+<td>New section <strong>§11n</strong> gates the record itself: status against the register budget in both directions (C-26's bar); no forbidden sourcing <strong>route</strong>, where naming a ruled-out repository stays legal and routing to it does not; no present-tense assertion that a closed gate is open, with dated corrections and struck passages exempt per A4 and §11f's precedent; and the Atlas <code>unit</code> must <strong>name</strong> every layer the manifest carries. Floors beneath all of it (L-31): zero records inspected, or zero forbidden-repository mentions adjudicated, fails rather than printing green. §11b now closes on the balancing tag, asserts the ratified shape (eighteen panels, one layer keyset, slots = panels × layers) <strong>before</strong> trusting its own denominator, and compares panels against panels. <strong>Ten of ten mutations turn the build red for the right reason</strong>, and two of them only after the harness caught itself — see L-32 for the first, and for the second: the initial <code>unit</code> mutation changed bytes while leaving the tested property standing, which is the subtler face of the recorded no-op trap. <strong>Byte-changed is not mutation-tested</strong></td>
+<td><strong>L-32</strong></td>
+</tr>
+<tr>
+<td>C-60</td>
+<td>07-25</td>
+<td>3</td>
+<td><strong>Two dimensions were built and the record said they were not.</strong> Dimension 1 (Object Museum) and dimension 13 (Constraint Model) each had <strong>every register their budget marks <code>build</code> filled by a real, contracted, byte-verified artifact</strong> — the two diagrams shipped on 25 July under C-47 — while <code>data/dimensions.json</code> held both at <code>status: &quot;building&quot;</code> and both <code>note</code> fields still said the diagram register <em>remained</em>. Their pages therefore published <em>&quot;This dimension is being built now&quot;</em> over a completed dimension, and a sentence naming an outstanding register that was not outstanding. <code>docs/STATE.md</code> had derived <em>&quot;Register slots the budget marks build with no artifact filling them: <strong>0</strong>&quot;</em> on the same build, so the derived surface and the hand-written one disagreed and only the hand-written one was read by a reader. This is C-42's family — prose asserting what a build can compute (L-22) — with the status field itself as the prose</td>
+<td>Both promoted to <code>built</code>, both notes corrected with their dates and the correction shown rather than swapped in (A4). <strong>The promotion is not an assertion: §11n now derives it.</strong> A dimension whose budget is met cannot sit at <code>building</code>, and one with an unfilled build slot cannot claim <code>built</code> — the bar the author set in C-26, now enforced instead of remembered. Negative-tested in both directions. <strong>Eight built dimensions</strong>, and nothing was constructed to make that true; the record caught up with the artifacts</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-59</td>
+<td>07-25</td>
+<td><strong>4</strong></td>
+<td><strong>The Atlas's own page was sending the next session through the one repository its rights clause forbids.</strong> <code>data/dimensions.json</code> dimension 14 <code>sources[2]</code> read: <em>&quot;To be sourced from the National Library of Scotland's series <strong>via the Digital Repository of Ireland</strong>… The governing licence line is <strong>UNREAD</strong> and is the dimension's first gate.&quot;</em> Both halves false since <strong>catch C-33, six days earlier</strong>: DRI applies its own <strong>CC BY-NC-ND</strong> reuse licence — the exact bar RIGHTS.md clause 7 exists to hold — and links back to NLS anyway; and the licence line was read, resolving to CC BY 4.0 with a named credit. The <code>confidence</code> field five lines below on the same rendered page recorded both facts correctly, so <strong>the page contradicted itself</strong>, and the wrong half was the half shaped like an instruction. Found by an adversarial sweep of every Atlas surface — 81 findings raised, 24 surviving refutation — run before any sourcing began, which is the only reason it was found before it was followed. <strong>It was a family, not a sentence, and the difference is L-29: the grep that finds a defect also frames it.</strong> Searching for the CLAIM rather than the string found six more live forms. (a) <code>/method/dimensions/</code> published an <strong>unstruck</strong> paragraph asserting both rights gates still open, plus a panel-contents list still naming the newspaper page, the tram map and the handwriting — all three dropped as uncleanable. (b) <code>docs/04-dimensions.md</code> defined the panel as <em>&quot;place + period document&quot;</em> — <strong>two</strong> layers, where the manifest has always carried three; written on 19 July while the object layer was unsurveyed, and never revisited after C-33 cleared 17 of 18 objects later the same day. (c) The <code>unit</code> field carried that same undercount, and it is the <strong>only</strong> definitional field the Atlas page publishes. (d) The <code>note</code> still said <em>&quot;the panels themselves are the next session's work&quot;</em>, superseded by C-48. (e) The <code>note</code> asserted <em>&quot;the Evening Telegraph masthead on Commons substitutes&quot;</em> for the dropped newspaper page — <strong>no such file appears in the manifest, in the fetched provenance, or anywhere in this repository.</strong> An asserted substitute nobody recorded. (f) Three surfaces stated episode 17's substitution in the <strong>present indicative</strong> — <em>&quot;carries a period document in that slot&quot;</em> — for a file never fetched</td>
+<td>All seven corrected across <code>data/dimensions.json</code>, <code>docs/04-dimensions.md</code> and <code>RIGHTS.md</code>, each <strong>shown with its date rather than swapped in quietly</strong> (A4), and the 04-dimensions paragraphs struck through rather than deleted. The sourcing route now names NLS directly and rules out DRI, Tailte Éireann and nli.ie in the same breath. <strong>Clearance and acquisition are separated wherever they were conflated</strong>: episode 17's document is <em>ruled, not acquired</em>, and RIGHTS.md now records that seven of the seventeen cleared object slots (episodes 4, 7, 8, 10, 13, 15, 16) hold a licence and no file. The class is closed structurally by <strong>§11n</strong> (see C-61), which refuses a forbidden sourcing route and a closed gate re-asserted as open — negative-tested in four forms, including the <code>via</code> phrasing</td>
+<td><strong>L-32</strong></td>
+</tr>
+<tr>
 <td>C-58</td>
 <td>07-25</td>
 <td>3</td>
@@ -981,6 +1005,37 @@ is not a wrong answer, it is a confident answer about almost nothing (L-14, C-43
 build; §11m verifying every quoted reader sentence against its own page of the record, with two dated
 exceptions and a parse floor; the three quotations restored and <code>curve.pdf</code> rebuilt; C-57's limit
 struck in the artifact, the handoff and this file rather than left standing.</p>
+<p><strong>L-32 — The disclosure of a withdrawn claim can satisfy the gate that enforces its withdrawal.</strong>
+<em>From C-59 and C-61.</em> This project's practice on a corrected falsehood is fixed and good: do
+not swap the sentence out quietly, write the correction beside it with its date (A4). And its
+practice on a new rule is also fixed and good: make a build refuse the claim, in every form it
+can take (L-29). Put the two together and they interfere, in a way neither one predicts.
+The Atlas's <code>unit</code> field was corrected from <em>&quot;a place and a period document&quot;</em> to name three
+layers, with a correction clause appended: <em>&quot;this field named two layers where the source
+manifest has always carried three.&quot;</em> The gate written to hold that correction asked whether the
+field states the manifest's layer count. <strong>It does — in the correction.</strong> Restoring the exact
+two-layer wording left the build green, because the word <em>three</em> was still sitting there, in the
+sentence describing the error. The gate passed on the confession.
+The same shape appeared twice more in one afternoon. The forbidden-repository gate failed the
+project's own disclosure — <em>&quot;for six days after C-33 this entry routed sourcing through the
+Digital Repository of Ireland&quot;</em> — because past-tense narration of a route has the grammar of a
+route; that is the error in the other direction, a disclosure read as an instruction. And §11f
+had already met the benign face of this and handled it, by matching only the present tense.
+So the rule: <strong>an A4 disclosure is text about a claim, and a gate must be able to tell it from
+the claim.</strong> Two ways, and prefer the second. Match only the assertive form, as §11f does — or
+better, <strong>make the test structural rather than lexical</strong>, so no sentence about the rule can
+satisfy the rule. Asking <em>&quot;does this field say three?&quot;</em> is answerable by prose. Asking <em>&quot;does
+this field name <code>object</code>, <code>place</code> and <code>document</code>?&quot;</em> — the manifest's own keys — is not.
+A companion note, cheaper and easier to forget: the first mutation written to test that gate
+changed bytes and left the tested property standing, so the harness reported a real gate as
+untested. The repository already records that a <strong>no-op</strong> mutation reports a gate as untested
+rather than as passing. This is its sibling: <strong>byte-changed is not mutation-tested.</strong> A mutation
+must remove the property under test, and the only way to know it did is to watch the build go
+red for the reason you named in advance.
+<em>Applied:</em> §11n's Atlas gate strips any <code>Corrected &lt;date&gt;</code> clause before testing and then tests
+structurally, against the manifest's layer keys; its forbidden-route gate scopes its disclosure
+test to the sentence rather than to a window of characters; every branch negative-tested, ten of
+ten red for the right reason, with each expected failure named before the mutation ran.</p>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
