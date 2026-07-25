@@ -265,6 +265,22 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-57</td>
+<td>07-25</td>
+<td><strong>4</strong></td>
+<td><strong>The region admitted for the record's voice let the project's own voice through it, and two of the sentences it published were false — one of them written by the same session, an hour after it corrected a different falsehood.</strong> The reader-words region shipped located the reader by FORM: a string followed by its page marker. A verifier replicated the gate and ran the project's own analytic prose through it. <strong>Two sentences passed as the reader speaking</strong> — <em>&quot;the what-is-a-nation passage was asked about twice across two days&quot;</em> admitted as p.40, <em>&quot;the single retrospective question covering episodes 2–3&quot;</em> as p.6. Reproduced here before acting. That is catch C-53 exactly, reached through the door opened to fix it: the project's prose has the same shape as the reader's, because the project writes both. The same binding, <code>study.indexOf</code>, inspected only the FIRST copy of a quote, so three of the reader's strongest sentences were silently refused for appearing first in a cite line. <strong>Three published falsehoods came with it.</strong> (a) <code>curve.html</code>'s intro claimed <em>&quot;the checker verifies … every warrant against the record, on every build&quot;</em> — <strong>written by this session while correcting C-54.</strong> It does not: warrants are verified against <code>curve.html</code>, which for a reader-words warrant is circular, since the surface that publishes the claim certifies it. (b) Episode 5's refusal said the reader's recorded words <em>&quot;name neither it nor anything in it&quot;</em> — true of the study, <strong>false of the record</strong>: the verifier extracted all 117 pages and found two of the reader's questions at p.10 are about episode 5's own text, including its closing image. An unscoped claim of silence at the one episode where the project is most exposed. (c) Episode 2's warrant published <em>&quot;his numbering is the book's own&quot;</em>, and <strong>the record contradicts it on the very page cited</strong>: at p.6 the reader says his edition names Parts rather than episodes and that he <em>&quot;thought I was reading Chapter 1&quot;</em> when he was not, and elsewhere writes <em>&quot;book 2 (or chapter 2)&quot;</em> for what is episode 4. One coincidence at p.4 does not establish a scheme</td>
+<td><strong>The region is located by an explicit MARKER, not by shape.</strong> The study now wraps the reader's warranting words as <code>&lt;q class=&quot;reader&quot; data-record-page=&quot;N&quot;&gt;</code> — inside its own quote marks, so the rendered text is unchanged and neither the print source nor the PDF needed touching — and §11f reads only those. A marker cannot be produced by writing a sentence. Verified by replication: what the old gate admitted, the marker refuses, 2 to 0. <strong>Episode 2's passage is WITHDRAWN</strong>, not re-labelled: without the ordinal claim it has no warrant at all, so it returns to the honest-empty form. Episode 5's sentence is scoped to <em>&quot;the reader's own recorded words THAT THIS STUDY MARKS&quot;</em>, §11i requires that scope, and both empty episodes now carry <em>&quot;The record is not silent here&quot;</em> with the study's own question count — because a missing warrant is not a missing reading, and §11i requires that sentence too. <code>curve.html</code>'s intro now states the limit instead of overclaiming it: the checker verifies passages against the held 1922 source and warrants against <strong>that page</strong>, not against the reading record, which this project holds as a PDF no tool here opens. <strong>The answer's words are refused BY NAME</strong> in <code>data/passages.json</code>, because the record is a dialogue and the answer names episodes outright (<em>&quot;episode 5's is the Lotus-Eaters&quot;</em>, p.11) — a future session under pressure to fill episode 5 would find them. And the honest boundary is declared rather than left implied: a marker records that the PROJECT attributes those words to the reader at that page; making the region verifiable against the record needs a verified extraction of the 117-page record, which this project does not hold. <strong>Declared, not pending (L-18.)</strong> Escalated to <strong>L-30</strong></td>
+<td><strong>L-30</strong></td>
+</tr>
+<tr>
+<td>C-56</td>
+<td>07-25</td>
+<td>3</td>
+<td><strong>Three passages claimed a PLACE as their episode's name, and the last of the layer's judgement calls is gone with them.</strong> The verifiers on the reader-words region arrived after the layer had shipped, and both refuted episode 3 on the same ground: <code>namesEpisodeAs: &quot;The beach scene&quot;</code> asserts the reader named <em>this episode</em>, and <strong>the beach scene is not one episode.</strong> Sandymount strand is the setting of Proteus and of Nausicaa — and the record itself puts the reader at p.48 calling Nausicaa <em>&quot;the scene by the sea&quot;</em>, on the same strand, in the same voice. So the phrase could name either, and the entry picked one. Auditing the whole table against that test found the defect was not episode 3's alone: <strong>&quot;the tower&quot;</strong> (episode 1) is a place, and <strong>&quot;The Bloom household&quot;</strong> (episode 4) is 7 Eccles Street — which is Calypso <em>and</em> Ithaca <em>and</em> Penelope. Three entries out of eighteen. The field's whole job is to say which words name the episode, and a place does not name an episode</td>
+<td><strong>The judgement is replaced by a string equality.</strong> <code>namesEpisodeAs</code> must now be the episode's <strong>own scaffolding title, verbatim</strong> — or the warrant must name the episode by <strong>ordinal</strong> and carry the record's evidence for that numbering (the p.4 sentence, C-55). Anything else is a locus and belongs in <code>namesInside</code>, with the episode placed by the held 1922 text's <strong>own section markers</strong>, which the checker already verifies for every passage. So episodes 1, 3 and 4 keep their phrases as loci, lose the episode claim, and <strong>the page says how they are placed instead</strong>: <em>&quot;The warrant does not name this episode — a place can sit in more than one, so naming one is not the same as naming the other. These lines are placed by the held 1922 text's own section markers, verified at every build, and not by any list of this project's (A2).&quot;</em> Enforced in §11f and negative-tested by re-asserting <em>&quot;the tower&quot;</em> as episode 1's name. Two smaller findings from the same verdicts, both fixed: episode 3's id promised its terminus wrongly (in the X-to-Y form Y is the end, and <em>&quot;live dog across the sand&quot;</em> is the first line of its second paragraph), and the reader-words sentence ended on a quotation that already carried its own punctuation, so the citation now closes the sentence and the reader's words stay exactly as spoken (A6). <strong>Recorded plainly: this correction arrived after the commit it belongs to.</strong> The verifiers were still running when the layer shipped, and reading them afterwards is what caught it</td>
+<td>—</td>
+</tr>
+<tr>
 <td>C-55</td>
 <td>07-25</td>
 <td>—</td>
@@ -893,6 +909,39 @@ way you would check a claim.
 <em>Applied:</em> both prose assertions corrected, with the correction disclosed on the page rather than
 swapped in quietly (A4); §11f's gate broadened from one string to a pattern set applied to every
 surface a passage declares, and mutation-tested in both forms.</p>
+<p><strong>L-30 — A region you recognise by shape will admit whatever else has that shape. Mark it instead.</strong>
+<em>From C-57.</em> The project needed to quote the reader's own words, and the reader is quoted inside the
+project's own analytic prose, so the region could not be defined by <em>place</em>. Defining it by <em>form</em>
+looked like the answer: a quoted run followed by its page marker, which is how the study prints the
+reader and which carries the page beside the sentence so a citation cannot be misfiled. It was a
+good rule and it was wrong, because <strong>the project's prose has the same form</strong> — it also writes
+sentences and follows them with page numbers. Two sentences of the project's own commentary were
+admitted as the reader speaking. The door opened to let the record's voice in let the project's
+voice in with it, which is the same defect (L-28) one turn further round.
+The general shape: <strong>a pattern is a description, not a boundary.</strong> When a rule must separate two
+things that live in the same file and look alike, recognising one of them by its features will
+always admit the other's near-misses, because the features were never what distinguished them —
+authorship was. So put the distinction in the artifact as a <strong>mark</strong>: <code>&lt;q class=&quot;reader&quot; data-record-page=&quot;6&quot;&gt;</code>. A mark cannot be produced by writing a sentence. It makes the region's
+extent a dated, auditable decision instead of whatever the pattern happens to catch, and it fails
+closed — an unmarked quote is refused rather than guessed at.
+Two companion lessons from the same catch, both about how far a check reaches:
+<strong>Verification against the surface that publishes the claim is not verification.</strong> The reader-words
+warrants were checked &quot;verbatim&quot; against <code>curve.html</code> — the file that also prints them. That is a
+citation, not a check (L-16), and it stayed hidden because the file is audited and trustworthy in
+every other respect. The honest response was to say so on the page: the checker verifies passages
+against the held 1922 text and warrants against <em>that page</em>, not against the reading record, which
+the project holds as a PDF no tool here opens. Closing it needs a verified extraction of the record
+— <strong>declared as outside the project's present reach rather than left as a pending intention</strong> (L-18).
+<strong>And an absence must be scoped to what you actually searched.</strong> Episode 5's refusal said the
+reader's recorded words name nothing in that episode. True of the study; false of the record, which
+holds two of his questions about that very episode's text. <em>&quot;…that this study marks&quot;</em> is four words
+and it is the difference between a true sentence and a false one. The verifier that found it had
+extracted all 117 pages of the record — the only pass in this project's history to check the study
+against the thing the study derives from.
+<em>Applied:</em> the marker, and §11f reading only marked runs; §11i requiring the scope phrase and
+requiring both empty episodes to say the record is not silent; episode 2's passage withdrawn, since
+its ordinal warrant was contradicted by the record on the page it cited; the answer's words refused
+by name in <code>data/passages.json</code> before a future session reaches for them; the reach declared.</p>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
