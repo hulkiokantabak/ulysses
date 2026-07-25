@@ -265,6 +265,22 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-55</td>
+<td>07-25</td>
+<td>—</td>
+<td>Not an error — the passage layer completed, logged. <strong>Three episodes had no passage because no exchange TITLE names them, and that turned out to be a fact about the record rather than a limit on the project.</strong> The reading record's first three exchanges are titled by subject, not by episode — exchange 2 is literally <em>&quot;The edition, the eighteen episodes, and the numbering&quot;</em> — because the reader had not yet learned the episode scheme. So a rule admitting only exchange titles could never reach Nestor, Proteus or Lotus Eaters. <strong>A second region is therefore admitted: the reader's own words</strong>, which the study prints verbatim beside the page of the record he said them on. Those are the record's own voice, and stronger evidence than an exchange title, which is the project's summary of it. The region is defined by <strong>form, not by place</strong> — a quoted run followed by its own page marker — and that distinction is the whole point: the reader is quoted <em>inside</em> the project's analytic prose, so a location rule would either re-admit that prose (the C-53 defect) or throw away the record's own words. The page travelling beside the sentence gives this region the same unmisfilable tie the exchange table gives the other. Episode 3's warrant is the reader at p.6: <em>&quot;The beach scene is awesome.&quot;</em> Episode 2's is the same page: <em>&quot;…I would like to hear more about chapters 2 and 3 as well,&quot;</em> — which names the episode by NUMBER, and a number could only be mapped through this project's own scheme, which is exactly what L-26 forbids. So the mapping is evidenced instead: at p.4 the reader says he will <em>&quot;read gently until bloom appears in chapter four,&quot;</em> and Bloom does appear in the fourth section the held text marks. <strong>His numbering is the book's, on the record's own evidence</strong> — an argument converted into a citation (L-27)</td>
+<td>Seventeen of the eighteen episodes now show the book's own words. <strong>Episode 5 alone shows none</strong>, and it says so specifically rather than under a blanket sentence: no exchange title names Lotus Eaters, and the reader's own recorded words name neither it nor anything in it — the only thing the study has about it is its own analytic row, which is the refused region. That section carries the study's sentence about the episode instead of a silence. Enforced: <code>check.mjs</code> §11f validates each region by its own rule, refuses an unknown region, requires an ordinal warrant to carry its record evidence, and refuses ordinal evidence carried without one; §11i requires the refusal to name BOTH regions, or it understates what was searched. <strong>One consequence caught in passing:</strong> the study's undercount caveat rendered only in the no-passage branch, so when episodes 2 and 3 gained passages it would have left the site silently while remaining entirely true. It now renders wherever it is true — an in-range episode with a zero count — and §11i checks that placement over every episode, in both directions</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-54</td>
+<td>07-25</td>
+<td>3</td>
+<td><strong>C-51's correction was applied to the five cites and not to the two sentences above them, so the withdrawn claim stayed published in its most prominent form.</strong> The debt C-51 named was <code>curve.html</code> publishing all five pilot passages under <em>&quot;the scene is the exchange's.&quot;</em> Those five cites were rewritten from the data. But the same claim was made twice more on the same page, and both survived: the passage section's own intro read <strong>&quot;The record names the scene; which lines to show is the project's choice,&quot;</strong> and the caveats list read <strong>&quot;the scene each passage answers is sourced from the record.&quot;</strong> The intro is the sentence a reader meets <em>first</em>. Found by an adversarial verifier that had been asked about something else entirely and reported it as collateral. This is learning <strong>L-24</strong> committed inside a single session — <em>a pass that re-reads the pictures inherits the words</em> — and the mechanism is exact: the fix was scoped to &quot;the cites&quot;, the grep that found the debt matched the cite string, and the two prose sentences said the same thing in different words. <strong>A second, smaller misjudgement is recorded with it:</strong> C-51 estimated the cost of correcting the artifact as <em>&quot;rebuilding its PDF and its deck,&quot;</em> which is why the debt was deferred rather than paid. That was wrong. <code>curve.print.html</code> and <code>deck.html</code> carry no passages at all, so neither the PDF nor the deck was ever affected; the correction cost five lines. An overstated cost deferred a real fix — the wrong-qualifier failure (L-17) applied to effort rather than to evidence</td>
+<td>Both sentences corrected, and the correction is <strong>disclosed on the page</strong> rather than swapped in quietly: the caveats entry now states that an earlier version said the record named the scene, that it did not, and that the correction is catch C-51 (anchor A4). The gate that made this a fix is broadened accordingly — §11f no longer looks for the one string that was found first but for a <strong>pattern set</strong> covering every form the claim took, applied to every surface a passage declares. It deliberately does not match the past tense, because disclosing a withdrawn claim is not asserting it. Verified by mutation: reintroducing the claim as a cite and as the section intro each turns the build red</td>
+<td>—</td>
+</tr>
+<tr>
 <td>C-53</td>
 <td>07-25</td>
 <td>3</td>
@@ -851,6 +867,32 @@ title; the tiers removed from the data model, the templates, the reports and <co
 <code>check.mjs</code> §11f enforcing the region and the row; all sixteen passages re-anchored under one rule,
 the ratified pilot's five included.</li>
 </ul>
+<p><strong>L-29 — Correct the claim, not the string you found it in.</strong>
+<em>From C-54.</em> A withdrawn claim was published on one page in three places: five rendered cites, the
+section's own intro, and an entry in the caveats list. The debt was found by grepping for the cite
+string, so the debt was recorded as being about cites, so the fix corrected cites — and the intro,
+which is the sentence a reader meets <em>first</em>, went on saying the same thing in different words. It
+was found afterwards by a verifier that had been asked about something else and mentioned it in
+passing.
+The mechanism is worth stating exactly, because it is not carelessness and it will recur. <strong>The
+grep that finds a defect also frames it.</strong> A search returns strings; a defect is a claim; and the
+scope of the fix silently inherits the shape of the search. Every paraphrase of the claim sits
+outside that scope by construction, and paraphrases are what prose is made of.
+So two habits. First, when a claim is withdrawn, <strong>write down the claim in your own words and then
+search for the claim, not for the sentence</strong> — synonyms, the passive voice, the noun form. Second,
+make the gate a <strong>pattern set from the start</strong>: the enforcement that follows a withdrawal should
+refuse every form the claim can take, not the one instance that happened to be found. Here that is
+three regexes instead of one substring, and reintroducing the claim as either a cite or an intro now
+turns the build red.
+A companion note, smaller and more embarrassing: the same catch deferred its own fix on an
+overstated cost. C-51 estimated that correcting the artifact meant <em>&quot;rebuilding its PDF and its
+deck&quot;</em>, and neither was true — the print source and the deck carry no passages at all, and the
+correction cost five lines. <strong>An overstated cost defers a real fix</strong>, which is L-17's wrong
+qualifier pointed at effort instead of at evidence. Before deferring anything, check the cost the
+way you would check a claim.
+<em>Applied:</em> both prose assertions corrected, with the correction disclosed on the page rather than
+swapped in quietly (A4); §11f's gate broadened from one string to a pattern set applied to every
+surface a passage declares, and mutation-tested in both forms.</p>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
