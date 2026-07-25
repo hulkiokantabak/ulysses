@@ -265,6 +265,14 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-58</td>
+<td>07-25</td>
+<td>3</td>
+<td><strong>C-57's declared limit is closed, and the check it made possible found the study tidying the reader in three places.</strong> C-57 named a boundary rather than fixing it: a warrant drawn from the reader's own words was verified against <code>curve.html</code>, the file that also prints it, because the reading record is a PDF and nothing in <code>tools/</code> opened it. Closing that needed a verified text of the 117 pages, which the project was said not to hold. <strong>It holds one now.</strong> The record's page content streams sit under a two-stage filter, <code>[ /ASCII85Decode /FlateDecode ]</code> — which is why a first attempt read 12 of 129 streams, produced zero characters, and would have justified leaving the limit in place. Decoded in the right order, all 129 streams read and all 117 pages come out. <strong>The check that C-57 said could not be run then found five misses out of twenty-one quoted reader sentences, and three were real:</strong> at record pages 6, 17 and 111 the record ends the reader's sentence with a <strong>full stop</strong> and the study printed a <strong>comma</strong> — inserted because the quotation sits mid-sentence inside the study's own prose and a comma made that sentence flow. That is the editorial habit anchor <strong>A6</strong> exists to forbid (the reader's words stay as spoken, dictation slips included) and it is catch <strong>C-45's class</strong>: a quotation tidied to fit its surroundings. Worse in one respect than C-45: <code>curve.html</code> and its own print source <strong>already disagreed with each other</strong> about the reader's punctuation in two of the three places, and section 10's table comparison never saw it because these quotes live in prose</td>
+<td>The extraction ships as <code>tools/extract-record.mjs</code> (<code>npm run record</code>), node built-ins only, <strong>source-only</strong> — the record is already published as a PDF, a second plain-text copy would be a second thing to keep true, and section 2b now fails if it reaches the built site. New section <strong>§11m</strong> verifies every quoted reader sentence in the study against <strong>that page of the record</strong>, and <code>npm run check</code> regenerates the extraction and byte-compares it, so it cannot go stale. The three tidied quotations are restored to the reader's own full stops in <code>curve.html</code> and in the print source, and <code>curve.pdf</code> was rebuilt. <strong>Two misses remain and are named exceptions with their dates and reasons rather than a tolerance:</strong> the p.69 sentence contains an em dash the extractor drops (the study is right, the extraction is lossy, and a fold wide enough to absorb it would also absorb a real alteration), and the p.54 quotation is a declared elision joining two of the reader's sentences across a long quotation from Joyce. The section also carries a <strong>parse-count floor</strong>: its first run used the checker's existing <code>decode</code>, which handles <code>&amp;#39;</code> and not the <code>&amp;#x27;</code> this study is written with, parsed <strong>one</strong> pair out of twenty-one, and would have printed a green line. The floor caught it. That is the whole of L-14 in one afternoon</td>
+<td><strong>L-31</strong></td>
+</tr>
+<tr>
 <td>C-57</td>
 <td>07-25</td>
 <td><strong>4</strong></td>
@@ -928,10 +936,12 @@ Two companion lessons from the same catch, both about how far a check reaches:
 <strong>Verification against the surface that publishes the claim is not verification.</strong> The reader-words
 warrants were checked &quot;verbatim&quot; against <code>curve.html</code> — the file that also prints them. That is a
 citation, not a check (L-16), and it stayed hidden because the file is audited and trustworthy in
-every other respect. The honest response was to say so on the page: the checker verifies passages
-against the held 1922 text and warrants against <em>that page</em>, not against the reading record, which
-the project holds as a PDF no tool here opens. Closing it needs a verified extraction of the record
-— <strong>declared as outside the project's present reach rather than left as a pending intention</strong> (L-18).
+every other respect. <em>This learning first ended by declaring that closing it was outside the
+project's reach. <strong>That declaration was wrong and is struck</strong> — see L-31 and catch C-58: the record's
+pages read once the right filter chain is applied, §11m now verifies every quoted reader sentence
+against its own page of the record, and doing so caught three of the reader's sentences printed with
+a comma where he said a full stop.</em> The lesson that survives is the first sentence of this paragraph,
+not the concession that followed it.
 <strong>And an absence must be scoped to what you actually searched.</strong> Episode 5's refusal said the
 reader's recorded words name nothing in that episode. True of the study; false of the record, which
 holds two of his questions about that very episode's text. <em>&quot;…that this study marks&quot;</em> is four words
@@ -942,6 +952,35 @@ against the thing the study derives from.
 requiring both empty episodes to say the record is not silent; episode 2's passage withdrawn, since
 its ordinal warrant was contradicted by the record on the page it cited; the answer's words refused
 by name in <code>data/passages.json</code> before a future session reaches for them; the reach declared.</p>
+<p><strong>L-31 — A declared limit is a hypothesis. Test it before you write it down.</strong>
+<em>From C-58.</em> C-57 closed by declaring a boundary: a warrant taken from the reader's own words could
+only be verified against the study that publishes it, because the reading record is a PDF and
+nothing here opened it. That was honest, it was written into the artifact and the handoff, and it
+was <strong>wrong</strong> — and the evidence that it was wrong had already been produced. A first attempt at
+extraction read 12 of 129 streams and returned zero characters, which felt like proof. It was
+proof of one thing only: that the streams were not plain Flate. They sit under
+<code>[ /ASCII85Decode /FlateDecode ]</code>, and decoded in that order all 129 read and all 117 pages come out.
+This is L-18's neighbour and its opposite. L-18 says <em>name the project's reach, and close what falls
+outside it</em> — and that is right, because an open question nobody can answer is a limit. But a limit
+declared from <strong>one failed attempt</strong> is not a reach, it is a guess wearing a reach's clothes, and it
+is more durable than a guess because declaring it feels like rigour. The test that distinguishes
+them is small: <strong>can I say what would have to be true for this limit to be false, and did I check
+that?</strong> Here the answer was &quot;the streams use a filter I did not try&quot;, and one diagnostic settled it.
+And what the check found once it ran is the reason it mattered. Three of the reader's sentences were
+printed with a comma where he said a full stop, because each quotation sits mid-sentence inside the
+project's prose and a comma made that sentence flow. Nobody decided to alter him. <strong>The alteration
+is what careful sentence-writing does to a quotation</strong>, which is why anchor A6 has to be enforced by
+something other than care. Two surfaces even disagreed with each other about his punctuation, in
+prose that the table-level comparison does not reach.
+One more time, the same lesson in the same afternoon: this section's first run used the checker's
+existing <code>decode</code>, which handles <code>&amp;#39;</code> and not the <code>&amp;#x27;</code> the study is written with. It parsed
+<strong>one</strong> sentence out of twenty-one and would have printed a green line. A <strong>parse-count floor</strong>
+caught it. Any check that discovers its own subjects by pattern needs one, because the failure mode
+is not a wrong answer, it is a confident answer about almost nothing (L-14, C-43).
+<em>Applied:</em> <code>tools/extract-record.mjs</code> and <code>npm run record</code>, source-only and byte-compared at every
+build; §11m verifying every quoted reader sentence against its own page of the record, with two dated
+exceptions and a parse floor; the three quotations restored and <code>curve.pdf</code> rebuilt; C-57's limit
+struck in the artifact, the handoff and this file rather than left standing.</p>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
