@@ -31,8 +31,15 @@
   .ident .num { color:var(--paper); font-size:1rem; }
   .panel { margin:0; display:grid; gap:.25rem; grid-template-columns:1fr 1fr 1fr;
            background:#04101f; padding:.25rem; }
-  .slot { aspect-ratio:1/1; overflow:hidden; background:#04101f; }
-  .slot img { width:100%; height:100%; object-fit:cover; display:block; }
+  /* PADDED, NEVER CROPPED. RIGHTS.md clause 7: "Do not crop share-alike images to fit the grid
+     — pad them uncropped, which keeps the panels clear of the adaptation boundary." The first
+     build of this page used aspect-ratio:1/1 with object-fit:cover, which crops every image to a
+     square, and it shipped that way over CC BY-SA files. object-fit:contain pads instead: the
+     whole licensed frame is shown, and the plate colour fills what is left. 3:2 is one ratio for
+     all fifty-four slots, chosen once rather than per image, so no slot's shape is an editorial
+     act either. */
+  .slot { aspect-ratio:3/2; overflow:hidden; background:#04101f; }
+  .slot img { width:100%; height:100%; object-fit:contain; display:block; }
   .slot.empty { border:1px solid rgba(185,195,214,.28);
                 background:repeating-linear-gradient(135deg, transparent 0 7px, rgba(185,195,214,.14) 7px 8px); }
   table { border-collapse:collapse; width:100%; font-size:.9375rem; margin:.75rem 0 0; }
@@ -217,7 +224,10 @@ sections (anchor A2). They say which episode a panel belongs to. They do not say
 <section class="colophon">
 <h2>Colophon — every image, and where it came from</h2>
 <p>This is the attribution surface for all eighteen panels. CC BY 4.0 §3(a)(2) permits it to sit
-here rather than beside each image; CC BY-SA 2.0 permits it only while the panels stay bare.</p>
+here rather than beside each image; CC BY-SA 2.0 permits it only while the panels stay bare.
+<strong>The panels themselves are licensed CC BY-SA 4.0.</strong> No image on this page is cropped:
+every frame is shown whole and padded to the slot, because cropping a share-alike image to fit a
+grid is an adaptation and this atlas stays clear of that boundary.</p>
 <table>
   <thead><tr><th scope="col">Ep</th><th scope="col">Layer</th><th scope="col">What</th><th scope="col">Licence and source</th></tr></thead>
   <tbody>
