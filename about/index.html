@@ -100,23 +100,32 @@ Rescoped by the author on 19 July 2026: publicly available sources only, and if 
 problem could not be avoided the dimension was to be struck. It can be avoided, so these
 are the rules it is built under (catch C-32).</p>
 <ul>
-<li><strong>Every image carries a named licence at a named URL on the credits page.</strong> No image
-enters the Atlas without one. &quot;Probably old enough&quot; is not a licence.</li>
-<li><strong>An institution's terms are not the copyright.</strong> The National Library of Ireland and
+<li>
+<p><strong>Every image carries a named licence at a named URL on the credits page.</strong> No image
+enters the Atlas without one. &quot;Probably old enough&quot; is not a licence.</p>
+</li>
+<li>
+<p><strong>An institution's terms are not the copyright.</strong> The National Library of Ireland and
 Tailte Éireann both assert re-use conditions over their own scans while holding no
 copyright in the underlying works. Source the same material from a repository that
 imposes no such terms — Wikimedia Commons, per file. Do <strong>not</strong> source from nli.ie or
-its Flickr stream, whose terms are private-research-only.</li>
-<li><strong>Attribution lives on the credits page, never on a panel.</strong> CC BY 4.0 §3(a)(2)
+its Flickr stream, whose terms are private-research-only.</p>
+</li>
+<li>
+<p><strong>Attribution lives on the credits page, never on a panel.</strong> CC BY 4.0 §3(a)(2)
 expressly permits this, and Creative Commons' own guidance names the case. There is a
 trap attached: CC BY-SA 2.0 requires credit at least as prominent as any other
 authorship credit that appears, so the colophon is lawful <strong>only while no panel carries
 any credit at all</strong>. Warburg's refusal of the caption and the licence compliance are one
 decision. <strong>Adding a single signature or caption to a panel would breach every
-share-alike licence on it simultaneously.</strong></li>
-<li><strong>Do not crop share-alike images</strong> to fit the grid — pad them uncropped, which keeps the
-panels clear of the adaptation boundary. Licence the panels themselves CC BY-SA 4.0.</li>
-<li><strong>A watermark is a credit on the panel, so a watermarked file cannot be used.</strong> Added
+share-alike licence on it simultaneously.</strong></p>
+</li>
+<li>
+<p><strong>Do not crop share-alike images</strong> to fit the grid — pad them uncropped, which keeps the
+panels clear of the adaptation boundary. Licence the panels themselves CC BY-SA 4.0.</p>
+</li>
+<li>
+<p><strong>A watermark is a credit on the panel, so a watermarked file cannot be used.</strong> Added
 25 July 2026, from the place-layer survey, which found a correctly licensed CC BY 2.0
 photograph of the Martello tower carrying <em>&quot;Alessandro Ambrosetti | 2015&quot;</em> burned into the
 pixels. The no-caption rule above is what makes the colophon lawful, and it is satisfied
@@ -128,24 +137,32 @@ with <code>{{watermark}}</code> in the wikitext, which is how the survey caught 
 applied by volunteers and its absence proves nothing — <strong>look at the pixels.</strong>
 <code>tools/atlas-licence.mjs</code> already declared this blind spot in its own header (<em>&quot;it reads
 TEXT; a file whose page is correct and whose pixels carry a watermark passes&quot;</em>). The limit
-was known and unenforced; this is the rule that enforces it, at survey time, by eye.</li>
-<li><strong>&quot;No known copyright restrictions&quot; is not a licence, and the National Library of Ireland's
+was known and unenforced; this is the rule that enforces it, at survey time, by eye.</p>
+</li>
+<li>
+<p><strong>&quot;No known copyright restrictions&quot; is not a licence, and the National Library of Ireland's
 Flickr stream is where that trap lives.</strong> Recorded 25 July 2026 because the place survey hit
 it four times in one place: the finest period images of Dalkey — Robert French, Lawrence
 Collection, exactly the class clause 7 clears — carry <code>{{Flickr-no known copyright restrictions}}</code> and no public-domain tag of any kind, sourced from <code>nli.ie</code>'s stream. Both
 grounds already appear above; what is new is how <em>good</em> the rejected images are. The temptation
-is real and it should be expected rather than resisted by memory.</li>
-<li><strong>Cleared:</strong> period photographs attributed to Robert French (d. 1917; public domain in
+is real and it should be expected rather than resisted by memory.</p>
+</li>
+<li>
+<p><strong>Cleared:</strong> period photographs attributed to Robert French (d. 1917; public domain in
 Ireland and the EU since 1988); contemporary photographs under CC0, CC BY or CC BY-SA,
 with Irish freedom of panorama (CRRA 2000 s.93) clearing the architecture; Thom's 1904
-directory; the 1922 text.</li>
-<li><strong>Not cleared, and dropped:</strong> any page scan of a 16 June 1904 Dublin newspaper — no free
+directory; the 1922 text.</p>
+</li>
+<li>
+<p><strong>Not cleared, and dropped:</strong> any page scan of a 16 June 1904 Dublin newspaper — no free
 source exists, and the digitisers hold the scans even though the 1904 text is out of
 copyright; <strong>Joyce's handwriting and any manuscript image</strong> — the Rosenbach expressly
 neither grants nor denies permission, and unpublished Joyce remains in copyright in the
 UK until 2039; photographic portraits of Joyce (Abbott and Freund both have active
-licensors); the separate tram map.</li>
-<li><strong>The map layer is settled, and the licence was read rather than inferred (19 July 2026,
+licensors); the separate tram map.</p>
+</li>
+<li>
+<p><strong>The map layer is settled, and the licence was read rather than inferred (19 July 2026,
 catch C-33).</strong> The Ordnance Survey six-inch Ireland sheets come from the <strong>National
 Library of Scotland</strong>, whose per-image tag on the Dublin sheets reads <code>Re-use: CC-BY (NLS)</code> and whose terms page resolves that to <strong>CC BY 4.0</strong> — not NC, not ND, not SA. The
 required credit, verbatim: <em>&quot;Reproduced with the permission of the National Library of
@@ -167,40 +184,77 @@ declares <code>tiles: [{width: 512, height: 512, …}]</code>, so 512 is the ser
 departing from it buys at most 34 requests out of 759 while losing the tile-aligned cache.
 <strong>One sheet is 33 × 23 = 759 tiles</strong>, roughly 14 MB and about nine minutes at a polite request
 rate. The whole-sheet claim is confirmed: the only pre-rendered sizes offered are three
-thumbnails, the largest 521 px wide.</li>
-<li><strong>The NLS front door is shut to any tool, and that has a consequence for this clause.</strong>
+thumbnails, the largest 521 px wide.</p>
+</li>
+<li>
+<p><strong>The NLS front door is shut to any tool, and that has a consequence for this clause.</strong>
 <code>maps.nls.uk</code> sits behind an AWS WAF: every non-browser request returns <strong>HTTP 405 &quot;Human
 Verification&quot;</strong>, and a real browser gets a security-check interstitial. <strong>So the per-image
 <code>Re-use: CC-BY (NLS)</code> tag recorded above could not be re-read on 25 July 2026.</strong> It was read
 once, on 19 July 2026, by the survey that produced catch C-33; nothing since has confirmed it,
 the Wayback Machine holds no capture of any Irish six-inch sheet's view page, and the archived
 copyright page of 3 December 2025 agrees with what is written here but is not the per-image
-tag. <strong>Stated as a limit rather than left implied (L-18): this clause's licence line is
+tag. <s><strong>Stated as a limit rather than left implied (L-18): this clause's licence line is
 currently unverifiable by tool, and someone should open
 <code>https://maps.nls.uk/view/247667874</code> by hand and read the box.</strong> Nothing is being sourced from
-NLS until that is done.
+NLS until that is done.</s></p>
+<p><em><strong>THE BOX WAS READ, 26 July 2026 (catch C-75).</strong></em> The author opened the item page in his own
+browser, cleared the WAF's human-verification challenge, and read the line where this survey
+predicted it would sit — directly beneath the page's <em>&quot;Search: [Type a keyword…]&quot;</em> box. <strong>It
+reads <code>Re-use: CC-BY (NLS).</code></strong> — the tag recorded above, unchanged, with <code>CC-BY</code> rendered as a
+hyperlink and NLS's own <em>&quot;Order this map&quot;</em> bar below it. <strong>Catch C-63's freeze is lifted</strong>, and
+it is lifted by a <em>record</em> rather than by this sentence: the reading lives in
+<code>data/atlas-document-survey.json</code> under <code>osSheets.licenceReadings</code>, every document slot's
+<code>outstanding</code> list derives from it, and <strong>§11w fails the build in both directions</strong> — if a
+reading is current and any slot still announces the freeze, or if a slot announces a reading no
+record supports. Prose thaws when somebody remembers to edit it in eighteen places, which is
+catch C-42; a record thaws by existing.</p>
+<p><strong>Three limits travel with that reading and are part of it (A5, L-17).</strong> <em>(1)</em> The evidence is a
+screenshot crop carrying no URL bar and no sheet number, so <strong>it does not itself establish which
+sheet</strong> — the author was asked to open Sheet 18 at <code>/view/247667874</code> and his sending the box back
+is his report that he read it there; that report is the source, and it is marked as his report.
+<em>(2)</em> <code>CC-BY</code> is a link and the link target is not in the crop, so the reading confirms the
+<strong>tag</strong> and not that it still resolves to <strong>4.0</strong> rather than another version; the 4.0 above
+rests on the 19 July reading and the archived copyright page, which agree. <em>(3)</em> <strong>The tag is
+per image and the Atlas would draw on ten sheets</strong> — one reading clears one sheet, and no
+reading is asserted for the other nine.</p>
+<p><strong>A tool still cannot read it.</strong> The WAF is unchanged: re-tested 26 July 2026 from a real
+browser engine against both <code>maps.nls.uk</code> and <code>map-view.nls.uk</code>, and both serve the
+human-verification interstitial rather than the page. That is why the ruling named a person.</p>
+<p><strong>And the map layer is still gated, on something other than its licence.</strong> The
+institutional-marks question (catch <strong>C-72</strong>, learning <strong>L-34</strong>) is unruled and reaches every
+institutional scan. An Ordnance Survey sheet photographed by a library is an institutional scan,
+and if that question goes the literal way these sheets fail on their marks whatever this clause
+says about their licence.
 <em>The acquisition route itself does not need the front door,</em> and is recorded in
 <code>data/atlas-document-survey.json</code>: <code>geoserver.nls.uk</code>'s WFS sheet index → the sheet's <code>IMAGE</code>
 id → <code>map-view.nls.uk</code>'s IIIF endpoint. Both are ungated. A public S3 XYZ tileset of the same
 edition also exists at <code>mapseries-tilesets.s3.amazonaws.com/os/dublin_2nd/{z}/{x}/{y}.png</code>.
-Neither route changes the licence question; they only mean the WAF is not the obstacle.</li>
-<li><strong>The object layer cleared 17 of 18</strong> (catch C-33), each with a named licence at a named
+Neither route changes the licence question; they only mean the WAF is not the obstacle.</p>
+</li>
+<li>
+<p><strong>The object layer cleared 17 of 18</strong> (catch C-33), each with a named licence at a named
 URL. The panel that could not be cleared (episode 17) is ruled to take a period document
 in that slot instead, which is still a second layer. <em>Stated exactly, 25 July 2026: that
 is a ruling, not an acquisition. The manifest records a candidate and a preference among
 three options; no file has been fetched, and this line previously said the slot &quot;carries&quot;
-the document, in the present indicative, for a thing nobody had yet obtained.</em></li>
-<li><strong>The object layer is acquired: 17 of 17 cleared slots hold a file.</strong> Episodes 4, 7, 8,
+the document, in the present indicative, for a thing nobody had yet obtained.</em></p>
+</li>
+<li>
+<p><strong>The object layer is acquired: 17 of 17 cleared slots hold a file.</strong> Episodes 4, 7, 8,
 10, 13, 15 and 16 were cleared on 19 July and never fetched; they were fetched on 25 July,
 and every one of the seventeen now carries the clearance-comparison's own verdict in
 <code>artifacts/atlas-of-one-day/provenance.json</code> — the licence Commons reports today against
 the licence the rights survey recorded, agreeing on family and, where both state one,
 on version. Before that run the gate had never fired on a real image. Clearance and
-acquisition are two different facts and this note keeps them apart.</li>
-<li><strong>Where a photograph would mislead, use a document instead.</strong> 7 Eccles Street was
+acquisition are two different facts and this note keeps them apart.</p>
+</li>
+<li>
+<p><strong>Where a photograph would mislead, use a document instead.</strong> 7 Eccles Street was
 demolished in 1967. In a caption-free atlas a convincing photograph of the surviving
 terrace would read as Bloom's door and be the wrong house, and there would be no caption
-to say so. The Thom's 1904 entry for the address is the honest element, and the better one.</li>
+to say so. The Thom's 1904 entry for the address is the honest element, and the better one.</p>
+</li>
 </ul>
 <p><strong>Practical rule for the build:</strong> anything on the site that is not Joyce's 1922 text or
 our own writing carries an attribution line. If it can't be attributed, it doesn't go up.</p>
