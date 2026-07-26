@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Atlas of One Day</title>
+<style>
+  :root {
+    --deep:#081a35; --paper:#f4efe2; --ink-mute:#3d4d68; --deep-mute:#b9c3d6;
+    --rule:rgba(8,26,53,.25); --zebra:#e9e5da;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  html,body { margin:0; padding:0; background:var(--paper); color:var(--deep); }
+  body { font-family:var(--serif); font-size:1.0625rem; line-height:1.65; }
+  main { max-width:72rem; margin-inline:auto; padding:1.5rem 1rem 3rem; }
+  .lede, ul.caveats, .colophon p { max-width:65ch; }
+  h1 { font-size:1.728rem; line-height:1.2; margin:0 0 .25rem; }
+  h2 { font-size:1.44rem; margin:2.25rem 0 .5rem; }
+  .kicker,.ident,.num,.kind,.scaff { font-family:var(--mono); }
+  .kicker { font-size:.875rem; color:var(--ink-mute); letter-spacing:.06em; margin:0 0 1.25rem; }
+  .strip { font-family:var(--mono); font-size:.8125rem; border-block:1px solid var(--rule);
+           padding-block:.5rem; margin:0 0 1.5rem; }
+  .strip a { color:var(--deep); }
+  .plates { background:var(--deep); padding:1.25rem; margin:1.5rem 0;
+            width:min(100vw - 2rem, 72rem); margin-inline:calc(50% - min(100vw - 2rem, 72rem)/2);
+            display:grid; gap:1.25rem; grid-template-columns:repeat(auto-fill,minmax(19rem,1fr)); }
+  .ep { margin:0; }
+  .ident { color:var(--deep-mute); font-size:.8125rem; letter-spacing:.06em; margin:0 0 .375rem;
+           display:flex; gap:.625rem; align-items:baseline; }
+  .ident .num { color:var(--paper); font-size:1rem; }
+  .panel { margin:0; display:grid; gap:.25rem; grid-template-columns:1fr 1fr 1fr;
+           background:#04101f; padding:.25rem; }
+  .slot { aspect-ratio:1/1; overflow:hidden; background:#04101f; }
+  .slot img { width:100%; height:100%; object-fit:cover; display:block; }
+  .slot.empty { border:1px solid rgba(185,195,214,.28);
+                background:repeating-linear-gradient(135deg, transparent 0 7px, rgba(185,195,214,.14) 7px 8px); }
+  table { border-collapse:collapse; width:100%; font-size:.9375rem; margin:.75rem 0 0; }
+  th,td { text-align:left; vertical-align:top; padding:.375rem .5rem; border-bottom:1px solid var(--rule); }
+  th { font-family:var(--mono); font-size:.8125rem; letter-spacing:.04em; }
+  tbody tr:nth-child(odd) { background:var(--zebra); }
+  td.num, td.kind { font-family:var(--mono); font-size:.875rem; white-space:nowrap; }
+  ul.caveats { font-size:.9375rem; }
+  .colophon { margin-top:2.5rem; }
+  @media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+<main>
+
+<p class="strip"><a href="https://hulkiokantabak.github.io/ulysses/" target="_top">The Ulysses Project</a> · <a href="https://hulkiokantabak.github.io/ulysses/dimensions/atlas-of-one-day/" target="_top">Dimension 14</a> · <a href="https://hulkiokantabak.github.io/ulysses/method/" target="_top">Method</a></p>
+
+<h1>The Atlas of One Day</h1>
+<p class="kicker">Dimension 14 · Type VI, a made object · eighteen panels, one per episode</p>
+
+<p class="lede">Eighteen panels, one for each section of 16 June 1904, each holding up to three
+things beside one another: an object, a place, a period document. <strong>Nothing on a panel
+explains a panel.</strong> That is the form — meaning made by arrangement rather than by argument —
+and it is also the licence: attribution for these images lives in the colophon below, which is
+lawful only while no panel carries any credit at all. A single caption would breach every
+share-alike licence on this page at once.</p>
+
+<p class="lede">Where a slot is empty it is <em>shown</em> empty, hatched, rather than closed up.
+The grid does not tidy itself. Every absence has a reason and every reason is in the colophon.</p>
+
+<p class="lede">The episode numbers and names beside each panel are <strong>scaffolding</strong>:
+Joyce printed no episode titles, and these are the project's own labels for the day's eighteen
+sections (anchor A2). They say which episode a panel belongs to. They do not say what it means.</p>
+
+<div class="plates">
+    <section class="ep" id="ep1">
+      <p class="ident"><span class="num">1</span><span class="scaff">Telemachus</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep01-object.jpg" alt="The Martello tower key" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty place slot"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep2">
+      <p class="ident"><span class="num">2</span><span class="scaff">Nestor</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep02-object.jpg" alt="Mr Deasy's foot-and-mouth letter" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty place slot"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep3">
+      <p class="ident"><span class="num">3</span><span class="scaff">Proteus</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep03-object.jpg" alt="Stephen's boots (Mulligan's castoffs)" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty place slot"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep4">
+      <p class="ident"><span class="num">4</span><span class="scaff">Calypso</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep04-object.jpg" alt="the Agendath Netaim flyer" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep04-place.jpg" alt="View south along Upper Dorset Street - geograph.org.uk - 1897946.jpg" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep5">
+      <p class="ident"><span class="num">5</span><span class="scaff">Lotus Eaters</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep05-object.png" alt="the Freeman's Journal (Bloom's copy)" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep05-place.jpg" alt="Dublin StAndrews WestlandRow 45 IMG 20250804 1027.jpg" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep6">
+      <p class="ident"><span class="num">6</span><span class="scaff">Hades</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep06-object.jpg" alt="the brown macintosh" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep06-place.jpg" alt="Glasnevin Cemetery, Dublin - geograph.org.uk - 5947111.jpg" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep7">
+      <p class="ident"><span class="num">7</span><span class="scaff">Aeolus</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep07-object.jpg" alt="the Keyes ad cutting" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty place slot"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep8">
+      <p class="ident"><span class="num">8</span><span class="scaff">Lestrygonians</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep08-object.jpg" alt="The Elijah throwaway" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty place slot"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep9">
+      <p class="ident"><span class="num">9</span><span class="scaff">Scylla and Charybdis</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep09-object.jpg" alt="Stephen's Latin Quarter hat" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep09-place.jpg" alt="the gilt-lettered forecourt gate and columned portico on Kildare Street" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep10">
+      <p class="ident"><span class="num">10</span><span class="scaff">Wandering Rocks</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep10-object.jpg" alt="Boylan's fruit basket (port and peaches)" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty place slot"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep11">
+      <p class="ident"><span class="num">11</span><span class="scaff">Sirens</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep11-object.jpg" alt="The blind stripling's tapping cane" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep11-place.jpg" alt="the Ormond Hotel, Upper Ormond Quay" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep12">
+      <p class="ident"><span class="num">12</span><span class="scaff">Cyclops</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep12-object.jpg" alt="the Jacobs' biscuit tin" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty place slot"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep13">
+      <p class="ident"><span class="num">13</span><span class="scaff">Nausicaa</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep13-object.jpg" alt="the lemon soap" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty place slot"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep14">
+      <p class="ident"><span class="num">14</span><span class="scaff">Oxen of the Sun</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep14-object.jpg" alt="Stephen's wages (three pounds twelve)" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty place slot"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep15">
+      <p class="ident"><span class="num">15</span><span class="scaff">Circe</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep15-object.jpg" alt="Stephen's ashplant" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty place slot"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep16">
+      <p class="ident"><span class="num">16</span><span class="scaff">Eumaeus</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep16-object.jpg" alt="Sweets of Sin" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep16-place.jpg" alt="the cabman's shelter, Butt Bridge" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep17">
+      <p class="ident"><span class="num">17</span><span class="scaff">Ithaca</span></p>
+      <figure class="panel">
+      <div class="slot empty" role="img" aria-label="empty object slot"></div>
+      <div class="slot empty" role="img" aria-label="empty place slot"></div>
+      <div class="slot"><img src="images/ep17-document.jpg" alt="Dr G. S. Buchanan's report to the Local Government Board on an outbreak of illness at Mansfield caused by eating potted meat (London: printed for H.M.S.O. by Eyre and Spottiswoode, 1896; 12 pages, 33 cm; report dated May 1896)" loading="lazy" decoding="async"></div>
+      </figure>
+    </section>
+    <section class="ep" id="ep18">
+      <p class="ident"><span class="num">18</span><span class="scaff">Penelope</span></p>
+      <figure class="panel">
+      <div class="slot"><img src="images/ep18-object.jpg" alt="the orangekeyed chamberpot" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="empty place slot"></div>
+      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      </figure>
+    </section>
+</div>
+
+<section class="colophon">
+<h2>Colophon — every image, and where it came from</h2>
+<p>This is the attribution surface for all eighteen panels. CC BY 4.0 §3(a)(2) permits it to sit
+here rather than beside each image; CC BY-SA 2.0 permits it only while the panels stay bare.</p>
+<table>
+  <thead><tr><th scope="col">Ep</th><th scope="col">Layer</th><th scope="col">What</th><th scope="col">Licence and source</th></tr></thead>
+  <tbody>
+      <tr>
+        <td class="num">1</td>
+        <td class="kind">object</td>
+        <td>The Martello tower key</td>
+        <td>Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0), dual-tagged with Creative Commons Attribution-ShareAlike 2.0 Generic (CC BY-SA 2.0) — <a href="https://commons.wikimedia.org/wiki/File:Iron_door_key_-_Side_view_(FindID_489603).jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">2</td>
+        <td class="kind">object</td>
+        <td>Mr Deasy's foot-and-mouth letter</td>
+        <td>PD-USGov (with NARA-cooperation; Commons categories &quot;PD US Government&quot; and &quot;CC-PD-Mark&quot;) — <a href="https://commons.wikimedia.org/wiki/File:Letter_to_Superintendent_regarding_the_grazing_of_the_Santa_Clara_cattle_on_the_Jemez_Forest_Reserve._-_NARA_-_293295.tif" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">3</td>
+        <td class="kind">object</td>
+        <td>Stephen's boots (Mulligan's castoffs)</td>
+        <td>Creative Commons CC0 1.0 Universal Public Domain Dedication — <a href="https://commons.wikimedia.org/wiki/File:Korte_herenlaars_van_lakleer_met_stoffen_%27slobkous%27,_sluiting_van_knoopjes,_BK-1984-97-A.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">4</td>
+        <td class="kind">object</td>
+        <td>the Agendath Netaim flyer</td>
+        <td>{{PD-Art|PD-1923}} — public domain; the work is American (Chapman and Co., St. Louis), so PD-US-expired IS its country-of-origin tag rather than a US-only clearance of a foreign work — <a href="https://commons.wikimedia.org/wiki/File:Chapman_and_Co.,_St._Louis,_advertisement_of_farms_for_sale_and_exchange_in_Arkansas,_Illinois,_and_Arizona,_September_1890.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">4</td>
+        <td class="kind">place</td>
+        <td>View south along Upper Dorset Street - geograph.org.uk - 1897946.jpg</td>
+        <td>CC BY-SA 2.0 Generic (Eric Jones, 28 May 2010, via Geograph). Licence sits in Structured Data on Commons, not in the wikitext. — <a href="https://commons.wikimedia.org/wiki/File:View_south_along_Upper_Dorset_Street_-_geograph.org.uk_-_1897946.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">5</td>
+        <td class="kind">object</td>
+        <td>the Freeman's Journal (Bloom's copy)</td>
+        <td>{{PD-anon-70-EU}} + {{PD-1923}} (rendered as: &quot;This work is in the public domain in the European Union and the United States because it is an anonymous work whose copyright has expired&quot; / &quot;published before January 1, 1931&quot;) — <a href="https://commons.wikimedia.org/wiki/File:Irish_Independent_First_Issue_1905_01_02.png" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">5</td>
+        <td class="kind">place</td>
+        <td>Dublin StAndrews WestlandRow 45 IMG 20250804 1027.jpg</td>
+        <td>CC0 (public-domain dedication) — <a href="https://commons.wikimedia.org/wiki/File:Dublin_StAndrews_WestlandRow_45_IMG_20250804_1027.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">6</td>
+        <td class="kind">object</td>
+        <td>the brown macintosh</td>
+        <td>{{PD-anon-1923}} (resolves to PD-anon-expired): &quot;This work was published before January 1, 1931 and it is anonymous or pseudonymous due to unknown authorship. It is in the public domain in the United States as well as countries and areas where the copyright terms of anonymous or pseudonymous works are 95 years or fewer since publication.&quot; — <a href="https://commons.wikimedia.org/wiki/File:Carson,_Pirie,_Scott_%26_Co._Macintosh,_1893.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">6</td>
+        <td class="kind">place</td>
+        <td>Glasnevin Cemetery, Dublin - geograph.org.uk - 5947111.jpg</td>
+        <td>CC BY-SA 2.0 Generic — Gareth James (geograph profile 32787), photographed 14 October 2018 — <a href="https://commons.wikimedia.org/wiki/File:Glasnevin_Cemetery,_Dublin_-_geograph.org.uk_-_5947111.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">7</td>
+        <td class="kind">object</td>
+        <td>the Keyes ad cutting</td>
+        <td>{{PD-UK-unknown}} — rendered on the file page as &quot;Public domain / This UK artistic or literary work, of which the author is unknown and cannot be ascertained by reasonable enquiry, is in the public domain because it ... was made available to the public ... more than 70 years ago (before 1 January 1956).&quot; — <a href="https://commons.wikimedia.org/wiki/File:19090619_Selfridge%27s_ad_-_The_Recollection_of_Quality_-_The_Times_(London)_p4.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">8</td>
+        <td class="kind">object</td>
+        <td>The Elijah throwaway</td>
+        <td>{{cc-by-2.0}} — &quot;This file is licensed under the Creative Commons Attribution 2.0 Generic license.&quot; Flickr-reviewed: FlickreviewR passed 2024-01-05, confirming cc-by-2.0 at source. — <a href="https://commons.wikimedia.org/wiki/File:Rev._John_Alexander_Dowie,_City_of_Zion_brochure.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">9</td>
+        <td class="kind">object</td>
+        <td>Stephen's Latin Quarter hat</td>
+        <td>Public Domain Mark 1.0 + PD-old-80 (&quot;The author died in 1932, so this work is in the public domain in its country of origin and other countries and areas where the copyright term is the author's life plus 80 years or fewer&quot;) + PD-US-expired (&quot;This work is in the public domain in the United States because it was published before January 1, 1931&quot;) + PD-Art (PD-old-auto-expired) — <a href="https://commons.wikimedia.org/wiki/File:Ramon_Casas_-_Self-portrait_-_Google_Art_Project_(559678).jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">9</td>
+        <td class="kind">place</td>
+        <td>Kildare Street — the National Museum and National Library</td>
+        <td>Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0), self-published, dual-licensed at the reuser's election with GFDL — <a href="https://commons.wikimedia.org/wiki/File:National_Library_of_Ireland,_Dublin,_October_2010_(01).JPG" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">10</td>
+        <td class="kind">object</td>
+        <td>Boylan's fruit basket (port and peaches)</td>
+        <td>Public domain — PD-old-100 (country of origin France; Manet d. 1883) plus Public Domain Mark 1.0 — <a href="https://commons.wikimedia.org/wiki/File:Basket_of_Fruit,_by_%C3%89douard_Manet.JPG" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">11</td>
+        <td class="kind">object</td>
+        <td>The blind stripling's tapping cane</td>
+        <td>CC-BY-4.0 (Creative Commons Attribution 4.0 International), attribution: Auckland Museum — <a href="https://commons.wikimedia.org/wiki/File:Cane_(AM_72245-1).jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">11</td>
+        <td class="kind">place</td>
+        <td>the Ormond Hotel, Upper Ormond Quay</td>
+        <td>Creative Commons Attribution 2.0 Generic (CC BY 2.0) — <a href="https://commons.wikimedia.org/wiki/File:Ormond_quay_upper_(8158636690).jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">12</td>
+        <td class="kind">object</td>
+        <td>the Jacobs' biscuit tin</td>
+        <td>{{PD-old-70-1923}} — renders on the file page as: &quot;This work is in the public domain in its country of origin and other countries and areas where the copyright term is the author's life plus 70 years or fewer&quot; PLUS &quot;This work is in the public domain in the United States because it was published (or registered with the U.S. Copyright Office) before January 1, 1931.&quot; — <a href="https://commons.wikimedia.org/wiki/File:Literature_Biscuit_Tin,_1906_(CH_18635299).jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">13</td>
+        <td class="kind">object</td>
+        <td>the lemon soap</td>
+        <td>PD-old-70-1923 — <a href="https://commons.wikimedia.org/wiki/File:Advertisement_for_Pears%27_Soap_illustrated_with_Halley%27s_Comet_LCCN2002712858.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">14</td>
+        <td class="kind">object</td>
+        <td>Stephen's wages (three pounds twelve)</td>
+        <td>CC0 1.0 Universal Public Domain Dedication ({{Cc-zero}} on the file page; API LicenseShortName &quot;CC0&quot;, UsageTerms &quot;Creative Commons Zero, Public Domain Dedication&quot;) — <a href="https://commons.wikimedia.org/wiki/File:Edward_VII_sovereign_MET_DP100405.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">15</td>
+        <td class="kind">object</td>
+        <td>Stephen's ashplant</td>
+        <td>PD-old-100 + Public Domain Mark 1.0 + PD-US-expired — <a href="https://commons.wikimedia.org/wiki/File:Wandelstok,_objectnr_4783.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">16</td>
+        <td class="kind">object</td>
+        <td>Sweets of Sin</td>
+        <td>{{PD-old-100-expired}} — rendering as: &quot;This work is in the public domain in its country of origin and other countries and areas where the copyright term is the author's life plus 100 years or fewer.&quot; + &quot;This work is in the public domain in the United States because it was published (or registered with the U.S. Copyright Office) before January 1, 1931.&quot; + Creative Commons Public Domain Mark 1.0 — <a href="https://commons.wikimedia.org/wiki/File:Aurora_Floyd_1892.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">16</td>
+        <td class="kind">place</td>
+        <td>the cabman's shelter, Butt Bridge</td>
+        <td>Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0), released by the photographer under {{self}} — <a href="https://commons.wikimedia.org/wiki/File:River_Liffey,_Butt_Bridge_and_Loopline_Bridge.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">17</td>
+        <td class="kind">document</td>
+        <td>Dr G. S. Buchanan's report to the Local Government Board on an outbreak of illness at Mansfield caused by eating potted meat (London: printed for H.M.S.O. by Eyre and Spottiswoode, 1896; 12 pages, 33 cm; report dated May 1896)</td>
+        <td>Public domain — {{PD-old-100-expired}} as tagged on Commons — <a href="https://commons.wikimedia.org/wiki/File:Dr._G.S._Buchanan%27s_report_to_the_Local_Government_Board_on_an_outbreak_of_illness_at_Mansfield_caused_by_eating_potted_meat_(IA_b30557628).pdf" target="_top" rel="noopener">source</a></td>
+      </tr>
+      <tr>
+        <td class="num">18</td>
+        <td class="kind">object</td>
+        <td>the orangekeyed chamberpot</td>
+        <td>Creative Commons Attribution-Share Alike 3.0 Unported (CC BY-SA 3.0) — <a href="https://commons.wikimedia.org/wiki/File:Museum_Rotterdam,_wastafelset_Soci%C3%A9t%C3%A9_C%C3%A9ramique,_kamerpo.jpg" target="_top" rel="noopener">source</a></td>
+      </tr>
+  </tbody>
+</table>
+
+<h2>What is missing, and why</h2>
+<p>An empty slot on this page is a fact about the record, not a gap in the work.</p>
+<table>
+  <thead><tr><th scope="col">Ep</th><th scope="col">Layer</th><th scope="col">Why it is empty</th></tr></thead>
+  <tbody>
+      <tr>
+        <td class="num">1</td>
+        <td class="kind">place</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">1</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">2</td>
+        <td class="kind">place</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">2</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">3</td>
+        <td class="kind">place</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">3</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">4</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">5</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">6</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">7</td>
+        <td class="kind">place</td>
+        <td>base document 03 documents 2 places in this episode's hours, and nothing in the record ranks them. A place is not an episode (catch C-56 is the same mistake made about episode names), so choosing one is an editorial act and it is the author's.</td>
+      </tr>
+      <tr>
+        <td class="num">7</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">8</td>
+        <td class="kind">place</td>
+        <td>base document 03 documents 3 places in this episode's hours, and nothing in the record ranks them. A place is not an episode (catch C-56 is the same mistake made about episode names), so choosing one is an editorial act and it is the author's.</td>
+      </tr>
+      <tr>
+        <td class="num">8</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">9</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">10</td>
+        <td class="kind">place</td>
+        <td>The place layer is empty on this panel and the panel says so. Base document 03 documents no place in this episode's hours. Its tracks name places, but a track is where a person is going or is sighted rather than where the episode sits, and at least one is marked [assumed] by the constraint model itself — so a track here would publish the model's assumption as the record's place (learning L-26).</td>
+      </tr>
+      <tr>
+        <td class="num">10</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">11</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">12</td>
+        <td class="kind">place</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">12</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">13</td>
+        <td class="kind">place</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">13</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">14</td>
+        <td class="kind">place</td>
+        <td>base document 03 documents 2 places in this episode's hours, and nothing in the record ranks them. A place is not an episode (catch C-56 is the same mistake made about episode names), so choosing one is an editorial act and it is the author's.</td>
+      </tr>
+      <tr>
+        <td class="num">14</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">15</td>
+        <td class="kind">place</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">15</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">16</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">17</td>
+        <td class="kind">object</td>
+        <td>No image of this object class could be cleared to the project's standard, and on 26 July 2026 the author ruled that this slot stays EMPTY rather than being filled by something that is not an object. Episode 17 is therefore a two-layer panel — place and document — and the colophon records the absence. The panel carries no substitute object.</td>
+      </tr>
+      <tr>
+        <td class="num">17</td>
+        <td class="kind">place</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+      <tr>
+        <td class="num">18</td>
+        <td class="kind">place</td>
+        <td>The place layer is empty on this panel and the panel says so. Nothing in the held record places this episode: base document 03 documents no place in its hours and it has no tracks either. Empty shown as empty.</td>
+      </tr>
+      <tr>
+        <td class="num">18</td>
+        <td class="kind">document</td>
+        <td>this slot is not yet sourced</td>
+      </tr>
+  </tbody>
+</table>
+
+<h2>Institutional marks on the scans</h2>
+<p>A caption-free panel cannot tell a reader that the stamp is a modern library's and not part of the 1896 printing. That is the limitation, it is real, and 'mention them where needed' is what is done about it: every admitted mark is recorded against its image and must appear in the Atlas's colophon, which is the only surface the form leaves available. The ruling, 2026-07-26, in the author's own words: <em>&ldquo;We have to accept limitations and mention them where needed and continue.&rdquo;</em></p>
+<table>
+  <thead><tr><th scope="col">Ep</th><th scope="col">Layer</th><th scope="col">The mark</th></tr></thead>
+  <tbody>
+      <tr><td class="num">17</td><td class="kind">document</td><td>Page 1 carries an inked WELLCOME LIBRARY / General Collections ownership stamp in the lower right, with a handwritten accession number beside it. Page 2 carries a printed Wellcome barcode, 22502708362, in the lower left. Both are modern marks on the physical artefact and neither is part of the 1896 printing.</td></tr>
+  </tbody>
+</table>
+
+<h2>Caveats</h2>
+<ul class="caveats">
+      <li><span class="num">4</span> <span class="kind">place</span> — A wide view straight down the roadway, taking in both terraces and no single doorway. The camera (Structured Data P1259: 53.357650, -6.263443) stands at the northern end of Dorset Street Upper — which Nominatim bounds at roughly 53.3530-53.3574 / -6.2683 to -6.2639 — looking south along it. What the frame does NOT show: it does not show Eccles Street. The camera stands close to where Eccles Street's east end meets Dorset Street, but it is turned to look directly away, so no part of Eccles Street enters the picture. It also shows no butcher's shop and no shopfront framed large enough to be mistaken for one; the shopfronts on the left run away from the camera in sharp perspective and none is legible as a subject. Nothing in the frame existed on 16 June 1904: the surviving street fabric is largely later rebuilding, and the picture additionally contains motor cars, a red delivery van, a white van, a bus, painted lane markings and a hatched yellow box, steel bollards, a modern litter bin, a black refuse sack, tall modern street lamps, traffic and bus-lane signage on galvanised poles, a wheeled advertising board, and pedestrians in 2010 dress. The light is flat bright overcast, not a June morning.</li>
+      <li><span class="num">5</span> <span class="kind">place</span> — The widest single frame found: it holds the church portico, the Georgian terrace running away to the right, AND the Loop Line bridge with the station's curved roof at the left — three of the quarter's four landmarks at once. It does NOT show Sweny's or the post office. Not on 16 June 1904: a red-surfaced cycle lane and modern painted road markings, modern lamp standards, a traffic signal, printed notice boards on the railings, the station's twentieth-century curved roof and modern hoardings on the bridge — and, at the right edge, a white camping tent pitched against the churchyard railings, which is a piece of contemporary Dublin the panel would carry silently and which the author should see before ruling.</li>
+      <li><span class="num">6</span> <span class="kind">place</span> — The frame is a raking wide view over a dense field of 1860s-1900s headstones, Celtic crosses and a standing Sacred Heart figure, running back to a treeline. It does NOT show the O'Connell round tower, the Finglas Road gates, the mortuary chapel, the museum, any path a funeral cortege would take, or any open grave — so it claims the burial ground and nothing more specific. Objects that did not exist on 16 June 1904: a small blue-and-white adhesive grave-maintenance sticker on the shaft of the nearest Celtic cross (I found it only by zooming to that region at full resolution — at panel size it is an illegible blue fleck, not readable text); a modern asphalt road carrying a painted white edge-line along the right margin; red and white decorative gravel chippings, concrete grave kerbing and clipped box borders, all late-20th-century grounds practice; the background trees are later plantings. The monuments themselves are overwhelmingly of the right period.</li>
+      <li><span class="num">9</span> <span class="kind">place</span> — It shows the National Library only — not the National Museum, and not Kildare Street. It is a close view of the forecourt gate, so a reader gets &quot;the gate of the Library&quot; rather than &quot;the street with its two rotundas&quot;, and the slot is named for both institutions. Second, the panel will carry a legible word: LIBRARY, in gilt, is lettering cast into the photographed gate, part of the fabric and not a caption or credit we add, so it breaches nothing — but it is worth the author knowing that this panel will read as labelled where no other panel does, and deciding whether that is a virtue or an inconsistency. Third, it is a 2010 photograph. The gates, the gilt lettering and the rotunda were all standing in 1904 and nothing in the frame contradicts that, but the photograph proves nothing about 1904 and does not pretend to.</li>
+      <li><span class="num">11</span> <span class="kind">place</span> — Stated plainly rather than stretched. FIRST, this is not a photograph of the Ormond Hotel and does not claim to be. It is a photograph of the quay the hotel stood on. That is exactly why it is safe: a wide view of a terrace claims the terrace, whereas the 7 Eccles Street failure happens when a photograph frames one door and the caption-free panel silently turns it into Bloom's door. Nothing here is framed as a single building, and no building in it is identifiable as the hotel without a caption — which in a caption-free atlas is a virtue, not a defect. SECOND, and this must be flagged hard: nothing in this frame is 1904 fabric in the sense a reader might assume. The photograph is from September 2012. The Ormond Hotel was demolished in 2018 and rebuilt, so the present-day quay does not contain it at all; and the building demolished in 2018 was itself a much-altered twentieth-century thing, not the hotel Joyce put Bloom in. So this image is one remove from the book on both counts — it shows a 2012 streetscape, and even the 2012 streetscape was not Joyce's. What survives across all of it is the alignment: the river, the quay wall, the line of the terrace, the Four Courts dome in the same place. That continuity is the whole of the claim. THIRD, aspect ratio: 3168x1505 is 2.105:1, a wide letterbox, which will pad awkwardly in a grid. Note that this file is CC BY 2.0 and not share-alike, so the no-crop rule (which RIGHTS.md states for share-alike images) does not bind it and a crop would be licit — but that is the author's call, not mine, and padding uncropped keeps the whole Atlas on one rule. FOURTH, the photograph is HDR tone-mapped: the sky and the brickwork carry a visible processing signature that is the photographer's style and not the Atlas's. If that reads as authorial interference, the geograph backup is a plain documentary frame.</li>
+      <li><span class="num">16</span> <span class="kind">place</span> — State this plainly: the cabman's shelter is NOT in this photograph, and no photograph of it exists on Commons. The shelter is gone. What is more, the road bridge in the foreground is NOT the bridge Bloom crossed — the 1904 Butt Bridge was the 1879 iron swing bridge (Beresford Bridge), demolished and replaced by the present fixed concrete span in 1932. Only the Loopline railway viaduct behind it is 1904 fabric. The image also carries visible modern Dublin: green double-decker buses on Eden Quay at the left edge, IFSC glass office blocks behind the Custom House, contemporary lamp standards and quay railings. Caption-free, a reader sees 'the Liffey at the Custom House, with a railway bridge' — which is true, is the right stretch of river, and claims nothing it cannot support. It does not read as 1904 and should not be presented as though it did. This is the site, honestly; it is not the hut, and it is not the 1904 bridge.</li>
+      <li><span class="num">17</span> <span class="kind">document</span> —  <em>THE TAG'S STATED GROUND IS NOT TRUE OF THIS AUTHOR, AND THE CLEARANCE HOLDS ANYWAY — recorded rather than smoothed over, because a licence this Atlas would rest on should not rest on a reason that does not apply. {{PD-old-100-expired}} asserts a life-plus-100 basis. Buchanan died on 11 October 1936 — verified against two sources that did not write the Commons page: The National Archives' authority record ('Buchanan, Sir George Seaton, (1869-1936)') and Nature's obituary of 14 November 1936. That is 90 years, not 100. The work is public domain on TWO independent country-of-origin grounds, either of which alone satisfies RIGHTS.md clause 7: it is an 1896 H.M.S.O. publication, so UK Crown copyright ran 50 years from publication and expired in 1946; and life-plus-70 for an author who died in 1936 expired on 1 January 2007. The tag names the wrong one of the available grounds. L-17, and the second instance of that shape in one day.</em></li>
+      <li>This atlas is built from one reader's first cover-to-cover reading of the book, in July 2026. <strong>n = 1</strong>, and the arrangement is that reader's (anchor A10).</li>
+      <li>Sourced and inferred are marked apart throughout (A5). A panel's place is the place base document 03 documents in that episode's hours, or the place the author chose from several the record does not rank — and which of those it is, is recorded.</li>
+</ul>
+</section>
+
+<p class="strip"><a href="https://hulkiokantabak.github.io/ulysses/" target="_top">The Ulysses Project</a> · <a href="https://hulkiokantabak.github.io/ulysses/dimensions/atlas-of-one-day/" target="_top">Dimension 14</a> · <a href="https://hulkiokantabak.github.io/ulysses/method/" target="_top">Method</a></p>
+
+</main>
+</body>
+</html>
