@@ -265,6 +265,30 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-72</td>
+<td>07-26</td>
+<td>3</td>
+<td><strong>The licence passed and the pixels did not — and the only scan that exists carries a modern institution's marks on every page.</strong> Episode 17's object never cleared, and the author ruled on 26 July that Dr G. S. Buchanan's 1896 H.M.S.O. report on an outbreak of illness at Mansfield caused by eating potted meat moves into the <strong>document</strong> layer, with the object slot left empty and saying so. The licence was read twice by two paths before anything was fetched — the file page's RAW WIKITEXT carries exactly one licensing template, <code>{{PD-old-100-expired}}</code>, and the API's extmetadata independently reports License <code>pd</code>, UsageTerms <em>&quot;Public domain&quot;</em>, Copyrighted false, no NonCommercial term, no NoDerivatives term, no <code>{{watermark}}</code> tag and no second template. It fetched, it cleared the clearance-comparison, it sniffed clean, it sized clean. <strong>Then it was looked at</strong>, which is the rule RIGHTS.md clause 7 added on 25 July 2026 after a correctly licensed photograph turned out to carry a photographer's name burned into the pixels — <em>&quot;Commons flags these with <code>{{watermark}}</code> in the wikitext … but the flag is applied by volunteers and its absence proves nothing — look at the pixels.&quot;</em> <strong>Page 1 carries an inked WELLCOME LIBRARY / General Collections ownership stamp in the lower right with a handwritten accession number beside it; page 2 carries a printed Wellcome barcode, 22502708362, in the lower left.</strong> Both are modern institutional marks on the physical artefact and neither is part of the 1896 printing. A Commons search returns <strong>exactly one</strong> file for this report, so there is no second scan to prefer. <strong>And the tag's own stated ground is false of this author, while the clearance holds anyway:</strong> <code>PD-old-100-expired</code> asserts a life-plus-100 basis, and Buchanan died on 11 October 1936 — verified against two sources that did not write the Commons page, The National Archives' authority record and <em>Nature</em>'s obituary of 14 November 1936. Ninety years, not a hundred. The work is public domain on two independent country-of-origin grounds either of which alone satisfies clause 7 — an 1896 H.M.S.O. publication whose UK Crown copyright ran fifty years from publication and expired in 1946, and life-plus-70 for an author who died in 1936, expired 1 January 2007. <strong>L-17 twice in one day: the claim right, the qualifier wrong</strong></td>
+<td><strong>FAILED CLOSED, and the question is the author's.</strong> The image is refused, the file removed, the provenance record dropped and episode 17's document slot returned to <code>to-source</code> <strong>with the whole finding on the record</strong> rather than a bare status. The reason it is not a session's call: clause 7's no-credit rule was written for an <strong>authorship</strong> credit, which is what CC BY-SA 2.0's <em>&quot;at least as prominent as any other authorship credit&quot;</em> clause is about — and a library's ownership stamp is not one, since Wellcome is not the author, not the licensor, and the file is public domain. But the clause as written says <strong>&quot;no panel carries any credit at all&quot;</strong> and <strong>&quot;a credit in the image is still a credit, whoever put it there&quot;</strong>, and read literally it refuses this scan. Reading a rule's purpose against its own words is the one-notch-too-strong move this repository has logged more than any other, so the session did not. <strong>And the question is structural, not local: it reaches the whole document layer, all eighteen panels.</strong> That layer is specified as Thom's 1904 (University of Victoria scans) and the Ordnance Survey six-inch sheets (National Library of Scotland) — and library and archive scans of period documents routinely carry stamps, accession numbers and barcodes, because that is how institutions mark physical holdings. If the literal reading stands, the document layer may not be buildable from institutional scans at all. Recorded in the manifest as an open question with its reach stated, and put to the author</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-71</td>
+<td>07-26</td>
+<td>3</td>
+<td><strong>Four documents were telling the next session that finished work was open, and one of them was telling the author to answer a question he had already answered.</strong> All four verified against the repository before being touched, and they are one class: prose that outlived the build. (a) <code>docs/panel-session-06.md</code> — fourth in the list the handoff tells a new session to read first — closed with <em>&quot;the structural floor found three pages without exactly one <code>h1</code>, one with a skipped heading level, and eleven with a <code>&lt;th&gt;</code> lacking <code>scope</code> — <strong>real, small, and not yet fixed</strong>.&quot;</em> They were fixed as <strong>C-68</strong>, in commit <code>a90937c</code>, and <strong>§11t</strong> has enforced all three since; today's build prints <em>&quot;structural floor holds on 47 pages&quot;</em>. <strong>The same commit rewrote the two sentences immediately above that clause and left the clause standing</strong> — L-29 one turn worse than its own statement, because here the editing pass that fixed the defect framed its own scope by the paragraph it happened to be rewriting. (b) <code>docs/handback.md</code> recorded a <strong>[DEFAULT]</strong> decision that standalone document pages <em>&quot;render their documents' heading structure exactly as written, even where a source document uses several <code>h1</code>s — verbatim wins over the single-h1 accessibility convention there, deliberately.&quot;</em> C-68 reversed exactly that for the three pages where the two rules collided. (c) <code>data/atlas-place-candidates.json</code> carried a hand-written key <strong>literally named <code>openQuestionForTheAuthor</code>, ending in the word &quot;Unruled.&quot;</strong> — about the TEXT INSIDE THE PICTURE question the author answered on 25 July, by the <code>building-yes-nameplate-no</code> ruling recorded <strong>eleven lines below it in the same file</strong>, which admitted episode 9 and refused episode 12. Nothing owned the key, so <code>npm run rulings</code> rebuilt everything around it; and <code>tools/check.mjs</code> contained the string <code>openQuestionForTheAuthor</code> <strong>zero times</strong>, so nothing read it either. C-59's shape exactly: the file contradicted itself and the stale half was the half shaped like an instruction. (d) <code>docs/HANDOFF.md</code> — and the author's own handoff prompt after it — said the eight open place slots' candidates were <em>&quot;surveyed, licence-cleared and quoted verbatim in <code>data/atlas-place-candidates.json</code>&quot;</em>. <strong>That file surveys a disjoint set of eight.</strong> It covers episodes 1, 2, 3+13, 9, 11, 12, 15 and 16 — every one a place base document 03 <strong>settles</strong> — while the eight slots that need his choices are episodes 4, 5, 6, 7, 8, 10, 14 and 18, and not one of them appears in it. An author opening the named file to make the eight choices would have found eight different places</td>
+<td>(a) and (b) corrected with the correction <strong>shown beside the struck sentence and dated</strong> rather than swapped in (A4), and (b) replaced by the rule as it actually stands, which is structural rather than a category: <strong>a document shifts one rank exactly when its page supplies its own <code>&lt;h1&gt;</code></strong> — five do, eight do not, and all eight of those source documents carry exactly one <code>#</code>, so verbatim did not lose, the two rules simply had nothing to disagree about anywhere but the three pages C-68 corrected. (c) fixed <strong>structurally, not by rewording</strong>, which is the fix C-64 already taught in that very tool: <code>tools/apply-atlas-rulings.mjs</code> now <strong>owns the key</strong>, deletes it before every rebuild, and regenerates a <code>questionsForTheAuthor</code> record whose <code>status</code> is <strong>derived</strong> from whether its <code>answeredBy</code> names a rule the tool actually applies — so a question cannot be marked answered by prose, and an answered question cannot survive a run that removes its rule. The structural evidence goes further than the link: this question named two frames and expected them to part, so the gate asserts that the answering rule produced <strong>at least one admission and at least one refusal</strong>, which no sentence can satisfy (L-32). <strong>Three of three mutations red for the named reason</strong> — the question naming a rule the tool does not apply; the rule ceasing to part the two frames; and the L-31 floor, an emptied questions record. (d) corrected in HANDOFF with the two sets named apart and the file that actually holds the open slots' shortlists — <code>data/atlas-targets.json</code> — named instead</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-70</td>
+<td>07-26</td>
+<td>—</td>
+<td>Not an error — <strong>the author's four answers, logged, and the first of them is the only PICK in this project's history.</strong> (1) <strong>THE SIX PLACE SLOTS ARE CHOSEN.</strong> Base document 03 documents several places for six episodes and nothing ranks them; he chose the set that shows <em>the interior, where the episode's work is done</em> — episode 4 Dlugacz's in Upper Dorset Street, 5 the Westland Row quarter, 6 Glasnevin Cemetery, 7 the Freeman's Journal in Prince's Street, 8 Grafton–Duke Street, 14 Holles Street hospital. Every place distinct, Kildare Street left to episode 9 which was already cleared and acquired. (2) <strong>EPISODES 10 AND 18 CARRY NO PLACE AND THE PANEL SAYS SO</strong> — 03 documents none for 10 and nothing whatever for 18, so there was nothing to pick between and he ruled the absence instead. (3) <strong>A11 STANDS AGAIN</strong>, re-affirmed a second day running: no seventeenth dimension, no fourth inventory, and the run's scope is the Atlas and the site. (4) <strong>EPISODE 17's Buchanan report moves to the DOCUMENT layer</strong> and its object slot stays empty and says so — <em>&quot;cleanest bookkeeping: a document recorded as a document&quot;</em> — over the alternative of leaving it in the object slot as a declared substitute, which would have had the manifest calling a document an object</td>
+<td><strong>THE PICKS ARE PICKS, AND THAT IS ENFORCED RATHER THAN DESCRIBED.</strong> C-64 is the precedent and it is a precedent about the opposite case: there the author ratified four SENTENCES and <code>tools/apply-atlas-rulings.mjs</code> applies them so every outcome names the rule that produced it. Here he gave six choices, which are not derivable and must never be dressed as derivations (A5; C-51 is what that looks like). So <code>tools/apply-place-choices.mjs</code> (<code>npm run choices</code>) records <strong>keys only</strong> — every other field, the place's name, its basis in 03, whether RIGHTS.md permits a photograph of it, is looked up from the derived shortlist rather than typed (L-22) — and new section <strong>§11u</strong> holds four properties: a pick must name a key <code>data/atlas-targets.json</code> <strong>actually produced</strong>, which is a structural test no prose can satisfy (L-32); a pick may not be made where 03 settles the slot by itself, and a ruling-of-absence may not be filed where 03 offers candidates, so the two kinds of decision cannot be filed as each other; the arithmetic closes in both directions, every open slot decided exactly once and nothing decided that is not open; and <strong>the slot stays OPEN in the derivation</strong>, because choosing which of the record's places this atlas shows is not making the record rank them — which keeps §11o's clean-sweep floor armed and stops a pick being read later as base document 03's own. <strong>Nine of nine mutations red for the named reason</strong>, and the last two matter most: the leak was tested by mutating the GENERATOR and regenerating, because a gate behind a byte comparison can only be tested that way; and when the first leak mutation went red on an upstream guard rather than on §11u, §11u was re-tested with <strong>every upstream guard disabled</strong> and caught it alone — a gate that never runs because something else always fires first is not a passing gate, it is an untested one</td>
+<td>—</td>
+</tr>
+<tr>
 <td>C-69</td>
 <td>07-25</td>
 <td>—</td>
@@ -1100,6 +1124,76 @@ red for the reason you named in advance.
 structurally, against the manifest's layer keys; its forbidden-route gate scopes its disclosure
 test to the sentence rather than to a window of characters; every branch negative-tested, ten of
 ten red for the right reason, with each expected failure named before the mutation ran.</p>
+<p><strong>L-33 — A remedy belongs to its class, not to the file you found it in.</strong>
+<em>From C-72.</em> On 25 July catch C-64 found a real defect and fixed it well: <code>apply-atlas-rulings.mjs</code>
+reads the file it writes, so it only ever ADDED keys, and an earlier run's output survived every
+later one untouched. The remedy — <em>delete the keys you own before rebuilding them</em> — was written
+into that tool, negative-tested there, and escalated into the handoff as a named failure mode. Its
+identical twin sat in <code>fetch-atlas.mjs</code> and nobody looked, because the fix had been scoped to the
+tool where the defect was noticed rather than to the shape of the defect. It was still there a day
+later, and it was demonstrated rather than argued: episode 17's document slot was set back to
+<code>to-source</code>, a full pass was run, and the <code>ep17-document</code> record survived it — <strong>21 provenance
+records standing for 20 cleared slots</strong>, in a file whose entire job is to say which images have a
+licence behind them.
+This is <strong>L-29 one level over.</strong> L-29 is about a claim: the grep that finds a defect also frames
+it, so the fix inherits the shape of the search and every paraphrase escapes. This is the same
+mechanism in code: <strong>the file that contains a defect also frames its remedy</strong>, and every sibling
+implementation escapes by construction. The pull is strong because fixing the found instance
+feels complete — it is testable, it goes red and then green, and the report reads like a closed
+loop.
+So the habit, and it is cheap: <strong>when a fix is written, describe the defect in one sentence with
+no filename in it, then go and find every other place that sentence is true of.</strong> Here the
+sentence is <em>&quot;a generator that reads the file it writes cannot remove anything&quot;</em>, and it is
+answerable mechanically — seven tools under <code>tools/</code> read a path they also write. Five of them
+(<code>state.mjs</code>, <code>build-substrate.mjs</code>, <code>derive-atlas-targets.mjs</code>, <code>extract-record.mjs</code>,
+<code>apply-place-choices.mjs</code>) read their own output <strong>only</strong> to byte-compare it in <code>--check</code> and
+build their content from scratch, so the defect cannot reach them. Exactly two ever used their own
+output as a BASE, and both are now fixed. <strong>The class is closed across <code>tools/</code>, and that sweep is
+what makes this a learning rather than a second anecdote</strong> — a rule asserted from one instance and
+not swept is the thing L-31 warns about wearing different clothes.
+One refinement worth keeping, because the obvious fix was wrong: the remedy here is <strong>not</strong> &quot;empty
+the file and rebuild&quot;. This tool hits Commons rate limits often enough to carry a retry, and
+rebuilding from empty would let a transient 429 erase a good record for a slot that is still
+cleared and whose file is still on disk. The ownership rule is stated against the manifest instead
+— <em>a provenance record exists if and only if the manifest marks that slot cleared</em> — which removes
+exactly what was withdrawn and nothing else, and a run scoped to one episode owns only that
+episode's records because it did not look at the others.
+<em>Applied:</em> <code>fetch-atlas.mjs</code> drops the records it owns and deletes their orphaned files, logging
+what it dropped rather than printing a total; demonstrated absent before the fix and present after,
+which is the mutation test run in the right order; the sweep above recorded so the next session
+does not repeat it.</p>
+<p><strong>L-34 — When a rule's words and its purpose diverge, fail closed and hand the divergence up.</strong>
+<em>From C-72.</em> RIGHTS.md clause 7 forbids any credit on an Atlas panel, and says so twice over:
+attribution lives in the colophon, which is lawful <em>&quot;only while no panel carries any credit at
+all&quot;</em>, and <strong>&quot;a credit in the image is still a credit, whoever put it there.&quot;</strong> The clause was
+written after a survey found a photographer's name burned into a correctly licensed photograph —
+an <strong>authorship</strong> credit, which is exactly what CC BY-SA 2.0's <em>&quot;at least as prominent as any
+other authorship credit&quot;</em> condition is about.
+Then the only scan on Commons of the period document episode 17 needed turned out to carry a
+Wellcome Library ownership stamp on page 1 and a Wellcome barcode on page 2. Read by its <strong>words</strong>
+the clause refuses it. Read by its <strong>purpose</strong> it does not reach it at all: a library's ownership
+mark is not an authorship credit, Wellcome is neither author nor licensor, and the file is public
+domain, so no share-alike prominence condition is engaged by anything in the frame.
+Both readings are defensible, which is the whole difficulty. The temptation is to resolve it, and
+the direction the resolution goes is predictable: a session that wants the slot filled reads the
+purpose, and a session that wants to look rigorous reads the words. <strong>Neither is a session's call,
+because a rule's scope is a decision about what the rule is for</strong>, and this project's own record
+is that reading a rule's purpose against its own text is the one-notch-too-strong move it has
+logged more often than any other (L-17, and C-51 and C-53 are two faces of it).
+So: <strong>fail closed, and say what you did not decide.</strong> The slot goes back to open with the finding
+on it, not the image with a caveat on it — because an image on a panel is a published fact and a
+caveat in a data file is not, and if the author later reads it the other way the cost of having
+waited is one fetch.
+And the part that makes this worth a rule rather than a note: <strong>check whether the divergence is
+local before you describe it as local.</strong> This one is not. The Atlas's document layer is specified
+as Thom's 1904 and the Ordnance Survey sheets, both institutional scans, and library and archive
+scans of period documents routinely carry stamps, accession numbers and barcodes because that is
+how institutions mark physical holdings. On the literal reading the layer may not be buildable
+from institutional scans at all — which is a structural fact about the dimension, and the
+difference between a question about one page and a question about eighteen panels.
+<em>Applied:</em> the image refused, the file removed, the provenance record dropped, episode 17's
+document slot returned to <code>to-source</code> with the whole finding recorded in the manifest, and the
+question put to the author with its reach stated rather than resolved by the session that found it.</p>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
