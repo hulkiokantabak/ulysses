@@ -40,8 +40,10 @@
      act either. */
   .slot { aspect-ratio:3/2; overflow:hidden; background:#04101f; }
   .slot img { width:100%; height:100%; object-fit:contain; display:block; }
-  .slot.empty { border:1px solid rgba(185,195,214,.28);
-                background:repeating-linear-gradient(135deg, transparent 0 7px, rgba(185,195,214,.14) 7px 8px); }
+  /* A drawn hole, and nothing else in it. Build panel session 07 refused any texture or device in
+     an empty slot: a hatch is a mark that reads as content, and an empty slot must read as absence
+     at the same footprint a plate would occupy. A keyline on the plate ground, full stop. */
+  .slot.empty { border:1px solid rgba(185,195,214,.28); }
   table { border-collapse:collapse; width:100%; font-size:.9375rem; margin:.75rem 0 0; }
   th,td { text-align:left; vertical-align:top; padding:.375rem .5rem; border-bottom:1px solid var(--rule); }
   th { font-family:var(--mono); font-size:.8125rem; letter-spacing:.04em; }
@@ -61,162 +63,165 @@
 <p class="kicker">Dimension 14 · Type VI, a made object · eighteen panels, one per episode</p>
 
 <p class="lede">Eighteen panels, one for each section of 16 June 1904, each holding up to three
-things beside one another: an object, a place, a period document. <strong>Nothing on a panel
+slots, always three, in one fixed order: an object, a place, a period document. <strong>Nothing on a panel
 explains a panel.</strong> That is the form — meaning made by arrangement rather than by argument —
 and it is also the licence: attribution for these images lives in the colophon below, which is
 lawful only while no panel carries any credit at all. A single caption would breach every
 share-alike licence on this page at once.</p>
 
-<p class="lede">Where a slot is empty it is <em>shown</em> empty, hatched, rather than closed up.
-The grid does not tidy itself. Every absence has a reason and every reason is in the colophon.</p>
+<p class="lede">Where a slot is empty it is <em>shown</em> empty — a drawn keyline at exactly the
+footprint a picture would occupy, never closed up and never textured. The grid does not tidy
+itself. Every absence has a reason and every reason is in the colophon.</p>
+
+<p class="kicker">State 1 · 27 July 2026 · Of 54 slots, 24 hold an image and 30 are empty — 17 of 18 objects, 6 of 18 places, 1 of 18 documents. This is not a promise about the rest.</p>
 
 <p class="lede">The episode numbers and names beside each panel are <strong>scaffolding</strong>:
 Joyce printed no episode titles, and these are the project's own labels for the day's eighteen
 sections (anchor A2). They say which episode a panel belongs to. They do not say what it means.</p>
 
 <div class="plates">
-    <section class="ep" id="ep1">
+    <section class="ep" id="ep1" aria-label="Episode 1">
       <p class="ident"><span class="num">1</span><span class="scaff">Telemachus</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep01-object.jpg" alt="The Martello tower key" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty place slot"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep01-object.jpg" alt="a hand-forged iron door key, dark, lying on a plain pale ground, its bow and wards in profile" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="place layer, empty"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep2">
+    <section class="ep" id="ep2" aria-label="Episode 2">
       <p class="ident"><span class="num">2</span><span class="scaff">Nestor</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep02-object.jpg" alt="Mr Deasy's foot-and-mouth letter" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty place slot"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep02-object.jpg" alt="a page of typewritten official correspondence, headed and signed, on aged paper" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="place layer, empty"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep3">
+    <section class="ep" id="ep3" aria-label="Episode 3">
       <p class="ident"><span class="num">3</span><span class="scaff">Proteus</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep03-object.jpg" alt="Stephen's boots (Mulligan's castoffs)" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty place slot"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep03-object.jpg" alt="a pair of worn leather ankle boots, laces slack, cracked at the toe" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="place layer, empty"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep4">
+    <section class="ep" id="ep4" aria-label="Episode 4">
       <p class="ident"><span class="num">4</span><span class="scaff">Calypso</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep04-object.jpg" alt="the Agendath Netaim flyer" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep04-place.jpg" alt="View south along Upper Dorset Street - geograph.org.uk - 1897946.jpg" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep04-object.jpg" alt="a printed advertising handbill in a foreign alphabet, ruled border, dense small type" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep04-place.jpg" alt="a wide view straight down a roadway, plain terraced houses on both sides, shopfronts at street level, parked cars along the kerb" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep5">
+    <section class="ep" id="ep5" aria-label="Episode 5">
       <p class="ident"><span class="num">5</span><span class="scaff">Lotus Eaters</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep05-object.png" alt="the Freeman's Journal (Bloom's copy)" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep05-place.jpg" alt="Dublin StAndrews WestlandRow 45 IMG 20250804 1027.jpg" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep05-object.png" alt="the folded front page of a broadsheet newspaper, masthead across the top, columns beneath" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep05-place.jpg" alt="a columned church portico on the right, a long brick terrace running away to the left, an iron railway bridge and a curved station roof beyond" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep6">
+    <section class="ep" id="ep6" aria-label="Episode 6">
       <p class="ident"><span class="num">6</span><span class="scaff">Hades</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep06-object.jpg" alt="the brown macintosh" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep06-place.jpg" alt="Glasnevin Cemetery, Dublin - geograph.org.uk - 5947111.jpg" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep06-object.jpg" alt="a long pale gabardine raincoat, buttoned, belted at the waist, hanging full length" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep06-place.jpg" alt="ranks of Victorian headstones and Celtic crosses across mown grass, a standing draped figure among them, a dark treeline behind" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep7">
+    <section class="ep" id="ep7" aria-label="Episode 7">
       <p class="ident"><span class="num">7</span><span class="scaff">Aeolus</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep07-object.jpg" alt="the Keyes ad cutting" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty place slot"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep07-object.jpg" alt="a small rectangular newspaper cutting, a ruled advertisement with a device at its centre" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="place layer, empty"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep8">
+    <section class="ep" id="ep8" aria-label="Episode 8">
       <p class="ident"><span class="num">8</span><span class="scaff">Lestrygonians</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep08-object.jpg" alt="The Elijah throwaway" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty place slot"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep08-object.jpg" alt="a single printed handbill, a short line of heavy display type across a pale sheet" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="place layer, empty"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep9">
+    <section class="ep" id="ep9" aria-label="Episode 9">
       <p class="ident"><span class="num">9</span><span class="scaff">Scylla and Charybdis</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep09-object.jpg" alt="Stephen's Latin Quarter hat" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep09-place.jpg" alt="the gilt-lettered forecourt gate and columned portico on Kildare Street" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep09-object.jpg" alt="a soft wide-brimmed felt hat, crown creased, brim curling" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep09-place.jpg" alt="a tall iron forecourt gate with gilt lettering worked into it, a columned stone portico standing behind" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep10">
+    <section class="ep" id="ep10" aria-label="Episode 10">
       <p class="ident"><span class="num">10</span><span class="scaff">Wandering Rocks</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep10-object.jpg" alt="Boylan's fruit basket (port and peaches)" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty place slot"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep10-object.jpg" alt="a shallow wicker basket packed with fruit, straw padding, a bottle laid among it" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="place layer, empty"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep11">
+    <section class="ep" id="ep11" aria-label="Episode 11">
       <p class="ident"><span class="num">11</span><span class="scaff">Sirens</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep11-object.jpg" alt="The blind stripling's tapping cane" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep11-place.jpg" alt="the Ormond Hotel, Upper Ormond Quay" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep11-object.jpg" alt="a slender wooden walking cane, tapering, with a worn handle and a metal ferrule" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep11-place.jpg" alt="a river quay seen wide from across the water, a continuous terrace of tall houses along the waterfront, a green dome downstream" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep12">
+    <section class="ep" id="ep12" aria-label="Episode 12">
       <p class="ident"><span class="num">12</span><span class="scaff">Cyclops</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep12-object.jpg" alt="the Jacobs' biscuit tin" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty place slot"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep12-object.jpg" alt="a printed tin biscuit box, lithographed panels on its sides, lid seated" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="place layer, empty"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep13">
+    <section class="ep" id="ep13" aria-label="Episode 13">
       <p class="ident"><span class="num">13</span><span class="scaff">Nausicaa</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep13-object.jpg" alt="the lemon soap" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty place slot"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep13-object.jpg" alt="a small rectangular cake of pale soap, edges rounded from use, maker's name pressed into the face" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="place layer, empty"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep14">
+    <section class="ep" id="ep14" aria-label="Episode 14">
       <p class="ident"><span class="num">14</span><span class="scaff">Oxen of the Sun</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep14-object.jpg" alt="Stephen's wages (three pounds twelve)" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty place slot"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep14-object.jpg" alt="coins and folded banknotes of the period laid on a flat ground" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="place layer, empty"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep15">
+    <section class="ep" id="ep15" aria-label="Episode 15">
       <p class="ident"><span class="num">15</span><span class="scaff">Circe</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep15-object.jpg" alt="Stephen's ashplant" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty place slot"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep15-object.jpg" alt="a stout ash walking stick, bark-flecked, one end cut square" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="place layer, empty"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep16">
+    <section class="ep" id="ep16" aria-label="Episode 16">
       <p class="ident"><span class="num">16</span><span class="scaff">Eumaeus</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep16-object.jpg" alt="Sweets of Sin" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep16-place.jpg" alt="the cabman's shelter, Butt Bridge" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep16-object.jpg" alt="the printed paper cover of a cheap novel, title in display type, a figure illustrated below" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep16-place.jpg" alt="a wide reach of river between stone quay walls, a low road bridge crossing in the foreground, a girder railway viaduct behind it" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
-    <section class="ep" id="ep17">
+    <section class="ep" id="ep17" aria-label="Episode 17">
       <p class="ident"><span class="num">17</span><span class="scaff">Ithaca</span></p>
       <figure class="panel">
-      <div class="slot empty" role="img" aria-label="empty object slot"></div>
-      <div class="slot empty" role="img" aria-label="empty place slot"></div>
-      <div class="slot"><img src="images/ep17-document.jpg" alt="Dr G. S. Buchanan's report to the Local Government Board on an outbreak of illness at Mansfield caused by eating potted meat (London: printed for H.M.S.O. by Eyre and Spottiswoode, 1896; 12 pages, 33 cm; report dated May 1896)" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="object layer, empty"></div>
+      <div class="slot empty" role="img" aria-label="place layer, empty"></div>
+      <div class="slot"><img src="images/ep17-document.jpg" alt="a printed title page, a line of spaced capitals at the head, dense letterpress beneath it, an inked oval ownership stamp and a handwritten numeral at the foot" loading="lazy" decoding="async"></div>
       </figure>
     </section>
-    <section class="ep" id="ep18">
+    <section class="ep" id="ep18" aria-label="Episode 18">
       <p class="ident"><span class="num">18</span><span class="scaff">Penelope</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep18-object.jpg" alt="the orangekeyed chamberpot" loading="lazy" decoding="async"></div>
-      <div class="slot empty" role="img" aria-label="empty place slot"></div>
-      <div class="slot empty" role="img" aria-label="empty document slot"></div>
+      <div class="slot"><img src="images/ep18-object.jpg" alt="a glazed earthenware chamber pot, single loop handle, a band of colour at the rim" loading="lazy" decoding="async"></div>
+      <div class="slot empty" role="img" aria-label="place layer, empty"></div>
+      <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
     </section>
 </div>
@@ -516,7 +521,7 @@ grid is an adaptation and this atlas stays clear of that boundary.</p>
       <tr>
         <td class="num">17</td>
         <td class="kind">object</td>
-        <td>No image of this object class could be cleared to the project's standard, and on 26 July 2026 the author ruled that this slot stays EMPTY rather than being filled by something that is not an object. Episode 17 is therefore a two-layer panel — place and document — and the colophon records the absence. The panel carries no substitute object.</td>
+        <td>No image of this object class could be cleared to the project's standard, and on 26 July 2026 the author ruled that this slot stays EMPTY rather than being filled by something that is not an object. Episode 17 therefore carries fewer layers than three, and the colophon records the absence. Corrected 27 July 2026 (build panel session 07): this field said &quot;a two-layer panel — place and document&quot;, and episode 17s PLACE slot is not acquired either, so the panel carries one layer today. How many layers a panel has is a fact about what has been acquired, and asserting it here is a count that goes stale between one acquisition and the next (L-22) — the coverage is derived onto the page itself instead. The panel carries no substitute object.</td>
       </tr>
       <tr>
         <td class="num">17</td>
