@@ -265,6 +265,14 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-81</td>
+<td>07-27</td>
+<td>3</td>
+<td><strong>Nine dimension pages were shipping literal asterisks at the reader, and had been for as long as the fields existed.</strong> The dimension records' prose fields — <code>note</code>, <code>confidence</code>, <code>unit</code>, <code>sources</code> — have always been written in markdown, because they are read and edited as prose, and <code>site/dimensions/dimension.njk</code> printed them <strong>raw</strong>. <strong>Fifty-two literal asterisks across nine published pages</strong>, verified on the live site with a cache-busted read before anything was touched. The worst was <code>four-odysseys</code>' <code>confidence</code> field with twenty-six of them — which is <strong>the most careful rights-and-verification prose in the project</strong>, the field that separates High from Partial claim by claim after catch C-30 withdrew two figures, rendering as asterisk soup. <strong>Twelve of the fifty-two were written the same night</strong>, by the session that added dimension 14's note — a note about honesty, printed unfinished. <strong>It survived because nothing looked.</strong> The checker verified that rendered DOCUMENT text matches its source, that 1131 internal links resolve, that every declared colour pairing meets its floor, that no page carries a stray styling vector — and never that the bytes a reader actually receives are finished prose. That is L-14's shape one level out: not a check passing vacuously, but a property nobody thought to assert at all. <strong>Found by the joint session of 27 July</strong>, by a master who read the BUILT TREE rather than the data model — the same move that caught the stale brief in session 07, made by the other body</td>
+<td><strong>A <code>prose</code> filter, INLINE ONLY, and a gate over the whole site.</strong> <code>eleventy.config.js</code> gains <code>prose</code>, which runs a field through <code>markdown-it</code>'s <code>renderInline</code> — so bold, italic, code and links render, and a data field <strong>cannot grow headings, lists or paragraphs and quietly become a document</strong>. The four fields in <code>dimension.njk</code> now pass through it. A field that wants a heading wants to be a document, and documents go through <code>renderdoc</code>. New section <strong>§11y</strong> fails the build on <code>**</code> anywhere in a walked page outside <code>&lt;code&gt;</code> and <code>&lt;pre&gt;</code>, where a literal asterisk is legitimate content. <strong>It was run across every page BEFORE being added and came back zero</strong>, so it enforces a state the site actually holds rather than an ambition — which is the difference between a gate and a wish. Negative-tested: reverting one field to raw turned the build red naming three pages, and restoring it turned it green. <strong>52 to 0</strong>, verified in the built tree and then live</td>
+<td><strong>L-35</strong></td>
+</tr>
+<tr>
 <td>C-80</td>
 <td>07-27</td>
 <td>2</td>
@@ -1258,6 +1266,32 @@ difference between a question about one page and a question about eighteen panel
 <em>Applied:</em> the image refused, the file removed, the provenance record dropped, episode 17's
 document slot returned to <code>to-source</code> with the whole finding recorded in the manifest, and the
 question put to the author with its reach stated rather than resolved by the session that found it.</p>
+<p><strong>L-35 — Check the bytes the reader receives, not only the ones you generated them from.</strong>
+<em>From C-81.</em> This checker verifies a great deal: that rendered document text matches its source,
+that 1131 internal links resolve, that every declared colour pairing meets its contrast floor, that
+no page carries a stray styling vector, that no artifact has drifted from its bytes. Every one of
+those tests reaches BACKWARDS from the output to the input it was made from. Not one of them asked
+the simplest question a reader asks: <strong>is this finished prose?</strong>
+So nine dimension pages published fifty-two literal asterisks — markdown written in a data field
+and printed raw — and the worst of them was the field carrying the project's most careful rights
+markings. It had been true for as long as the fields existed. Nothing was broken; a property had
+simply never been asserted.
+The distinction that makes this a rule rather than a bug report: <strong>a derivation check and a
+delivery check are different checks.</strong> &quot;The output matches its source&quot; and &quot;the output is fit to
+read&quot; can both be true, can both be false, and can differ — raw markdown matches its source
+perfectly. A project that only checks derivation will keep every promise it made about provenance
+and still hand a reader asterisks.
+And note who found it, because it is the second time in two sessions: <strong>an adversarial panel that
+read the BUILT TREE rather than the data model.</strong> The chair had read the data model all night. The
+build is the artifact; the data is the argument for it; and a session that only ever reads its own
+argument will not see what it shipped.
+The cheap version of the habit: before shipping, grep the output for the syntax of every language
+you author in — <code>**</code>, <code>__</code>, <code>~~</code>, <code>](</code>, <code>{{</code>, <code>{%</code>, <code>TODO</code>, <code>FIXME</code> — and make the ones that must
+never appear into a gate. It is one section and it found a defect on its first run.
+<em>Applied:</em> the <code>prose</code> filter (inline-only, so a data field cannot become a document); the four
+dimension fields rendered through it; §11y failing the build on raw emphasis anywhere in a walked
+page outside <code>&lt;code&gt;</code> and <code>&lt;pre&gt;</code>, run clean across every page before being added and
+negative-tested by reverting one field.</p>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
