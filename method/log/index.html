@@ -265,6 +265,30 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-85</td>
+<td>07-27</td>
+<td>3</td>
+<td><strong>Twenty-one of twenty-six rows in a table titled &quot;What is missing, and why&quot; gave no why</strong>, under a lede promising in terms that <em>&quot;every absence has a reason and every reason is in the colophon.&quot;</em> They read <code>this slot is not yet sourced</code> — <strong>the absence restated in the past tense</strong>, wearing the costume of an explanation. Five rows carried real reasons and were good: they cited the ratified rule, the catch and the author's ruling by date. The other twenty-one were a placeholder, and <strong>a placeholder that fills the shape of an answer is worse than a blank, because a blank cannot be mistaken for one.</strong> Found by the joint session of 27 July, by an advisor who <strong>grepped the artifact instead of trusting its own sentence</strong> — the same move, by the other body, that caught the stale brief in session 07 and the raw markdown an hour earlier. <strong>The root cause was named by a master before the build proved it:</strong> <code>tools/build-atlas.mjs</code> reads <code>data/atlas-place-choices.json</code> — the record of which SUBJECT the author picked — and <strong>never opened <code>data/atlas-place-image-choices.json</code></strong>, the record of which photograph carries a subject and why one was refused. So every refusal's reasoning sat in a file the artifact could not see, and the artifact printed a placeholder over it. It never opened the 25 July survey's own rulings either, which hold the only statement of why episodes 12 and 15 are empty</td>
+<td><strong>The reasons were in the derived data the whole time and the generator was not reading them.</strong> It now reads all three sources: the image-choice decisions with their rule tokens (<code>refused by rule 4(i)</code>, <code>refused by rule 4(ii)</code>), the 25 July survey's ratified-rule rulings for episodes 12 and 15, and — for the document layer — <code>atlas-targets.json</code>'s own <code>openBecause</code>, which says the true thing a placeholder was hiding: <em>&quot;the document follows the place, and this episode's place is not settled.&quot;</em> <strong>21 placeholders to 0</strong>, every row now carrying the reason that already existed. <strong>And the fix is gated by construction rather than by a section:</strong> if no reason can be derived for an empty slot the BUILD FAILS, naming the episode and the layer, so the artifact cannot print an unexplained hole in a table that promises explanations. It fired four times on its first run and each firing was a real gap — which is how the missing wiring was found</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-84</td>
+<td>07-27</td>
+<td><strong>4</strong></td>
+<td><strong>The object layer shows CLASS EXEMPLARS, and seventeen panels never said so.</strong> Found at the joint session of 27 July by an advisor who opened <code>artifacts/atlas-of-one-day/atlas.html</code> and read all 580 lines rather than the data model. Verified against the manifest before anything was touched. Episode 2's slot names <em>&quot;Mr Deasy's foot-and-mouth letter&quot;</em> and holds <strong>a United States National Archives letter about grazing Santa Clara cattle on the Jemez Forest Reserve</strong>. Episode 4's names <em>&quot;the Agendath Netaim flyer&quot;</em> and holds <strong>an 1890 St Louis advertisement for farms in Arkansas, Illinois and Arizona</strong>. Episode 5's <em>&quot;the Freeman's Journal, Bloom's copy&quot;</em> holds <strong>the Irish Independent, first issue, 1905</strong>. Episode 10's <em>&quot;Boylan's fruit basket&quot;</em> holds <strong>Manet's painting <em>Basket of Fruit</em></strong>. Episode 14's <em>&quot;Stephen's wages, three pounds twelve&quot;</em> holds <strong>an Edward VII sovereign</strong>. A letter for a letter, an advertisement for an advertisement, a painting of fruit for a basket of it. <strong>Seventeen object slots cleared and NOT ONE carried a caveat, while all ten place slots do.</strong> In a caption-free panel whose fixed order tells a reader that the first slot is the object, <strong>POSITION ASSERTS IDENTITY</strong> — the panel says <em>&quot;this is Mr Deasy's letter&quot;</em> without writing it, which is the 7 Eccles Street failure the place layer refuses by ratified rule four times over, applied to seventeen slots nobody examined. <strong>AND IT EXPLAINS THE NUMBER THE PROJECT HAD BEEN READING WRONG.</strong> Objects 17 of 18, places 10, documents 1 — published six hours earlier in the Atlas's own <code>shows</code> field as a finding about who keeps what. The seventeen measures how easy a <strong>stand-in</strong> is to find, not an object. The three layers were never admitted on the same terms</td>
+<td><strong>DISCLOSED, NOT DECIDED, and the distinction is the whole of it.</strong> All seventeen cleared object slots now carry the caveat, and it appears seventeen times on the page: <em>a class exemplar, not the object itself.</em> The <code>shows</code> field is corrected with the correction shown (A4). A standing record at <code>objectLayerStanding</code> in the manifest states the finding, what it explains, and what it raises. <strong>Rule 4(i) — identification, adopted the same morning — run backwards over the object layer as build panel session 07 required for the place layer, REFUSES ALL SEVENTEEN:</strong> a National Archives letter is not Mr Deasy's letter. That is recorded and <strong>not acted on</strong>, because acting on it empties the Atlas from twenty-eight pictures to eleven, and because the question underneath is not a rules question. <strong>Is this a museum of the day's OBJECTS or of their KINDS?</strong> The second is defensible and arguably Warburgian — Mnemosyne juxtaposed types, not relics — but it is a different work from the one the slot names describe, and it has never been declared. <strong>The chair does not settle the form of a made object by fiat at the end of a long night.</strong> It is the author's, and it is the first item of docs/panel-session-08.md's author list</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C-83</td>
+<td>07-27</td>
+<td>3</td>
+<td><strong>The Atlas could say which ratified rule refused which photograph, and could not say what it was for.</strong> Every dimension record carries <code>claim</code> and <code>shows</code> — two plain sentences, in the language of someone who has read the book once, telling an ordinary reader what the thing argues and what it found. <strong>They are the only two fields on a dimension page written for a reader rather than for the record.</strong> The Atlas, the project's ninth built dimension, shipped with <strong>both null</strong> — the only built dimension of nine with neither — while eighty catches, thirty-four learnings and forty-odd checker sections had been written about it. The project could state, per slot and per rule, why episode 12's frame was refused and episode 9's admitted, and had no sentence saying why a reader should look at any of it. <strong>That is Kiberd's standing objection — the drift toward the academy — evidenced in one data row rather than asserted</strong>, and he named it at the joint session of 27 July before the tree confirmed it</td>
+<td>Both written, in the register the other eight built dimensions already use. The <code>shows</code> field took <strong>Saramago's</strong> reading from round one, because it was the best thing said in the session — <em>&quot;a day can be reassembled from its objects by anyone, and from its documents only by an institution&quot;</em> — and <strong>that sentence had to be corrected the same night by catch C-84</strong>, which found the object layer's seventeen measures how easy a STAND-IN is to find rather than an object. The correction is shown, not swapped (A4): the beautiful reading rested on a false premise, and the premise is the more interesting fact. <strong>The artifact also publishes its own DEPTH now, derived</strong>: <em>&quot;0 of 18 panels hold all three layers; 10 hold two, 8 hold one.&quot;</em> Twenty-eight of fifty-four slots is a true number that hides what a reader of an atlas most needs — this form works by juxtaposition, and a panel with one picture juxtaposes nothing. New section <strong>§11z</strong> fails the build when a built or building dimension leaves <code>claim</code> or <code>shows</code> empty, or fills either with a label under eighty characters. <strong>There is no way to satisfy it by machinery, which is the point:</strong> it can only be answered by writing two sentences a stranger could use. Negative-tested by emptying the field and watching the build go red</td>
+<td>—</td>
+</tr>
+<tr>
 <td>C-82</td>
 <td>07-27</td>
 <td><strong>4</strong></td>
@@ -1300,6 +1324,32 @@ never appear into a gate. It is one section and it found a defect on its first r
 dimension fields rendered through it; §11y failing the build on raw emphasis anywhere in a walked
 page outside <code>&lt;code&gt;</code> and <code>&lt;pre&gt;</code>, run clean across every page before being added and
 negative-tested by reverting one field.</p>
+<p><strong>L-36 — A contiguity check cannot see a missing tail, and a record written only in a commit message is not written.</strong>
+<em>From the repair of C-83, C-84 and C-85.</em> Three catches were produced in one night, written into
+commit messages, cited by name in <code>docs/panel-session-08.md</code> — and <strong>never inserted into
+<code>docs/catches.md</code> at all</strong>. The insert helper anchored on the previous catch's row, did not check
+that the anchor existed, and when it did not <code>indexOf</code> returned −1; <code>raw.slice(0, -1) + row + raw.slice(-1)</code> then spliced the row in before the file's final byte, landing it inside an unrelated
+row's line behind a bare <code>\r</code>. On a CRLF file a lone <code>\r</code> starts no line, so the row was invisible
+to every line-anchored pattern in the project, including the one that counts the log.
+<strong>And the count reported &quot;contiguous&quot;, and was right.</strong> C-01…C-82 with the tail absent IS
+contiguous. A gap detector finds holes BETWEEN the first and last id it can see; <strong>a missing tail is
+invisible to it by construction.</strong> This is the shape worth carrying: an integrity check that
+measures a set against ITSELF cannot notice that the set is short. Contiguity, byte-comparison,
+round-tripping and schema validation are all this kind. Every one of them would have passed a log
+missing its last three entries, because none of them knows what the last entry ought to be.
+The test that works is a <strong>cross-reference to something outside the set</strong>: every <code>C-NN</code> and <code>L-NN</code>
+cited anywhere in <code>docs/</code> must resolve to a row or a definition. A citation is a claim that a record
+exists, and this project checks claims. It would have caught this the moment the session record
+cited the catches that session had produced — which happened within the hour.
+Two smaller rules fall out and both are cheap. <strong>A script that locates by anchor must fail when the
+anchor is absent</strong>, never proceed on a −1; a silent fallback to &quot;somewhere&quot; is worse than a crash
+because it produces a file that looks edited. And <strong>the log is the artifact, not the commit
+message.</strong> L-25 says a catch is not closed when its resolution is written but when something
+outside the log can show it; this is its twin — a catch is not <em>recorded</em> when its story is written,
+only when the row is in the file, and the commit trail is not the file.
+<em>Applied:</em> the three rows restored and the mis-spliced one relocated; §11aa cross-checking every
+citation in every document against the log, negative-tested by deleting a row and watching the
+session record's own citation turn the build red; the insert helper made to fail on a missing anchor.</p>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
