@@ -265,6 +265,14 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-95</td>
+<td>07-27</td>
+<td>3</td>
+<td><strong>The project held a georeference for the SHEETS and none at all for the PLACES, and the gap was invisible because nobody had tried to put a frame anywhere.</strong> <code>data/atlas-document-survey.json</code> carries corner coordinates for every County Dublin sheet, straight out of NLS's own WFS index — thirty-five decimal-degree pairs, all of them sheet corners. <strong>Every place record in <code>data/substrate.json</code> carries exactly four fields: <code>key</code>, <code>name</code>, <code>src</code>, <code>approximate</code>.</strong> No coordinate, anywhere, for any of the eighteen places the Atlas is built around; base document 03 gives a distance from the centre (<em>&quot;~1.5 km from the centre&quot;</em>) rather than a position. Both acquisition routes into the document layer — the IIIF region and the S3 mosaic — need a position before a frame can be placed, so <strong>the layer was unsourceable and nothing said so</strong>, because the tiling plan C-94 struck had never got as far as asking where to point. <strong>And the session found it by being wrong in public.</strong> It supplied 7 Eccles Street from its own recall, fetched the tile, and looked: <strong>Berkeley Road and the Mater Misericordiae — one tile north and one west of the street</strong>, wrong by about 180 metres, which is the exact scale at which a caption-free panel asserts <em>this is Bloom's door</em>. A coordinate is the easiest value in this project to produce from nothing and the hardest to notice is wrong, because a wrong one looks precisely like a right one</td>
+<td><strong>A held table, read off the sheets: <code>data/atlas-place-positions.json</code>, eight places, thirteen tiles looked at.</strong> A position is <code>documented</code> only when the SHEET'S OWN LETTERING naming the place was read in that frame and the words are quoted — rule 4(i) applied to a coordinate, and the standard the Thom's page numbers already met. <strong>Five documented and three honestly not:</strong> <em>Martello Tower</em> (ep 1, first tile), <em>ORMOND QUAY</em> (ep 11, first tile), <em>E BRITAIN ST.</em> (ep 12, second tile), <em>MABBOT STREET</em> (ep 15, second tile), <em>ECCLES STREET</em> (ep 17, <strong>third</strong> tile). Not established: <strong>episode 9</strong>, where [F]EDERICK and LEIN[STER] are legible and Kildare Street is not; <strong>episode 16</strong>, where CUSTOM HOUSE, QUAY and <em>Swivel Br.</em> are legible and Butt Bridge is never printed — the 1879 bridge was a swivel bridge, so the frame is consistent, and <em>a surveyor's hedge is not a clearance</em>; and <strong>episode 3</strong>, which is the interesting one and became <strong>L-38</strong>. New section <strong>§11ad</strong> gates it: a documented position must quote lettering that shares a substantive word with the place it claims, the stored bounds are <strong>recomputed from the tile</strong> rather than trusted (L-22), a third confidence state is refused (A5), and the tile must be an integer z17 reference so any claim here can be re-fetched and re-checked by anyone. <strong>Six of six mutations red for the named reason.</strong> <strong>Two operational findings worth carrying.</strong> <em>A street label can span a tile boundary</em> — LITT[LE] sits in one tile and [LITTL]E BRITAIN ST. in the next, so no single z17 tile holds the whole name, and a published frame must be positioned to contain the LABEL rather than centred on a tile. And <strong>none of this is published or cropped</strong>: establishing where a place sits is research, and taking a region for a panel is the open board item <code>may-a-map-sheet-be-cropped</code>. The table is built first deliberately, so that ruling is made against a real plan instead of an estimate</td>
+<td><strong>L-38</strong></td>
+</tr>
+<tr>
 <td>C-94</td>
 <td>07-27</td>
 <td>3</td>
@@ -1453,6 +1461,33 @@ removing the derived reason and watching the generator refuse to write the artif
 as the delivery-side backstop, refusing the placeholder family by shape and naming the two strings
 this artifact actually shipped; the positive draft withdrawn and recorded here rather than quietly
 replaced.</p>
+<p><strong>L-38 — Some subjects are drawn and not named, and a rule that admits by naming cannot reach them.</strong>
+<em>From C-95.</em> Rule 4(i) is a good rule and this project earned it: the held record, quoted, must
+establish that the frame shows the thing the slot names. In practice that means the source has to
+NAME the subject — the sheet prints <em>ECCLES STREET</em>, and the position is established.
+Then episode 3 was looked at. Sandymount Strand on the six-inch sheet is an unbroken field of the
+Ordnance Survey stipple that renders sand, and there is <strong>no lettering in it at all</strong>. Not faint,
+not cut off, not at another zoom — the cartographer drew the strand and did not label it, because
+a beach is not a street and the convention says so. <strong>The place is unmistakably depicted and
+permanently unnamed.</strong>
+So a test that admits by naming can never admit it, however good the frame, however certain anyone
+is that this is the right stretch of sand. That is not the rule failing; it is the rule reaching
+its edge, and the edge is a fact about the SOURCE rather than about the search. The failure mode to
+avoid is the obvious one: a session that has read four sheets successfully will start treating
+&quot;not established&quot; as &quot;not found yet&quot; and go looking harder, and the looking cannot terminate.
+The rule: <strong>when an admissibility test rests on a property of the source, record which subjects
+that source structurally lacks it for, and mark them as OUT OF THE TEST’S REACH rather than as
+failing it.</strong> A slot that fails a test and a slot the test cannot address are different facts and a
+reader deserves both. The distinction is the same one this project already draws between an
+exhausted search (episode 14 place: nothing admissible exists) and a refusal by rule (episode 7:
+bombardment) — and this is a third thing again, which neither of those covers.
+What to do about it is the author’s, and the options are worth stating so the question is real:
+admit a drawn-and-unnamed subject on corroboration instead of naming (adjacent labels, the
+coastline’s own shape, the sheet number); leave the slot empty and say the sheet does not name it;
+or take the document from Thom’s instead, which names by address and so cannot have this problem.
+<em>Applied:</em> episode 3 recorded as <code>not established</code> with the reason stated as a fact about the sheet
+rather than about the search; §11ad refuses a third confidence state so the distinction cannot be
+smuggled in as a middle value; the question carried to the author with its three options named.</p>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
