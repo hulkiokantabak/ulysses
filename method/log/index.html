@@ -265,6 +265,14 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-99</td>
+<td>07-28</td>
+<td>3</td>
+<td><strong><code>docs/STATE.md</code> told a reader that five items were waiting from the session in which every item is ruled — and the cross-reference written to prevent exactly this was reading only half the board.</strong> The <em>What is waiting on a person</em> section opened <em>&quot;5 item(s) only the author can rule, from <code>docs/panel-session-08.md</code> (2026-07-27)&quot;</em>. <strong>The count was derived and right; the attribution was wrong in both halves.</strong> All five of session 08's items were ruled on 27 July, and all five OPEN items were raised at joint session 09 on 28 July. <code>tools/state.mjs</code> printed the board's top-level <code>raisedBy</code> and <code>raisedOn</code> — which describe the <code>items</code> array alone — beside a count taken from <code>items</code> <strong>and</strong> <code>alsoOnTheBoard</code>. One sentence, two clauses, two different sets, and <strong>being derived did not save it</strong>: L-22 stops a number going stale and says nothing about a number and a name computed from different denominators. That is <strong>L-17</strong> in the file the handoff tells every new session to trust over any prose document, in the section <strong>C-89</strong> built for this exact failure, and the cost is specific — a session doing precisely as it is told opens session 08's numbered list and finds every item struck through. Found on a first read of the handoff, by following it. <strong>AND UNDERNEATH IT, THE WORSE HALF.</strong> §11ac is a cross-reference by design, because a set measured against itself cannot see that it is short (<strong>L-36</strong>) — and it cross-referenced <code>items</code> one-for-one against <code>raisedBy</code> while <code>alsoOnTheBoard</code> got field-presence checks and an existence test on its <code>raisedIn</code> file. <strong>Nothing counted it against anything.</strong> That scoping was correct while the loose half held only things raised in a code comment, a learning or a catch, where no list exists to count against; joint session 09 then raised five items in a numbered list of its own and they landed there. <strong>So everything actually waiting on the author sat in the unchecked half of the board, and deleting one would have printed green</strong> — <strong>L-33</strong>, the remedy scoped to the array the defect was noticed in rather than to its class, landing on the very section written for L-36</td>
+<td><strong>The provenance is computed from the same set as the count.</strong> <code>state.mjs</code> derives it from each open item's own source, deduplicated, so the sentence cannot name a session with nothing open, and the zero-open branch says so in words instead of printing an empty list. <strong>And the cross-reference is applied to its class.</strong> Every <code>alsoOnTheBoard</code> entry whose source document carries a <em>What the author must rule</em> list now records its position in that list (<code>listedN</code>); the positions recorded against a document must be exactly 1..K on the list's own length; and each entry's <code>keyPhrase</code> must appear <strong>inside its own numbered item</strong>, not anywhere in the file — which matters here, because item 3's phrase also occurs in Atwood's opening three hundred lines below. <code>listedN: null</code> is a recorded decision that an entry is not one of that list's items — the title string followed from item 5's ruling and was never item 6 — and the field is <strong>required</strong>, so that an omission cannot look like a decision (C-86's shape). §11ac now also fails if STATE does not name every document an open item was raised in. <strong>The list parse was bounded to its own section while it was being reused, and that was not cosmetic:</strong> the original sliced to end-of-file, harmless only because session 08's list is the last thing in its document, and joint session 09 carries three more numbered lines under <em>What was done the same night</em> — so the unbounded parse reads eight items where the author left five, and a count wrong in the safe direction today is a gate that fails for the wrong reason tomorrow. <strong>What this does NOT reach is stated rather than implied:</strong> an open entry raised where no such list exists is still checked only for that file existing. <strong>6 of 6 mutations red for the named reason</strong> — deleting the board's last session-09 entry, renumbering a position, corrupting a key phrase, removing <code>listedN</code> from an entry whose source carries a list, pointing <code>state.mjs</code> back at the top-level <code>raisedBy</code>, and unbounding the list parse</td>
+<td><strong>L-39</strong></td>
+</tr>
+<tr>
 <td>C-98</td>
 <td>07-28</td>
 <td>3</td>
@@ -1517,6 +1525,36 @@ Designed disagreement is not a guarantee — a panel composed for one kind of ca
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the
 question, not to trust the answer</strong> (the skill's own rule, which the chair did not apply
 to a vote that went the way the chair already leaned).</p>
+<p><strong>L-39 — A derived sentence is only as true as the narrowest set its clauses came from.</strong>
+<em>From C-99.</em> L-22 is one of this project's load-bearing rules — derive it or it will drift — and it has
+closed more staleness defects than any other. C-99 is the failure L-22 does not reach: <strong>the sentence
+was derived, every token in it computed from the data model, and it was false anyway.</strong> <em>&quot;5 item(s)
+only the author can rule, from <code>docs/panel-session-08.md</code> (2026-07-27)&quot;</em> took its <strong>count</strong> from two
+arrays and its <strong>attribution</strong> from a field describing one of them. Neither derivation was wrong. The
+sentence was.
+So the rule: <strong>when a generated sentence joins a count to a name, a date, a source or a scope, every
+clause must range over the same set.</strong> A count over A ∪ B beside a label taken from A is a falsehood
+the generator will keep telling forever, and it is worse than a hand-written one, because nobody
+re-reads generated prose — the whole point of deriving it was to stop having to. L-22 makes a number
+true; it does nothing for the words around the number.
+Finding them is cheap and mechanical: read every template that interpolates two or more expressions,
+name the collection each one ranges over, and where the collections differ either widen the label to
+the union or narrow the count. This repository has many such sentences and they should be swept once,
+not audited one at a time (L-33).
+<strong>And the second-order half, which is what actually cost the time.</strong> The same asymmetry had been built
+into the CHECK. §11ac cross-referenced the <code>items</code> array and not <code>alsoOnTheBoard</code>, so the half of the
+board that can grow was measured against itself — <strong>L-36 inside the section written for L-36.</strong> The
+generalisation is worth more than the instance: <strong>when a record is split into a checked part and a
+loose part, the loose part is where the next thing waits.</strong> Not by accident — a loose part is exactly
+what a later session reaches for when the checked shape does not fit what it has to record, which is
+precisely the moment the record is growing and precisely the moment nothing is watching it.
+<em>Applied:</em> <code>tools/state.mjs</code> computing the provenance from the open items' own sources rather than
+from the board's first session, with a zero-open branch that says so in words; §11ac extended to
+cross-reference <code>alsoOnTheBoard</code> one-for-one against the numbered list of every session that raised an
+entry, each key phrase matched inside its own numbered item, <code>listedN</code> required so an omission cannot
+look like a decision, and the list parse bounded to its own section; STATE required to name every
+document an open item was raised in; six mutations, six red builds, each for the reason named before
+it ran.</p>
 
 </div>
 
