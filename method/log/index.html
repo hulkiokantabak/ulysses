@@ -265,6 +265,22 @@ escalated to <code>learnings.md</code>.</p>
 <td><strong>L-15</strong></td>
 </tr>
 <tr>
+<td>C-101</td>
+<td>08-05</td>
+<td>3</td>
+<td><strong>The delivery run's own verification swarm refuted six of its surfaces before they shipped, and five of the six were the same defect: a hand-typed line number pointing at bytes the run itself had moved.</strong> Five adversarial verifiers ran over everything the autonomous delivery built. What they caught: (a) <strong>docs/04-dimensions.md was only partially re-founded</strong> — the heading still counted the reported film among the measured works, the carrying sentence still de-mystified a hero nobody here has seen, and the ADD/REMOVE contrast stood as a live finding, all publicly delivered, while a correction inserted earlier had <strong>split the four-works markdown table in half</strong> (the dated correction was placed between Nolan's row and Joyce's row, so Joyce's row fell out of the table); (b) the Book 22 row's register tally — <em>transaction 5, song 6, martyrology 5, physiology 3, joke or parody 3</em> — <strong>could not be recomputed from the twenty printed cells</strong> (the cells' own recount differs on four of five numbers), an uncertifiable count in the very document whose coding sheet had just demoted one; (c) the print chart's prose still said the film <em>&quot;was plotted at about seventy per cent fidelity&quot;</em> outside any corrected clause; (d) dimension 14's inclusionRuleStatedIn field was <strong>truncated mid-sentence</strong> with an unclosed parenthesis and a wrong anchor, shipped verbatim on the delivered page; (e) the positions file's summary tally still described the 27 July state (10 positions, 7 documented) beside sixteen records — C-99's shape, a summary lagging the set it summarises, in the same session that corrected the neighbouring field; and (f) a family of citations in data/dimensions.json pointed at line numbers the run's own insertions had shifted — dim 2's anchors named the line the register now opens on, dim 9's named a closing brace, dim 16's claimClassWhy quoted <strong>the old four-work claim against a field that now says three</strong>. Two verifiers also confirmed the whole build the other way: the register of the unnamed passed with zero findings, and the Book 22 row's twenty passages verified byte-exact with the git sequence proven</td>
+<td>All six fixed before the commit: the table healed with the correction moved below it and the missing third and fourth corrections added; the tally replaced by the cells' own record with the reason stated (<em>no tally is asserted apart from them, because a count that cannot be recomputed from the printed cells is the class of number the coding sheet above just demoted</em>); the plotted-position wording moved out of standing prose; the truncated field completed; the positions tally recomputed from the positions themselves with the correction noted; and <strong>every stale line-number citation replaced with a region name</strong> — the section, the field, the box — because a region name survives an insertion and a line number is a coordinate recalled (escalated to <strong>L-40</strong>). The session-09 transcript, which speaks of nine-of-eighteen as a count, gains a dated editorial headnote on its page wrapper pointing at the demotion, the body untouched — a record that quietly fixes its participants is not a record</td>
+<td><strong>L-40</strong></td>
+</tr>
+<tr>
+<td>C-100</td>
+<td>08-04</td>
+<td>3</td>
+<td><strong>&quot;Butt Bridge is never printed&quot; was false of the sheet, and &quot;not established&quot; at Kildare Street ended on the sixth frame — two bounded negatives had been read as properties of the source.</strong> The second looking session, run on the sheets' own IIIF scans for the document layer's acquisition, found the sheet prints <strong>&quot;Butt Br.&quot; with &quot;(Swivel)&quot; beneath it</strong>, on the river between EDEN QUAY and GEORGE'S QUAY beside the loop-line viaduct — episode 16's position record had said the bridge &quot;is never printed&quot; and held the slot not-established on a surveyor's-hedge caution that was right in itself and attached to the wrong bridge: the first frame read this session landed on GEORGE'S DOCK, whose entrance basin has a Swivel Br. of its own, which is likely what the earlier search's frame showed. And a sixth frame at Kildare Street carried <strong>KILDARE STREET, KILDARE PL. and SCIENCE &amp; ART INSTITUTIONS</strong> — the earlier five-frame search's bounded negative closed exactly as the corroboration ruling's scope predicted: <em>&quot;the search has not got there yet&quot; is not &quot;the source does not do this.&quot;</em> Both are L-17's shape — the claim (five frames read, nothing found) true, the qualifier (never printed) wrong — in the file whose whole discipline is that a position is read, never recalled</td>
+<td>Both positions flipped to <strong>documented by NAMING</strong> with the old evidence kept and the correction dated beside it (A4), each carrying a refetchable IIIF region of the sheet's own scan as its evidence form — §11ad extended to accept that form beside the z17 tile, because the acquisition frame and the evidence frame being the same bytes is the stronger property. Six further positions established the same way (eps 4, 5, 6, 7, 8, 14 — all on licence-read Sheet 18, the sheet's own lettering quoted for each), the sheet naming Glasnevin's cemetery by its formal name <strong>PROSPECT CEMETERY</strong> disclosed on the record with the held text's own warrant quoted (<em>&quot;The high railings of Prospect rippled past their gaze.&quot;</em>, source line 4724, L-27), and <strong>fourteen document regions acquired</strong> under the map-region ruling with the C-96(ii) colophon disclosure. Episode 2 stays open on a NEW board item, <code>document-for-an-invented-place</code>, raised from C-95's own note — the school is Joyce's invention, and every answer to what a document slot does about that would invent a rule, so the chair does not resolve it under delegation. The document layer stands at <strong>15 of 18 held, 3 honestly open</strong></td>
+<td>—</td>
+</tr>
+<tr>
 <td>C-99</td>
 <td>07-28</td>
 <td>3</td>
@@ -1520,6 +1536,31 @@ or take the document from Thom’s instead, which names by address and so cannot
 <em>Applied:</em> episode 3 recorded as <code>not established</code> with the reason stated as a fact about the sheet
 rather than about the search; §11ad refuses a third confidence state so the distinction cannot be
 smuggled in as a middle value; the question carried to the author with its three options named.</p>
+<p><strong>L-40 — A hand-typed line number is a coordinate recalled, and an edit is what makes it wrong.</strong>
+<em>From C-101, and it is C-95's lesson moved from the map to the repository.</em> C-95 established that a
+coordinate supplied from memory looks exactly like a coordinate read, and is wrong at precisely the
+scale that matters. A line number written into a citation has the same two properties, plus a third
+that makes it worse: <strong>the edit that adds the citation is often the edit that moves the line.</strong> In
+one delivery run, five citation families went stale THE DAY THEY WERE WRITTEN — fields inserted
+into data/dimensions.json shifted the file under the self-references being typed into it; a register
+inserted into women.html moved the section its own dimension record was citing; two sections added
+to the concordance moved everything a fresh field pointed at. Every rule text was genuine; every
+address was wrong. That is the worst ratio the project knows: content that verifies, wearing
+citations that don't.
+The rule: <strong>cite by region, not by offset.</strong> A section id, a field name, a heading, a box — names
+survive insertion, and a checker can find a name; nothing can re-find &quot;line 352&quot; after the file
+grows. Where a line number genuinely earns its place (a verbatim source line in a held text that
+never changes, like the 1922 source's own lines), the file it indexes must be one nothing edits.
+And the cheap audit, run once per session that inserts anything: grep the data files for <code>:\d+</code>
+citations into any file the session touched, and treat every hit as stale until shown current.
+The second-order half: the SUMMARY BLOCK is the same defect wearing a plural. A tally stored beside
+the records it summarises (positions: 10, documented: 7 — beside sixteen records) is a set of
+hand-typed coordinates into the file's own state, and it drifts the same way for the same reason.
+Derive it at read time, or recompute it in every edit that touches the set — C-99 said this about
+one sentence, and this run proved it about every stored summary it met.
+<em>Applied:</em> every stale citation replaced with a region name; the positions tally recomputed from the
+positions themselves with the correction noted; dimension 14's truncated field completed; the
+§11af gate's path parse taught to read a leading path rather than split on a colon it may not find.</p>
 <p><em>Second-order note on L-11:</em> the panel produced this error unanimously, and the author caught it.
 Designed disagreement is not a guarantee — a panel composed for one kind of caution will
 be uniformly cautious. <strong>When the panel is unanimous, that is a signal to test the

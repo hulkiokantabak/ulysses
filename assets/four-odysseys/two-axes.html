@@ -45,6 +45,19 @@
                  border-block-start: 1px solid var(--mute); }
   .whence .addr { display: block; margin-block-start: .25rem; word-break: break-all; }
   @media print { .whence.up { display: none; } }
+
+  /* The register of reports (struck 4 August 2026): a separately-denominated record
+     on this surface, at deliberately unequal layout to the plotted works — no chart,
+     no axis, a plain table of claims with status. Saramago's dissent sits BESIDE the
+     register, not beneath it, at full strength; if this section ever drifts back
+     toward parity of layout with the chart above, the dissent was right. */
+  h2 { font-size: 1.125rem; font-weight: 600; margin: 2.25rem 0 .25rem; }
+  h3 { font-size: 1rem; font-weight: 600; margin: 1.5rem 0 .25rem; }
+  .side { display: grid; gap: 1rem; margin: .75rem 0 1rem; align-items: start; }
+  @media (min-width: 60rem) { .side { grid-template-columns: 3fr 2fr; } }
+  .dissent { border: 1px solid var(--gold); padding: .75rem .875rem; margin: 0;
+             font-family: var(--mono); font-size: .8125rem; line-height: 1.5;
+             color: var(--paper); }
 </style>
 </head>
 <body>
@@ -56,20 +69,23 @@
   </nav>
 
   <h1>Four Odysseys on two axes</h1>
-  <p>DIMENSION 16 · COMPARATIVE · HOMER — WILSON 2017 — NOLAN 2026 — JOYCE 1922</p>
+  <p>DIMENSION 16 · COMPARATIVE · HOMER — WILSON 2017 — JOYCE 1922 · AND A REGISTER OF
+  REPORTS ON NOLAN 2026, OFF BOTH AXES</p>
 
   <figure>
     <svg viewBox="0 0 960 560" role="img"
          aria-labelledby="chart-title chart-desc">
-      <title id="chart-title">Four Odysseys placed on two axes</title>
+      <title id="chart-title">Three Odysseys placed on two axes</title>
       <desc id="chart-desc">A scatter chart. Horizontal axis: fidelity to Homer's plot
       and genre, from about zero to one hundred percent. Vertical axis: interior
-      orientation, from externalized to maximal. Homer sits at one hundred percent
-      fidelity with externalized interiority; Wilson's translation at one hundred
-      percent fidelity with high interiority; Nolan's film at about seventy percent
-      fidelity with medium-high interiority, marked as resting on day-one reviews;
-      Joyce at about zero percent fidelity with maximal interiority. The same data
-      follows as a table.</desc>
+      orientation, from externalized to maximal. Three works are plotted. Homer sits
+      at one hundred percent fidelity with externalized interiority; Wilson's
+      translation at one hundred percent fidelity with high interiority; Joyce at
+      about zero percent fidelity with maximal interiority. Nolan's 2026 film is not
+      plotted: every claim about it is second-hand, and no second-hand term may occupy
+      a position on any measured axis, so the reports about it are held in a register
+      below the chart. The same data follows as a table, with the film's row demoted
+      to sentences.</desc>
 
       <!-- axes; y-axis shifted right to x=160 so the rotated title clears the band labels -->
       <line x1="160" y1="470" x2="900" y2="470" stroke="#b9c3d6" stroke-width="1"/>
@@ -105,24 +121,14 @@
         <text x="880" y="192" text-anchor="end" font-family="Georgia, serif" font-size="18" fill="#f4efe2">Wilson, 2017</text>
         <text x="880" y="212" text-anchor="end" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c3d6">register, not plot · 100%</text>
       </g>
-      <!-- Nolan: ~70%, medium-high (by adding content); dashed ring = day-one reviews -->
-      <g>
-        <circle cx="678" cy="296" r="9" fill="#f4efe2"/>
-        <circle cx="678" cy="296" r="16" fill="none" stroke="#dfa93f" stroke-width="2" stroke-dasharray="4 4"/>
-        <text x="678" y="268" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#f4efe2">Nolan, 2026</text>
-        <text x="678" y="330" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c3d6">adds content · ~70%</text>
-      </g>
+      <!-- Nolan, 2026 is not plotted (resolution of 4 August 2026): no second-hand
+           term may occupy a position on any measured axis in any register. The
+           reports about the film are held in the register below the chart. -->
       <!-- Joyce: ~0%, maximal (structural) -->
       <g>
         <circle cx="172" cy="92" r="9" fill="#dfa93f"/>
         <text x="192" y="86" font-family="Georgia, serif" font-size="18" fill="#f4efe2">Joyce, 1922</text>
         <text x="192" y="106" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c3d6">genre transformed · ~0%</text>
-      </g>
-
-      <!-- legend for the dashed ring -->
-      <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c3d6">
-        <circle cx="184" cy="24" r="8" fill="none" stroke="#dfa93f" stroke-width="2" stroke-dasharray="4 4"/>
-        <text x="200" y="29">placement rests on reports, not the film</text>
       </g>
     </svg>
 
@@ -131,31 +137,145 @@
     disappears.</figcaption>
   </figure>
 
-  <p class="carrying">Wilson de-mystifies the sentence. Nolan de-mystifies the hero but
-  keeps the myth. Joyce discards the myth's events and re-mystifies the ordinary.</p>
+  <p class="carrying">Wilson de-mystifies the sentence. Joyce discards the myth's events
+  and re-mystifies the ordinary. <em>Corrected 4 August 2026: this line also said "Nolan
+  de-mystifies the hero but keeps the myth" — a second-hand claim, withdrawn from the
+  dimension's findings and held in the register of reports below.</em></p>
 
   <p class="confidence">CONFIDENCE (ANCHOR A5) — every claim about Nolan is second-hand.
   The first source was written one day after the film opened, from reviews; later July
   2026 reporting has been added, and is fuller but still not the film. Its markings —
-  High / Medium / Partial / Unconfirmed — govern every Nolan claim. Three departures
-  reported since (Sinon imported from Virgil's Aeneid in place of Achilles, the elided
-  hanging of the slave girls, an ending in which Odysseus is exiled rather than
-  celebrated) push his fidelity to the low edge of ~70%; the marker has not moved,
-  because second-hand evidence does not earn that precision. Homer, Wilson and Joyce
-  placements rest on the works themselves.</p>
+  High / Medium / Partial / Unconfirmed — govern every Nolan claim. The honest form of
+  the film's fidelity is a sentence, not a number: journalism reports substantial
+  fidelity with named departures (Sinon imported from Virgil's Aeneid in place of
+  Achilles, the elided hanging of the slave girls, an ending in which Odysseus is exiled
+  rather than celebrated); no measurement was made and none can be (C-31). Homer, Wilson
+  and Joyce placements rest on the works themselves; the film holds no placement.
+  <em>Corrected 4 August 2026: this paragraph said the three reported departures "push
+  his fidelity to the low edge of ~70%; the marker has not moved, because second-hand
+  evidence does not earn that precision." A percentage asserts that a measurement was
+  made, and none was — the ~70% marker is demoted from a number to the sentence above,
+  and the film's point is removed from the chart. Its reports are held in the register
+  below.</em></p>
 
   <table>
-    <caption>THE SAME DATA, AS THE DOCUMENT STATES IT</caption>
+    <caption>THE SAME DATA — HOMER, WILSON AND JOYCE AS THE DOCUMENT STATES THEM; THE
+    FILM AS THE EVIDENCE ALLOWS</caption>
     <thead>
       <tr><th scope="col">Work</th><th scope="col">Fidelity to plot/genre</th><th scope="col">Interior orientation</th><th scope="col">Mechanism</th></tr>
     </thead>
     <tbody>
       <tr><th scope="row">Homer</th><td>100% — the source</td><td>externalised; kleos and xenia</td><td>oral epic; character through action</td></tr>
       <tr><th scope="row">Wilson (2017)</th><td>100% — invents no plot</td><td>high, without touching plot</td><td>register — plain diction, refusal of archaism</td></tr>
-      <tr><th scope="row">Nolan (2026)</th><td>~70% — keeps genre, rewrites motive</td><td>medium-high, by adding content</td><td>adaptation — new scenes, reframed motive</td></tr>
+      <tr><th scope="row">Nolan (2026)</th><td>journalism reports substantial fidelity with named departures; no measurement was made and none can be (C-31)</td><td>reported to reach for interiority by adding content; no band is assigned — a second-hand term takes no position on a measured axis</td><td>adaptation — new scenes, reframed motive (reported)</td></tr>
       <tr><th scope="row">Joyce (1922)</th><td>~0% — plot abandoned</td><td>maximal, structural</td><td>genre transformation — myth as scaffolding</td></tr>
     </tbody>
   </table>
+
+  <p class="confidence"><em>Corrected 4 August 2026: the film's row read "~70% — keeps
+  genre, rewrites motive" and "medium-high, by adding content", and the caption read "THE
+  SAME DATA, AS THE DOCUMENT STATES IT." Both cells were positions on measured axes held
+  by second-hand evidence; both are withdrawn, and the row now carries sentences — a
+  percentage asserts that a measurement was made, and none was (joint session 09).</em></p>
+
+  <h2 id="register">The register of reports — Nolan, 2026</h2>
+  <p class="confidence">STRUCK 4 AUGUST 2026 — a separately-denominated record of the
+  reports this project holds ABOUT Christopher Nolan's The Odyssey (2026): each reported
+  claim with the status wording under which it was held when the register was struck, and
+  the date it entered. It is not a fifth register class — base document 00 defines the
+  four registers, and that architecture is the base document's and the author's; this is
+  a denominated record on dimension 16's existing surfaces, kept at deliberately unequal
+  layout to the three plotted works: no chart, no axis, a plain table. The record of
+  record is the project's data file data/nolan-reports.json, which also holds the address
+  each claim occupied when the register was struck; this section mirrors it. The rule
+  published with the register: no second-hand term may occupy a position on any measured
+  axis in any register — HTML, PDF, deck or diagram. The count of reports standing when
+  the register was struck is the count of rows below — counted from the entries, stored
+  nowhere as a bare number, because a figure held unchanged while reports accumulate
+  "does not read as held; it reads as confirmed" (joint session 09).</p>
+
+  <div class="side">
+    <table>
+      <caption>THE REPORTS, WITH THEIR STATUS WORDING AS HELD</caption>
+      <thead>
+        <tr><th scope="col">Reported claim</th><th scope="col">Status, as held</th><th scope="col">Entered</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Nolan's overall placement: ~70% fidelity ('keeps genre, rewrites motive'), medium-high interiority 'by adding content', mechanism 'adaptation — new scenes, reframed motive'</td><td>Placed 'from reports', not the film — the one point on the chart with a dashed ring, legend 'placement rests on reports, not the film'; every claim about Nolan is second-hand (anchor A5)</td><td>18 July 2026 (comparative session; handoff written one day after the film opened)</td></tr>
+        <tr><td>Sinon imported from Virgil's Aeneid in place of Achilles in Hades (deck adds the casting: Elliot Page as Sinon)</td><td>'Newly reported departure' / 'reported late' — pushes fidelity toward the low edge of the stated ~70% without moving the marker; deck plate footed 'From reports, not the film.'</td><td>19 July 2026 (commentary admitted under revised anchor A17, C-23)</td></tr>
+        <tr><td>The hanging of the slave girls elided, displaced onto a single betrayer</td><td>'Nolan is reported to remove the scene altogether' — second-hand; one of the three late departures; contrasted with Wilson's checkable half ('the translator is the one who will not soften it'), asymmetry expressly marked: 'Wilson's half is verifiable, Nolan's half is second-hand'</td><td>19 July 2026 (via A17 commentary)</td></tr>
+        <tr><td>An ending in which Odysseus is exiled rather than celebrated ('reclamation, then expulsion')</td><td>'Newly reported departure' — pushes fidelity to the low edge of ~70%, marker not moved; deck plate 'The ending' footed 'From reports, not the film.'</td><td>19 July 2026 (via A17 commentary)</td></tr>
+        <tr><td>Calypso's arc: erasure then release — she gives the lotus so he forgets, and lets him go once he remembers what he is returning to</td><td>'Narrowed, not closed' — 'That narrows the question but does not close it'; then closed as permanently unresolved with this as its last known state (C-31)</td><td>19 July 2026 (via A17 commentary)</td></tr>
+        <tr><td>'We are the Sea People' — the film's central invention</td><td>Deck-only plate, captioned 'Nolan, 2026 · the central invention · from reports, not the film'</td><td>not dated in the deck; Nolan section governed by the 18-19 July 2026 reporting</td></tr>
+        <tr><td>Wilson has confirmed she was not consulted by Nolan (the admitted commentary's most load-bearing claim)</td><td>'Held at Medium permanently' — cannot be supported from the commentary's own citations, whose only Wilson interview predates the film by nine years; 'the interview would have to exist and be found, and neither is this project's to pursue' (C-31)</td><td>19 July 2026</td></tr>
+        <tr><td>Nolan reads Homer through Joyce (asserted by the admitted commentary)</td><td>'The commentator's interpretation, not a source' — not treated as evidence (C-23, L-12); 'it closes nothing'; open question 4 is not closed by it</td><td>19 July 2026</td></tr>
+        <tr><td>The commentary presents nine departures where its own cited Vanity Fair piece names ten</td><td>Recorded as a defect of the relay: 'its selection is editorial' — the framing is the relayer's, not the source's</td><td>19 July 2026 (C-30 correction context)</td></tr>
+        <tr><td>Agreement between handoff and commentary (both resting on July 2026 journalism)</td><td>Explicitly NOT corroboration: 'one ancestor counted twice, not two witnesses'; corrected by C-30 — the outlets named (Vanity Fair, GQ, TODAY.com) are the commentary's own, the handoff cites a different list, so the overlap is in KIND of source, not a shared citation; 'Nothing has been promoted on the grounds that two documents agree' (catch C-24, learning L-13)</td><td>C-24 escalated to L-13; C-30 correction 19 July 2026</td></tr>
+      </tbody>
+    </table>
+    <aside class="dissent">DISSENT — SARAMAGO, AT FULL STRENGTH, beside the register and
+    not beneath it. A separately-denominated register is "the same evasion at one remove"
+    — the project keeping the column while appearing to give it up. The remedy is removal:
+    strip the film of any axis position until the project holds it. The warrant: "a
+    project whose entire authority is that it says what it does not have must be
+    strictest exactly where it is being invited to be precise." Recorded with it, the
+    tripwire, in the session's words: "If the register drifts back toward parity of
+    layout, he was right and the finding was a compromise."</aside>
+  </div>
+
+  <h3>The four questions, closed as permanently unresolved (C-31)</h3>
+  <table>
+    <thead>
+      <tr><th scope="col">Question</th><th scope="col">Last known state</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Calypso's memory arc</td><td>Narrowed, not closed — reported as erasure then release: she gives the lotus so he forgets, and lets him go once he remembers what he is returning to; that narrowed the question without closing it</td></tr>
+      <tr><td>The Cattle of the Sun resolution</td><td>Stands — 'Remains thin.'</td></tr>
+      <tr><td>The Laestrygonian child's gender</td><td>Stands — 'Remains thin.'</td></tr>
+      <tr><td>Whether Nolan has ever mentioned Joyce</td><td>Stands — unevidenced; 'Nothing found.' The admitted commentary's assertion that Nolan reads Homer through Joyce is the commentator's interpretation, not a source, and it closes nothing</td></tr>
+    </tbody>
+  </table>
+
+  <h3>The marker, its history</h3>
+  <p class="confidence">STATED — 18 July 2026: 'adds content · ~70%' on the chart,
+  '~70% — keeps genre, rewrites motive' in the works table, inside a dashed gold ring
+  whose legend read 'placement rests on reports, not the film'. HELD UNMOVED — 19 July
+  2026, when three late-reported departures pushed the reported fidelity toward the low
+  edge of the stated ~70%: 'the marker was not moved, because second-hand evidence does
+  not earn that precision, and it will not be moved now.' GROUND — second-hand evidence
+  does not earn that precision, and the project consults no primary sources it does not
+  hold: no screening of the film (C-31). DEMOTED — 4 August 2026, from a number to a
+  sentence: a percentage asserts that a measurement was made, and none was (joint
+  session 09). The full history, with the addresses the marker occupied, is in the
+  register file.</p>
+
+  <h3>The contrast, withdrawn</h3>
+  <p class="confidence">ADD AGAINST REMOVE — withdrawn as a finding, 4 August 2026, and
+  restated as a question the evidence cannot close: the reported film was the sole
+  occupant of the ADD pole, and with it removed the contrast has one example on one side
+  — "that is not a comparative dimension; that is three cases and an anecdote" (joint
+  session 09). Whether the film genuinely adds where Wilson and Joyce remove would need
+  the film, and this project does not consult sources it does not hold (C-31).</p>
+
+  <h3>The four-instruments finding</h3>
+  <div class="side">
+    <p class="confidence">Published on this register per the chair's resolution of the
+    author's item what-is-owed-the-twelve, clause (c), with the correction the verifier
+    required. At the hanging of the twelve enslaved women, four instruments fail in the
+    same direction: Homer counts the twelve and does not name them. Wilson's stated
+    policy fails to reach her hardest scene — she writes 'these girls' at the hanging —
+    and the refusal of a clean death is, in her rendering, TELEMACHUS's sentence, a
+    killer's stated cruelty and not a translator's comment on her own practice. The
+    reported film elides the hanging onto a single betrayer — reported, second-hand,
+    permanently. And dimension 2's census could not reach the unnamed until the register
+    of women drawn and never named was built. The blind spot is at the same coordinate
+    every time: the woman who is owned, counted, and not named.</p>
+    <aside class="dissent">DISSENT — SARAMAGO, AT FULL STRENGTH, beside this finding and
+    not beneath it. The three-way comparison should not be published in any form.
+    Comparing claims still seats a rumour on an ordinal beside two printed texts, and no
+    label drains precision back out of a placed object. Strip the Nolan column of any
+    position, not merely of movement.</aside>
+  </div>
 
   <nav class="whence foot" aria-label="Where this sits">
     <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a>

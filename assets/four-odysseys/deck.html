@@ -161,13 +161,13 @@
     <!-- ============ THE PLANE: one surface, five cards light it ============ -->
     <svg class="chart" viewBox="0 0 1120 630" role="img" aria-labelledby="ch-t ch-d">
       <title id="ch-t">The plane: fidelity against interior orientation</title>
-      <desc id="ch-d">A scatter plot on a deep plate. The horizontal axis is fidelity to Homer&#8217;s plot and genre, from about zero per cent at the left to one hundred per cent at the right. The vertical axis is interior orientation, running from externalized at the foot through medium-high and high to maximal at the head. Four marks sit on it. Homer, at one hundred per cent fidelity and externalized interiority, low at the right. Wilson, 2017, at one hundred per cent fidelity and high interiority, directly above Homer. Nolan, 2026, at about seventy per cent fidelity and medium-high interiority, in the middle, inside a broken ring that marks a placement resting on reports rather than on the work. Joyce, 1922, at about zero per cent fidelity and maximal interiority, high at the left. One mark is lit at a time; the last card lights all four.</desc>
+      <desc id="ch-d">A scatter plot on a deep plate. The horizontal axis is fidelity to Homer&#8217;s plot and genre, from about zero per cent at the left to one hundred per cent at the right. The vertical axis is interior orientation, running from externalized at the foot through medium-high and high to maximal at the head. Three marks sit on it. Homer, at one hundred per cent fidelity and externalized interiority, low at the right. Wilson, 2017, at one hundred per cent fidelity and high interiority, directly above Homer. Joyce, 1922, at about zero per cent fidelity and maximal interiority, high at the left. Nolan&#8217;s 2026 film holds no mark on the plane: every claim about it is second-hand, and its cards are report cards, each stamped so. One mark is lit at a time; the last card lights all three.</desc>
       <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
       <text class="p-r" x="64" y="78">FIDELITY TO HOMER&#8217;S PLOT AND GENRE &#8594;</text>
       <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
 
       <!-- the plate title band carries the lit work's name -->
-      <text class="alltitle p-t" x="64" y="140">The four, assembled</text>
+      <text class="alltitle p-t" x="64" y="140">The three, assembled</text>
 
       <!-- the room: axes, gridlines, band names -->
       <text class="p-r" x="240" y="178">INTERIOR ORIENTATION &#8593;</text>
@@ -191,7 +191,7 @@
         <text x="1010" y="534">100%</text>
       </g>
 
-      <!-- the four marks. Unlit: ambient, r=5, no label. Lit: gold, r=14, one Label. -->
+      <!-- the three marks. Unlit: ambient, r=5, no label. Lit: gold, r=14, one Label. -->
       <g class="pt" id="p-homer">
         <text class="ptitle p-t" x="64" y="140">Homer</text>
         <circle class="dot" cx="1010" cy="470" r="5"/>
@@ -202,14 +202,9 @@
         <circle class="dot" cx="1010" cy="305" r="5"/>
         <text class="plabel p-l" x="986" y="290" text-anchor="end">register, not plot &#183; 100%</text>
       </g>
-      <g class="pt" id="p-nolan">
-        <text class="ptitle p-t" x="64" y="140">Nolan, 2026</text>
-        <circle class="ring" cx="779" cy="380" r="30" fill="none" stroke="#f4efe2"
-                stroke-width="4" stroke-dasharray="10 8"/>
-        <circle class="dot" cx="779" cy="380" r="5"/>
-        <text class="plabel p-l" x="779" y="330" text-anchor="middle">adds content &#183; ~70%</text>
-        <text class="pfoot p-n" x="64" y="580">From reports, not the film.</text>
-      </g>
+      <!-- Nolan, 2026 holds no mark on the plane (resolution of 4 August 2026): no
+           second-hand term may occupy a position on any measured axis in any register.
+           Its cards are report cards, each stamped 'From reports, not the film.' -->
       <g class="pt" id="p-joyce">
         <text class="ptitle p-t" x="64" y="140">Joyce, 1922</text>
         <circle class="dot" cx="250" cy="210" r="5"/>
@@ -223,13 +218,13 @@
     <div class="title show" id="title">
       <svg viewBox="0 0 1120 630" role="img" aria-labelledby="ti-t ti-d">
         <title id="ti-t">Four Odysseys</title>
-        <desc id="ti-d">The deck&#8217;s title card. On a deep plate, the words Four Odysseys are set large at the left over a heavy gold rule. Beneath the rule the four works are named in a line: Homer, Wilson, Nolan, Joyce. Below that, in italic: two axes usually collapsed into one.</desc>
+        <desc id="ti-d">The deck&#8217;s title card. On a deep plate, the words Four Odysseys are set large at the left over a heavy gold rule. Beneath the rule the three plotted works are named in a line &#8212; Homer, Wilson, Joyce &#8212; and after them, reports of Nolan. Below that, in italic: two axes usually collapsed into one.</desc>
         <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
         <text class="p-r" x="64" y="78">AN AUDIENCE DECK &#183; DIMENSION 16</text>
         <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
         <text class="p-d" x="64" y="300">Four Odysseys</text>
         <line class="bear-g" x1="64" y1="338" x2="688" y2="338"/>
-        <text class="p-r" x="64" y="400">HOMER &#183; WILSON &#183; NOLAN &#183; JOYCE</text>
+        <text class="p-r" x="64" y="400">HOMER &#183; WILSON &#183; JOYCE &#183; REPORTS OF NOLAN</text>
         <text class="p-t it" x="64" y="474">Two axes usually collapsed into one.</text>
         <text class="p-n" x="1056" y="580" text-anchor="end">16 &#183; FOUR ODYSSEYS</text>
       </svg>
@@ -637,12 +632,12 @@
     <!-- SERIES: four placements, one of them ringed -->
     <div class="plate" id="pl-evidence">
       <svg viewBox="0 0 1120 630" role="img" aria-labelledby="pv-t pv-d">
-        <title id="pv-t">What the placements rest on</title>
-        <desc id="pv-d">Four filled marks in a row across a deep plate, labelled Homer, Wilson 2017, Joyce 1922 and Nolan 2026. The first three are bracketed together beneath and named the works themselves. The fourth stands inside a broken gold ring, bracketed alone and named reports.</desc>
+        <title id="pv-t">What the claims rest on</title>
+        <desc id="pv-d">Four filled marks in a row across a deep plate, labelled Homer, Wilson 2017, Joyce 1922 and Nolan 2026. The first three are bracketed together beneath and named the works themselves. The fourth stands inside a broken gold ring, bracketed alone and named reports &#8212; an evidence class, not a placement.</desc>
         <rect x="32" y="24" width="1056" height="582" fill="#0b2140"/>
         <text class="p-r" x="64" y="78">DIMENSION 16 &#183; THE EVIDENCE</text>
         <line class="hair" x1="64" y1="100" x2="1056" y2="100"/>
-        <text class="p-t" x="64" y="140">What the placements rest on</text>
+        <text class="p-t" x="64" y="140">What the claims rest on</text>
 
         <g class="fp">
           <circle cx="188" cy="300" r="14"/>
@@ -664,7 +659,8 @@
         <text class="p-t" x="436" y="490" text-anchor="middle">the works themselves</text>
         <text class="p-t" x="932" y="490" text-anchor="middle">reports</text>
 
-        <text class="p-n" x="64" y="580">Day-one reviews, then July 2026 reporting.</text>
+        <circle class="hair" cx="72" cy="572" r="8" stroke-dasharray="5 4"/>
+        <text class="p-n" x="92" y="580">Nolan: from reports, not the film.</text>
         <text class="p-n" x="1056" y="580" text-anchor="end">16 &#183; FOUR ODYSSEYS</text>
       </svg>
     </div>
@@ -681,7 +677,10 @@
     <span class="count" id="count"></span>
   </div>
 </div>
-<p class="foot">An audience deck. Nolan's placement rests on reports, not the film.
+<p class="foot">An audience deck. Nolan, 2026 holds no mark on the plane: its cards are
+report cards, stamped 'From reports, not the film.' <em>Corrected 4 August 2026: this
+line said "Nolan's placement rests on reports, not the film" &#8212; the film has no
+placement; the reports about it are held to a register on the chart page.</em>
 <a href="https://hulkiokantabak.github.io/ulysses/" target="_top">Ulysses Project</a> &#183; <a href="https://hulkiokantabak.github.io/ulysses/dimensions/four-odysseys/" target="_top">Dimension 16, Four Odysseys</a> &#183; <a href="https://hulkiokantabak.github.io/ulysses/assets/four-odysseys/two-axes.html" target="_top">the chart</a>.</p>
 
 <script>
@@ -705,7 +704,9 @@
       tag:"Wilson, 2017 · the same number of lines as the Greek · her Translator's Note" },
     { kind:"plate", plate:"pl-dmoe", name:"One Greek word",
       tag:"dmoe · Wilson, often: “slave” · older translators: maid, handmaid, serving-woman" },
-    { kind:"work",  id:"p-nolan",  name:"Nolan, 2026",  tag:"adds content · medium-high · ~70% · from reports" },
+    // Nolan, 2026 has no work card (resolution of 4 August 2026): the film holds no
+    // mark on the plane, and no second-hand term may occupy a position on any measured
+    // axis. Its three cards below are report cards, each stamped on the plate.
     { kind:"plate", plate:"pl-seapeople", name:"“We are the Sea People”",
       tag:"Nolan, 2026 · the central invention · from reports, not the film" },
     { kind:"plate", plate:"pl-hades", name:"Hades",
@@ -719,11 +720,11 @@
       tag:"Joyce, 1922 · Stephen plays Telemachus · Molly plays Penelope" },
     { kind:"plate", plate:"pl-pages", name:"Forty unpunctuated pages",
       tag:"Molly · the pages that close the book" },
-    { kind:"plate", plate:"pl-evidence", name:"What the placements rest on",
+    { kind:"plate", plate:"pl-evidence", name:"What the claims rest on",
       tag:"Homer, Wilson, Joyce: the works themselves · Nolan: reports, not the film" },
-    { kind:"all",   name:"The four, assembled",         tag:"two axes usually collapsed into one" }
+    { kind:"all",   name:"The three, assembled",        tag:"two axes usually collapsed into one" }
   ];
-  var pts = ["p-homer","p-wilson","p-nolan","p-joyce"];
+  var pts = ["p-homer","p-wilson","p-joyce"];
   var i = 0;
   var stage = document.getElementById("stage");
   var title = document.getElementById("title");
