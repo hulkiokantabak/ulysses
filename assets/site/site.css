@@ -246,7 +246,9 @@ a:hover { text-decoration-thickness: 2px; }  /* thickness change only; nothing r
 }
 
 .page-address {
+  -webkit-user-select: all;               /* Safari honours only the prefixed form (closing audit, 5 Aug 2026) */
   user-select: all;                       /* the visible address is copyable — session 02 §2 */
+  overflow-wrap: break-word;              /* engines before `anywhere` (Safari <15.4) still wrap the address */
   overflow-wrap: anywhere;
   margin-block: .25rem 1.5rem;
 }
@@ -368,6 +370,8 @@ blockquote cite::before { content: "\2014\00a0"; }  /* the attributive em dash *
   color: var(--ink-mute);                 /* 7.44:1 */
   letter-spacing: .02em;
   margin-block-start: .25rem;
+  overflow-wrap: break-word;
+  -webkit-user-select: all;               /* Safari honours only the prefixed form (closing audit, 5 Aug 2026) */
   user-select: all;
 }
 
@@ -550,4 +554,56 @@ iframe.register-embed {
   table { display: table; overflow-x: visible; }
   table:not(.matrix) > tbody > tr:nth-child(even) > td { background: none; }
   tr, blockquote { break-inside: avoid; }
+}
+
+/* ---------- legacy-engine fallbacks — closing audit, 5 August 2026 ---------- */
+/* Engines older than Chrome 87 / Safari 14.1 (iOS 12–14.0 hardware among them) drop
+   every logical-property declaration above: the folio loses its centering, its
+   horizontal padding and its vertical rhythm. This block restores the same values in
+   physical terms ONLY where logical properties are unsupported, so a modern engine
+   never reads it and the ratified rules above stay the single source of truth. The
+   nav fallback rides here too: engines this old also predate flexbox gap, without
+   which the primary nav's links fuse into one unbroken string. No new design decision
+   lives in this block — every value repeats a ratified one. */
+@supports not (margin-inline: auto) {
+  .site-header, .site-footer, main {
+    margin-left: auto; margin-right: auto;
+    padding-left: 1.25rem; padding-right: 1.25rem;
+  }
+  main { padding-top: 1.5rem; padding-bottom: 3rem; }
+  h1, h2, h3, h4, h5, h6 { margin-top: 2.25rem; margin-bottom: .75rem; }
+  h1 { margin-top: 1rem; }
+  :target {
+    border-left: 2px solid var(--gold-ink);
+    padding-left: .625rem;
+    margin-left: calc(-.625rem - 2px);
+  }
+  .plate :target, .matrix :target, .artifact-frame :target { border-left-color: var(--gold); }
+  p, ul, ol, dl { margin-top: 0; margin-bottom: 1rem; }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: .25rem; }
+  dl { margin-top: 1.25rem; margin-bottom: 1.25rem; }
+  .site-header { padding-top: 1rem; padding-bottom: .875rem; }
+  .site-nav li { margin-right: 1.25rem; }
+  .site-nav a { padding-top: .125rem; padding-bottom: .125rem; }
+  .site-footer { margin-top: 2rem; padding-top: 1rem; padding-bottom: 2rem; }
+  .page-address { margin-top: .25rem; margin-bottom: 1.5rem; }
+  .status-line { margin-top: .25rem; margin-bottom: 1rem; }
+  .empty { margin-top: 1rem; margin-bottom: 1rem; }
+  pre { margin-top: 1.25rem; margin-bottom: 1.25rem; }
+  caption { padding-top: .5rem; padding-bottom: .5rem; }
+  table { margin-top: 1.5rem; margin-bottom: 1.5rem; }
+  blockquote p { margin-top: 0; margin-bottom: .5rem; }
+  blockquote cite, cite { margin-top: .5rem; }
+  .q-address { margin-top: .25rem; }
+  .plate { margin-top: 2rem; margin-bottom: 2rem; }
+  .matrix { margin-top: 1rem; margin-bottom: 1rem; }
+  .matrix .matrix-caption, .plate .matrix-caption, .matrix caption { padding-top: .5rem; padding-bottom: .5rem; }
+  .artifact-frame { margin-top: 1.5rem; margin-bottom: 0; }
+  .artifact-frame + iframe { margin-bottom: 1.5rem; }
+  .artifact-frame, .artifact-frame + iframe {
+    margin-left: calc(50% - min(100vw - 3rem, 67.5rem) / 2);
+    margin-right: calc(50% - min(100vw - 3rem, 67.5rem) / 2);
+  }
+  iframe.register-embed { margin-top: 1rem; margin-bottom: 1.5rem; }
 }

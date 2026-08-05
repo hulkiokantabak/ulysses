@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The constraint graph — dimension 13's diagram · Ulysses Project</title>
+<title>The constraint graph — dimension 13's diagram</title>
 <link rel="canonical" href="https://hulkiokantabak.github.io/ulysses/assets/constraint-model/graph.html">
 <style>
   :root { --deep:#081a35; --plate:#0b2140; --paper:#f4efe2; --gold:#dfa93f;
@@ -26,6 +26,15 @@
   .whence.foot { margin:1.5rem 0 0; padding-block-start:.625rem;
                  border-block-start:1px solid var(--rule); }
   .whence .addr { display:block; margin-block-start:.25rem; word-break:break-all; }
+  /* Print: the deep plate inverts to paper by flipping the palette variables, so every
+     var()-referencing fill and stroke — inline SVG attributes included — follows in one
+     rule. Gold's print form is the ratified #A0701C (base document 00). Before this,
+     these light-on-dark plates printed near-blank (closing audit, 5 August 2026). */
+  @media print {
+    :root { --deep:#fff; --plate:#fff; --paper:#081a35; --gold:#A0701C;
+            --mute:#374a63; --rule:rgba(8,26,53,.35); }
+    figure { border:1px solid #081a35; }
+  }
 
   .t { font-family:var(--mono); font-size:11px; fill:var(--mute); }
   .t.n { font-size:12px; fill:var(--paper); }

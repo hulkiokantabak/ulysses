@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- No referrer leaves this page. Without this, one click on any link out of the log
+     handed the destination page's analytics the full address of this page as referrer —
+     the exact datum the promise below says the project never receives. Closing audit,
+     5 August 2026; the promise is the rule, this line is what makes it true. -->
+<meta name="referrer" content="no-referrer">
 <title>The Reading Log — a tool you keep</title>
 <style>
   /* Dimension 15's single-file HTML register, and the whole of it. The instrument is
@@ -261,7 +266,7 @@ loved loudest and read fastest. Question density tracked engagement at least as 
 struggle. A log full of entries is not a record of failing to read the book.</p>
 
 <footer>
-  <p>Dimension 15 of the Ulysses Project · the instrument is the register (anchor A8) ·
+  <p>Dimension 15 of <em>Ulysses: a first reading, and the apparatus built around it</em> · the instrument is the register (anchor A8) ·
   prompts derived from dimension 11's nine kinds of difficulty, eight of them applicable
   (anchor A15, discharged) · episode titles are scaffolding, and Joyce printed none
   (anchor A2).</p>
@@ -305,11 +310,29 @@ struggle. A log full of entries is not a record of failing to read the book.</p>
   var $ = function (id) { return document.getElementById(id); };
   var entries = [];
 
+  // One malformed entry must never cost a reader the page. Before the closing audit of
+  // 5 August 2026, an imported entry whose fields were the wrong shape was saved first and
+  // rendered second; render threw, the wiring below it never ran, and every later visit
+  // re-threw on load — a bricked instrument whose Erase button was among the casualties.
+  // Every entry now passes through this normaliser on both paths in and out of storage:
+  // wrong-shaped entries are dropped, wrong-typed fields are coerced or dropped, and an
+  // already-corrupt store heals on the next load instead of killing it.
+  function normalizeEntry(e) {
+    if (!e || typeof e !== "object" || Array.isArray(e)) return null;
+    if (e.id == null || String(e.id) === "") return null;
+    var n = { id: String(e.id) };
+    ["date","from","to","episode","stopped","feeling","stall","asked","unblocked"].forEach(function (f) {
+      if (e[f] != null && typeof e[f] !== "object") n[f] = String(e[f]);
+    });
+    n.kinds = Array.isArray(e.kinds) ? e.kinds.filter(function (k) { return typeof k === "string"; }) : [];
+    return n;
+  }
+
   function load() {
     try {
       var raw = window.localStorage.getItem(KEY);
-      entries = raw ? JSON.parse(raw) : [];
-      if (!Array.isArray(entries)) entries = [];
+      var parsed = raw ? JSON.parse(raw) : [];
+      entries = (Array.isArray(parsed) ? parsed : []).map(normalizeEntry).filter(Boolean);
     } catch (e) { entries = []; }
   }
   function save() {
@@ -486,7 +509,7 @@ struggle. A log full of entries is not a record of failing to read the book.</p>
   $("btn-export").addEventListener("click", function () {
     if (!entries.length) { window.alert("There is nothing to save yet."); return; }
     var payload = {
-      what: "A reading log kept with the Ulysses Project's instrument (dimension 15).",
+      what: "A reading log kept with the instrument of Ulysses: a first reading, and the apparatus built around it (dimension 15).",
       note: "This file was written by your own browser to your own disk. It was not sent anywhere.",
       version: 1,
       entries: entries
@@ -517,10 +540,14 @@ struggle. A log full of entries is not a record of failing to read the book.</p>
         entries.forEach(function (e) { seen[e.id] = true; });
         var added = 0;
         incoming.forEach(function (e) {
-          if (e && e.id && !seen[e.id]) { entries.push(e); seen[e.id] = true; added++; }
+          var n = normalizeEntry(e);
+          if (n && !seen[n.id]) { entries.push(n); seen[n.id] = true; added++; }
         });
-        save();
+        // render before save: nothing is persisted that the page has not first proved
+        // it can draw (closing audit, 5 August 2026 — the old order persisted the entry
+        // that then bricked every later visit).
         render();
+        save();
         window.alert(added + (added === 1 ? " session" : " sessions") + " loaded.");
       } catch (e) {
         window.alert("That file could not be read as a reading log.");

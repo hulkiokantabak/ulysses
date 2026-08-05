@@ -86,7 +86,7 @@
   .stage.assembled .alltitle { opacity:1; }
 
   /* ---- the title card and the drawn plates share the stage ---- */
-  .title, .plate { position:absolute; inset:0; display:none;
+  .title, .plate { position:absolute; top:0; right:0; bottom:0; left:0; display:none;
                    align-items:center; justify-content:center; }
   .title.show, .plate.show { display:flex; }
   .stage.plated svg.chart { visibility:hidden; }
@@ -775,13 +775,19 @@ placement; the reports about it are held to a register on the chart page.</em>
 
   prev.addEventListener("click", function(){ go(i-1); });
   next.addEventListener("click", function(){ go(i+1); });
-  document.addEventListener("keydown", function(e){
+  // bound to the stage AND the deck's own control bar, not the document — the pattern the
+  // four sibling decks corrected to: a document-wide capture took the arrow, Page, Home and
+  // End keys from a screen reader's browse mode and from page scrolling everywhere on the
+  // page (closing audit, 5 Aug 2026). The stage carries tabindex.
+  var deckKeys = function(e){
     if (e.altKey || e.ctrlKey || e.metaKey) { return; }
     if (e.key === "ArrowRight" || e.key === "PageDown") { go(i+1); e.preventDefault(); }
     else if (e.key === "ArrowLeft" || e.key === "PageUp") { go(i-1); e.preventDefault(); }
     else if (e.key === "Home") { go(0); e.preventDefault(); }
     else if (e.key === "End") { go(CARDS.length-1); e.preventDefault(); }
-  });
+  };
+  stage.addEventListener("keydown", deckKeys);
+  document.querySelector(".bar").addEventListener("keydown", deckKeys);
   render();
 })();
 </script>

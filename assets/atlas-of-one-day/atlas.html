@@ -51,6 +51,17 @@
   td.num, td.kind { font-family:var(--mono); font-size:.875rem; white-space:nowrap; }
   ul.caveats { font-size:.9375rem; }
   .colophon { margin-top:2.5rem; }
+  /* Print: ink on paper. The deep plate ground does not print; without these rules the
+     panel idents (deep-mute on deep) and the empty slots' keylines vanished on paper —
+     an empty slot must read as absence at full footprint in every medium (closing
+     audit, 5 August 2026). */
+  @media print {
+    .plates { background:none; border:1px solid var(--deep); }
+    .panel, .slot { background:none; }
+    .ident { color:var(--ink-mute); }
+    .ident .num { color:var(--deep); }
+    .slot.empty { border:1px solid var(--deep); }
+  }
   @media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; } }
 </style>
 </head>
@@ -62,7 +73,7 @@
 <h1>The Atlas of One Day</h1>
 <p class="kicker">Dimension 14 · Type VI, a made object · eighteen panels, one per episode</p>
 
-<p class="lede">Eighteen panels, one for each section of 16 June 1904, each carrying three
+<p class="lede" data-form-ruling="2026-07-27">Eighteen panels, one for each section of 16 June 1904, each carrying three
 slots in one fixed order — a thing of the kind the book names, a place, a period document — whether or not a picture has been
 found for them. <strong>The first slot holds a KIND, not a relic:</strong> the book's objects are mostly Joyce's
 inventions, and what a photograph can show is another letter, another advertisement, another sovereign. This atlas
@@ -76,7 +87,7 @@ share-alike licence on this page at once.</p>
 footprint a picture would occupy, never closed up and never textured. The grid does not tidy
 itself. Every absence has a reason and every reason is in the colophon.</p>
 
-<p class="kicker">State 1 · 27 July 2026 · Of 54 slots, 43 hold an image and 11 are empty — 17 of 18 objects, 10 of 18 places, 16 of 18 documents. 10 of 18 panels hold all three layers; 5 hold two, 3 hold one. This is not a promise about the rest.</p>
+<p class="kicker">State 1 · as of 4 August 2026 · Of 54 slots, 43 hold an image and 11 are empty — 17 of 18 objects, 10 of 18 places, 16 of 18 documents. 10 of 18 panels hold all three layers; 5 hold two, 3 hold one. This is not a promise about the rest.</p>
 
 <p class="lede">The episode numbers and names beside each panel are <strong>scaffolding</strong>:
 Joyce printed no episode titles, and these are the project's own labels for the day's eighteen
@@ -86,79 +97,79 @@ sections (anchor A2). They say which episode a panel belongs to. They do not say
     <section class="ep" id="ep1" aria-label="Episode 1">
       <p class="ident"><span class="num">1</span><span class="scaff">Telemachus</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep01-object-display.jpg" alt="a hand-forged iron door key, dark, lying on a plain pale ground, its bow and wards in profile" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep01-place-display.jpg" alt="coursed granite ashlar rising to a projecting string course and a parapet, sky behind, no other structure in the frame" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep01-document.jpg" alt="The six-inch sheet's rocky Sandycove shore, Martello Tower printed beside the Bathing Place" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep01-object-display.jpg" alt="a hand-forged iron door key, dark, lying on a plain pale ground, its bow and wards in profile" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep01-place-display.jpg" alt="coursed granite ashlar rising to a projecting string course and a parapet, sky behind, no other structure in the frame" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep01-document.jpg" alt="The six-inch sheet's rocky Sandycove shore, Martello Tower printed beside the Bathing Place" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep2" aria-label="Episode 2">
       <p class="ident"><span class="num">2</span><span class="scaff">Nestor</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep02-object-display.jpg" alt="a page of typewritten official correspondence, headed and signed, on aged paper" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep02-object-display.jpg" alt="a page of typewritten official correspondence, headed and signed, on aged paper" width="600" height="400" loading="lazy" decoding="async"></div>
       <div class="slot empty" role="img" aria-label="place layer, empty"></div>
-      <div class="slot"><img src="images/ep02-document.jpg" alt="Dalkey's ground with the townland's own spread letters across it, Mount Salus Road and Nerano Road named, the station and the tunnel beside them" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep02-document.jpg" alt="Dalkey's ground with the townland's own spread letters across it, Mount Salus Road and Nerano Road named, the station and the tunnel beside them" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep3" aria-label="Episode 3">
       <p class="ident"><span class="num">3</span><span class="scaff">Proteus</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep03-object-display.jpg" alt="a pair of worn leather ankle boots, laces slack, cracked at the toe" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep03-place-display.jpg" alt="a wide expanse of wet ribbed sand under an overcast sky, shallow water lying in the ridges, a low industrial skyline on the far horizon" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep03-document.jpg" alt="An unbroken field of the sand stipple with Beach Road printed at its landward edge" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep03-object-display.jpg" alt="a pair of worn leather ankle boots, laces slack, cracked at the toe" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep03-place-display.jpg" alt="a wide expanse of wet ribbed sand under an overcast sky, shallow water lying in the ridges, a low industrial skyline on the far horizon" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep03-document.jpg" alt="An unbroken field of the sand stipple with Beach Road printed at its landward edge" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep4" aria-label="Episode 4">
       <p class="ident"><span class="num">4</span><span class="scaff">Calypso</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep04-object-display.jpg" alt="a printed advertising handbill in a foreign alphabet, ruled border, dense small type" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep04-place-display.jpg" alt="a wide view straight down a roadway, plain terraced houses on both sides, shopfronts at street level, parked cars along the kerb" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep04-document.jpg" alt="The street grid at Dorset Street, the letters spread along the street's own axis, Granby Row and Dominick Street beside it" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep04-object-display.jpg" alt="a printed advertising handbill in a foreign alphabet, ruled border, dense small type" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep04-place-display.jpg" alt="a wide view straight down a roadway, plain terraced houses on both sides, shopfronts at street level, parked cars along the kerb" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep04-document.jpg" alt="The street grid at Dorset Street, the letters spread along the street's own axis, Granby Row and Dominick Street beside it" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep5" aria-label="Episode 5">
       <p class="ident"><span class="num">5</span><span class="scaff">Lotus Eaters</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep05-object-display.png" alt="the folded front page of a broadsheet newspaper, masthead across the top, columns beneath" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep05-place-display.jpg" alt="a columned church portico on the right, a long brick terrace running away to the left, an iron railway bridge and a curved station roof beyond" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep05-document.jpg" alt="Westland Row printed full-length between the station and the church" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep05-object-display.png" alt="the folded front page of a broadsheet newspaper, masthead across the top, columns beneath" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep05-place-display.jpg" alt="a columned church portico on the right, a long brick terrace running away to the left, an iron railway bridge and a curved station roof beyond" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep05-document.jpg" alt="Westland Row printed full-length between the station and the church" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep6" aria-label="Episode 6">
       <p class="ident"><span class="num">6</span><span class="scaff">Hades</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep06-object-display.jpg" alt="a long pale gabardine raincoat, buttoned, belted at the waist, hanging full length" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep06-place-display.jpg" alt="ranks of Victorian headstones and Celtic crosses across mown grass, a standing draped figure among them, a dark treeline behind" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep06-document.jpg" alt="Prospect Cemetery's grounds with The O'Connell Circle and the Tower printed inside them" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep06-object-display.jpg" alt="a long pale gabardine raincoat, buttoned, belted at the waist, hanging full length" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep06-place-display.jpg" alt="ranks of Victorian headstones and Celtic crosses across mown grass, a standing draped figure among them, a dark treeline behind" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep06-document.jpg" alt="Prospect Cemetery's grounds with The O'Connell Circle and the Tower printed inside them" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep7" aria-label="Episode 7">
       <p class="ident"><span class="num">7</span><span class="scaff">Aeolus</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep07-object-display.jpg" alt="a small rectangular newspaper cutting, a ruled advertisement with a device at its centre" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep07-object-display.jpg" alt="a small rectangular newspaper cutting, a ruled advertisement with a device at its centre" width="600" height="400" loading="lazy" decoding="async"></div>
       <div class="slot empty" role="img" aria-label="place layer, empty"></div>
-      <div class="slot"><img src="images/ep07-document.jpg" alt="Prince's Street printed behind the General Post Office block, Lower Sackville Street beside it" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep07-document.jpg" alt="Prince's Street printed behind the General Post Office block, Lower Sackville Street beside it" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep8" aria-label="Episode 8">
       <p class="ident"><span class="num">8</span><span class="scaff">Lestrygonians</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep08-object-display.jpg" alt="a single printed handbill, a short line of heavy display type across a pale sheet" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep08-place-display.jpg" alt="a rank of parked bicycles along a kerb in the foreground, a shopfront terrace running back on the left, figures on the pavement, traffic receding into haze" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep08-document.jpg" alt="Grafton Street's axis with Duke Street crossing it, the Mansion House a block east" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep08-object-display.jpg" alt="a single printed handbill, a short line of heavy display type across a pale sheet" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep08-place-display.jpg" alt="a rank of parked bicycles along a kerb in the foreground, a shopfront terrace running back on the left, figures on the pavement, traffic receding into haze" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep08-document.jpg" alt="Grafton Street's axis with Duke Street crossing it, the Mansion House a block east" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep9" aria-label="Episode 9">
       <p class="ident"><span class="num">9</span><span class="scaff">Scylla and Charybdis</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep09-object-display.jpg" alt="a soft wide-brimmed felt hat, crown creased, brim curling" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep09-place-display.jpg" alt="a tall iron forecourt gate with gilt lettering worked into it, a columned stone portico standing behind" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep09-document.jpg" alt="Kildare Street printed along the street with the Science and Art Institutions block beside it" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep09-object-display.jpg" alt="a soft wide-brimmed felt hat, crown creased, brim curling" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep09-place-display.jpg" alt="a tall iron forecourt gate with gilt lettering worked into it, a columned stone portico standing behind" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep09-document.jpg" alt="Kildare Street printed along the street with the Science and Art Institutions block beside it" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep10" aria-label="Episode 10">
       <p class="ident"><span class="num">10</span><span class="scaff">Wandering Rocks</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep10-object-display.jpg" alt="a shallow wicker basket packed with fruit, straw padding, a bottle laid among it" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep10-object-display.jpg" alt="a shallow wicker basket packed with fruit, straw padding, a bottle laid among it" width="600" height="400" loading="lazy" decoding="async"></div>
       <div class="slot empty" role="img" aria-label="place layer, empty"></div>
       <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
@@ -166,49 +177,49 @@ sections (anchor A2). They say which episode a panel belongs to. They do not say
     <section class="ep" id="ep11" aria-label="Episode 11">
       <p class="ident"><span class="num">11</span><span class="scaff">Sirens</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep11-object-display.jpg" alt="a slender wooden walking cane, tapering, with a worn handle and a metal ferrule" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep11-place-display.jpg" alt="a river quay seen wide from across the water, a continuous terrace of tall houses along the waterfront, a green dome downstream" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep11-document.jpg" alt="Upper Ormond Quay printed along the north bank, Chancery Street and Mary's Abbey behind it" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep11-object-display.jpg" alt="a slender wooden walking cane, tapering, with a worn handle and a metal ferrule" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep11-place-display.jpg" alt="a river quay seen wide from across the water, a continuous terrace of tall houses along the waterfront, a green dome downstream" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep11-document.jpg" alt="Upper Ormond Quay printed along the north bank, Chancery Street and Mary's Abbey behind it" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep12" aria-label="Episode 12">
       <p class="ident"><span class="num">12</span><span class="scaff">Cyclops</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep12-object-display.jpg" alt="a printed tin biscuit box, lithographed panels on its sides, lid seated" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep12-object-display.jpg" alt="a printed tin biscuit box, lithographed panels on its sides, lid seated" width="600" height="400" loading="lazy" decoding="async"></div>
       <div class="slot empty" role="img" aria-label="place layer, empty"></div>
-      <div class="slot"><img src="images/ep12-document.jpg" alt="Little Britain Street printed beside the courthouse block and Green Street" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep12-document.jpg" alt="Little Britain Street printed beside the courthouse block and Green Street" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep13" aria-label="Episode 13">
       <p class="ident"><span class="num">13</span><span class="scaff">Nausicaa</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep13-object-display.jpg" alt="a small rectangular cake of pale soap, edges rounded from use, maker's name pressed into the face" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep13-place-display.jpg" alt="a broad tidal flat running out to still water, two tall banded chimneys standing on the far shore, low cloud above" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep13-document.jpg" alt="The same unbroken stipple field the strand shares between two episodes, Beach Road at its edge" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep13-object-display.jpg" alt="a small rectangular cake of pale soap, edges rounded from use, maker's name pressed into the face" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep13-place-display.jpg" alt="a broad tidal flat running out to still water, two tall banded chimneys standing on the far shore, low cloud above" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep13-document.jpg" alt="The same unbroken stipple field the strand shares between two episodes, Beach Road at its edge" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep14" aria-label="Episode 14">
       <p class="ident"><span class="num">14</span><span class="scaff">Oxen of the Sun</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep14-object-display.jpg" alt="coins and folded banknotes of the period laid on a flat ground" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep14-object-display.jpg" alt="coins and folded banknotes of the period laid on a flat ground" width="600" height="400" loading="lazy" decoding="async"></div>
       <div class="slot empty" role="img" aria-label="place layer, empty"></div>
-      <div class="slot"><img src="images/ep14-document.jpg" alt="Holles Street printed full-length with Denzille Street crossing and Merrion Square at its foot" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep14-document.jpg" alt="Holles Street printed full-length with Denzille Street crossing and Merrion Square at its foot" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep15" aria-label="Episode 15">
       <p class="ident"><span class="num">15</span><span class="scaff">Circe</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep15-object-display.jpg" alt="a stout ash walking stick, bark-flecked, one end cut square" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep15-object-display.jpg" alt="a stout ash walking stick, bark-flecked, one end cut square" width="600" height="400" loading="lazy" decoding="async"></div>
       <div class="slot empty" role="img" aria-label="place layer, empty"></div>
-      <div class="slot"><img src="images/ep15-document.jpg" alt="Mabbot Street printed at the Talbot Street corner, Foley Street beside it" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep15-document.jpg" alt="Mabbot Street printed at the Talbot Street corner, Foley Street beside it" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep16" aria-label="Episode 16">
       <p class="ident"><span class="num">16</span><span class="scaff">Eumaeus</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep16-object-display.jpg" alt="the printed paper cover of a cheap novel, title in display type, a figure illustrated below" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep16-place-display.jpg" alt="a wide reach of river between stone quay walls, a low road bridge crossing in the foreground, a girder railway viaduct behind it" loading="lazy" decoding="async"></div>
-      <div class="slot"><img src="images/ep16-document.jpg" alt="The river with Butt Br. (Swivel) printed on it, the loop-line viaduct beside it and the Custom House east" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep16-object-display.jpg" alt="the printed paper cover of a cheap novel, title in display type, a figure illustrated below" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep16-place-display.jpg" alt="a wide reach of river between stone quay walls, a low road bridge crossing in the foreground, a girder railway viaduct behind it" width="600" height="400" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep16-document.jpg" alt="The river with Butt Br. (Swivel) printed on it, the loop-line viaduct beside it and the Custom House east" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep17" aria-label="Episode 17">
@@ -216,13 +227,13 @@ sections (anchor A2). They say which episode a panel belongs to. They do not say
       <figure class="panel">
       <div class="slot empty" role="img" aria-label="object layer, empty"></div>
       <div class="slot empty" role="img" aria-label="place layer, empty"></div>
-      <div class="slot"><img src="images/ep17-document-display.jpg" alt="a printed title page, a line of spaced capitals at the head, dense letterpress beneath it, an inked oval ownership stamp and a handwritten numeral at the foot" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep17-document-display.jpg" alt="a printed title page, a line of spaced capitals at the head, dense letterpress beneath it, an inked oval ownership stamp and a handwritten numeral at the foot" width="600" height="400" loading="lazy" decoding="async"></div>
       </figure>
     </section>
     <section class="ep" id="ep18" aria-label="Episode 18">
       <p class="ident"><span class="num">18</span><span class="scaff">Penelope</span></p>
       <figure class="panel">
-      <div class="slot"><img src="images/ep18-object-display.jpg" alt="a glazed earthenware chamber pot, single loop handle, a band of colour at the rim" loading="lazy" decoding="async"></div>
+      <div class="slot"><img src="images/ep18-object-display.jpg" alt="a glazed earthenware chamber pot, single loop handle, a band of colour at the rim" width="600" height="400" loading="lazy" decoding="async"></div>
       <div class="slot empty" role="img" aria-label="place layer, empty"></div>
       <div class="slot empty" role="img" aria-label="document layer, empty"></div>
       </figure>
@@ -615,7 +626,7 @@ indicated, and a caption-free panel cannot indicate anything, so this table is t
       <tr>
         <td class="num">2</td>
         <td class="kind">place</td>
-        <td>refused by rule 4(i) — REFUSED 27 JULY 2026 AT RULE 4(i), IDENTIFICATION, AND THE SLOT CANNOT BE FILLED BY SEARCHING HARDER. Mr Deasy's school is Joyce's invention. The 25 July survey proved by text search and an 800-metre geosearch that nothing depicting it exists on Commons in any form, so no held record can establish that any frame shows the thing this slot names — which is the first test, and it disposes. The three cleared candidates confirm it from the other side: an 1830 engraving seventy-four years early and before the railway made Dalkey a villa suburb; a photochrom dominated by Killiney Hill in which Dalkey village is not identifiable; and a 2011 street with a taxi, road markings and a DALKEY sign, which rule 3 refuses besides. **The slot stays empty, and it is the honest kind of empty**: not unfinished sourcing, but a place that does not exist to be photographed.</td>
+        <td>refused by rule 4(i) — REFUSED 27 JULY 2026 AT RULE 4(i), IDENTIFICATION, AND THE SLOT CANNOT BE FILLED BY SEARCHING HARDER. Mr Deasy's school is Joyce's invention. The 25 July survey proved by text search and an 800-metre geosearch that nothing depicting it exists on Commons in any form, so no held record can establish that any frame shows the thing this slot names — which is the first test, and it disposes. The three cleared candidates confirm it from the other side: an 1830 engraving seventy-four years early and before the railway made Dalkey a villa suburb; a photochrom dominated by Killiney Hill in which Dalkey village is not identifiable; and a 2011 street with a taxi, road markings and a DALKEY sign, which rule 3 refuses besides. The slot stays empty, and it is the honest kind of empty: not unfinished sourcing, but a place that does not exist to be photographed.</td>
       </tr>
       <tr>
         <td class="num">7</td>

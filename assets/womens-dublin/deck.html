@@ -597,7 +597,7 @@
         <text x="996" y="470">midnight</text>
       </g>
 
-      <g class="pt" id="d-molly">
+      <g class="pt" id="dm-molly">
         <line class="thin" x1="100" y1="440" x2="100" y2="180"/>
         <circle class="mark" cx="100" cy="180" r="5"/>
         <text class="lab" x="130" y="189">Molly Bloom<tspan class="hr">  ~8:00 a.m.</tspan></text>
@@ -612,7 +612,7 @@
         <circle class="mark" cx="109" cy="264" r="5"/>
         <text class="lab" x="139" y="273">May Dedalus<tspan class="hr">  ~8:10 a.m.</tspan></text>
       </g>
-      <g class="pt" id="d-milk">
+      <g class="pt" id="dm-milk">
         <line class="thin" x1="114" y1="440" x2="114" y2="306"/>
         <circle class="mark" cx="114" cy="306" r="5"/>
         <text class="lab" x="144" y="315">the milk woman<tspan class="hr">  ~8:15 a.m.</tspan></text>
@@ -647,7 +647,7 @@
         <circle class="mark" cx="389" cy="306" r="5"/>
         <text class="lab" x="419" y="315">Mina Purefoy<tspan class="hr">  ~1:10 p.m.</tspan></text>
       </g>
-      <g class="pt" id="d-ann">
+      <g class="pt" id="dm-ann">
         <line class="thin" x1="445" y1="440" x2="445" y2="348"/>
         <circle class="mark" cx="445" cy="348" r="5"/>
         <text class="lab" x="475" y="357">Ann Hathaway<tspan class="hr">  ~2:10 p.m.</tspan></text>
@@ -773,7 +773,7 @@ once, by its first appearance. <a href="https://hulkiokantabak.github.io/ulysses
       name:"Molly Bloom — interiority: episode 18",
       tag:"episodes 1–17, none · episode 18, the whole episode" },
 
-    { plane:"p-day", ids:["d-molly","d-milly","d-may","d-milk"],
+    { plane:"p-day", ids:["dm-molly","d-milly","d-may","dm-milk"],
       title:"The eight o'clock hour", datum:"4", foot:"4 of 16 first entrances",
       name:"The eight o'clock hour — 4 of 16",
       tag:"Molly Bloom · Milly Bloom · May Dedalus · the milk woman" },
@@ -781,8 +781,8 @@ once, by its first appearance. <a href="https://hulkiokantabak.github.io/ulysses
       foot:"episode 15 · the last of the sixteen",
       name:"Bella Cohen — ~12:15 a.m., episode 15",
       tag:"the last of the sixteen first entrances" },
-    { plane:"p-day", bare:true, ids:["d-molly","d-milly","d-may","d-milk","d-martha","d-riordan",
-      "d-dignam","d-breen","d-dilly","d-mina","d-ann","d-barmaids","d-gerty","d-street",
+    { plane:"p-day", bare:true, ids:["dm-molly","d-milly","d-may","dm-milk","d-martha","d-riordan",
+      "d-dignam","d-breen","d-dilly","d-mina","dm-ann","d-barmaids","d-gerty","d-street",
       "d-cissy","d-bella"],
       title:"Sixteen first entrances", datum:"16", foot:"~8:00 a.m. to ~12:15 a.m.",
       name:"Sixteen first entrances — ~8:00 a.m. to ~12:15 a.m.",
@@ -855,14 +855,18 @@ once, by its first appearance. <a href="https://hulkiokantabak.github.io/ulysses
 
   prev.addEventListener("click", function(){ go(i-1); });
   next.addEventListener("click", function(){ go(i+1); });
-  // bound to the stage, not the document: arrows belong to the deck when the deck has
-  // focus, and must not be taken away from a screen reader's browse mode elsewhere.
-  stage.addEventListener("keydown", function(e){
+  // bound to the stage AND the deck's own control bar, not the document: arrows belong
+  // to the deck when the deck has focus — including focus on its Prev/Next/dot controls,
+  // where the advertised keys used to go dead (closing audit, 5 Aug 2026) — and must not
+  // be taken away from a screen reader's browse mode elsewhere.
+  var deckKeys = function(e){
     if (e.key === "ArrowRight" || e.key === "PageDown") { go(i+1); e.preventDefault(); }
     else if (e.key === "ArrowLeft" || e.key === "PageUp") { go(i-1); e.preventDefault(); }
     else if (e.key === "Home") { go(0); e.preventDefault(); }
     else if (e.key === "End") { go(CARDS.length-1); e.preventDefault(); }
-  });
+  };
+  stage.addEventListener("keydown", deckKeys);
+  document.querySelector(".bar-ui").addEventListener("keydown", deckKeys);
   render();
 })();
 </script>

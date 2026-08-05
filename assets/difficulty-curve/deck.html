@@ -1142,14 +1142,18 @@
 
   prev.addEventListener("click", function(){ go(i-1); });
   next.addEventListener("click", function(){ go(i+1); });
-  // bound to the stage, not the document: a global arrow-key capture fights a screen
-  // reader's browse mode and takes the keys from every other control on the page.
-  stage.addEventListener("keydown", function(e){
+  // bound to the stage AND the deck's own control bar, not the document: a global
+  // arrow-key capture fights a screen reader's browse mode, and a stage-only binding
+  // left the advertised keys dead while focus sat on Prev/Next/dots (closing audit,
+  // 5 Aug 2026).
+  var deckKeys = function(e){
     if (e.key === "ArrowRight" || e.key === "PageDown") { go(i+1); e.preventDefault(); }
     else if (e.key === "ArrowLeft" || e.key === "PageUp") { go(i-1); e.preventDefault(); }
     else if (e.key === "Home") { go(0); e.preventDefault(); }
     else if (e.key === "End") { go(CARDS.length-1); e.preventDefault(); }
-  });
+  };
+  stage.addEventListener("keydown", deckKeys);
+  document.querySelector(".bar-nav").addEventListener("keydown", deckKeys);
   render();
 })();
 </script>

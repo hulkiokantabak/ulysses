@@ -1,4 +1,4 @@
-# Ulysses Project — the public site
+# Ulysses: a first reading, and the apparatus built around it — the public site
 
 **Read it online → [hulkiokantabak.github.io/ulysses](https://hulkiokantabak.github.io/ulysses/)**
 
@@ -8,7 +8,7 @@ against the project's URL contract, and overwrites this repository — do not ed
 anything here; nothing survives a deploy.
 
 The project: a website and a presentation built out of a first cover-to-cover reading
-of James Joyce's *Ulysses* (7–17 July 2026), by Hulki Okan Tabak. How it is made — the
+of James Joyce's *Ulysses* (7–17 July 2026), by Hulki Okan Tabak. How it was made — the
 four output registers, the sixteen dimensions and their seven types, the advisors, and
 the project's own log of its errors — is published on the site itself, under
 [/method/](https://hulkiokantabak.github.io/ulysses/method/).

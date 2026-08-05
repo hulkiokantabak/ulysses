@@ -39,7 +39,7 @@
   svg { display:block; width:100%; height:auto; max-height:74vh; }
   /* only one drawn surface is visible at a time */
   .stage.plated > svg { visibility:hidden; }
-  .plate { position:absolute; inset:0; display:none; background:var(--deep); }
+  .plate { position:absolute; top:0; right:0; bottom:0; left:0; display:none; background:var(--deep); }
   .plate.show { display:flex; align-items:center; justify-content:center; }
 
   /* THE FIVE TYPE SIZES. Nothing in the drawn layer goes below 22. */
@@ -571,8 +571,9 @@
 
   prev.addEventListener("click", function(){ go(i-1); });
   next.addEventListener("click", function(){ go(i+1); });
-  // bound to the stage and to the dot bar, not to the document: a global arrow handler
-  // fights a screen reader's browse mode.
+  // bound to the stage and to the deck's whole control bar, not to the document: a global
+  // arrow handler fights a screen reader's browse mode, and the dot-bar-only binding left
+  // the keys dead while focus sat on the Prev/Next buttons (closing audit, 5 Aug 2026).
   function keys(e){
     if (e.key === "ArrowRight" || e.key === "PageDown") { go(i+1); e.preventDefault(); }
     else if (e.key === "ArrowLeft" || e.key === "PageUp") { go(i-1); e.preventDefault(); }
@@ -580,7 +581,7 @@
     else if (e.key === "End") { go(CARDS.length-1); e.preventDefault(); }
   }
   stage.addEventListener("keydown", keys);
-  dotsWrap.addEventListener("keydown", keys);
+  document.querySelector(".bar").addEventListener("keydown", keys);
   render();
 })();
 </script>
