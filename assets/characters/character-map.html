@@ -142,6 +142,24 @@
     .node text{font-size:13px}
     .lbl-a{font-size:13px}
   }
+  /* ---- the commissioned narrow-screen revision, 5 August 2026 ----
+     playtest-01 item 1. At 375px this drawing was scaled to about 0.37, so an 11px
+     label rendered near 4px and a 13-unit node was a sliver. The stage becomes a
+     keyboard-walkable scroll box at a fixed 1250px — scale 1.28, so the 11px label
+     renders at 14.0px and the c0 label at 19.1px — and the nodes grow their own hit
+     area. Nothing about the desktop layout changes; this is the ratified deck pattern
+     (five decks carry it), applied to prior work on the author's commission. */
+  @media (max-width:760px){
+    .stage{overflow-x:auto;overflow-y:hidden;margin:26px -18px 0;padding:0 12px 8px;
+           -webkit-overflow-scrolling:touch}
+    .stage svg{width:1250px;max-width:none}
+    /* the hit area, not the ink: a bigger transparent ring around each node */
+    .node circle{r:17}
+    .node.c0 circle{r:20}
+    .node:focus-visible circle{stroke-width:3}
+    /* the scroll box is a region a keyboard can reach and leave */
+    .stage:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  }
   @media (prefers-reduced-motion:reduce){
     *{transition:none !important}
   }
@@ -160,7 +178,7 @@
   </p>
 </header>
 
-<div class="stage">
+<div class="stage" tabindex="0" role="group" aria-label="The drawing — scrolls sideways on a narrow screen">
   <svg id="map" viewBox="0 0 980 980" role="img"
        aria-label="Circular map of the characters of Ulysses arranged in four rings inside a ring of the eighteen episodes"></svg>
 </div>
@@ -558,6 +576,7 @@ function inEpisode(c, n) { return c.e.includes(n); }
 function ghostIn(c, n)   { return (c.g || []).includes(n); }
 
 function selectEpisode(n) {
+  revealPanel();
   curEp = (curEp === n) ? null : n;
   curPerson = null;
   allBtn.setAttribute("aria-pressed", String(curEp === null));
@@ -573,7 +592,25 @@ function selectEpisode(n) {
   renderEpisodePanel();
 }
 
+
+/* Commissioned revision, 5 August 2026 (playtest-01 item 1): on a narrow screen the
+   detail panel sits below the fold, so a tap updated it invisibly. The panel already
+   announces itself to a screen reader (aria-live); this brings it into view for
+   everyone else. Desktop is untouched, and prefers-reduced-motion is honoured. */
+function revealPanel(){
+  if (window.matchMedia("(min-width:761px)").matches) return;
+  var p = document.getElementById("panel");
+  if (!p) return;
+  /* Instant and immediate. Never smooth: panel session 02 refused animation, and a
+     scroll this file cannot watch finish is a scroll it should not start. Not deferred
+     to a frame either — requestAnimationFrame does not fire in a backgrounded tab, and
+     the panel is aligned by its TOP, which the selection does not move; only what sits
+     below it changes height. So this is correct at call time and testable at call time,
+     which is why it is written this way. */
+  p.scrollIntoView({ behavior: "auto", block: "start" });
+}
 function selectPerson(id) {
+  revealPanel();
   curPerson = (curPerson === id) ? null : id;
   paint();
   if (curPerson) renderPersonPanel(byId[curPerson]);

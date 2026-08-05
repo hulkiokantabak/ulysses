@@ -130,6 +130,22 @@
     .panel{padding:18px 15px}
     .place text{font-size:17px}
   }
+  /* ---- the commissioned narrow-screen revision, 5 August 2026 ----
+     playtest-01 item 1. At 375px this map scaled to about 0.20, so a 13px place label
+     rendered near 2.6px. The stage becomes a keyboard-walkable scroll box at a fixed
+     2100px — scale 1.2, so the place labels render at 15.6px and the hour rail's 10px
+     labels at 12.0px — and the place markers grow their own hit area. The desktop
+     layout is untouched. The ratified deck pattern, applied to prior work on the
+     author's commission. */
+  @media (max-width:760px){
+    .stage{overflow-x:auto;overflow-y:hidden;padding-bottom:8px;
+           -webkit-overflow-scrolling:touch}
+    .stage svg#map{width:2100px;max-width:none}
+    .stage svg#rail{width:1224px;max-width:none}
+    .place circle{r:19}   /* 45.6px at this scale — clears the 44px target floor */
+    .place:focus-visible circle{stroke-width:3}
+    .stage:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  }
   @media (prefers-reduced-motion:reduce){*{transition:none !important}}
 </style>
 </head>
@@ -153,14 +169,18 @@
   <button id="btnBay"  aria-pressed="true">DUBLIN BAY</button>
   <button id="btnCity" aria-pressed="false">THE CITY</button>
 </div>
+<div class="stage" tabindex="0" role="group" aria-label="The map — scrolls sideways on a narrow screen">
 <svg id="map" viewBox="0 0 1750 1400" role="img"
      aria-label="Map of Dublin and its bay showing the routes of Bloom and Stephen on 16 June 1904"></svg>
+</div>
 
 <div class="sectionhead">
   <h2>The day</h2><span>when</span>
 </div>
+<div class="stage" tabindex="0" role="group" aria-label="The time rail — scrolls sideways on a narrow screen">
 <svg id="rail" viewBox="0 0 1020 230" role="img"
      aria-label="Timeline of the eighteen episodes across three characters"></svg>
+</div>
 
 <nav class="strip" id="strip" aria-label="Episodes"></nav>
 
@@ -490,6 +510,7 @@ const epBtns=EP.map(e=>{
 });
 
 function selectEpisode(n){
+  revealPanel();
   cur=(cur===n)?null:n;
   allBtn.setAttribute("aria-pressed",String(cur===null));
   epBtns.forEach((b,i)=>b.setAttribute("aria-pressed",String(EP[i].n===cur)));
@@ -507,7 +528,25 @@ function selectEpisode(n){
   e?renderEpisode(e):renderIntro();
 }
 
+
+/* Commissioned revision, 5 August 2026 (playtest-01 item 1): on a narrow screen the
+   detail panel sits below the fold, so a tap updated it invisibly. The panel already
+   announces itself to a screen reader (aria-live); this brings it into view for
+   everyone else. Desktop is untouched, and prefers-reduced-motion is honoured. */
+function revealPanel(){
+  if (window.matchMedia("(min-width:761px)").matches) return;
+  var p = document.getElementById("panel");
+  if (!p) return;
+  /* Instant and immediate. Never smooth: panel session 02 refused animation, and a
+     scroll this file cannot watch finish is a scroll it should not start. Not deferred
+     to a frame either — requestAnimationFrame does not fire in a backgrounded tab, and
+     the panel is aligned by its TOP, which the selection does not move; only what sits
+     below it changes height. So this is correct at call time and testable at call time,
+     which is why it is written this way. */
+  p.scrollIntoView({ behavior: "auto", block: "start" });
+}
 function selectPlace(id){
+  revealPanel();
   cur=null;
   allBtn.setAttribute("aria-pressed","false");
   epBtns.forEach(b=>b.setAttribute("aria-pressed","false"));
